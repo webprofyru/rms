@@ -702,7 +702,7 @@ ngModule.factory('dsChanges', [
 
       DSChanges.prototype.save = (function(saveInProgress) {
         return function(isContinue) {
-          var change, duedate, nextTask, promise, propChange, propName, ref, split, task, taskKey, taskUpd, upd;
+          var change, dueDateStr, duedate, nextTask, promise, propChange, propName, ref, split, startDate, task, taskKey, taskUpd, upd;
           if (saveInProgress && !isContinue) {
             return saveInProgress.promise;
           }
@@ -732,7 +732,10 @@ ngModule.factory('dsChanges', [
                   taskUpd['start-date'] = split === null || (duedate = task.get('duedate')) === null ? '' : split.firstDate(duedate).format('YYYYMMDD');
                   break;
                 case 'duedate':
-                  taskUpd['due-date'] = propChange.v ? propChange.v.format('YYYYMMDD') : '';
+                  taskUpd['due-date'] = dueDateStr = propChange.v ? propChange.v.format('YYYYMMDD') : '';
+                  if ((startDate = task.get('startDate')) !== null && startDate > task.get('duedate')) {
+                    taskUpd['start-date'] = dueDateStr;
+                  }
                   break;
                 case 'estimate':
                   taskUpd['estimated-minutes'] = propChange.v ? Math.floor(propChange.v.asMinutes()) : '0';
@@ -1259,7 +1262,7 @@ ngModule.factory('TWTasks', [
         todoListMap = {};
         importResponse = ((function(_this) {
           return function(json) {
-            var count, data, desc, duedateStr, estimate, i, jsonTask, len, person, project, ref, resp, split, task, todoList;
+            var count, data, date, desc, duedateStr, estimate, i, jsonTask, len, person, project, ref, resp, split, task, todoList;
             count = 0;
             Task.pool.enableWatch(false);
             try {
@@ -1279,6 +1282,7 @@ ngModule.factory('TWTasks', [
                 task.set('title', jsonTask['content']);
                 task.set('estimate', (estimate = jsonTask['estimated-minutes']) ? moment.duration(estimate, 'minutes') : null);
                 task.set('duedate', (duedateStr = jsonTask['due-date']) ? moment(duedateStr, 'YYYYMMDD') : null);
+                task.set('startDate', (date = jsonTask['start-date']) ? moment(date, 'YYYYMMDD') : null);
                 desc = jsonTask['description'];
                 data = RMSData.get(desc);
                 if (data !== null) {
@@ -5583,6 +5587,14 @@ module.exports = Task = (function(superClass) {
   });
 
   (Task.propMoment('duedate')).str = (function(v) {
+    if (v === null) {
+      return '';
+    } else {
+      return v.format('DD.MM.YYYY');
+    }
+  });
+
+  (Task.propMoment('startDate')).str = (function(v) {
     if (v === null) {
       return '';
     } else {

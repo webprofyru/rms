@@ -135,7 +135,8 @@ ngModule.factory 'dsChanges', [
                 taskUpd['description'] = RMSData.put task.get('description'), if split = propChange.v then {split: propChange.v.valueOf()} else null
                 taskUpd['start-date'] = if split == null || (duedate = task.get('duedate')) == null then '' else split.firstDate(duedate).format('YYYYMMDD')
               when 'duedate'
-                taskUpd['due-date'] = if propChange.v then propChange.v.format('YYYYMMDD') else ''
+                taskUpd['due-date'] = dueDateStr = if propChange.v then propChange.v.format('YYYYMMDD') else ''
+                taskUpd['start-date'] = dueDateStr if (startDate = task.get('startDate')) != null && startDate > task.get('duedate')
               when 'estimate'
                 taskUpd['estimated-minutes'] = if propChange.v then Math.floor propChange.v.asMinutes() else '0'
               when 'responsible'

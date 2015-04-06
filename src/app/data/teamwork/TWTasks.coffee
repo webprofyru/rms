@@ -132,6 +132,7 @@ ngModule.factory 'TWTasks', ['DSDataSimple', 'DSDataSource', '$q', ((DSDataSimpl
             task.set 'title', jsonTask['content']
             task.set 'estimate', if (estimate = jsonTask['estimated-minutes']) then moment.duration(estimate, 'minutes') else null
             task.set 'duedate', if (duedateStr = jsonTask['due-date']) then moment(duedateStr, 'YYYYMMDD') else null
+            task.set 'startDate', if (date = jsonTask['start-date']) then moment(date, 'YYYYMMDD') else null
             desc = jsonTask['description']
             data = RMSData.get desc
             if data != null

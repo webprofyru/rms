@@ -27,7 +27,7 @@ module.exports = class Task extends DSDocument
     res = '0' if !res
     return res)
   (@propMoment 'duedate').str = ((v) -> if v == null then '' else v.format 'DD.MM.YYYY')
-#  (@propMoment 'startDate').str = ((v) -> if v == null then '' else v.format 'DD.MM.YYYY')
+  (@propMoment 'startDate').str = ((v) -> if v == null then '' else v.format 'DD.MM.YYYY')
 
   @propDoc 'creator', Person
   # TODO: No support for multiple persons
