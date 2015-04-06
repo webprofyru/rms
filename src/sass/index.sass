@@ -1,0 +1,76 @@
+@import compass/css3
+@import susy
+@import breakpoint
+@import modular-scale
+@import lib/vertical-rhythmic
+
+//--- Variables
+//media
+$break-phone:   600px
+$break-small:   768px
+$break-medium:  992px
+$break-1150:    1150px
+$break-large:  1240px
+
+// reponsivenesss
+$narrow: 0 40rem
+$wide: 40rem
+$wide-border: 10%
+
+// base font size
+$ms-base: 1rem
+$base-font-size: $ms-base
+$base-line-height: 1.5rem
+html
+  @include vr-baseline($ms-base, $base-line-height)
+  @include container
+  font-family: 'Roboto', sans-serif
+
+// initial susy layout
+@include layout(100% 1 0 border-box)
+
+$wide-container: layout(80% 1 0)
+
+//colors
+$color-header-light: #D8D8D8
+$color-header-dark: #C6C6C6
+$color-bg: #F0F0F0
+$color-dark-white: #FAFAFA
+
+$color-task-blue: #BCD2E9
+
+//sizes
+
+$header-height: 40px
+$wide-border: 1rem
+
+//--- Mixins
+
+@mixin btn($bg-color,$color)
+  border: 1px solid #000000
+  padding: 5px 12px 5px 10px
+  background: $bg-color
+  color: $color
+  i
+    font-size: 15px
+    margin-right: 4px
+  &:hover
+    background: darken($bg-color, 10%)
+    color: lighten($color, 30%)
+
+@mixin horizontal-list($margin-right)
+  list-style-type: none
+  margin: 0
+  li
+    float: left
+    margin-right: $margin-right
+
+
+@import "lib/responsive"
+@import "partials/mixins-list"
+@import "partials/shadow.sass"
+@import "partials/scroller"
+@import "partials/loader"
+@import "partials/modals"
+@import "partials/select"
+@import "partials/style"

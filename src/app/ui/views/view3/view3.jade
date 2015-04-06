@@ -1,0 +1,37 @@
+div(ng-controller='View3')#sidebar
+    .header
+        include ../../actions.jade
+
+        //h3 Tasks browser
+        //.selector(ng-class="{demo:demo5}")
+        //    span Search:
+        //    .input-wrapper
+        //        input(type='text' ng-init='demo5=false' ng-focus='demo5=true' ng-blur='demo5=false')
+        //        i.fa.fa-search
+        //        span.demo-msg not working
+    .sub-header
+        ul.tabs
+            li(ng-click='sidebarTabs.clickSideBarTab(0)', ng-class='{active: sidebarTabs.active == 0}') WITHOUT DUE DATE
+            li(ng-click='sidebarTabs.clickSideBarTab(1)', ng-class='{active: sidebarTabs.active == 1}') NEXT WEEK
+            li(ng-click='sidebarTabs.clickSideBarTab(2)', ng-class='{active: sidebarTabs.active == 2}') ALL TASKS BY PROJECT
+    .content-block
+        div(ng-if="view.dataStatus =='load'").load-spinner
+            .spinner
+                .dot1
+                .dot2
+        ul(rms-view3-drop-task='').tasks-block.hide-scroll: .scroll-viewport
+            li(ng-repeat='project in view.projects')
+                h3 {{project.project.name}}
+                .task-list(ng-repeat='todoList in project.todoLists')
+                    div(ng-click="todoList.isExpand = !todoList.isExpand").task-list-title
+                        i(ng-if="!todoList.isExpand").fa.fa-caret-down
+                        i(ng-if="todoList.isExpand").fa.fa-caret-up
+                        h4 {{todoList.todoList.name}} (Tasks: {{todoList.tasksCount}}. Estimate: {{filter.taskPeriod(todoList, 'totalEstimate')}} )
+                    table(ng-if="todoList.isExpand").task-list-items
+                        tr(ng-repeat='task in todoList.tasks')
+                            td.col1
+                                div(rms-task='task', ng-model='task').view3-task {{task.title}}
+                            td.col2
+                                strong {{filter.taskPeriod(task, 'estimate')}}
+                            td.col3
+                                div DD

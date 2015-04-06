@@ -1,0 +1,41 @@
+
+doctype html
+html(lang="en" ng-app="app")
+
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width")
+    title "Resource Management System"
+    base(href="/" target="_self")
+    link(href="libs/normalize/normalize.css" rel="stylesheet")
+    link(href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet")
+    link(href='http://fonts.googleapis.com/css?family=Roboto:400,100,500&subset=cyrillic-ext,latin' rel='stylesheet' type='text/css')
+    link(href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css' rel='stylesheet' type='text/css')
+    link(href='libs/jQuery-Timepicker-Addon-1.5/jquery-ui-timepicker-addon.css' rel='stylesheet' type='text/css')
+    link(href='libs/ui-select-0.10.0/select.min.css' rel='stylesheet' type='text/css')
+    link( rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css")
+    link(href="index.css" rel="stylesheet")
+
+  body
+    div#main-wrapper(ui-view)
+
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+    script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js')
+    script(src='http://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.js')
+    script(src='http://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular-sanitize.min.js')
+
+    //script(src='libs/jquery-2.1.3/jquery.min.js')
+    //script(src='libs/jquery-ui-1.11.2/jquery-ui.min.js')
+    //script(src='libs/angularjs-1.3.13/angular.js')
+    //script(src='libs/angularjs-1.3.13/angular-sanitize.min.js')
+
+    script(src='libs/lodash-2.4.1/lodash.min.js')
+    //script(src='libs/lodash-2.4.1/lodash.js')
+
+    script(src='libs/angular-ui/ui-router-0.2.13/angular-ui-router.min.js')
+    script(src='libs/momentjs/moment.min.js')
+    script(src='libs/momentjs/locale/ru.js')
+    script(src='libs/jQuery-Timepicker-Addon-1.5/jquery-ui-timepicker-addon.min.js')
+    script(src='libs/ui-select-0.10.0/select.min.js')
+
+    script(src="app.js")

@@ -1,0 +1,5 @@
+div(ng-switch-when='drag-start')#task-drag-ghost
+    div.task-wrapper
+        span.title {{modal.task.title}}
+        span.duration {{filter.taskPeriod(modal.task, 'estimate')}}
+        span.due-date {{filter.shortDate(modal.task, 'duedate')}}

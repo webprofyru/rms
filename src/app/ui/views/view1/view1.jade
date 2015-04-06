@@ -1,0 +1,69 @@
+include ../../tasks/task.jade
+
+div(ng-controller='View1')#content
+    #top-block
+        .header
+            h3 People
+            .selector.speciality(ng-if='config.hasRoles', ng-class="{demo:demo1}")
+                span Speciality:
+                ui-select(ng-model='$parent.$parent.selectedRole', theme='selectize', ng-disabled='disabled', title='Choose a person').ui-select
+                    ui-select-match(placeholder='Select role...') {{$select.selected.name}}
+                    ui-select-choices(repeat='role in peopleRoles | filter: {name: $select.search}')
+                        div(ng-bind-html='role.name | highlight: $select.search')
+            .selector.contract(ng-if='config.hasRoles', ng-class="{demo:demo2}")
+                span Contract:
+                ui-select(ng-model='$parent.$parent.selectedCompany', theme='selectize', ng-disabled='disabled', title='Choose a person').ui-select
+                    ui-select-match(placeholder='Select company...') {{$select.selected.name}}
+                    ui-select-choices(repeat='role in filterCompanies | filter: {name: $select.search}')
+                        div(ng-bind-html='role.name | highlight: $select.search')
+            .selector.workload(ng-if='config.hasRoles', ng-class="{demo:demo3}")
+                span By workload:
+                ui-select(ng-model='$parent.$parent.selectedLoad', theme='selectize', ng-disabled='disabled', title='Choose a person').ui-select
+                    ui-select-match(placeholder='Select load...') {{$select.selected.name}}
+                    ui-select-choices(repeat='role in filterLoad | filter: {name: $select.search}')
+                        div(ng-bind-html='role.name | highlight: $select.search')
+        .sub-header
+            .col7.selector(ng-class="{demo:demo4}")
+                //.input-wrapper(ng-if='config.hasRoles')
+                //    input(type='text' ng-init='demo4=false' ng-focus='demo4=true' ng-blur='demo4=false')
+                //            i.fa.fa-search
+                //            span.demo-msg not working
+            .col1
+                button.btn(ng-click='view.periodChange(-1)')
+                    i.fa.fa-caret-left
+            .col3(ng-repeat='day in view.days')
+                strong(ng-bind-html='filter.calendarHeader(day, "date")')
+                small(ng-bind-html='filter.taskPeriod(day, "workTime")')
+            .col1
+                button.btn(ng-click='view.periodChange(1)')
+                    i.fa.fa-caret-right
+        .people.hide-scroll: .scroll-viewport
+            .vertical-lines
+                - var n = 1
+                while n <= 9
+                    .col(class="col" + n++)
+            ul
+                li.person-row(ng-repeat='row in view.rows', ng-class='{expand:row.expand}', rms-view1-drop-task='', style="{{expandHeight(row)}}")
+                    .col7.drop-zone(data-day='-1')
+                        img.avatar(ng-src='{{row.person.avatar}}', alt='')
+                        .name {{row.person.name}}
+                        .expand-icon(ng-click='row.expand =! row.expand')
+                            i.fa.fa-caret-down(ng-if='!row.expand')
+                            i.fa.fa-caret-up(ng-if='row.expand')
+                    .col1.drop-zone(data-day='-1')
+                        strong {{filter.taskPeriod(row.personDayStat, 'totalPeriodTime')}}
+                    .draw-area
+                        .block.drop-zone(ng-repeat="dayStat in row.personDayStat.dayStats", class="col{{$index}}" data-day='{{$index}}')
+                            span(ng-if='dayStat.tasksCount>0').task-count {{dayStat.tasksCount}}
+                            div(class="block-wrapper {{taskSummaryColor(dayStat)}}" style="width:{{dayTaskWidth(dayStat)}}%")
+                                span {{filter.taskPeriod(dayStat, 'tasksTotal')}}
+                        div(style="{{expandHeight(row)}}").tasks
+                            ul
+                                li.task(ng-repeat='taskView in row.tasks' style="left: {{taskView.x*3/21*100}}%; top:{{taskView.y*55}}px; width: {{taskView.len*3/21*100}}%")
+                                    +task('taskView.task')
+    include ../view2/view2.jade
+    .handler.handler-horiz(resizer='')
+        i.fa.fa-caret-down
+        i.fa.fa-caret-up
+
+

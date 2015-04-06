@@ -1,0 +1,11 @@
+div(ng-switch-when='task-info' rms-task-info='' style='top:{{top}}px;left:{{left}}px')#task-info-hover
+    ul
+        li
+            span.task-info-label Project
+            span.task-info-value {{task.project.name}}
+        li
+            span.task-info-label Todo list:
+            span.task-info-value {{task.todoList.name}}
+        li
+            span.task-info-label Title:
+            span.task-info-value {{task.title}}

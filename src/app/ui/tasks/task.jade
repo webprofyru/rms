@@ -1,0 +1,10 @@
+mixin task(path)
+    div(rms-task='#{path}', ng-model='#{path}', ng-class='{split:#{path}.split}').task-wrapper
+        span.title {{#{path}.title}}
+        span.duration(ng-if='!taskView.split') {{filter.taskPeriod(#{path}, 'estimate')}}
+        span.due-date {{filter.shortDate(#{path}, 'duedate')}}
+        ul.split-task(ng-if='taskView.split')
+            li(ng-repeat='duration in taskView.split')
+                span.duration(style="left: {{duration.x * 3/21 * 7/taskView.len * 100}}%") {{filter.splitDuration(duration.plan)}}
+
+

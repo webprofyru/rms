@@ -1,0 +1,31 @@
+div(ng-controller='ViewChanges' view-changes-fix='' ng-switch-when='changes')#changes-modal
+    h3 CHANGES
+    table.main-table.header
+        thead
+            th: div Type
+            th: div Title
+            th: div Property
+            th: div New value
+            th: div Conflict
+            th
+    .table-scroll
+        table.main-table.data
+            tr(ng-repeat='item in view.changes')
+                td: div {{item.doc.$ds_docType}}
+                td: div {{item.doc.title}}
+                td: div {{item.prop}}
+                td: div {{item.value}}
+                td: div {{item.conflict}}
+                td: img(src="./images/icons/recycling-can.svg" ng-click='item.remove()').icon-remove
+
+    .btn-group
+        ul
+            li(ng-click='reset()'): table: tr
+                td: img(src='./images/icons/recycling-man.svg')
+                td reset
+            li(ng-click='showChanges()').changes-modal-close: table: tr
+                td: img(src='./images/icons/close.svg').close
+                td close
+            li(ng-click='save()').changes-modal-save: table: tr
+                td: img(src='./images/icons/fly.svg')
+                td save
