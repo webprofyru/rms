@@ -20,18 +20,18 @@ div(ng-controller='View3')#sidebar
                 .dot1
                 .dot2
         ul(rms-view3-drop-task='').tasks-block.hide-scroll: .scroll-viewport
-            li(ng-repeat='project in view.projects')
+            li(ng-repeat='project in view.projects' ng-click='toggleProjectExpanded(project); $event.stopPropagation()')
+                i(ng-if='!isProjectExpanded(project)').fa.fa-caret-down
+                i(ng-if='isProjectExpanded(project)').fa.fa-caret-up
                 h3 {{project.project.name}}
-                .task-list(ng-repeat='todoList in project.todoLists')
-                    div(ng-click="todoList.isExpand = !todoList.isExpand").task-list-title
-                        i(ng-if="!todoList.isExpand").fa.fa-caret-down
-                        i(ng-if="todoList.isExpand").fa.fa-caret-up
+                .task-list(ng-repeat='todoList in project.todoLists' ng-if='isProjectExpanded(project)')
+                    div(ng-click='todoList.isExpand = !todoList.isExpand; $event.stopPropagation()').task-list-title
+                        i(ng-if='!todoList.isExpand').fa.fa-caret-down
+                        i(ng-if='todoList.isExpand').fa.fa-caret-up
                         h4 {{todoList.todoList.name}} (Tasks: {{todoList.tasksCount}}. Estimate: {{filter.taskPeriod(todoList, 'totalEstimate')}} )
-                    table(ng-if="todoList.isExpand").task-list-items
+                    table(ng-if='todoList.isExpand').task-list-items
                         tr(ng-repeat='task in todoList.tasks')
                             td.col1
                                 div(rms-task='task', ng-model='task').view3-task {{task.title}}
                             td.col2
                                 strong {{filter.taskPeriod(task, 'estimate')}}
-                            td.col3
-                                div DD

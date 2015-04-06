@@ -8153,13 +8153,15 @@ ngModule.directive('rmsView2DayDropTask', [
 
 
 },{"../../../data/dsChanges":"C:\\SVN\\_WebProfyManagement\\src\\app\\data\\dsChanges.coffee","../../../data/dsDataService":"C:\\SVN\\_WebProfyManagement\\src\\app\\data\\dsDataService.coffee","../../../dscommon/DSDigest":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDigest.coffee","../../../dscommon/DSView":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSView.coffee","../../../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","../../../models/Task":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Task.coffee","../view1/View1":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\views\\view1\\View1.coffee","../view1/models/TaskView":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\views\\view1\\models\\TaskView.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\views\\view3\\View3.coffee":[function(require,module,exports){
-var Project, ProjectView, Task, TodoList, TodoListView, assert, ngModule,
+var Project, ProjectView, Task, TodoList, TodoListView, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
 module.exports = (ngModule = angular.module('ui/views/view3/View3', [require('../../../config'), require('../../../data/dsDataService'), require('../../../dscommon/DSView')])).name;
 
 assert = require('../../../dscommon/util').assert;
+
+error = require('../../../dscommon/util').error;
 
 Task = require('../../../models/Task');
 
@@ -8199,6 +8201,7 @@ ngModule.factory('View3', [
 
       class1 = (function($scope, key) {
         DSView.call(this, $scope, key);
+        this.expandedProj = {};
         $scope.$watch((function() {
           var ref;
           return [$scope.mode, (ref = $scope.view1) != null ? ref.startDate.valueOf() : void 0, $scope.sidebarTabs.active];
@@ -8235,6 +8238,38 @@ ngModule.factory('View3', [
             }
           };
         })(this)), true);
+        $scope.toggleProjectExpanded = ((function(_this) {
+          return function(project) {
+            var active, expandedProj, projectKey, viewExpandedProj, viewExpandedProject;
+            if (assert) {
+              if (!(project instanceof ProjectView)) {
+                error.invalidArg('project');
+              }
+            }
+            viewExpandedProj = !(expandedProj = _this.expandedProj).hasOwnProperty((active = $scope.sidebarTabs.active)) ? expandedProj[active] = viewExpandedProject = {} : expandedProj[active];
+            if (viewExpandedProj.hasOwnProperty(projectKey = project.$ds_key)) {
+              return viewExpandedProj[projectKey] = !viewExpandedProj[projectKey];
+            } else {
+              return viewExpandedProj[projectKey] = !(active !== 2);
+            }
+          };
+        })(this));
+        $scope.isProjectExpanded = ((function(_this) {
+          return function(project) {
+            var active, expandedProj, projectKey, viewExpandedProj;
+            if (assert) {
+              if (!(project instanceof ProjectView)) {
+                error.invalidArg('project');
+              }
+            }
+            if ((expandedProj = _this.expandedProj).hasOwnProperty((active = $scope.sidebarTabs.active))) {
+              if ((viewExpandedProj = expandedProj[active]).hasOwnProperty(projectKey = project.$ds_key)) {
+                return viewExpandedProj[projectKey];
+              }
+            }
+            return active !== 2;
+          };
+        })(this));
       });
 
       View3.prototype.render = (function() {

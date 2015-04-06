@@ -5,6 +5,7 @@ module.exports = (ngModule = angular.module 'ui/views/view3/View3', [
 ]).name
 
 assert = require('../../../dscommon/util').assert
+error = require('../../../dscommon/util').error
 
 # Global models
 Task = require('../../../models/Task')
@@ -32,6 +33,8 @@ ngModule.factory 'View3', ['DSView', 'config', '$log', ((DSView, config, $log) -
     constructor: (($scope, key) ->
       DSView.call @, $scope, key
 
+      @expandedProj = {}
+
       $scope.$watch (-> [$scope.mode, $scope.view1?.startDate.valueOf(), $scope.sidebarTabs.active]),
         ((args) =>
           [mode, startDateVal, active] = args
@@ -48,6 +51,24 @@ ngModule.factory 'View3', ['DSView', 'config', '$log', ((DSView, config, $log) -
             when 2 # all tasks by project
               @dataUpdate {filter: 'all', mode}
           return), true
+
+      $scope.toggleProjectExpanded = ((project) =>
+        if assert
+          error.invalidArg 'project' if !(project instanceof ProjectView)
+        viewExpandedProj = if !(expandedProj = @expandedProj).hasOwnProperty (active = $scope.sidebarTabs.active)
+            expandedProj[active] = viewExpandedProject = {}
+          else expandedProj[active]
+        return if viewExpandedProj.hasOwnProperty(projectKey = project.$ds_key)
+            viewExpandedProj[projectKey] = !viewExpandedProj[projectKey]
+          else viewExpandedProj[projectKey] = !(active != 2)) # 2 - all by project
+
+      $scope.isProjectExpanded = ((project) =>
+        if assert
+          error.invalidArg 'project' if !(project instanceof ProjectView)
+        if (expandedProj = @expandedProj).hasOwnProperty (active = $scope.sidebarTabs.active)
+          if (viewExpandedProj = expandedProj[active]).hasOwnProperty(projectKey = project.$ds_key)
+            return viewExpandedProj[projectKey]
+        return active != 2) # 2 - all by project
 
       return)
 
