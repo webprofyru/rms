@@ -7,13 +7,13 @@
         {
             "role": "Designers Only",
             "name": "Только дизайнеры",
-            "roles": "Art-director, Designer",
+            "roles": "Art-director, Designer, Jr. Designer",
             "groupRole": true
         },
         {
             "role": "Webmasters Only",
             "name": "Только вебмастера",
-            "roles": "Markuper, Content-manager",
+            "roles": "Markuper, Programmer",
             "groupRole": true
         },
         {
@@ -67,6 +67,10 @@
         {
             "role": "Flasher",
             "name": "Флешер"
+        },
+        {
+          "role": "Technologist",
+          "name": "Технолог"
         }
     ],
     "people": [

@@ -702,7 +702,7 @@ ngModule.factory('dsChanges', [
 
       DSChanges.prototype.save = (function(saveInProgress) {
         return function(isContinue) {
-          var change, dueDateStr, duedate, nextTask, promise, propChange, propName, ref, split, startDate, task, taskKey, taskUpd, upd;
+          var actionError, change, dueDateStr, duedate, newReponsible, nextTask, project, projectPeople, promise, propChange, propName, ref, saveTaskAction, split, startDate, task, taskKey, taskUpd, upd;
           if (saveInProgress && !isContinue) {
             return saveInProgress.promise;
           }
@@ -712,7 +712,7 @@ ngModule.factory('dsChanges', [
           upd = {
             'todo-item': taskUpd = {}
           };
-          task = change = null;
+          task = change = newReponsible = null;
           ref = this.get('tasks');
           for (taskKey in ref) {
             nextTask = ref[taskKey];
@@ -741,7 +741,7 @@ ngModule.factory('dsChanges', [
                   taskUpd['estimated-minutes'] = propChange.v ? Math.floor(propChange.v.asMinutes()) : '0';
                   break;
                 case 'responsible':
-                  taskUpd['responsible-party-id'] = propChange.v ? [propChange.v.get('id')] : [];
+                  taskUpd['responsible-party-id'] = (newReponsible = propChange.v) ? [propChange.v.get('id')] : [];
                   break;
                 default:
                   console.error("change.save(): Property " + propName + " not expected to be changed");
@@ -756,8 +756,16 @@ ngModule.factory('dsChanges', [
             return promise;
           }
           task.addRef(this);
-          (function(_this) {
-            return (function(task, change) {
+          actionError = ((function(_this) {
+            return function() {
+              _this.set('cancel', null);
+              task.release(_this);
+              saveInProgress.reject();
+              saveInProgress = null;
+            };
+          })(this));
+          saveTaskAction = ((function(_this) {
+            return function() {
               return _this.get('source').httpPut("tasks/" + (task.get('id')) + ".json", upd, _this.set('cancel', $q.defer())).then((function(resp) {
                 _this.set('cancel', null);
                 if (resp.status === 200) {
@@ -774,17 +782,47 @@ ngModule.factory('dsChanges', [
                   saveInProgress.reject();
                   saveInProgress = null;
                 }
-              }), (function() {
+              }), actionError);
+            };
+          })(this));
+          if (newReponsible === null) {
+            saveTaskAction();
+          } else if ((projectPeople = (project = task.get('project')).get('people')) === null) {
+            this.get('source').httpGet("projects/" + (project.get('id')) + "/people.json", this.set('cancel', $q.defer())).then(((function(_this) {
+              return function(resp) {
+                var i, len, p, ref1;
                 _this.set('cancel', null);
-                task.release(_this);
-                saveInProgress.reject();
-                saveInProgress = null;
-              }));
-            });
-          })(this)(task, change);
+                if (resp.status === 200) {
+                  project.set('people', projectPeople = {});
+                  ref1 = resp.data.people;
+                  for (i = 0, len = ref1.length; i < len; i++) {
+                    p = ref1[i];
+                    projectPeople[p.id] = true;
+                  }
+                  _this.addPersonToProject(project, newReponsible, saveTaskAction, actionError);
+                }
+              };
+            })(this)), actionError);
+          } else if (!projectPeople.hasOwnProperty(newReponsible.get('id'))) {
+            this.addPersonToProject(project, newReponsible, saveTaskAction);
+          } else {
+            saveTaskAction();
+          }
           return saveInProgress.promise;
         };
       })(null);
+
+      DSChanges.prototype.addPersonToProject = (function(project, person, nextAction, actionError) {
+        this.get('source').httpPost("projects/" + (project.get('id')) + "/people/" + (person.get('id')) + ".json", null, this.set('cancel', $q.defer())).then(((function(_this) {
+          return function(resp) {
+            _this.set('cancel', null);
+            if (resp.status === 200) {
+              project.get('people')[person.get('id')] = true;
+              nextAction();
+            }
+          };
+        })(this)), actionError);
+      });
 
       DSChanges.end();
 
@@ -5497,7 +5535,7 @@ module.exports = PersonDayStat = (function(superClass) {
 
 
 },{"../dscommon/DSObject":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSObject.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","./Person":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Person.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Project.coffee":[function(require,module,exports){
-var DSDocument, Project, assert, error,
+var DSObject, Project, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -5505,7 +5543,7 @@ assert = require('../dscommon/util').assert;
 
 error = require('../dscommon/util').error;
 
-DSDocument = require('../dscommon/DSDocument');
+DSObject = require('../dscommon/DSObject');
 
 module.exports = Project = (function(superClass) {
   extend(Project, superClass);
@@ -5530,15 +5568,17 @@ module.exports = Project = (function(superClass) {
 
   Project.propStr('name');
 
+  Project.propObj('people');
+
   Project.end();
 
   return Project;
 
-})(DSDocument);
+})(DSObject);
 
 
 
-},{"../dscommon/DSDocument":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDocument.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Task.coffee":[function(require,module,exports){
+},{"../dscommon/DSObject":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSObject.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Task.coffee":[function(require,module,exports){
 var DSDocument, Person, Project, Task, TaskSplit, TodoList, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7551,6 +7591,8 @@ ngModule.factory('View1', [
 
       View1.propObj('hiddenPeople', {});
 
+      View1.propNum('hiddenPeopleCount', 0);
+
       class1 = (function($scope, key) {
         DSView.call(this, $scope, key);
         this.scope = $scope;
@@ -7612,11 +7654,18 @@ ngModule.factory('View1', [
 
       View1.prototype.hideRow = (function(row) {
         this.get('hiddenPeople')[row.$ds_key] = true;
+        this.hiddenPeopleCount++;
+        this.__dirty++;
+      });
+
+      View1.prototype.unhideAll = (function() {
+        this.set('hiddenPeople', {});
+        this.hiddenPeopleCount = 0;
         this.__dirty++;
       });
 
       View1.prototype.render = (function() {
-        var companyId, days, daysTemp, f0, f1, f2, filter, hiddenPeople, j, k, l, len1, len2, loadFilter, peopleStatus, personDayStat, personDayStatStatus, poolRows, r, ref, ref1, ref2, ref3, ref4, role, rolesMap, rows, selectedPeople, selectedRole, startDate, tasksByPerson, tasksStatus;
+        var companyId, days, daysTemp, f0, f1, f2, filter, hiddenPeople, j, k, len1, loadFilter, peopleStatus, personDayStat, personDayStatStatus, poolRows, r, ref, ref1, ref2, ref3, role, rolesMap, rows, selectedPeople, selectedRole, startDate, tasksByPerson, tasksStatus;
         if (!((peopleStatus = this.get('data').get('peopleStatus')) === 'ready' || peopleStatus === 'update')) {
           this.get('rowsList').merge(this, []);
           return;
@@ -7670,17 +7719,9 @@ ngModule.factory('View1', [
             } else if (selectedRole.hasOwnProperty('special')) {
               switch (selectedRole.special) {
                 case 'notSupervisors':
-                  rolesMap = {};
-                  ref3 = this.scope.peopleRoles;
-                  for (l = 0, len2 = ref3.length; l < len2; l++) {
-                    r = ref3[l];
-                    if (!r.supervisor && (!r.special && !r.roles)) {
-                      rolesMap[r.role] = true;
-                    }
-                  }
                   filter = (function(person) {
-                    var ref4;
-                    return f1(person) && ((ref4 = person.get('roles')) != null ? ref4.any(rolesMap) : void 0);
+                    var roles;
+                    return f1(person) && ((roles = person.get('roles')) === null || !roles.get('Manager'));
                   });
                   break;
                 default:
@@ -7689,31 +7730,31 @@ ngModule.factory('View1', [
             } else {
               role = selectedRole.role;
               filter = (function(person) {
-                var ref4;
-                return f1(person) && ((ref4 = person.get('roles')) != null ? ref4.get(role) : void 0);
+                var ref3;
+                return f1(person) && ((ref3 = person.get('roles')) != null ? ref3.get(role) : void 0);
               });
             }
           }
-          if (((ref4 = this.scope.selectedLoad) != null ? ref4.id : void 0) !== 0) {
+          if (((ref3 = this.scope.selectedLoad) != null ? ref3.id : void 0) !== 0) {
             if (this.get('data').get('personDayStatStatus') !== 'ready') {
               retrun;
             }
             personDayStat = this.get('data').get('personDayStat');
             loadFilter = this.scope.selectedLoad.id === 1 ? (function(person) {
-              var dayStat, len3, m, ref5;
-              ref5 = personDayStat[person.$ds_key].get('dayStats');
-              for (m = 0, len3 = ref5.length; m < len3; m++) {
-                dayStat = ref5[m];
+              var dayStat, l, len2, ref4;
+              ref4 = personDayStat[person.$ds_key].get('dayStats');
+              for (l = 0, len2 = ref4.length; l < len2; l++) {
+                dayStat = ref4[l];
                 if (dayStat.get('timeLeft') < 0) {
                   return true;
                 }
               }
               return false;
             }) : (function(person) {
-              var dayStat, len3, m, ref5;
-              ref5 = personDayStat[person.$ds_key].get('dayStats');
-              for (m = 0, len3 = ref5.length; m < len3; m++) {
-                dayStat = ref5[m];
+              var dayStat, l, len2, ref4;
+              ref4 = personDayStat[person.$ds_key].get('dayStats');
+              for (l = 0, len2 = ref4.length; l < len2; l++) {
+                dayStat = ref4[l];
                 if (dayStat.get('timeLeft').valueOf() / dayStat.get('contract').valueOf() > 0.2) {
                   return true;
                 }
@@ -7725,10 +7766,8 @@ ngModule.factory('View1', [
               return f2(person) && loadFilter(person);
             });
           }
-          selectedPeople = _.filter(this.data.get('people'), filter);
-        } else {
-          selectedPeople = _.map(this.data.get('people'), _.identity);
         }
+        selectedPeople = _.filter(this.data.get('people'), filter);
         selectedPeople.sort((function(left, right) {
           var leftLC, rightLC;
           if ((leftLC = left.name.toLowerCase()) < (rightLC = right.name.toLowerCase())) {
@@ -7764,11 +7803,11 @@ ngModule.factory('View1', [
           }));
           _.forEach(rows, ((function(_this) {
             return function(row) {
-              var dayStats, ds, i, len3, m, ref5, taskViews, tasksPool;
+              var dayStats, ds, i, l, len2, ref4, taskViews, tasksPool;
               row.set('personDayStat', personDayStat = _this.data.get('personDayStat')[row.$ds_key]);
-              ref5 = dayStats = personDayStat.get('dayStats');
-              for (i = m = 0, len3 = ref5.length; m < len3; i = ++m) {
-                ds = ref5[i];
+              ref4 = dayStats = personDayStat.get('dayStats');
+              for (i = l = 0, len2 = ref4.length; l < len2; i = ++l) {
+                ds = ref4[i];
                 daysTemp[i].add(ds.get('tasksTotal'));
               }
               tasksPool = row.get('tasksPool');

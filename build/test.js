@@ -734,7 +734,7 @@ ngModule.factory('dsChanges', [
 
       DSChanges.prototype.save = (function(saveInProgress) {
         return function(isContinue) {
-          var change, dueDateStr, duedate, nextTask, promise, propChange, propName, ref, split, startDate, task, taskKey, taskUpd, upd;
+          var actionError, change, dueDateStr, duedate, newReponsible, nextTask, project, projectPeople, promise, propChange, propName, ref, saveTaskAction, split, startDate, task, taskKey, taskUpd, upd;
           if (saveInProgress && !isContinue) {
             return saveInProgress.promise;
           }
@@ -744,7 +744,7 @@ ngModule.factory('dsChanges', [
           upd = {
             'todo-item': taskUpd = {}
           };
-          task = change = null;
+          task = change = newReponsible = null;
           ref = this.get('tasks');
           for (taskKey in ref) {
             nextTask = ref[taskKey];
@@ -773,7 +773,7 @@ ngModule.factory('dsChanges', [
                   taskUpd['estimated-minutes'] = propChange.v ? Math.floor(propChange.v.asMinutes()) : '0';
                   break;
                 case 'responsible':
-                  taskUpd['responsible-party-id'] = propChange.v ? [propChange.v.get('id')] : [];
+                  taskUpd['responsible-party-id'] = (newReponsible = propChange.v) ? [propChange.v.get('id')] : [];
                   break;
                 default:
                   console.error("change.save(): Property " + propName + " not expected to be changed");
@@ -788,8 +788,16 @@ ngModule.factory('dsChanges', [
             return promise;
           }
           task.addRef(this);
-          (function(_this) {
-            return (function(task, change) {
+          actionError = ((function(_this) {
+            return function() {
+              _this.set('cancel', null);
+              task.release(_this);
+              saveInProgress.reject();
+              saveInProgress = null;
+            };
+          })(this));
+          saveTaskAction = ((function(_this) {
+            return function() {
               return _this.get('source').httpPut("tasks/" + (task.get('id')) + ".json", upd, _this.set('cancel', $q.defer())).then((function(resp) {
                 _this.set('cancel', null);
                 if (resp.status === 200) {
@@ -806,17 +814,47 @@ ngModule.factory('dsChanges', [
                   saveInProgress.reject();
                   saveInProgress = null;
                 }
-              }), (function() {
+              }), actionError);
+            };
+          })(this));
+          if (newReponsible === null) {
+            saveTaskAction();
+          } else if ((projectPeople = (project = task.get('project')).get('people')) === null) {
+            this.get('source').httpGet("projects/" + (project.get('id')) + "/people.json", this.set('cancel', $q.defer())).then(((function(_this) {
+              return function(resp) {
+                var i, len, p, ref1;
                 _this.set('cancel', null);
-                task.release(_this);
-                saveInProgress.reject();
-                saveInProgress = null;
-              }));
-            });
-          })(this)(task, change);
+                if (resp.status === 200) {
+                  project.set('people', projectPeople = {});
+                  ref1 = resp.data.people;
+                  for (i = 0, len = ref1.length; i < len; i++) {
+                    p = ref1[i];
+                    projectPeople[p.id] = true;
+                  }
+                  _this.addPersonToProject(project, newReponsible, saveTaskAction, actionError);
+                }
+              };
+            })(this)), actionError);
+          } else if (!projectPeople.hasOwnProperty(newReponsible.get('id'))) {
+            this.addPersonToProject(project, newReponsible, saveTaskAction);
+          } else {
+            saveTaskAction();
+          }
           return saveInProgress.promise;
         };
       })(null);
+
+      DSChanges.prototype.addPersonToProject = (function(project, person, nextAction, actionError) {
+        this.get('source').httpPost("projects/" + (project.get('id')) + "/people/" + (person.get('id')) + ".json", null, this.set('cancel', $q.defer())).then(((function(_this) {
+          return function(resp) {
+            _this.set('cancel', null);
+            if (resp.status === 200) {
+              project.get('people')[person.get('id')] = true;
+              nextAction();
+            }
+          };
+        })(this)), actionError);
+      });
 
       DSChanges.end();
 
@@ -5529,7 +5567,7 @@ module.exports = PersonDayStat = (function(superClass) {
 
 
 },{"../dscommon/DSObject":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSObject.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","./Person":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Person.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Project.coffee":[function(require,module,exports){
-var DSDocument, Project, assert, error,
+var DSObject, Project, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -5537,7 +5575,7 @@ assert = require('../dscommon/util').assert;
 
 error = require('../dscommon/util').error;
 
-DSDocument = require('../dscommon/DSDocument');
+DSObject = require('../dscommon/DSObject');
 
 module.exports = Project = (function(superClass) {
   extend(Project, superClass);
@@ -5562,15 +5600,17 @@ module.exports = Project = (function(superClass) {
 
   Project.propStr('name');
 
+  Project.propObj('people');
+
   Project.end();
 
   return Project;
 
-})(DSDocument);
+})(DSObject);
 
 
 
-},{"../dscommon/DSDocument":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDocument.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Task.coffee":[function(require,module,exports){
+},{"../dscommon/DSObject":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSObject.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Task.coffee":[function(require,module,exports){
 var DSDocument, Person, Project, Task, TaskSplit, TodoList, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;

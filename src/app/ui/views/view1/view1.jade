@@ -27,7 +27,10 @@ div(ng-controller='View1')#content
                 .dot1
                 .dot2
         .sub-header(ng-if="view.dataStatus == 'ready' || view.dataStatus == 'update'")
-            .col7.selector(ng-class="{demo:demo4}")
+            .col7(ng-class="{demo:demo4}")
+                div(ng-if='view.hiddenPeopleCount > 0').unhide
+                    span(ng-click='view.unhideAll(); $event.preventDefault()').action Unhide
+                    span {{view.hiddenPeopleCount + (view.hiddenPeopleCount == 1 ? ' person' : ' people')}}
                 //.input-wrapper(ng-if='config.hasRoles')
                 //    input(type='text' ng-init='demo4=false' ng-focus='demo4=true' ng-blur='demo4=false')
                 //            i.fa.fa-search

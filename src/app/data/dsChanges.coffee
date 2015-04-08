@@ -123,7 +123,7 @@ ngModule.factory 'dsChanges', [
         return saveInProgress.promise if saveInProgress && !isContinue
         saveInProgress = $q.defer() if !isContinue
         upd = {'todo-item': taskUpd = {}}
-        task = change = null
+        task = change = newReponsible = null
         for taskKey, nextTask of @get('tasks')
           task = nextTask
           change = _.clone task.__change # clone() makes possible to continue to edit data while updates gets saved to the server
@@ -140,16 +140,27 @@ ngModule.factory 'dsChanges', [
               when 'estimate'
                 taskUpd['estimated-minutes'] = if propChange.v then Math.floor propChange.v.asMinutes() else '0'
               when 'responsible'
-                taskUpd['responsible-party-id'] = if propChange.v then [propChange.v.get('id')] else []
+                taskUpd['responsible-party-id'] = if (newReponsible = propChange.v) then [propChange.v.get('id')] else []
               else console.error "change.save(): Property #{propName} not expected to be changed"
           break # process only one first task
+
         if !task # it's nothing to save
           saveInProgress.resolve()
           promise = saveInProgress.promise
           saveInProgress = null
           return promise
+
         task.addRef @
-        do (task, change) =>
+
+        actionError = (=>
+          # TODO: Add error visualization
+          @set 'cancel', null
+          task.release @
+          saveInProgress.reject()
+          saveInProgress = null
+          return)
+
+        saveTaskAction = (=>
           @get('source').httpPut("tasks/#{task.get('id')}.json", upd, @set('cancel', $q.defer()))
           .then(
             ((resp) => # ok
@@ -165,15 +176,36 @@ ngModule.factory 'dsChanges', [
                 task.release @
                 saveInProgress.reject()
                 saveInProgress = null
-              return),
-            (=> # error
-              # TODO: Add error visualization
+              return), actionError))
+
+        if newReponsible == null
+          saveTaskAction()
+        else if (projectPeople = (project = task.get('project')).get('people')) == null # we do not know yet list of people on project
+          @get('source').httpGet("projects/#{project.get('id')}/people.json", @set('cancel', $q.defer()))
+          .then(
+            ((resp) => # ok
               @set 'cancel', null
-              task.release @
-              saveInProgress.reject()
-              saveInProgress = null
-              return))
+              if (resp.status == 200) # 0 means that request was canceled
+                project.set 'people', projectPeople = {}
+                projectPeople[p.id] = true for p in resp.data.people
+                @addPersonToProject project, newReponsible, saveTaskAction, actionError
+              return), actionError)
+        else if !projectPeople.hasOwnProperty(newReponsible.get('id')) # person is not on a project
+          @addPersonToProject project, newReponsible, saveTaskAction
+        else saveTaskAction()
+
         return saveInProgress.promise)
+
+      addPersonToProject: ((project, person, nextAction, actionError) ->
+        @get('source').httpPost("projects/#{project.get('id')}/people/#{person.get('id')}.json", null, @set('cancel', $q.defer()))
+        .then(
+          ((resp) => # ok
+            @set 'cancel', null
+            if (resp.status == 200) # 0 means that request was canceled
+              project.get('people')[person.get('id')] = true
+              nextAction()
+            return), actionError)
+        return)
 
       @end()
 

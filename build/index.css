@@ -540,6 +540,18 @@ ul {
   background: #c6c6c6;
   line-height: 40px;
 }
+.sub-header .unhide {
+  margin-left: 3.5rem;
+  font-size: 12px;
+}
+.sub-header .unhide > span {
+  padding-right: 4px;
+}
+.sub-header .unhide .action {
+  color: #1d1dff;
+  font-weight: 500;
+  text-decoration: underline;
+}
 
 #top-block .header h3 {
   box-sizing: border-box;

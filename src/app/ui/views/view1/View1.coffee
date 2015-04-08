@@ -46,6 +46,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
     @propList 'rows', Row
 
     @propObj 'hiddenPeople', {}
+    @propNum 'hiddenPeopleCount', 0
 
     constructor: (($scope, key) ->
       DSView.call @, $scope, key
@@ -83,6 +84,13 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
 
     hideRow: ((row) ->
       @get('hiddenPeople')[row.$ds_key] = true
+      @hiddenPeopleCount++
+      @__dirty++
+      return)
+
+    unhideAll: (->
+      @set 'hiddenPeople', {}
+      @hiddenPeopleCount = 0
       @__dirty++
       return)
 
@@ -127,9 +135,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
           else if selectedRole.hasOwnProperty('special')
             switch selectedRole.special
               when 'notSupervisors'
-                rolesMap = {}
-                rolesMap[r.role] = true for r in @scope.peopleRoles when !r.supervisor && (!r.special && !r.roles)
-                filter = ((person) -> f1(person) && person.get('roles')?.any(rolesMap))
+                filter = ((person) -> f1(person) && ((roles = person.get('roles')) == null || !roles.get('Manager'))) # Hack: It's hardcoded role name
               else
                 console.error "Unexpected role.special value: #{role.special}", selectedRole
           else
@@ -151,10 +157,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
           f2 = filter
           filter = ((person) -> f2(person) && loadFilter(person))
 
-        selectedPeople = _.filter @data.get('people'), filter
-
-      else
-        selectedPeople = _.map @data.get('people'), _.identity # it's map to list conversion
+      selectedPeople = _.filter @data.get('people'), filter
 
       selectedPeople.sort ((left, right) -> if (leftLC = left.name.toLowerCase()) < (rightLC = right.name.toLowerCase()) then -1 else if leftLC > rightLC then 1 else 0)
 
