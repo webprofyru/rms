@@ -11,4 +11,5 @@ gulp.task "watch", ["setWatch", "browserSync"], (->
   gulp.watch config.test.src, ["jade"]
   gulp.watch config.sass.src, ["sass"]
   gulp.watch config.images.src, ["images"]
+  gulp.watch config.copyData.data + '/**', ["copyData"]
   return)

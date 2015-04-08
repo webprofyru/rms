@@ -82,7 +82,7 @@ ngModule.factory 'View3', ['DSView', 'config', '$log', ((DSView, config, $log) -
       tasksByProject = _.groupBy tasksByTodoList, ((todoList) -> todoList[0].get('project').$ds_key)
 
       poolProjects = @get 'poolProjects'
-      projects = @get('projectsList').merge @, _.map tasksByProject, ((projectGroup, projectKey) =>
+      projects = @get('projectsList').merge @, (_.map tasksByProject, ((projectGroup, projectKey) =>
         projectView = poolProjects.find @, projectKey
         projectView.set 'project', Project.pool.items[projectKey]
         projectView.get('todoListsList').merge @, _.map projectGroup, ((todoListGroup) =>
@@ -93,7 +93,8 @@ ngModule.factory 'View3', ['DSView', 'config', '$log', ((DSView, config, $log) -
           todoListView.set 'totalEstimate', _.reduce todoListGroup, ((sum, task) -> if (estimate = task.get('estimate')) then sum.add estimate else sum), moment.duration(0)
           todoListView.get('tasksList').merge @, _.map todoListGroup, ((task) => task.addRef @)
           return todoListView)
-        return projectView)
+        return projectView)).sort ((left, right) ->
+          if (leftLC = left.get('project').get('name').toLowerCase()) < (rightLC = right.get('project').get('name').toLowerCase()) then -1 else if leftLC > rightLC then 1 else 0)
       return)
 
     @end())]

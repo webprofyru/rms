@@ -1239,19 +1239,19 @@ ngModule.factory('TWTasks', [
           switch ((params = this.get('params')).filter) {
             case 'all':
               if (moment.isMoment(params.startDate)) {
-                return "tasks.json?startdate=" + (params.startDate.format('YYYYMMDD')) + "&enddate=" + (params.endDate.format('YYYYMMDD'));
+                return "tasks.json?startdate=" + (params.startDate.format('YYYYMMDD')) + "&enddate=" + (params.endDate.format('YYYYMMDD')) + "&getSubTasks=no";
               } else {
-                return "tasks.json?";
+                return "tasks.json?getSubTasks=no";
               }
               break;
             case 'assigned':
-              return "tasks.json?startdate=" + (params.startDate.format('YYYYMMDD')) + "&enddate=" + (params.endDate.format('YYYYMMDD')) + "&responsible-party-ids=-1";
+              return "tasks.json?startdate=" + (params.startDate.format('YYYYMMDD')) + "&enddate=" + (params.endDate.format('YYYYMMDD')) + "&responsible-party-ids=-1&getSubTasks=no";
             case 'notassigned':
-              return "tasks.json?startdate=" + (params.startDate.format('YYYYMMDD')) + "&enddate=" + (params.endDate.format('YYYYMMDD')) + "&responsible-party-ids=0";
+              return "tasks.json?startdate=" + (params.startDate.format('YYYYMMDD')) + "&enddate=" + (params.endDate.format('YYYYMMDD')) + "&responsible-party-ids=0&getSubTasks=no";
             case 'overdue':
-              return "tasks.json?filter=overdue";
+              return "tasks.json?filter=overdue&getSubTasks=no";
             case 'noduedate':
-              return "tasks.json?filter=nodate&include=noduedate";
+              return "tasks.json?filter=nodate&include=noduedate&getSubTasks=no";
             default:
               throw new Error("Unexpected filter: " + params.filter);
           }
@@ -3053,6 +3053,16 @@ module.exports = DSEnum = (function() {
       }
     }
     return this.map.hasOwnProperty(enumValue);
+  });
+
+  DSEnum.prototype.any = (function(map) {
+    var k;
+    for (k in map) {
+      if (this.map.hasOwnProperty(k)) {
+        return true;
+      }
+    }
+    return false;
   });
 
   DSEnum.prototype.diff = (function(src) {
@@ -5257,8 +5267,8 @@ module.exports = util = {
   traceData: false,
   traceWatch: false,
   traceView: false,
-  traceRefs: true,
-  totalRelease: true,
+  traceRefs: false,
+  totalRelease: false,
   totalReleaseVerb: false,
   modeReleaseDataOnReload: true,
   serviceOwner: new (ServiceOwner = (function() {

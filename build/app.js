@@ -1207,19 +1207,19 @@ ngModule.factory('TWTasks', [
           switch ((params = this.get('params')).filter) {
             case 'all':
               if (moment.isMoment(params.startDate)) {
-                return "tasks.json?startdate=" + (params.startDate.format('YYYYMMDD')) + "&enddate=" + (params.endDate.format('YYYYMMDD'));
+                return "tasks.json?startdate=" + (params.startDate.format('YYYYMMDD')) + "&enddate=" + (params.endDate.format('YYYYMMDD')) + "&getSubTasks=no";
               } else {
-                return "tasks.json?";
+                return "tasks.json?getSubTasks=no";
               }
               break;
             case 'assigned':
-              return "tasks.json?startdate=" + (params.startDate.format('YYYYMMDD')) + "&enddate=" + (params.endDate.format('YYYYMMDD')) + "&responsible-party-ids=-1";
+              return "tasks.json?startdate=" + (params.startDate.format('YYYYMMDD')) + "&enddate=" + (params.endDate.format('YYYYMMDD')) + "&responsible-party-ids=-1&getSubTasks=no";
             case 'notassigned':
-              return "tasks.json?startdate=" + (params.startDate.format('YYYYMMDD')) + "&enddate=" + (params.endDate.format('YYYYMMDD')) + "&responsible-party-ids=0";
+              return "tasks.json?startdate=" + (params.startDate.format('YYYYMMDD')) + "&enddate=" + (params.endDate.format('YYYYMMDD')) + "&responsible-party-ids=0&getSubTasks=no";
             case 'overdue':
-              return "tasks.json?filter=overdue";
+              return "tasks.json?filter=overdue&getSubTasks=no";
             case 'noduedate':
-              return "tasks.json?filter=nodate&include=noduedate";
+              return "tasks.json?filter=nodate&include=noduedate&getSubTasks=no";
             default:
               throw new Error("Unexpected filter: " + params.filter);
           }
@@ -3021,6 +3021,16 @@ module.exports = DSEnum = (function() {
       }
     }
     return this.map.hasOwnProperty(enumValue);
+  });
+
+  DSEnum.prototype.any = (function(map) {
+    var k;
+    for (k in map) {
+      if (this.map.hasOwnProperty(k)) {
+        return true;
+      }
+    }
+    return false;
   });
 
   DSEnum.prototype.diff = (function(src) {
@@ -5225,8 +5235,8 @@ module.exports = util = {
   traceData: false,
   traceWatch: false,
   traceView: false,
-  traceRefs: true,
-  totalRelease: true,
+  traceRefs: false,
+  totalRelease: false,
   totalReleaseVerb: false,
   modeReleaseDataOnReload: true,
   serviceOwner: new (ServiceOwner = (function() {
@@ -7539,6 +7549,8 @@ ngModule.factory('View1', [
 
       View1.propList('rows', Row);
 
+      View1.propObj('hiddenPeople', {});
+
       class1 = (function($scope, key) {
         DSView.call(this, $scope, key);
         this.scope = $scope;
@@ -7598,8 +7610,13 @@ ngModule.factory('View1', [
         this.set('startDate', this.startDate.add(num, 'week'));
       });
 
+      View1.prototype.hideRow = (function(row) {
+        this.get('hiddenPeople')[row.$ds_key] = true;
+        this.__dirty++;
+      });
+
       View1.prototype.render = (function() {
-        var companyId, days, daysTemp, f1, f2, filter, loadFilter, peopleStatus, personDayStat, personDayStatStatus, poolRows, ref, ref1, ref2, role, rows, selectedPeople, startDate, tasksByPerson, tasksStatus;
+        var companyId, days, daysTemp, f0, f1, f2, filter, hiddenPeople, j, k, l, len1, len2, loadFilter, peopleStatus, personDayStat, personDayStatStatus, poolRows, r, ref, ref1, ref2, ref3, ref4, role, rolesMap, rows, selectedPeople, selectedRole, startDate, tasksByPerson, tasksStatus;
         if (!((peopleStatus = this.get('data').get('peopleStatus')) === 'ready' || peopleStatus === 'update')) {
           this.get('rowsList').merge(this, []);
           return;
@@ -7616,47 +7633,87 @@ ngModule.factory('View1', [
             return day;
           };
         })(this))));
+        filter = (function() {
+          return true;
+        });
+        hiddenPeople = this.get('hiddenPeople');
+        for (k in hiddenPeople) {
+          filter = (function(person) {
+            return !hiddenPeople.hasOwnProperty(person.$ds_key);
+          });
+          break;
+        }
         if (config.get('hasRoles')) {
           if ((ref = this.scope.selectedCompany) != null ? ref.id : void 0) {
             companyId = this.scope.selectedCompany.id;
+            f0 = filter;
             filter = (function(person) {
-              return person.get('companyId') === companyId;
+              return f0(person) && person.get('companyId') === companyId;
             });
           } else {
-            filter = (function() {
-              return true;
-            });
+            f0 = filter;
           }
           if ((ref1 = this.scope.selectedRole) != null ? ref1.role : void 0) {
-            role = this.scope.selectedRole.role;
+            selectedRole = this.scope.selectedRole;
             f1 = filter;
-            filter = (function(person) {
-              var ref2;
-              return f1(person) && ((ref2 = person.get('roles')) != null ? ref2.get(role) : void 0);
-            });
-          } else {
-            f1 = filter;
+            if (selectedRole.hasOwnProperty('roles')) {
+              rolesMap = {};
+              ref2 = selectedRole.roles.split(',');
+              for (j = 0, len1 = ref2.length; j < len1; j++) {
+                r = ref2[j];
+                rolesMap[r.trim()] = true;
+              }
+              filter = (function(person) {
+                var ref3;
+                return f1(person) && ((ref3 = person.get('roles')) != null ? ref3.any(rolesMap) : void 0);
+              });
+            } else if (selectedRole.hasOwnProperty('special')) {
+              switch (selectedRole.special) {
+                case 'notSupervisors':
+                  rolesMap = {};
+                  ref3 = this.scope.peopleRoles;
+                  for (l = 0, len2 = ref3.length; l < len2; l++) {
+                    r = ref3[l];
+                    if (!r.supervisor && (!r.special && !r.roles)) {
+                      rolesMap[r.role] = true;
+                    }
+                  }
+                  filter = (function(person) {
+                    var ref4;
+                    return f1(person) && ((ref4 = person.get('roles')) != null ? ref4.any(rolesMap) : void 0);
+                  });
+                  break;
+                default:
+                  console.error("Unexpected role.special value: " + role.special, selectedRole);
+              }
+            } else {
+              role = selectedRole.role;
+              filter = (function(person) {
+                var ref4;
+                return f1(person) && ((ref4 = person.get('roles')) != null ? ref4.get(role) : void 0);
+              });
+            }
           }
-          if (((ref2 = this.scope.selectedLoad) != null ? ref2.id : void 0) !== 0) {
+          if (((ref4 = this.scope.selectedLoad) != null ? ref4.id : void 0) !== 0) {
             if (this.get('data').get('personDayStatStatus') !== 'ready') {
               retrun;
             }
             personDayStat = this.get('data').get('personDayStat');
             loadFilter = this.scope.selectedLoad.id === 1 ? (function(person) {
-              var dayStat, j, len1, ref3;
-              ref3 = personDayStat[person.$ds_key].get('dayStats');
-              for (j = 0, len1 = ref3.length; j < len1; j++) {
-                dayStat = ref3[j];
+              var dayStat, len3, m, ref5;
+              ref5 = personDayStat[person.$ds_key].get('dayStats');
+              for (m = 0, len3 = ref5.length; m < len3; m++) {
+                dayStat = ref5[m];
                 if (dayStat.get('timeLeft') < 0) {
                   return true;
                 }
               }
               return false;
             }) : (function(person) {
-              var dayStat, j, len1, ref3;
-              ref3 = personDayStat[person.$ds_key].get('dayStats');
-              for (j = 0, len1 = ref3.length; j < len1; j++) {
-                dayStat = ref3[j];
+              var dayStat, len3, m, ref5;
+              ref5 = personDayStat[person.$ds_key].get('dayStats');
+              for (m = 0, len3 = ref5.length; m < len3; m++) {
+                dayStat = ref5[m];
                 if (dayStat.get('timeLeft').valueOf() / dayStat.get('contract').valueOf() > 0.2) {
                   return true;
                 }
@@ -7673,9 +7730,10 @@ ngModule.factory('View1', [
           selectedPeople = _.map(this.data.get('people'), _.identity);
         }
         selectedPeople.sort((function(left, right) {
-          if (left.name < right.name) {
+          var leftLC, rightLC;
+          if ((leftLC = left.name.toLowerCase()) < (rightLC = right.name.toLowerCase())) {
             return -1;
-          } else if (left.name > right.name) {
+          } else if (leftLC > rightLC) {
             return 1;
           } else {
             return 0;
@@ -7706,11 +7764,11 @@ ngModule.factory('View1', [
           }));
           _.forEach(rows, ((function(_this) {
             return function(row) {
-              var dayStats, ds, i, j, len1, ref3, taskViews, tasksPool;
+              var dayStats, ds, i, len3, m, ref5, taskViews, tasksPool;
               row.set('personDayStat', personDayStat = _this.data.get('personDayStat')[row.$ds_key]);
-              ref3 = dayStats = personDayStat.get('dayStats');
-              for (i = j = 0, len1 = ref3.length; j < len1; i = ++j) {
-                ds = ref3[i];
+              ref5 = dayStats = personDayStat.get('dayStats');
+              for (i = m = 0, len3 = ref5.length; m < len3; i = ++m) {
+                ds = ref5[i];
                 daysTemp[i].add(ds.get('tasksTotal'));
               }
               tasksPool = row.get('tasksPool');
@@ -7740,7 +7798,7 @@ ngModule.factory('View1', [
       });
 
       positionTaskView = (function(pos, taskView, taskStartDate, day) {
-        var dayPos, dpos, j, k, len, len1, plan, ref, s, split, task, v, viewSplit, y;
+        var dayPos, dpos, j, l, len, len1, plan, ref, s, split, task, v, viewSplit, y;
         taskView.set('x', day);
         dayPos = pos[day];
         if (day === 0) {
@@ -7764,7 +7822,7 @@ ngModule.factory('View1', [
         } else {
           len = taskView.set('len', Math.min(moment.duration(moment(split.lastDate(task.get('duedate'))).diff(taskStartDate)).asDays() + 1, 7 - day));
           viewSplit = taskView.set('split', []);
-          for (s = k = 0, ref = len; 0 <= ref ? k < ref : k > ref; s = 0 <= ref ? ++k : --k) {
+          for (s = l = 0, ref = len; 0 <= ref ? l < ref : l > ref; s = 0 <= ref ? ++l : --l) {
             if ((plan = split.get(task.duedate, s === 0 ? taskStartDate : moment(taskStartDate).add(s, 'day'))) !== null) {
               viewSplit.push({
                 x: s,
@@ -8285,7 +8343,7 @@ ngModule.factory('View3', [
           return todoList[0].get('project').$ds_key;
         }));
         poolProjects = this.get('poolProjects');
-        projects = this.get('projectsList').merge(this, _.map(tasksByProject, ((function(_this) {
+        projects = this.get('projectsList').merge(this, (_.map(tasksByProject, ((function(_this) {
           return function(projectGroup, projectKey) {
             var projectView;
             projectView = poolProjects.find(_this, projectKey);
@@ -8311,7 +8369,16 @@ ngModule.factory('View3', [
             })));
             return projectView;
           };
-        })(this))));
+        })(this)))).sort((function(left, right) {
+          var leftLC, rightLC;
+          if ((leftLC = left.get('project').get('name').toLowerCase()) < (rightLC = right.get('project').get('name').toLowerCase())) {
+            return -1;
+          } else if (leftLC > rightLC) {
+            return 1;
+          } else {
+            return 0;
+          }
+        })));
       });
 
       View3.end();

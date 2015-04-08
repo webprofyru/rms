@@ -3,8 +3,8 @@ module.exports = util =
   traceData: false
   traceWatch: false # add to watch listener 'owner' value
   traceView: false
-  traceRefs: true
-  totalRelease: true # Use windows.totalRelease() to real all object, and check window.totalPool to see if there any object left unreleased
+  traceRefs: false
+  totalRelease: false # Use windows.totalRelease() to real all object, and check window.totalPool to see if there any object left unreleased
   totalReleaseVerb: false
   modeReleaseDataOnReload: true
   serviceOwner: new class ServiceOwner

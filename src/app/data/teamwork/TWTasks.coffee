@@ -67,17 +67,17 @@ ngModule.factory 'TWTasks', ['DSDataSimple', 'DSDataSource', '$q', ((DSDataSimpl
       @set 'request', switch (params = @get('params')).filter
         when 'all'
           if moment.isMoment(params.startDate)
-            "tasks.json?startdate=#{params.startDate.format 'YYYYMMDD'}&enddate=#{params.endDate.format 'YYYYMMDD'}"
+            "tasks.json?startdate=#{params.startDate.format 'YYYYMMDD'}&enddate=#{params.endDate.format 'YYYYMMDD'}&getSubTasks=no"
           else
-            "tasks.json?"
+            "tasks.json?getSubTasks=no"
         when 'assigned'
-          "tasks.json?startdate=#{params.startDate.format 'YYYYMMDD'}&enddate=#{params.endDate.format 'YYYYMMDD'}&responsible-party-ids=-1"
+          "tasks.json?startdate=#{params.startDate.format 'YYYYMMDD'}&enddate=#{params.endDate.format 'YYYYMMDD'}&responsible-party-ids=-1&getSubTasks=no"
         when 'notassigned'
-          "tasks.json?startdate=#{params.startDate.format 'YYYYMMDD'}&enddate=#{params.endDate.format 'YYYYMMDD'}&responsible-party-ids=0"
+          "tasks.json?startdate=#{params.startDate.format 'YYYYMMDD'}&enddate=#{params.endDate.format 'YYYYMMDD'}&responsible-party-ids=0&getSubTasks=no"
         when 'overdue'
-          "tasks.json?filter=overdue"
+          "tasks.json?filter=overdue&getSubTasks=no"
         when 'noduedate'
-          "tasks.json?filter=nodate&include=noduedate"
+          "tasks.json?filter=nodate&include=noduedate&getSubTasks=no"
         else
           throw new Error "Unexpected filter: #{params.filter}"
 

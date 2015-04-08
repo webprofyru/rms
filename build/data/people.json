@@ -5,8 +5,27 @@
             "name": "Все"
         },
         {
+            "role": "Designers Only",
+            "name": "Только дизайнеры",
+            "roles": "Art-director, Designer",
+            "groupRole": true
+        },
+        {
+            "role": "Webmasters Only",
+            "name": "Только вебмастера",
+            "roles": "Markuper, Content-manager",
+            "groupRole": true
+        },
+        {
+            "role": "All but managers",
+            "name": "Все кроме менеджеров",
+            "special": "notSupervisors",
+            "groupRole": true
+        },
+        {
             "role": "Art-director",
-            "name": "Арт-директор"
+            "name": "Арт-директор",
+            "supervisor": true
         },
         {
             "role": "Designer",
@@ -22,7 +41,8 @@
         },
         {
             "role": "Manager",
-            "name": "Менеджер"
+            "name": "Менеджер",
+            "supervisor": true
         },
         {
             "role": "Programmer",
@@ -295,6 +315,12 @@
             "role": "Content-manager",
             "name": "Юлия Калмыкова",
             "email": "jill007@gmail.com"
+        },
+        {
+          "id": 115063,
+          "role": "Manager",
+          "name": "Ольга Черноусова",
+          "email": "o.chernousova@webprofy.ru"
         }
     ]
 }

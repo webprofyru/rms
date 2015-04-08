@@ -150,8 +150,16 @@ $z-index-content: 10
         min-height: 10rem
       .col7
         @include span(7 of 30)
-        padding-left: $wide-border
+        padding-left: 0.2rem
+        //padding-left: $wide-border
         //padding: 4px 0 4px 0
+        .hide
+          width: 1rem
+          float: left
+          padding-right: 0.3rem
+          padding-top: 0.3rem
+          opacity: 0.3
+          cursor: pointer
         .avatar
           width: 2rem
           float: left
@@ -255,10 +263,12 @@ $z-index-content: 10
 
 #top-block .people
   .person-row
+    overflow: hidden
     .draw-area
       .tasks
         display: none
     &.expand
+      overflow: auto
       .draw-area
         .tasks
           display: block

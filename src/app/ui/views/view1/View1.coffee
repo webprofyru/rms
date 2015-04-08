@@ -45,6 +45,8 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
     @propPool 'poolRows', Row
     @propList 'rows', Row
 
+    @propObj 'hiddenPeople', {}
+
     constructor: (($scope, key) ->
       DSView.call @, $scope, key
 
@@ -75,8 +77,13 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
 
       return)
 
-    periodChange: ((num)->
+    periodChange: ((num) ->
       @set 'startDate', @startDate.add(num, 'week')
+      return)
+
+    hideRow: ((row) ->
+      @get('hiddenPeople')[row.$ds_key] = true
+      @__dirty++
       return)
 
     render: (->
@@ -94,20 +101,40 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
           day.set 'x', dayIndex
           return day)
 
+      filter = (-> true)
+      hiddenPeople = @get('hiddenPeople')
+      for k of hiddenPeople
+        filter = ((person) -> !hiddenPeople.hasOwnProperty(person.$ds_key))
+        break
+
       if config.get('hasRoles')
 
         if @scope.selectedCompany?.id
           companyId = @scope.selectedCompany.id
-          filter = ((person) -> person.get('companyId') == companyId)
+          f0 = filter
+          filter = ((person) -> f0(person) && person.get('companyId') == companyId)
         else
-          filter = (-> true)
+          f0 = filter
 
         if @scope.selectedRole?.role
-          role = @scope.selectedRole.role
+          selectedRole = @scope.selectedRole
           f1 = filter
-          filter = ((person) -> f1(person) && person.get('roles')?.get(role))
-        else
-          f1 = filter
+          if selectedRole.hasOwnProperty('roles')
+            rolesMap = {}
+            for r in selectedRole.roles.split(',')
+              rolesMap[r.trim()] = true
+            filter = ((person) -> f1(person) && person.get('roles')?.any(rolesMap))
+          else if selectedRole.hasOwnProperty('special')
+            switch selectedRole.special
+              when 'notSupervisors'
+                rolesMap = {}
+                rolesMap[r.role] = true for r in @scope.peopleRoles when !r.supervisor && (!r.special && !r.roles)
+                filter = ((person) -> f1(person) && person.get('roles')?.any(rolesMap))
+              else
+                console.error "Unexpected role.special value: #{role.special}", selectedRole
+          else
+            role = selectedRole.role
+            filter = ((person) -> f1(person) && person.get('roles')?.get(role))
 
         if @scope.selectedLoad?.id != 0
           retrun if @get('data').get('personDayStatStatus') != 'ready'
@@ -129,7 +156,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
       else
         selectedPeople = _.map @data.get('people'), _.identity # it's map to list conversion
 
-      selectedPeople.sort ((left, right) -> if left.name < right.name then -1 else if left.name > right.name then 1 else 0)
+      selectedPeople.sort ((left, right) -> if (leftLC = left.name.toLowerCase()) < (rightLC = right.name.toLowerCase()) then -1 else if leftLC > rightLC then 1 else 0)
 
       poolRows = @get 'poolRows'
       rows = @get('rowsList').merge @, _.map selectedPeople, ((person) =>

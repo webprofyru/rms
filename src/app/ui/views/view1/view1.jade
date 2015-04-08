@@ -22,7 +22,11 @@ div(ng-controller='View1')#content
                     ui-select-match(placeholder='Select load...') {{$select.selected.name}}
                     ui-select-choices(repeat='role in filterLoad | filter: {name: $select.search}')
                         div(ng-bind-html='role.name | highlight: $select.search')
-        .sub-header
+        div(ng-if="view.dataStatus == 'load'").load-spinner
+            .spinner
+                .dot1
+                .dot2
+        .sub-header(ng-if="view.dataStatus == 'ready' || view.dataStatus == 'update'")
             .col7.selector(ng-class="{demo:demo4}")
                 //.input-wrapper(ng-if='config.hasRoles')
                 //    input(type='text' ng-init='demo4=false' ng-focus='demo4=true' ng-blur='demo4=false')
@@ -37,7 +41,7 @@ div(ng-controller='View1')#content
             .col1
                 button.btn(ng-click='view.periodChange(1)')
                     i.fa.fa-caret-right
-        .people.hide-scroll: .scroll-viewport
+        .people.hide-scroll(ng-if="view.dataStatus == 'ready' || view.dataStatus == 'update'"): .scroll-viewport
             .vertical-lines
                 - var n = 1
                 while n <= 9
@@ -45,6 +49,7 @@ div(ng-controller='View1')#content
             ul
                 li.person-row(ng-repeat='row in view.rows', ng-class='{expand:row.expand}', rms-view1-drop-task='', style="{{expandHeight(row)}}")
                     .col7.drop-zone(data-day='-1')
+                        img(src='./images/icons/eye46.svg', ng-click='view.hideRow(row)').hide
                         img.avatar(ng-src='{{row.person.avatar}}', alt='')
                         .name {{row.person.name}}
                         .expand-icon(ng-click='row.expand =! row.expand')

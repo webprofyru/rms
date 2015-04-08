@@ -62,6 +62,11 @@ module.exports = class DSEnum
         error.invalidArg 'enumValue'
     return @map.hasOwnProperty(enumValue))
 
+  any: ((map) ->
+    for k of map
+      return true if @map.hasOwnProperty k
+    return false)
+
   diff: ((src) ->
     if assert
       if !(typeof src == 'object' && src.__proto__ == DSEnum::)

@@ -658,7 +658,15 @@ ul {
   box-sizing: border-box;
   width: 23.33333%;
   float: left;
-  padding-left: 1rem;
+  padding-left: 0.2rem;
+}
+#top-block .people .person-row .col7 .hide {
+  width: 1rem;
+  float: left;
+  padding-right: 0.3rem;
+  padding-top: 0.3rem;
+  opacity: 0.3;
+  cursor: pointer;
 }
 #top-block .people .person-row .col7 .avatar {
   width: 2rem;
@@ -784,8 +792,14 @@ ul {
   font-size: 12px;
 }
 
+#top-block .people .person-row {
+  overflow: hidden;
+}
 #top-block .people .person-row .draw-area .tasks {
   display: none;
+}
+#top-block .people .person-row.expand {
+  overflow: auto;
 }
 #top-block .people .person-row.expand .draw-area .tasks {
   display: block;
