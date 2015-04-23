@@ -17,6 +17,9 @@ TaskView = require('../view1/models/TaskView')
 
 ngModule.controller 'View2', ['$scope', 'View2', (($scope, View2) ->
   $scope.view = new View2 $scope, 'view2'
+  $scope.tasksHeight = ((row)->
+    return '' if !row.expand || _.isEmpty row.tasks
+    return "height:#{52 * _.max(row.tasks, 'y').y + 100}px")
   return)]
 
 ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', ((View1, DSView, $rootScope, $log) ->
@@ -25,12 +28,13 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', ((View1, DSV
     @begin 'View2'
 
     @propData 'tasksOverdue', Task, {filter: 'overdue'}
-    @propData 'tasksNotassigned', Task, {filter: 'notassigned'}
+    @propData 'tasksNotAssigned', Task, {filter: 'notassigned'}
 
     @propList 'tasksOverdue', Task
 
     @propPool 'poolTasksNotassignedViews', TaskView
-    @propList 'tasksNotassigned', TaskView
+    @propList 'tasksNotAssigned', TaskView
+    @propNum  'tasksNotAssignedHeight', 0
 
     constructor: (($scope, key) ->
       DSView.call @, $scope, key
@@ -52,16 +56,17 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', ((View1, DSV
         tasksOverdue.sort((left, right) -> if (l = left.get('duedate').valueOf()) == (r = right.get('duedate').valueOf()) then 0 else r - l)
         @get('tasksOverdueList').merge @, tasksOverdue
 
-      if !((status = @get('data').get('tasksNotassignedStatus')) == 'ready' || status == 'update')
-        @get('tasksNotassignedList').merge @, []
+      if !((status = @get('data').get('tasksNotAssignedStatus')) == 'ready' || status == 'update')
+        @get('tasksNotAssignedList').merge @, []
+        @set 'tasksNotAssignedHeight', 0
       else
         poolTasksNotassignedViews = @get('poolTasksNotassignedViews')
-        tasksNotassigned = @get('tasksNotassignedList').merge @, _.map @get('data').get('tasksNotassigned'), ((task) =>
+        tasksNotAssigned = @get('tasksNotAssignedList').merge @, _.map @get('data').get('tasksNotAssigned'), ((task) =>
           taskView = poolTasksNotassignedViews.find @, task.$ds_key
           taskView.set 'task', task
           return taskView)
 
-        View1.layoutTaskView startDate, tasksNotassigned
+        @set 'tasksNotAssignedHeight', View1.layoutTaskView startDate, tasksNotAssigned
 
       return)
 

@@ -1,0 +1,100 @@
+#sidebar
+  @include absolute-pos($header-height, 0, null, null)
+  background: $color-bg
+  border-left: 1px solid darken($color-header-dark, 5%)
+
+  .sub-header
+    .tabs
+      list-style: none
+      padding-left: 0
+      padding-top: 10px
+      line-height: $header-height - 10
+      margin: 0 10px
+      font-size: 12px
+      &>li
+        height: 30px
+        float: left
+        border-top-left-radius: 4px
+        border-top-right-radius: 4px
+        margin-right: 3px
+        padding: 0 14px
+        cursor: pointer
+        background: #828282
+        color: #B0B0B0
+        overflow: hidden
+        text-overflow: ellipsis
+        &.active
+          background: $color-bg
+          color: #000000
+    &.narrow
+      .tabs > li
+        width: auto
+        font-size: 8px
+        &.active
+          width: auto
+
+  table.project
+    td
+      line-height: 24px
+  table.todo-list
+    td
+      line-height: 24px
+
+  .content-block
+    position: relative
+    font-size: 12px
+    overflow: hidden
+    padding-top: 15px
+    h3, h4
+      margin: 0
+      @include break
+    .tasks-block
+      padding-left: 24px
+      li
+        padding-bottom: 15px
+        table
+          td
+            vertical-align: top
+            text-align: left
+            h3
+              padding-left: 5px
+    //i
+    //  display: inline-block
+    //h3
+    //  display: inline-block
+    //  padding-left: 5px
+    .task-list
+      padding-left: 20px
+      padding-bottom: 10px
+      .task-list-title
+        cursor: pointer
+        i
+          display: inline-block
+        h4
+          display: inline-block
+          padding-left: 5px
+    .task-list-items
+      padding-left: 20px
+      margin-left: 1rem
+      width: 100%
+      table-layout: fixed
+      .col
+        line-height: 13px
+      .col1
+        width: 50%
+        div
+          overflow: hidden
+          height: 20px
+          width: auto
+          margin-bottom: 2px
+          font-size: 11px
+          line-height: 20px
+          text-overflow: ellipsis
+          background: $color-task-blue
+          border-radius: 5px
+          border: 1px solid darken($color-task-blue, 10%)
+          padding: 2px 6px
+      .col2
+        width: 2rem
+        text-align: center
+        line-height: 19px

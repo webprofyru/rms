@@ -1,77 +1,97 @@
 include ../../tasks/task.jade
 
-div(ng-controller='View1')#content
-    #top-block
-        .header
-            h3 People
-            .selector.speciality(ng-if='config.hasRoles', ng-class="{demo:demo1}")
-                span Speciality:
-                ui-select(ng-model='$parent.$parent.selectedRole', theme='selectize', ng-disabled='disabled', title='Choose a person').ui-select
-                    ui-select-match(placeholder='Select role...') {{$select.selected.name}}
-                    ui-select-choices(repeat='role in peopleRoles | filter: {name: $select.search}')
-                        div(ng-bind-html='role.name | highlight: $select.search')
-            .selector.contract(ng-if='config.hasRoles', ng-class="{demo:demo2}")
-                span Contract:
-                ui-select(ng-model='$parent.$parent.selectedCompany', theme='selectize', ng-disabled='disabled', title='Choose a person').ui-select
-                    ui-select-match(placeholder='Select company...') {{$select.selected.name}}
-                    ui-select-choices(repeat='role in filterCompanies | filter: {name: $select.search}')
-                        div(ng-bind-html='role.name | highlight: $select.search')
-            .selector.workload(ng-if='config.hasRoles', ng-class="{demo:demo3}")
-                span By workload:
-                ui-select(ng-model='$parent.$parent.selectedLoad', theme='selectize', ng-disabled='disabled', title='Choose a person').ui-select
-                    ui-select-match(placeholder='Select load...') {{$select.selected.name}}
-                    ui-select-choices(repeat='role in filterLoad | filter: {name: $select.search}')
-                        div(ng-bind-html='role.name | highlight: $select.search')
-        div(ng-if="view.dataStatus == 'load'").load-spinner
-            .spinner
-                .dot1
-                .dot2
-        .sub-header(ng-if="view.dataStatus == 'ready' || view.dataStatus == 'update'")
-            .col7(ng-class="{demo:demo4}")
-                div(ng-if='view.hiddenPeopleCount > 0').unhide
-                    span(ng-click='view.unhideAll(); $event.preventDefault()').action Unhide
-                    span {{view.hiddenPeopleCount + (view.hiddenPeopleCount == 1 ? ' person' : ' people')}}
-                //.input-wrapper(ng-if='config.hasRoles')
-                //    input(type='text' ng-init='demo4=false' ng-focus='demo4=true' ng-blur='demo4=false')
-                //            i.fa.fa-search
-                //            span.demo-msg not working
-            .col1
-                button.btn(ng-click='view.periodChange(-1)')
-                    i.fa.fa-caret-left
-            .col3(ng-repeat='day in view.days')
-                strong(ng-bind-html='filter.calendarHeader(day, "date")')
-                small(ng-bind-html='filter.taskPeriod(day, "workTime")')
-            .col1
-                button.btn(ng-click='view.periodChange(1)')
-                    i.fa.fa-caret-right
-        .people.hide-scroll(ng-if="view.dataStatus == 'ready' || view.dataStatus == 'update'"): .scroll-viewport
-            .vertical-lines
-                - var n = 1
-                while n <= 9
-                    .col(class="col" + n++)
-            ul
-                li.person-row(ng-repeat='row in view.rows', ng-class='{expand:row.expand}', rms-view1-drop-task='', style="{{expandHeight(row)}}")
-                    .col7.drop-zone(data-day='-1')
-                        img(src='./images/icons/eye46.svg', ng-click='view.hideRow(row)').hide
-                        img.avatar(ng-src='{{row.person.avatar}}', alt='')
-                        .name {{row.person.name}}
-                        .expand-icon(ng-click='row.expand =! row.expand')
-                            i.fa.fa-caret-down(ng-if='!row.expand')
-                            i.fa.fa-caret-up(ng-if='row.expand')
-                    .col1.drop-zone(data-day='-1')
-                        strong {{filter.taskPeriod(row.personDayStat, 'totalPeriodTime')}}
-                    .draw-area
-                        .block.drop-zone(ng-repeat="dayStat in row.personDayStat.dayStats", class="col{{$index}}" data-day='{{$index}}')
-                            span(ng-if='dayStat.tasksCount>0').task-count {{dayStat.tasksCount}}
-                            div(class="block-wrapper {{taskSummaryColor(dayStat)}}" style="width:{{dayTaskWidth(dayStat)}}%")
-                                span {{filter.taskPeriod(dayStat, 'tasksTotal')}}
-                        div(style="{{expandHeight(row)}}").tasks
-                            ul
-                                li.task(ng-repeat='taskView in row.tasks' style="left: {{taskView.x*3/21*100}}%; top:{{taskView.y*55}}px; width: {{taskView.len*3/21*100}}%")
-                                    +task('taskView.task')
-    include ../view2/view2.jade
-    .handler.handler-horiz(resizer='')
-        i.fa.fa-caret-down
-        i.fa.fa-caret-up
+#container(ng-controller='View1')
+    .header(ng-if='!config.hasRoles')
+        h3 People
+        include ../../actions.jade
+
+    table.header(ng-if='config.hasRoles' ui-layout-header=''): tr
+        td(valign='top').text: h3 People
+        td.filters(ui-layout-header-filters='')
+            span.speciality Speciality:
+            ui-select.speciality(ng-model='$parent.$parent.selectedRole', theme='selectize', ng-disabled='disabled', title='Choose a person').ui-select
+                ui-select-match(placeholder='Select role...') {{$select.selected.name}}
+                ui-select-choices(repeat='role in peopleRoles | filter: {name: $select.search}')
+                    div(ng-bind-html='role.name | highlight: $select.search')
+            span.contract Contract:
+            ui-select.contract(ng-model='$parent.$parent.selectedCompany', theme='selectize', ng-disabled='disabled', title='Choose a person').ui-select
+                ui-select-match(placeholder='Select company...') {{$select.selected.name}}
+                ui-select-choices(repeat='role in filterCompanies | filter: {name: $select.search}')
+                    div(ng-bind-html='role.name | highlight: $select.search')
+            span.workload By workload:
+            ui-select.workload(ng-model='$parent.$parent.selectedLoad', theme='selectize', ng-disabled='disabled', title='Choose a person').ui-select
+                ui-select-match(placeholder='Select load...') {{$select.selected.name}}
+                ui-select-choices(repeat='role in filterLoad | filter: {name: $select.search}')
+                    div(ng-bind-html='role.name | highlight: $select.search')
+        td(valign='top').actions
+            include ../../actions.jade
+    div(style='width:{{layout.area1.width}}px;height:{{layout.height}}px')
+        #top-block(style='width:{{layout.area1.width}}px;height:{{layout.area1.height}}px')
+            div(ng-if="view.dataStatus == 'load' || view.dataStatus == 'update'").load-spinner
+                .spinner
+                    .dot1
+                    .dot2
+            .sub-header(ng-if="view.dataStatus == 'ready' || view.dataStatus == 'update'")
+                .left-space
+                    div(ng-if='view.hiddenPeopleCount > 0').unhide
+                        span(ng-click='view.unhideAll(); $event.preventDefault()').action Unhide
+                        span {{view.hiddenPeopleCount + (view.hiddenPeopleCount == 1 ? ' person' : ' people')}}
+                    //.input-wrapper(ng-if='config.hasRoles')
+                    //    input(type='text' ng-init='demo4=false' ng-focus='demo4=true' ng-blur='demo4=false')
+                    //            i.fa.fa-search
+                    //            span.demo-msg not working
+                .prev-next-week
+                    button.btn(ng-click='view.periodChange(-1)')
+                        i.fa.fa-caret-left
+                .day(ng-repeat='day in view.days')
+                    strong(ng-bind-html='filter.calendarHeader(day, "date")')
+                    small(ng-bind-html='filter.taskPeriod(day, "workTime")')
+                .prev-next-week
+                    button.btn(ng-click='view.periodChange(1)')
+                        i.fa.fa-caret-right
+            .people(ng-if="view.dataStatus == 'ready' || view.dataStatus == 'update'")
+                .scroll-viewport(style='height:{{layout.area1.height}}px')
+                    .scroll-body
+                        .vertical-lines
+                            - var n = 1
+                            while n <= 9
+                                .col(class="col" + n++)
+                        ul.people-table
+                            li.person-row.drop-zone(data-day='-1', ng-repeat='row in view.rows', ng-class='{expand:row.expand}', rms-view1-drop-task='', style="{{expandedHeight(row)}}")
+                                .person-info
+                                    table
+                                        tbody
+                                            tr
+                                                td.hide
+                                                    img(src='./images/icons/eye46.svg', ng-click='view.hideRow(row)').hide
+                                                td.avatar
+                                                    img.avatar(ng-src='{{row.person.avatar}}', alt='')
+                                                td.name {{row.person.name}}
+                                                td.expand
+                                                    .expand-icon(ng-click='row.expand =! row.expand')
+                                                        i.fa.fa-caret-down(ng-if='!row.expand')
+                                                        i.fa.fa-caret-up(ng-if='row.expand')
+                                .estimate
+                                    strong {{filter.taskPeriod(row.personDayStat, 'totalPeriodTime')}}
+                                .total.drop-zone(ng-repeat="dayStat in row.personDayStat.dayStats", class="day{{$index}}" data-day='{{$index}}')
+                                    span(ng-if='dayStat.tasksCount>0').task-count {{dayStat.tasksCount}}
+                                    .loaded(class="{{taskSummaryColor(dayStat)}}" style="width:{{dayTaskWidth(dayStat)}}%")
+                                        span {{filter.taskPeriod(dayStat, 'tasksTotal')}}
+                                .tasks(ng-show='row.expand', style="{{expandedHeight(row)}}")
+                                    ul
+                                        li.task(ng-repeat='taskView in row.tasks' style="left:{{((3 * taskView.x + 8) * (100/30)).toFixed(5)}}%;top:{{Math.round(taskView.y*55)}}px;width:{{((taskView.len * 3 - 0.2) * (100/30)).toFixed(5)}}%")
+                                            +task('taskView.task')
+
+        .handler.handler-horiz(ui-layout-resizer='horizontal', style='left:{{Math.round(layout.area1.width / 2 - 22.5)}}px;top:{{Math.round(layout.area1.height - 7.5) + 40}}px')
+            i.fa.fa-caret-down
+            i.fa.fa-caret-up
+
+        include ../view2/view2.jade
+
+    .handler.handler-vertical(ui-layout-resizer='vertical', style='left:{{Math.round(layout.area1.width - 7.5)}}px;top:{{40 + Math.round(layout.area1.height / 2 - 22.5)}}px')
+        i.fa.fa-caret-left
+        i.fa.fa-caret-right
+
+    include ../view3/view3.jade
 
 

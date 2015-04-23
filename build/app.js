@@ -54,6 +54,10 @@ ngModule.factory('config', [
         return this.teamwork === 'http://teamwork.webprofy.ru/';
       }));
 
+      Config.propNum('hResizer');
+
+      Config.propNum('vResizer');
+
       Config.onAnyPropChange((function(item, propName, newVal, oldVal) {
         if (typeof newVal !== 'undefined') {
           localStorageService.set(propName, newVal);
@@ -816,7 +820,7 @@ ngModule.factory('dsChanges', [
         this.get('source').httpPost("projects/" + (project.get('id')) + "/people/" + (person.get('id')) + ".json", null, this.set('cancel', $q.defer())).then(((function(_this) {
           return function(resp) {
             _this.set('cancel', null);
-            if (resp.status === 200) {
+            if (resp.status === 200 || resp.status === 409) {
               project.get('people')[person.get('id')] = true;
               nextAction();
             }
@@ -1133,7 +1137,7 @@ ngModule.factory('TWPeople', [
 
 
 },{"../../dscommon/DSDataSimple":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDataSimple.coffee","../../dscommon/DSDataSource":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDataSource.coffee","../../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","../../models/Person":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Person.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\data\\teamwork\\TWTasks.coffee":[function(require,module,exports){
-var DSData, DSDigest, Person, Project, RMSData, Task, TaskSplit, TodoList, assert, error, ngModule,
+var DSData, DSDigest, Person, Project, RMSData, Task, TaskSplit, TodoList, assert, error, ngModule, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -1142,6 +1146,8 @@ module.exports = (ngModule = angular.module('data/teamwork/TWTasks', [require('.
 assert = require('../../dscommon/util').assert;
 
 error = require('../../dscommon/util').error;
+
+time = require('../../ui/time');
 
 Task = require('../../models/Task');
 
@@ -1228,7 +1234,7 @@ ngModule.factory('TWTasks', [
           case 'overdue':
             return function(task) {
               var date;
-              return (date = task.get('duedate')) !== null && date < moment().startOf('day');
+              return (date = task.get('duedate')) !== null && date < time.today;
             };
           case 'noduedate':
             return function(task) {
@@ -1411,7 +1417,7 @@ ngModule.factory('TWTasks', [
 
 
 
-},{"../../dscommon/DSData":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSData.coffee","../../dscommon/DSDataSimple":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDataSimple.coffee","../../dscommon/DSDataSource":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDataSource.coffee","../../dscommon/DSDigest":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDigest.coffee","../../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","../../models/Person":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Person.coffee","../../models/Project":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Project.coffee","../../models/Task":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Task.coffee","../../models/TodoList":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\TodoList.coffee","../../models/types/TaskSplit":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\types\\TaskSplit.coffee","../../utils/RMSData":"C:\\SVN\\_WebProfyManagement\\src\\app\\utils\\RMSData.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSChangesBase.coffee":[function(require,module,exports){
+},{"../../dscommon/DSData":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSData.coffee","../../dscommon/DSDataSimple":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDataSimple.coffee","../../dscommon/DSDataSource":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDataSource.coffee","../../dscommon/DSDigest":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDigest.coffee","../../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","../../models/Person":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Person.coffee","../../models/Project":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Project.coffee","../../models/Task":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Task.coffee","../../models/TodoList":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\TodoList.coffee","../../models/types/TaskSplit":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\types\\TaskSplit.coffee","../../ui/time":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\time.coffee","../../utils/RMSData":"C:\\SVN\\_WebProfyManagement\\src\\app\\utils\\RMSData.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSChangesBase.coffee":[function(require,module,exports){
 var DSChangesBase, DSData, DSDocument, DSHistory, DSPool, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -5579,13 +5585,15 @@ module.exports = Project = (function(superClass) {
 
 
 },{"../dscommon/DSObject":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSObject.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Task.coffee":[function(require,module,exports){
-var DSDocument, Person, Project, Task, TaskSplit, TodoList, assert, error,
+var DSDocument, Person, Project, Task, TaskSplit, TodoList, assert, error, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
 assert = require('../dscommon/util').assert;
 
 error = require('../dscommon/util').error;
+
+time = require('../ui/time');
 
 DSDocument = require('../dscommon/DSDocument');
 
@@ -5664,6 +5672,11 @@ module.exports = Task = (function(superClass) {
 
   Task.propStr('description');
 
+  Task.prototype.isOverdue = (function() {
+    var duedate;
+    return (duedate = this.get('duedate')) !== null && duedate < time.today;
+  });
+
   Task.end();
 
   return Task;
@@ -5672,7 +5685,7 @@ module.exports = Task = (function(superClass) {
 
 
 
-},{"../dscommon/DSDocument":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDocument.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","./Person":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Person.coffee","./Project":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Project.coffee","./TodoList":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\TodoList.coffee","./types/TaskSplit":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\types\\TaskSplit.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\TodoList.coffee":[function(require,module,exports){
+},{"../dscommon/DSDocument":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDocument.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","../ui/time":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\time.coffee","./Person":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Person.coffee","./Project":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Project.coffee","./TodoList":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\TodoList.coffee","./types/TaskSplit":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\types\\TaskSplit.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\TodoList.coffee":[function(require,module,exports){
 var DSObject, Project, TodoList, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -6049,6 +6062,7 @@ module.exports = (ngModule = angular.module('app', ['ui.router', 'ui.select', 'L
 
 ngModule.run([
   'config', '$rootScope', (function(config, $rootScope) {
+    $rootScope.Math = Math;
     $rootScope.taskModal = {};
   })
 ]);
@@ -6405,176 +6419,158 @@ ngModule.run([
 
 
 
-},{"../dscommon/DSObject":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSObject.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\layout\\layout-factory.coffee":[function(require,module,exports){
-var ngModule;
+},{"../dscommon/DSObject":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSObject.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\layout.coffee":[function(require,module,exports){
+var DOMWrapper, actionsMinWidth, actionsWidth, area1MinHeight, area1MinWidth, area2MinHeight, area3MinWidth, assert, error, headerHeight, ngModule, windowMinHeight, windowMinWidth;
 
-module.exports = (ngModule = angular.module('ui-layout', [])).name;
+assert = require('../dscommon/util').assert;
 
-ngModule.factory('uiLayout', [
-  (function() {
-    var uiLayout;
-    uiLayout = {
-      height: function() {
-        return $(window).height();
-      },
-      width: function() {
-        return $(window).width();
-      },
-      content: $('#main-wrapper').find('#content'),
-      sidebar: $('#main-wrapper').find('#sidebar'),
-      sidebarWidth: function() {
-        return $('#main-wrapper').find('#sidebar').width();
-      },
-      topBlock: $('#main-wrapper #content').find('#top-block'),
-      bottomBlock: $('#main-wrapper #content').find('#bottom-block'),
-      peopleBlock: $('#main-wrapper').find('.people'),
-      handlerH: $('#main-wrapper #content').find('.handler-horiz'),
-      handlerV: $('#main-wrapper').find('.handler-vertical'),
-      fixContentHeight: (function() {
-        $('#main-wrapper').css({
-          width: this.width()
-        }).css({
-          height: this.height()
+error = require('../dscommon/util').error;
+
+module.exports = (ngModule = angular.module('ui/layout', [])).name;
+
+area1MinHeight = 140;
+
+area1MinWidth = 730;
+
+area2MinHeight = 10;
+
+area3MinWidth = 10;
+
+windowMinWidth = 900;
+
+windowMinHeight = area1MinHeight + area3MinWidth;
+
+headerHeight = 40;
+
+actionsWidth = 440;
+
+actionsMinWidth = 440;
+
+ngModule.directive("uiLayout", [
+  'config', '$window', '$rootScope', (function(config, $window, $rootScope) {
+    $window = $($window);
+    return {
+      restrict: 'A',
+      controller: (function($scope) {
+        var digest;
+        $scope.layout = this;
+        this.area1 = {};
+        this.area2 = {};
+        this.area3 = {};
+        this.width = $window.width();
+        this.area3.height = (this.height = $window.height() - headerHeight);
+        digest = (function() {
+          $rootScope.$digest();
+          $rootScope.$broadcast('layout-update');
         });
-        this.content.css({
-          height: this.height(),
-          width: this.width() * 0.62
+        (this.setVResizer = (function(v, noDigest) {
+          var w;
+          w = this.area1.width = this.area2.width = this.vResizer = Math.min(Math.max(Math.round(v), area1MinWidth), this.width - area3MinWidth);
+          this.area3.width = this.width - w;
+          config.set('vResizer', this.area1.width / this.width);
+          if (!noDigest) {
+            digest();
+          }
+        })).call(this, this.width * (config.get('vResizer') || 0.68), true);
+        (this.setHResizer = (function(v, noDigest) {
+          var h;
+          h = this.area1.height = this.hResizer = Math.min(Math.max(Math.round(v), area1MinHeight), this.height - area2MinHeight);
+          this.area2.height = this.height - h;
+          config.set('hResizer', this.area1.height / this.height);
+          if (!noDigest) {
+            digest();
+          }
+        })).call(this, this.height * (config.get('hResizer') || 0.68), true);
+        this.setSize = (function(width, height, noDigest) {
+          var change, oldHeight, oldWidth;
+          height -= headerHeight;
+          change = false;
+          if ((oldWidth = this.width) !== width) {
+            change = true;
+            this.setVResizer(this.vResizer * ((this.width = Math.max(width, windowMinWidth)) / oldWidth), true);
+          }
+          if ((oldHeight = this.height) !== height) {
+            change = true;
+            this.setHResizer(this.hResizer * ((this.height = Math.max(height, windowMinHeight)) / oldHeight), true);
+            this.area3.height = height;
+          }
+          if (change && !noDigest) {
+            digest();
+          }
         });
-        this.sidebar.css({
-          height: this.height(),
-          width: this.width() * 0.38
-        });
-        this.topBlock.css({
-          height: this.height() * 0.62
-        });
-        this.bottomBlock.css({
-          height: this.height() * 0.38
-        });
-        this.handlerH.css({
-          bottom: this.height() * 0.38 - this.handlerH.height() / 2,
-          left: this.content.width() / 2
-        });
-        this.handlerV.css({
-          right: this.width() * 0.38 - this.handlerV.width() / 2,
-          top: this.topBlock.height() / 2 - this.handlerV.height() / 2
-        });
-        this.bottomBlock.find('.task-grid').css({
-          height: (this.bottomBlock.innerHeight() - 50) + "px"
-        });
-        this.bottomBlock.find('.task-grid .col-not-assigned-tasks .tasks').css({
-          height: (this.bottomBlock.innerHeight() - 50) + "px"
-        });
-        this.sidebar.find('.tasks-block').css({
-          height: (this.height() - 100) + "px"
-        });
-        this.peopleBlock.css({
-          height: $('#top-block', '#main-wrapper #content').height() - $('#top-block .header').height() - $('#top-block .sub-header').height()
-        });
+      }),
+      link: (function($scope, element, attrs, uiLayout) {
+        var onResize;
+        $window.on('resize', onResize = (function() {
+          uiLayout.setSize($window.width(), $window.height());
+        }));
+        $scope.$on('$destroy', (function() {
+          $window.off('resize', onResize);
+        }));
       })
     };
-    return uiLayout;
   })
 ]);
 
-
-
-},{}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\layout\\resizer.coffee":[function(require,module,exports){
-var ngModule;
-
-module.exports = (ngModule = angular.module('ui-resizer', [])).name;
-
-ngModule.directive('resizer', [
-  '$document', 'uiLayout', (function($document, uiLayout) {
+ngModule.directive('uiLayoutResizer', [
+  '$document', (function($document) {
     return {
       restrict: 'A',
-      link: (function($scope, element, attrs) {
-        var actionBtnsChange, mousemove, mouseup;
-        element.on('mousedown', (function(event) {
+      require: '^uiLayout',
+      link: (function($scope, element, attrs, uiLayout) {
+        var isHorizontal, mousemove, mouseup, onMouseDown;
+        isHorizontal = attrs.uiLayoutResizer === 'horizontal';
+        element.on('mousedown', onMouseDown = (function(event) {
           event.preventDefault();
           $document.on('mousemove', mousemove);
           $document.on('mouseup', mouseup);
         }));
-        mousemove = (function(event) {
-          var handlerHeight, handlerWidth, x, y;
-          handlerHeight = $(element).height();
-          handlerWidth = $(element).width();
-          if (_.indexOf(attrs["class"].split(' '), 'handler-horiz') > 0) {
-            y = function() {
-              if (event.pageY > 200) {
-                return event.pageY;
-              } else {
-                return 200;
-              }
-            };
-            uiLayout.topBlock.css({
-              height: (y()) + "px"
-            });
-            uiLayout.bottomBlock.css({
-              height: (window.innerHeight - y()) + "px"
-            });
-            element.css({
-              bottom: (window.innerHeight - y() - handlerHeight / 2) + "px"
-            });
-            uiLayout.handlerV.css({
-              top: uiLayout.topBlock.height() / 2 - uiLayout.handlerV.height() / 2
-            });
-            uiLayout.bottomBlock.find('.task-grid').css({
-              height: (uiLayout.bottomBlock.innerHeight() - 50) + "px"
-            });
-            uiLayout.bottomBlock.find('.task-grid .col-not-assigned-tasks .tasks').css({
-              height: (uiLayout.bottomBlock.innerHeight() - 50) + "px"
-            });
-            uiLayout.peopleBlock.css({
-              height: $('#top-block', '#main-wrapper #content').height() - $('#top-block .header').height() - $('#top-block .sub-header').height()
-            });
-          } else {
-            x = function() {
-              if (event.pageX > 800 && (window.innerWidth - event.pageX) > 400) {
-                return event.pageX;
-              }
-              if (event.pageX < 800) {
-                return 800;
-              }
-              if ((window.innerWidth - event.pageX) < 400) {
-                return window.innerWidth - 400;
-              }
-            };
-            uiLayout.sidebar.css({
-              width: (window.innerWidth - x()) + 'px'
-            });
-            uiLayout.content.css({
-              width: x() + 'px'
-            });
-            element.css({
-              right: ((window.innerWidth - x()) - handlerWidth / 2) + 'px'
-            });
-            uiLayout.handlerH.css({
-              left: uiLayout.content.width() / 2 - uiLayout.handlerH.width() / 2
-            });
-            if (event.pageX < 900) {
-              uiLayout.topBlock.addClass('narrow');
-            } else {
-              uiLayout.topBlock.removeClass('narrow');
-            }
-            if ((window.innerWidth - event.pageX) < 500) {
-              uiLayout.sidebar.addClass('narrow');
-            } else {
-              uiLayout.sidebar.removeClass('narrow');
-            }
-            actionBtnsChange();
-          }
+        mousemove = isHorizontal ? (function(event) {
+          uiLayout.setHResizer(event.pageY - headerHeight);
+        }) : (function(event) {
+          uiLayout.setVResizer(event.pageX);
         });
         mouseup = (function(event) {
-          $document.unbind('mousemove', mousemove);
-          $document.unbind('mouseup', mouseup);
+          $document.off('mousemove', mousemove);
+          $document.off('mouseup', mouseup);
         });
-        actionBtnsChange = (function() {
-          if (uiLayout.sidebar.innerWidth() < 500) {
-            $('#sidebar .actions-buttons').addClass('short-version');
-          } else {
-            $('#sidebar .actions-buttons').removeClass('short-version');
-          }
-        });
+        $scope.$on('$destroy', (function() {
+          $document.off('mousedown', onMouseDown);
+          mouseup();
+        }));
+      })
+    };
+  })
+]);
+
+
+/* Header */
+
+DOMWrapper = (function() {
+  var class1;
+
+  function DOMWrapper() {
+    return class1.apply(this, arguments);
+  }
+
+  class1 = (function(DOMElement) {
+    this.elem = DOMElement;
+  });
+
+  DOMWrapper.prototype.innerHeight = (function() {
+    return this.elem.innerHeight();
+  });
+
+  return DOMWrapper;
+
+})();
+
+ngModule.directive('uiLayoutContainer', [
+  '$document', (function($document) {
+    return {
+      restrict: 'A',
+      link: (function($scope, element, attrs, uiLayoutContainer) {
+        $scope.uiContainer = new DOMWrapper(element);
       })
     };
   })
@@ -6582,7 +6578,7 @@ ngModule.directive('resizer', [
 
 
 
-},{}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\tasks\\TaskSplitWeekView.coffee":[function(require,module,exports){
+},{"../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\tasks\\TaskSplitWeekView.coffee":[function(require,module,exports){
 var DSObject, Person, PersonDayStat, Task, TaskSplit, assert, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -6898,11 +6894,13 @@ ngModule.directive('rmsSplitClass', [
 
 
 },{}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\tasks\\rmsTaskEdit.coffee":[function(require,module,exports){
-var DSDigest, Person, PersonDayStat, TaskSplit, assert, ngModule, splitViewWeeksCount;
+var DSDigest, Person, PersonDayStat, TaskSplit, assert, ngModule, splitViewWeeksCount, time;
 
 module.exports = (ngModule = angular.module('ui/tasks/rmsTaskEdit', [require('../../data/dsChanges'), require('../../data/dsDataService'), require('./TaskSplitWeekView')])).name;
 
 assert = require('../../dscommon/util').assert;
+
+time = require('../../ui/time');
 
 DSDigest = require('../../dscommon/DSDigest');
 
@@ -6920,7 +6918,7 @@ ngModule.directive('rmsTaskEdit', [
       restrict: 'A',
       scope: true,
       link: (function($scope, element, attrs) {
-        var close, duedate, edit, first, last, makeSplitView, modal, newTaskSplitWeekView, releaseSplitView, split, task, thisWeek, today, unwatchSplitLastDate, weeks;
+        var close, duedate, edit, first, last, makeSplitView, modal, newTaskSplitWeekView, releaseSplitView, split, task, thisWeek, unwatchSplitLastDate, weeks;
         modal = $rootScope.modal;
         $scope.edit = edit = {};
         unwatchSplitLastDate = null;
@@ -6971,7 +6969,11 @@ ngModule.directive('rmsTaskEdit', [
           return person;
         }));
         $scope.task = task = modal.task;
-        $scope.today = today = moment().startOf('day');
+        $scope.$watch((function() {
+          return time.today.valueOf();
+        }), (function() {
+          return $scope.today = time.today;
+        }));
         edit.title = task.get('title');
         edit.duedate = duedate = task.get('duedate');
         edit.estimate = task.get('estimate');
@@ -7125,7 +7127,7 @@ ngModule.directive('rmsTaskEdit', [
         return $scope.autoSplit = (function() {
           var d, e, initDuedate, initSplit, ref, ref1, reponsibleKey, splitWithinWeek;
           if (assert) {
-            if (!(edit.duedate !== null && today <= edit.duedate)) {
+            if (!(edit.duedate !== null && time.today <= edit.duedate)) {
               throw new Error("Invalid duedate: " + ((ref = edit.duedate) != null ? ref.format() : void 0));
             }
             if (!(edit.responsible !== null)) {
@@ -7157,7 +7159,7 @@ ngModule.directive('rmsTaskEdit', [
                 return;
               }
               dayStats = set.items[reponsibleKey].get('dayStats');
-              while (e > 0 && today <= d && weekStart <= d) {
+              while (e > 0 && time.today <= d && weekStart <= d) {
                 timeLeft = (dayStat = dayStats[moment.duration(d.diff(weekStart)).asDays()]).timeLeft;
                 if (initSplit !== null) {
                   if ((initPlan = initSplit.get(initDuedate, d)) !== null) {
@@ -7172,7 +7174,7 @@ ngModule.directive('rmsTaskEdit', [
               }
               unwatch();
               delete $scope._unwatch;
-              if (e > 0 && today <= d) {
+              if (e > 0 && time.today <= d) {
                 d.subtract(2, 'days');
                 splitWithinWeek();
               } else {
@@ -7190,7 +7192,7 @@ ngModule.directive('rmsTaskEdit', [
 
 
 
-},{"../../data/dsChanges":"C:\\SVN\\_WebProfyManagement\\src\\app\\data\\dsChanges.coffee","../../data/dsDataService":"C:\\SVN\\_WebProfyManagement\\src\\app\\data\\dsDataService.coffee","../../dscommon/DSDigest":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDigest.coffee","../../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","../../models/Person":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Person.coffee","../../models/PersonDayStat":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\PersonDayStat.coffee","../../models/types/TaskSplit":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\types\\TaskSplit.coffee","./TaskSplitWeekView":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\tasks\\TaskSplitWeekView.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\tasks\\rmsTaskInfo.coffee":[function(require,module,exports){
+},{"../../data/dsChanges":"C:\\SVN\\_WebProfyManagement\\src\\app\\data\\dsChanges.coffee","../../data/dsDataService":"C:\\SVN\\_WebProfyManagement\\src\\app\\data\\dsDataService.coffee","../../dscommon/DSDigest":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDigest.coffee","../../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","../../models/Person":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Person.coffee","../../models/PersonDayStat":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\PersonDayStat.coffee","../../models/types/TaskSplit":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\types\\TaskSplit.coffee","../../ui/time":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\time.coffee","./TaskSplitWeekView":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\tasks\\TaskSplitWeekView.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\tasks\\rmsTaskInfo.coffee":[function(require,module,exports){
 var DSObject, assert, error, ngModule;
 
 module.exports = (ngModule = angular.module('ui/tasks/rmsTaskInfo', [])).name;
@@ -7242,7 +7244,23 @@ ngModule.directive('rmsTaskInfo', [
 
 
 
-},{"../../dscommon/DSObject":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSObject.coffee","../../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\ui.coffee":[function(require,module,exports){
+},{"../../dscommon/DSObject":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSObject.coffee","../../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\time.coffee":[function(require,module,exports){
+var time, updateToday;
+
+module.exports = time = {
+  today: moment().startOf('day')
+};
+
+updateToday = (function() {
+  setTimeout((function() {
+    time.today = moment().startOf('day');
+    updateToday();
+  }), 60000);
+})();
+
+
+
+},{}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\ui.coffee":[function(require,module,exports){
 var DSObjectBase, PersonDayStat, assert, error, ngModule, totalRelease, uiCtrl;
 
 assert = require('../dscommon/util').assert;
@@ -7255,7 +7273,7 @@ DSObjectBase = require('../dscommon/DSObjectBase');
 
 PersonDayStat = require('../models/PersonDayStat');
 
-module.exports = (ngModule = angular.module('ui/ui', ['ui.router', 'ngSanitize', require('./views/view1/View1'), require('./views/view2/View2'), require('./views/view3/View3'), require('./views/changes/ViewChanges'), require('./account/rmsAccount'), require('./widgets/widgetDate'), require('./widgets/widgetDuration'), require('./tasks/rmsTask'), require('./tasks/rmsTaskEdit'), require('./tasks/TaskSplitWeekView'), require('./tasks/rmsTaskInfo'), require('./filters'), require('./layout/resizer'), require('./layout/layout-factory')])).name;
+module.exports = (ngModule = angular.module('ui/ui', ['ui.router', 'ngSanitize', require('./views/view1/View1'), require('./views/view2/View2'), require('./views/view3/View3'), require('./views/changes/ViewChanges'), require('./account/rmsAccount'), require('./widgets/widgetDate'), require('./widgets/widgetDuration'), require('./tasks/rmsTask'), require('./tasks/rmsTaskEdit'), require('./tasks/TaskSplitWeekView'), require('./tasks/rmsTaskInfo'), require('./layout'), require('./filters')])).name;
 
 ngModule.config([
   '$urlRouterProvider', '$stateProvider', '$locationProvider', '$httpProvider', (function($urlRouterProvider, $stateProvider, $locationProvider, $httpProvider) {
@@ -7296,15 +7314,11 @@ if (totalRelease) {
 }
 
 uiCtrl = [
-  '$rootScope', '$scope', 'uiLayout', (function($rootScope, $scope, uiLayout) {
-    uiLayout.fixContentHeight();
+  '$rootScope', '$scope', (function($rootScope, $scope) {
     $scope.mode = 'edited';
     $scope.setMode = (function(mode) {
       $scope.mode = mode;
     });
-    $(window).resize((function() {
-      uiLayout.fixContentHeight();
-    }));
     $scope.sidebarTabs = {
       active: 0,
       clickSideBarTab: (function(i) {
@@ -7347,7 +7361,7 @@ uiCtrl = [
 
 
 
-},{"../dscommon/DSObjectBase":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSObjectBase.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","../models/PersonDayStat":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\PersonDayStat.coffee","./account/rmsAccount":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\account\\rmsAccount.coffee","./filters":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\filters.coffee","./layout/layout-factory":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\layout\\layout-factory.coffee","./layout/resizer":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\layout\\resizer.coffee","./tasks/TaskSplitWeekView":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\tasks\\TaskSplitWeekView.coffee","./tasks/rmsTask":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\tasks\\rmsTask.coffee","./tasks/rmsTaskEdit":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\tasks\\rmsTaskEdit.coffee","./tasks/rmsTaskInfo":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\tasks\\rmsTaskInfo.coffee","./views/changes/ViewChanges":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\views\\changes\\ViewChanges.coffee","./views/view1/View1":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\views\\view1\\View1.coffee","./views/view2/View2":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\views\\view2\\View2.coffee","./views/view3/View3":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\views\\view3\\View3.coffee","./widgets/widgetDate":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\widgets\\widgetDate.coffee","./widgets/widgetDuration":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\widgets\\widgetDuration.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\views\\changes\\ViewChanges.coffee":[function(require,module,exports){
+},{"../dscommon/DSObjectBase":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSObjectBase.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","../models/PersonDayStat":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\PersonDayStat.coffee","./account/rmsAccount":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\account\\rmsAccount.coffee","./filters":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\filters.coffee","./layout":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\layout.coffee","./tasks/TaskSplitWeekView":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\tasks\\TaskSplitWeekView.coffee","./tasks/rmsTask":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\tasks\\rmsTask.coffee","./tasks/rmsTaskEdit":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\tasks\\rmsTaskEdit.coffee","./tasks/rmsTaskInfo":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\tasks\\rmsTaskInfo.coffee","./views/changes/ViewChanges":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\views\\changes\\ViewChanges.coffee","./views/view1/View1":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\views\\view1\\View1.coffee","./views/view2/View2":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\views\\view2\\View2.coffee","./views/view3/View3":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\views\\view3\\View3.coffee","./widgets/widgetDate":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\widgets\\widgetDate.coffee","./widgets/widgetDuration":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\widgets\\widgetDuration.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\views\\changes\\ViewChanges.coffee":[function(require,module,exports){
 var Change, DSObject, Person, Task, assert, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7541,20 +7555,18 @@ TaskView = require('./models/TaskView');
 
 ngModule.controller('View1', [
   '$scope', 'View1', '$rootScope', (function($scope, View1, $rootScope) {
-    $rootScope.view1 = $scope.view = new View1($scope, 'view1');
+    $scope.view = new View1($scope, 'view1');
     $scope.$on('$destroy', (function() {
       delete $rootScope.view1;
     }));
-    $scope.expandHeight = (function(row) {
-      var height, task;
-      height = '';
-      if (row.expand && !_.isEmpty(row.tasks)) {
-        task = _.max(row.tasks, 'y');
-        if (task.y > 0) {
-          height = 'height: ' + (52 * task.y + 110) + 'px';
-        }
+    $scope.expandedHeight = (function(row) {
+      if (!row.expand) {
+        return '';
       }
-      return height;
+      if (_.isEmpty(row.tasks)) {
+        return "height:100px";
+      }
+      return "height:" + (52 * _.max(row.tasks, 'y').y + 100) + "px";
     });
   })
 ]);
@@ -7874,10 +7886,12 @@ ngModule.factory('View1', [
             dpos[y] = true;
           }
         }
+        return y;
       });
 
       View1.layoutTaskView = (function(startDate, taskViews) {
-        var d, day, groupDates, i, j, len1, pos, t, taskStartDate, tasksByDay, tasksForTheDay;
+        var d, day, groupDates, i, j, len1, maxY, pos, t, taskStartDate, tasksByDay, tasksForTheDay;
+        maxY = 0;
         if (!_.some(taskViews, (function(taskView) {
           return taskView.get('task').get('split');
         }))) {
@@ -7892,7 +7906,7 @@ ngModule.factory('View1', [
             }));
             _.forEach(taskViews, (function(task, i) {
               task.set('x', x);
-              task.set('y', i);
+              maxY = Math.max(maxY, task.set('y', i));
               task.set('len', 1);
               task.set('split', null);
             }));
@@ -7928,10 +7942,11 @@ ngModule.factory('View1', [
               taskStartDate = startDate;
             }
             _.forEach(tasksForTheDay, (function(taskView) {
-              positionTaskView(pos, taskView, taskStartDate, day);
+              maxY = Math.max(maxY, positionTaskView(pos, taskView, taskStartDate, day));
             }));
           }
         }
+        return maxY;
       });
 
       View1.end();
@@ -7952,21 +7967,12 @@ ngModule.directive('rmsView1DropTask', [
           return false;
         }));
         element.on('drop', (function(e) {
-          var day, elArr, i, task;
-          elArr = $(element).find('.drop-zone');
-          i = _.findIndex(elArr, (function(value) {
-            return $(value).offset().left > e.originalEvent.clientX;
+          var day, task;
+          day = _.findIndex($('.drop-zone', element), (function(value) {
+            var $v;
+            $v = $(value);
+            return $v.offset().left + $v.width() >= e.originalEvent.clientX;
           }));
-          day = (function() {
-            switch (false) {
-              case !(i < 0):
-                return $(_.last(elArr)).attr("data-day");
-              case !(i < 3):
-                return day = -1;
-              default:
-                return $(elArr[i - 1]).attr("data-day");
-            }
-          })();
           if (day < 0) {
             (task = $rootScope.modal.task).set('responsible', $scope.row.get('person'));
           } else {
@@ -8123,6 +8129,12 @@ TaskView = require('../view1/models/TaskView');
 ngModule.controller('View2', [
   '$scope', 'View2', (function($scope, View2) {
     $scope.view = new View2($scope, 'view2');
+    $scope.tasksHeight = (function(row) {
+      if (!row.expand || _.isEmpty(row.tasks)) {
+        return '';
+      }
+      return "height:" + (52 * _.max(row.tasks, 'y').y + 100) + "px";
+    });
   })
 ]);
 
@@ -8144,7 +8156,7 @@ ngModule.factory('View2', [
         filter: 'overdue'
       });
 
-      View2.propData('tasksNotassigned', Task, {
+      View2.propData('tasksNotAssigned', Task, {
         filter: 'notassigned'
       });
 
@@ -8152,7 +8164,9 @@ ngModule.factory('View2', [
 
       View2.propPool('poolTasksNotassignedViews', TaskView);
 
-      View2.propList('tasksNotassigned', TaskView);
+      View2.propList('tasksNotAssigned', TaskView);
+
+      View2.propNum('tasksNotAssignedHeight', 0);
 
       class1 = (function($scope, key) {
         DSView.call(this, $scope, key);
@@ -8173,7 +8187,7 @@ ngModule.factory('View2', [
       });
 
       View2.prototype.render = (function() {
-        var poolTasksNotassignedViews, startDate, status, tasksNotassigned, tasksOverdue;
+        var poolTasksNotassignedViews, startDate, status, tasksNotAssigned, tasksOverdue;
         startDate = this.__scope.$parent.view.startDate;
         if (!((status = this.get('data').get('tasksOverdueStatus')) === 'ready' || status === 'update')) {
           this.get('tasksOverdueList').merge(this, []);
@@ -8194,11 +8208,12 @@ ngModule.factory('View2', [
           });
           this.get('tasksOverdueList').merge(this, tasksOverdue);
         }
-        if (!((status = this.get('data').get('tasksNotassignedStatus')) === 'ready' || status === 'update')) {
-          this.get('tasksNotassignedList').merge(this, []);
+        if (!((status = this.get('data').get('tasksNotAssignedStatus')) === 'ready' || status === 'update')) {
+          this.get('tasksNotAssignedList').merge(this, []);
+          this.set('tasksNotAssignedHeight', 0);
         } else {
           poolTasksNotassignedViews = this.get('poolTasksNotassignedViews');
-          tasksNotassigned = this.get('tasksNotassignedList').merge(this, _.map(this.get('data').get('tasksNotassigned'), ((function(_this) {
+          tasksNotAssigned = this.get('tasksNotAssignedList').merge(this, _.map(this.get('data').get('tasksNotAssigned'), ((function(_this) {
             return function(task) {
               var taskView;
               taskView = poolTasksNotassignedViews.find(_this, task.$ds_key);
@@ -8206,7 +8221,7 @@ ngModule.factory('View2', [
               return taskView;
             };
           })(this))));
-          View1.layoutTaskView(startDate, tasksNotassigned);
+          this.set('tasksNotAssignedHeight', View1.layoutTaskView(startDate, tasksNotAssigned));
         }
       });
 
@@ -8301,7 +8316,7 @@ ngModule.factory('View3', [
         this.expandedProj = {};
         $scope.$watch((function() {
           var ref;
-          return [$scope.mode, (ref = $scope.view1) != null ? ref.startDate.valueOf() : void 0, $scope.sidebarTabs.active];
+          return [$scope.mode, (ref = $scope.$parent.view.startDate) != null ? ref.valueOf() : void 0, $scope.sidebarTabs.active];
         }), ((function(_this) {
           return function(args) {
             var active, mode, nextWeekEndDate, nextWeekStartDate, startDateVal;

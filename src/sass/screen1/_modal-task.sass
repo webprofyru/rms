@@ -1,0 +1,118 @@
+#modal-task
+  @extend %modal-task
+  display: inline-table
+  top: 20%
+  left: 50%
+  -webkit-transform: translate(-50%, 0)
+  -moz-transform: translate(-50%, 0)
+  transform: translate(-50%, 0)
+  .task-modal-link
+    float: left
+  .task-modal-close
+    float: right
+  .task-modal-wrapper-main
+    width: 30rem
+    display: inline-block
+    .task-modal-row
+      margin-bottom: 10px
+      overflow: auto
+      @include layout(13 no-gutters)
+      &.overflow-visible
+        overflow: visible
+      .task-modal-row-title
+        @include span(3)
+        text-align: right
+        padding-right: 1rem
+      .task-modal-row-value
+        @include span(10)
+      .task-modal-title
+        width: 60%
+      .task-modal-estimate-hours
+        width: 2.3rem
+      .task-modal-estimate-minutes
+        width: 2.3rem
+        margin-left: 1rem
+      .task-modal-estimate-duration
+        padding-left: 0.2rem
+      .task-modal-duedate
+        width: 8rem
+      .task-modal-person
+        display: inline-block
+        float: left
+        width: 9rem
+      .task-modal-icon-link
+        vertical-align: middle
+        margin-top: -7px
+        padding-left: 0.5rem
+        height: 15px
+        opacity: 0.5
+        &:hover
+          opacity: 0.3
+      .task-modal-icon-recycling
+        margin-left: 0.5rem
+        cursor: pointer
+        &:hover
+          opacity: 0.5
+        &.icon-after-select
+          display: block
+          float: left
+          margin-top: 5px
+  .task-modal-wrapper-split
+    display: inline-block
+    vertical-align: top
+    table
+      margin-bottom: 1.5rem
+      th
+        text-align: left
+        padding-bottom: 10px
+      td
+        width: 5.4rem
+        padding: 4px
+        &:first-child
+          width: 2rem
+        &.warn
+          background-color: #D3724F
+        &.select
+          background-color: rgb(132, 211, 79)
+        .task-split-estimate-wrapper
+          input
+            width: 25%
+            text-align: right
+            &.task-modal-estimate-minutes
+              margin-left: 8px
+      tr.row-total-time
+        td
+          font-size: 0.7rem
+          padding: 0 4px
+          line-height: 1
+          text-align: center
+    .table-icon-arrow
+      text-align: center
+      img
+        width: 1.4rem
+        cursor: pointer
+        opacity: 0.5
+        &:hover
+          opacity: 0.3
+
+  input
+    padding: 2px 6px
+    border-radius: 3px
+    border: none
+
+  a
+    text-decoration: none
+
+  .btn-group
+    .right
+      float: right
+
+  .splitDiff
+    padding-left: 1rem
+    color: yellow
+
+  .btn.auto-split
+    padding: 0px 7px
+    font-size: 0.8rem
+    line-height: 1.5
+    margin-left: 1rem

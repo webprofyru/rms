@@ -1,14 +1,11 @@
-include ./views/view1/view1.jade
-include ./views/view3/view3.jade
+#screen1(ui-layout='', style='width:{{layout.width}}px;height:{{layout.height + 40}}px')
 
-.handler.handler-vertical(resizer='')
-    i.fa.fa-caret-left
-    i.fa.fa-caret-right
+    include ./views/view1/view1.jade
+
+    div(ng-switch='modal.type')
+        include ./tasks/taskEdit.jade
+        include ./tasks/taskInfo.jade
+        include ./tasks/taskDragGhost.jade
+        include ./views/changes/changes.jade
 
 include ./account/account.jade
-
-div(ng-switch='modal.type')
-    include ./tasks/taskEdit.jade
-    include ./tasks/taskInfo.jade
-    include ./tasks/taskDragGhost.jade
-    include ./views/changes/changes.jade

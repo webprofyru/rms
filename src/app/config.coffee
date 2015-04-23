@@ -28,6 +28,9 @@ ngModule.factory 'config',
       @propStr 'teamwork', 'http://teamwork.webprofy.ru/'
       @propCalc 'hasRoles', (-> @teamwork == 'http://teamwork.webprofy.ru/')
 
+      @propNum 'hResizer'
+      @propNum 'vResizer'
+
       @onAnyPropChange ((item, propName, newVal, oldVal) -> # save to local storage
         if typeof newVal != 'undefined'
           localStorageService.set propName, newVal

@@ -6,6 +6,8 @@ module.exports = (ngModule = angular.module 'data/teamwork/TWTasks', [
 assert = require('../../dscommon/util').assert
 error = require('../../dscommon/util').error
 
+time = require '../../ui/time'
+
 Task = require '../../models/Task'
 Person = require '../../models/Person'
 TodoList = require '../../models/TodoList'
@@ -57,7 +59,7 @@ ngModule.factory 'TWTasks', ['DSDataSimple', 'DSDataSource', '$q', ((DSDataSimpl
         when 'notassigned'
           ((task) -> task.get('responsible') == null && isTaskInDatesRange(params, task))
         when 'overdue'
-          ((task) -> (date = task.get('duedate')) != null && date < moment().startOf('day'))
+          ((task) -> (date = task.get('duedate')) != null && date < time.today)
         when 'noduedate'
           ((task) -> task.get('duedate') == null)
         else

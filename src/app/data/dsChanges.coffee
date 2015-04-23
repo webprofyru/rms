@@ -201,7 +201,7 @@ ngModule.factory 'dsChanges', [
         .then(
           ((resp) => # ok
             @set 'cancel', null
-            if (resp.status == 200) # 0 means that request was canceled
+            if (resp.status == 200 || resp.status == 409) # 0 - means that request was canceled, 409 - User is already on project
               project.get('people')[person.get('id')] = true
               nextAction()
             return), actionError)

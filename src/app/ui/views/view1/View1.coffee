@@ -20,14 +20,12 @@ Row = require('./models/Row')
 TaskView = require('./models/TaskView')
 
 ngModule.controller 'View1', ['$scope', 'View1', '$rootScope', (($scope, View1, $rootScope) ->
-  $rootScope.view1 = $scope.view = new View1 $scope, 'view1'
+  $scope.view = new View1 $scope, 'view1'
   $scope.$on '$destroy', (-> delete $rootScope.view1; return)
-  $scope.expandHeight = ((row)->
-    height = ''
-    if(row.expand && !_.isEmpty row.tasks)
-      task = _.max row.tasks, 'y'
-      height = 'height: ' + (52 * task.y + 110) + 'px' if task.y > 0
-    return height)
+  $scope.expandedHeight = ((row)->
+      return '' if !row.expand
+      return "height:100px" if _.isEmpty row.tasks
+      return "height:#{52 * _.max(row.tasks, 'y').y + 100}px")
   return)]
 
 ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, config, $rootScope, $log) ->
@@ -227,10 +225,11 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
             viewSplit.push {x: s, plan}
           dpos.length = y if (dpos = pos[day + s]).length <= y
           dpos[y] = true
-      return)
+      return y)
 
     # It's common functionality used in View1 and View2
     @layoutTaskView = ((startDate, taskViews) ->
+      maxY = 0
       # fill taskViews with respect to split
       if !_.some taskViews, ((taskView) -> taskView.get('task').get('split')) # simple case, then all taskViews are one day long
         tasksByDay = _.groupBy taskViews, ((taskView) -> taskView.get('task').get('duedate').valueOf())
@@ -239,7 +238,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
           taskViews.sort ((left, right) -> right.get('task').get('id') - left.get('task').get('id'))
           _.forEach taskViews, ((task, i) ->
             task.set 'x', x
-            task.set 'y', i
+            maxY = Math.max maxY, task.set 'y', i
             task.set 'len', 1
             task.set 'split', null
             return)
@@ -254,8 +253,8 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
           if day < 0
             day = 0
             taskStartDate = startDate
-          _.forEach tasksForTheDay, ((taskView) -> positionTaskView pos, taskView, taskStartDate, day; return)
-      return)
+          _.forEach tasksForTheDay, ((taskView) -> maxY = Math.max maxY, positionTaskView pos, taskView, taskStartDate, day; return)
+      return maxY)
 
     @end())]
 
@@ -268,14 +267,9 @@ ngModule.directive 'rmsView1DropTask', [
       element.on 'dragover', ((e)->
         return false)
       element.on 'drop', ((e)->
-        elArr = $(element).find('.drop-zone')
-        i = _.findIndex elArr, ((value)->
-          return $(value).offset().left > e.originalEvent.clientX)
-        day = switch
-          when i < 0 then $(_.last(elArr)).attr("data-day")
-          when i < 3 then day = -1
-          else $(elArr[i - 1]).attr("data-day")
-
+        day = _.findIndex $('.drop-zone', element), ((value)->
+          $v = $(value)
+          return $v.offset().left + $v.width() >= e.originalEvent.clientX)
         if(day < 0)
           (task = $rootScope.modal.task).set 'responsible', $scope.row.get 'person'
         else
@@ -287,7 +281,6 @@ ngModule.directive 'rmsView1DropTask', [
             finally
               hist.endBlock()
             return)
-
         $rootScope.$digest()
         return false)
       return))]

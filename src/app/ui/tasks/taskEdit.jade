@@ -1,4 +1,4 @@
-form(ng-switch-when='task-edit' rms-task-edit='' style='top:{{top}}px;left:{{left}}px')#task-modal
+form#modal-task(ng-switch-when='task-edit' rms-task-edit='')
     .task-modal-wrapper-main
         .task-modal-row
             .task-modal-row-title Project:
@@ -25,7 +25,7 @@ form(ng-switch-when='task-edit' rms-task-edit='' style='top:{{top}}px;left:{{lef
             input(type='number').task-modal-estimate-minutes
             span.task-modal-estimate-duration m
             img(src="./images/icons/recycling-can.svg" ng-click="edit.estimate = null").task-modal-icon-recycling
-            span.p-l-1rem(ng-if='edit.splitDiff' style='color:yellow') {{filter.periodDiff(edit.splitDiff)}}
+            span.splitDiff(ng-if='edit.splitDiff' style='color:yellow') {{filter.periodDiff(edit.splitDiff)}}
         .task-modal-row(ng-if='task.$u.estimate')
             .task-modal-row-title Split:
             input(type="checkbox" name="is-split" ng-model='edit.isSplit')

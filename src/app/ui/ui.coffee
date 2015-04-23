@@ -19,15 +19,15 @@ module.exports = (ngModule = angular.module 'ui/ui', [
 
   require './widgets/widgetDate'
   require './widgets/widgetDuration'
+#  require './widgets/widgetScroller'
 
   require './tasks/rmsTask'
   require './tasks/rmsTaskEdit'
   require './tasks/TaskSplitWeekView'
   require './tasks/rmsTaskInfo'
 
+  require './layout'
   require './filters'
-  require './layout/resizer'
-  require './layout/layout-factory'
 
 ]).name
 
@@ -64,18 +64,12 @@ if totalRelease
     )]
 
 uiCtrl = [
-  '$rootScope', '$scope',  'uiLayout'
-  (($rootScope, $scope, uiLayout) ->
-
-    uiLayout.fixContentHeight()
+  '$rootScope', '$scope',
+  (($rootScope, $scope) ->
 
     $scope.mode = 'edited'
     $scope.setMode = ((mode) ->
       $scope.mode = mode
-      return)
-
-    $(window).resize (->
-      uiLayout.fixContentHeight()
       return)
 
     $scope.sidebarTabs =

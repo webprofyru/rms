@@ -51,7 +51,8 @@ module.exports =
       css: './build'
       sourceComments: "map"
       imagePath: "/images" # Used by the image-url helper
-      require: ['susy', 'breakpoint', 'modular-scale']
+#      require: ['susy', 'breakpoint', 'modular-scale']
+      indentedSyntax: true
 
   images:
     src: "#{src}/images/**"

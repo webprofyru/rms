@@ -1,0 +1,54 @@
+%task
+  padding: 2px
+  cursor: pointer
+  &.drag-start
+    opacity: 0.3
+  .task-body
+    overflow: hidden
+    height: 45px
+    padding: 3px 5px 0px 5px
+    border-radius: 5px
+    &.split
+      &>.duration
+        display: none
+    .title
+      display: block
+      overflow: hidden
+      height: 15px
+      line-height: 15px
+      text-overflow: ellipsis
+    .duration
+      float: left
+      font-weight: bold
+      text-decoration: underline
+    .due-date
+      float: right
+      font-weight: bold
+      text-decoration: underline
+    .split-task
+      .duration
+        position: absolute
+        margin-left: 6px
+
+.task
+  @extend %task
+
+#task-drag-ghost
+  @extend %task
+  background-color: $color-task-blue
+  width: 6rem
+  border-radius: 5px
+  font-size: 12px
+
+.task-body
+  background: $color-task-blue
+  &:hover
+    background-color: darken($color-task-blue, 10%)
+  &.no-estimate:not(&.overdue)
+    background: $color-task-bright-blue
+    &:hover
+      background-color: darken($color-task-bright-blue, 10%)
+  &.overdue
+    background: $color-task-red
+    &:hover
+      background-color: darken($color-task-red, 10%)

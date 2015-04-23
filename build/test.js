@@ -86,6 +86,10 @@ ngModule.factory('config', [
         return this.teamwork === 'http://teamwork.webprofy.ru/';
       }));
 
+      Config.propNum('hResizer');
+
+      Config.propNum('vResizer');
+
       Config.onAnyPropChange((function(item, propName, newVal, oldVal) {
         if (typeof newVal !== 'undefined') {
           localStorageService.set(propName, newVal);
@@ -848,7 +852,7 @@ ngModule.factory('dsChanges', [
         this.get('source').httpPost("projects/" + (project.get('id')) + "/people/" + (person.get('id')) + ".json", null, this.set('cancel', $q.defer())).then(((function(_this) {
           return function(resp) {
             _this.set('cancel', null);
-            if (resp.status === 200) {
+            if (resp.status === 200 || resp.status === 409) {
               project.get('people')[person.get('id')] = true;
               nextAction();
             }
@@ -1165,7 +1169,7 @@ ngModule.factory('TWPeople', [
 
 
 },{"../../dscommon/DSDataSimple":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDataSimple.coffee","../../dscommon/DSDataSource":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDataSource.coffee","../../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","../../models/Person":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Person.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\data\\teamwork\\TWTasks.coffee":[function(require,module,exports){
-var DSData, DSDigest, Person, Project, RMSData, Task, TaskSplit, TodoList, assert, error, ngModule,
+var DSData, DSDigest, Person, Project, RMSData, Task, TaskSplit, TodoList, assert, error, ngModule, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -1174,6 +1178,8 @@ module.exports = (ngModule = angular.module('data/teamwork/TWTasks', [require('.
 assert = require('../../dscommon/util').assert;
 
 error = require('../../dscommon/util').error;
+
+time = require('../../ui/time');
 
 Task = require('../../models/Task');
 
@@ -1260,7 +1266,7 @@ ngModule.factory('TWTasks', [
           case 'overdue':
             return function(task) {
               var date;
-              return (date = task.get('duedate')) !== null && date < moment().startOf('day');
+              return (date = task.get('duedate')) !== null && date < time.today;
             };
           case 'noduedate':
             return function(task) {
@@ -1443,7 +1449,7 @@ ngModule.factory('TWTasks', [
 
 
 
-},{"../../dscommon/DSData":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSData.coffee","../../dscommon/DSDataSimple":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDataSimple.coffee","../../dscommon/DSDataSource":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDataSource.coffee","../../dscommon/DSDigest":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDigest.coffee","../../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","../../models/Person":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Person.coffee","../../models/Project":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Project.coffee","../../models/Task":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Task.coffee","../../models/TodoList":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\TodoList.coffee","../../models/types/TaskSplit":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\types\\TaskSplit.coffee","../../utils/RMSData":"C:\\SVN\\_WebProfyManagement\\src\\app\\utils\\RMSData.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSChangesBase.coffee":[function(require,module,exports){
+},{"../../dscommon/DSData":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSData.coffee","../../dscommon/DSDataSimple":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDataSimple.coffee","../../dscommon/DSDataSource":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDataSource.coffee","../../dscommon/DSDigest":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDigest.coffee","../../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","../../models/Person":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Person.coffee","../../models/Project":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Project.coffee","../../models/Task":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Task.coffee","../../models/TodoList":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\TodoList.coffee","../../models/types/TaskSplit":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\types\\TaskSplit.coffee","../../ui/time":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\time.coffee","../../utils/RMSData":"C:\\SVN\\_WebProfyManagement\\src\\app\\utils\\RMSData.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSChangesBase.coffee":[function(require,module,exports){
 var DSChangesBase, DSData, DSDocument, DSHistory, DSPool, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -5611,13 +5617,15 @@ module.exports = Project = (function(superClass) {
 
 
 },{"../dscommon/DSObject":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSObject.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Task.coffee":[function(require,module,exports){
-var DSDocument, Person, Project, Task, TaskSplit, TodoList, assert, error,
+var DSDocument, Person, Project, Task, TaskSplit, TodoList, assert, error, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
 assert = require('../dscommon/util').assert;
 
 error = require('../dscommon/util').error;
+
+time = require('../ui/time');
 
 DSDocument = require('../dscommon/DSDocument');
 
@@ -5696,6 +5704,11 @@ module.exports = Task = (function(superClass) {
 
   Task.propStr('description');
 
+  Task.prototype.isOverdue = (function() {
+    var duedate;
+    return (duedate = this.get('duedate')) !== null && duedate < time.today;
+  });
+
   Task.end();
 
   return Task;
@@ -5704,7 +5717,7 @@ module.exports = Task = (function(superClass) {
 
 
 
-},{"../dscommon/DSDocument":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDocument.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","./Person":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Person.coffee","./Project":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Project.coffee","./TodoList":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\TodoList.coffee","./types/TaskSplit":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\types\\TaskSplit.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\TodoList.coffee":[function(require,module,exports){
+},{"../dscommon/DSDocument":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDocument.coffee","../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee","../ui/time":"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\time.coffee","./Person":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Person.coffee","./Project":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\Project.coffee","./TodoList":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\TodoList.coffee","./types/TaskSplit":"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\types\\TaskSplit.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\models\\TodoList.coffee":[function(require,module,exports){
 var DSObject, Project, TodoList, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -6074,7 +6087,23 @@ module.exports = TaskSplit = (function() {
 
 
 
-},{"../../dscommon/DSDocument":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDocument.coffee","../../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\views\\changes\\ViewChanges.coffee":[function(require,module,exports){
+},{"../../dscommon/DSDocument":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\DSDocument.coffee","../../dscommon/util":"C:\\SVN\\_WebProfyManagement\\src\\app\\dscommon\\util.coffee"}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\time.coffee":[function(require,module,exports){
+var time, updateToday;
+
+module.exports = time = {
+  today: moment().startOf('day')
+};
+
+updateToday = (function() {
+  setTimeout((function() {
+    time.today = moment().startOf('day');
+    updateToday();
+  }), 60000);
+})();
+
+
+
+},{}],"C:\\SVN\\_WebProfyManagement\\src\\app\\ui\\views\\changes\\ViewChanges.coffee":[function(require,module,exports){
 var Change, DSObject, Person, Task, assert, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;

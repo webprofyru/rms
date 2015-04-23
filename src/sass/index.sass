@@ -1,8 +1,5 @@
-@import compass/css3
-@import susy
-@import breakpoint
-@import modular-scale
-@import lib/vertical-rhythmic
+@import lib/susy
+@import lib/breakpoint
 
 //--- Variables
 //media
@@ -22,7 +19,6 @@ $ms-base: 1rem
 $base-font-size: $ms-base
 $base-line-height: 1.5rem
 html
-  @include vr-baseline($ms-base, $base-line-height)
   @include container
   font-family: 'Roboto', sans-serif
 
@@ -37,7 +33,11 @@ $color-header-dark: #C6C6C6
 $color-bg: #F0F0F0
 $color-dark-white: #FAFAFA
 
+
+
 $color-task-blue: #BCD2E9
+$color-task-bright-blue: #D1F0ED
+$color-task-red: #E8BCBC
 
 //sizes
 
@@ -65,12 +65,18 @@ $wide-border: 1rem
     float: left
     margin-right: $margin-right
 
+@import 'partials/mixins'
+@import 'partials/general'
+@import 'partials/shadow'
 
-@import "lib/responsive"
-@import "partials/mixins-list"
-@import "partials/shadow.sass"
-@import "partials/scroller"
-@import "partials/loader"
-@import "partials/modals"
-@import "partials/select"
-@import "partials/style"
+// TODO: Later remove either one - they duplicate functionality
+@import 'partials/spinner'
+@import 'partials/loader'
+
+@import 'partials/handler'
+
+@import 'partials/scroller'
+@import 'partials/select'
+
+@import 'partials/modal-login'
+@import 'screen1/screen'

@@ -12,6 +12,7 @@ module.exports = (ngModule = angular.module 'app', [
 ]).name
 
 ngModule.run ['config', '$rootScope', ((config, $rootScope)->
+  $rootScope.Math = Math
   $rootScope.taskModal = {}
   return)]
 

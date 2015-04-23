@@ -1,27 +1,23 @@
-ul.actions-buttons
-    li.refresh.without-sign(ng-click='dataService.refresh()')
+ul.action-buttons(ui-layout-header-actions='')
+    li.refresh(ng-click='dataService.refresh()')
         img(src='./images/icons/refresh.svg')
-    li(ng-if="mode=='edited'" ng-click="setMode('original')").edited
-        table
-            tr
-                td: img(src='./images/icons/edit.svg')
-                td edited
-    li(ng-if="mode=='original'" ng-click="setMode('edited')").edited
-        table
-            tr
-                td: img(src='./images/icons/server.svg')
-                td original
+    li.edited(ng-if="mode=='edited'" ng-click="setMode('original')")
+        table: tr
+            td: img(src='./images/icons/edit.svg')
+            td edited
+    li.edited(ng-if="mode=='original'" ng-click="setMode('edited')")
+        table: tr
+            td: img(src='./images/icons/server.svg')
+            td original
     li.changes(ng-class='{disabled:!changes.anyChange()}' ng-click='showChanges()')
-        table
-            tr
-                td: img(src='./images/icons/list.svg')
-                td changes
+        table: tr
+            td: img(src='./images/icons/list.svg')
+            td changes
     li.undo.without-sign(ng-class='{disabled:!changes.hist.hasUndo()}' ng-click='changes.hist.undo()')
         img(src='./images/icons/undo.svg')
     li.redo.without-sign(ng-class='{disabled:!changes.hist.hasRedo()}' ng-click='changes.hist.redo()')
         img(src='./images/icons/redo.svg')
     li.account(ng-click='showAccount()')
-        table
-            tr
-                td: img(src='./images/icons/user.svg')
-                td account
+        table: tr
+            td: img(src='./images/icons/user.svg')
+            td account

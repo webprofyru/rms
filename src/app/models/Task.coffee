@@ -1,6 +1,8 @@
 assert = require('../dscommon/util').assert
 error = require('../dscommon/util').error
 
+time = require('../ui/time')
+
 DSDocument = require('../dscommon/DSDocument')
 
 Project = require('./Project')
@@ -37,6 +39,9 @@ module.exports = class Task extends DSDocument
   @propTaskRelativeSplit 'split'
 
   @propStr 'description'
+
+#  @propCalc 'isOverdue', (-> (duedate = @get('duedate')) != null && duedate < time.today)
+  isOverdue: (-> (duedate = @get('duedate')) != null && duedate < time.today)
 
   @end()
 

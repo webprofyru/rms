@@ -35,7 +35,7 @@ ngModule.factory 'View3', ['DSView', 'config', '$log', ((DSView, config, $log) -
 
       @expandedProj = {}
 
-      $scope.$watch (-> [$scope.mode, $scope.view1?.startDate.valueOf(), $scope.sidebarTabs.active]),
+      $scope.$watch (-> [$scope.mode, $scope.$parent.view.startDate?.valueOf(), $scope.sidebarTabs.active]),
         ((args) =>
           [mode, startDateVal, active] = args
           switch active

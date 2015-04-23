@@ -6,6 +6,8 @@ module.exports = (ngModule = angular.module 'ui/tasks/rmsTaskEdit', [
 
 assert = require('../../dscommon/util').assert
 
+time = require('../../ui/time')
+
 DSDigest = require '../../dscommon/DSDigest'
 
 Person = require '../../models/Person'
@@ -57,7 +59,7 @@ ngModule.directive 'rmsTaskEdit', [
 
       $scope.people = _.map Person.pool.items, ((person)-> person)
       $scope.task = task = modal.task
-      $scope.today = today = moment().startOf('day')
+      $scope.$watch (-> time.today.valueOf()), (-> $scope.today = time.today)
 
       edit.title = task.get('title')
       edit.duedate = duedate = task.get('duedate')
@@ -174,7 +176,7 @@ ngModule.directive 'rmsTaskEdit', [
       $scope.autoSplitInProgress = false
       $scope.autoSplit = (->
         if assert
-          throw new Error "Invalid duedate: #{edit.duedate?.format()}" if !(edit.duedate != null && today <= edit.duedate)
+          throw new Error "Invalid duedate: #{edit.duedate?.format()}" if !(edit.duedate != null && time.today <= edit.duedate)
           throw new Error "Invalid value 'edit.responsible': #{edit.responsible}" if !(edit.responsible != null)
           throw new Error "Invalid value 'edit.estimate': #{edit.estimate?.valueOf()}" if !(edit.estimate != null && edit.estimate > 0)
 
@@ -197,7 +199,7 @@ ngModule.directive 'rmsTaskEdit', [
           $scope._unwatch = personDayStatSet.watchStatus $scope, ((set, status, prevStatus, unwatch) ->
             return if status != 'ready'
             dayStats = set.items[reponsibleKey].get('dayStats')
-            while e > 0 && today <= d && weekStart <= d
+            while e > 0 && time.today <= d && weekStart <= d
               timeLeft = (dayStat = dayStats[moment.duration(d.diff(weekStart)).asDays()]).timeLeft
               if initSplit != null
                 (timeLeft = moment.duration(timeLeft)).add initPlan if (initPlan = initSplit.get initDuedate, d) != null
@@ -207,7 +209,7 @@ ngModule.directive 'rmsTaskEdit', [
               d.subtract 1, 'day'
             unwatch() # Note: personDayStatSet cannot be used after this operation, since it's released
             delete $scope._unwatch
-            if e > 0 && today <= d
+            if e > 0 && time.today <= d
               # Note: At the moment we hardcode that sat&sun are weekends, and we do not split tasks on them
               d.subtract 2, 'days'
               splitWithinWeek() # split on previouse week
