@@ -1,20 +1,21 @@
 # Resource Management System (RMS)
 
-### SASS + componentsRuby (https://www.ruby-lang.org/en/downloads/)
+### Build
 
-gem install compass --pre
+download nodejs from http://nodejs.org/
 
-gem install breakpoint
-
-gem install susy
-
-gem install modular-scale
-
-### Node.js + project dependenciesnode.js (http://nodejs.org/)
+install node.js
 
 npm install
 
-### Build
+npm install gulp
 
 gulp
 
+### In case of error, while gulp
+
+npm uninstall gulp
+
+npm install gulp
+
+See https://github.com/dlmanning/gulp-sass/issues/174 for details
