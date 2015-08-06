@@ -7,7 +7,7 @@
   .task-body
     overflow: hidden
     height: 45px
-    padding: 3px 5px 0px 5px
+    padding: 0.2rem 0.2rem 0 0.2rem
     border-radius: 5px
     line-height: 15px
     &.split
@@ -20,18 +20,20 @@
       text-overflow: ellipsis
     .duration
       position: absolute
-      left: 0.4rem
-      bottom: 0.4rem
-      //float: left
-      font-weight: bold
-      text-decoration: underline
+      left: 0.3rem
+      bottom: 0.2rem
+      font-size: 10px
     .due-date
+      &.up
+        bottom: 1rem
+        //color: white
+        background-color: inherit
+        //background-color: black
       position: absolute
-      right: 0.4rem
-      bottom: 0.4rem
-      //float: right
-      font-weight: bold
-      text-decoration: underline
+      padding-left: 0.2rem
+      right: 0.3rem
+      bottom: 0.2rem
+      font-size: 10px
     .split-task
       .duration
         position: absolute

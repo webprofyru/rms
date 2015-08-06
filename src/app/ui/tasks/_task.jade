@@ -8,10 +8,10 @@ mixin task(path, time, ngIf)
         .overestimate(style='width:{{#{path}.timeAboveEstimate()}}%')
         .percent {{#{path}.timeReported()}}
     span.title {{#{path}.title}}
-    span.duration(ng-if='!taskView.split') {{filter.taskPeriod(#{path},'estimate'#{time ? ',' + time : ''})}}
-    span.due-date {{filter.shortDate(#{path},'duedate')}}
+    span.duration(ng-if='!taskView.split' rms-task-duration='') {{filter.taskPeriod(#{path},'estimate'#{time ? ',' + time : ''})}}
+    span.due-date(rms-task-due-date='') {{filter.shortDate(#{path},'duedate')}}
     ul.split-task(ng-if='taskView.split')
       li(ng-repeat='duration in taskView.split')
-        span.duration(style="left: {{duration.x * 3/21 * 7/taskView.len * 100}}%") {{filter.splitDuration(duration.plan,duration.time)}}
+        span.duration(style="left: {{duration.x * 3/21 * 7/taskView.len * 100}}%" rms-task-due-date-position='$index == taskView.split.length') {{filter.splitDuration(duration.plan,duration.time)}}
 
 

@@ -45,7 +45,8 @@ include ../../tasks/_timeTracking.jade
                     button.btn(ng-click='view.periodChange(-1)')
                         i.fa.fa-caret-left
                 .day(ng-repeat='day in view.days')
-                    strong(ng-bind-html='filter.calendarHeader(day, "date")')
+                    //strong(ng-bind-html='filter.calendarHeader(day, "date")')
+                    div(ng-bind-html='filter.calendarHeader(day, "date")')
                     small(ng-bind-html='filter.taskPeriod(day, "workTime", day.timeSpent)')
                 .prev-next-week
                     button.btn(ng-click='view.periodChange(1)')
@@ -72,8 +73,8 @@ include ../../tasks/_timeTracking.jade
                                                     .expand-icon(ng-click='row.expand = !row.expand')
                                                         i.fa.fa-caret-down(ng-if='!row.expand')
                                                         i.fa.fa-caret-up(ng-if='row.expand')
-                                .estimate
-                                    strong {{filter.taskPeriod(row.personDayStat, 'totalPeriodTime')}}
+                                .estimate {{filter.taskPeriod(row.personDayStat, 'totalPeriodTime')}}
+                                    //strong {{filter.taskPeriod(row.personDayStat, 'totalPeriodTime')}}
                                 .total.drop-zone(ng-repeat="dayStat in row.personDayStat.dayStats", class="day{{$index}}" data-day='{{$index}}')
                                     .loaded(class="{{taskSummaryColor(dayStat)}}" style="width:{{dayTaskWidth(dayStat)}}%")
                                     span.person-day-time {{filter.taskPeriod(dayStat, 'tasksTotal', dayStat.timeSpent)}}

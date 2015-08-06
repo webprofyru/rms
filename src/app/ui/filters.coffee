@@ -44,13 +44,7 @@ ngModule.run ['$rootScope', (($rootScope) ->
           error.invalidArg 'prop' if !((props = doc.__proto__.__props).hasOwnProperty prop)
           throw new Error "Expected property with type 'duration', but property '#{prop}' has type #{type}" if !((type = props[prop].type) == 'duration')
       res = ''
-      if doc && (duration = doc.get(prop))
-        hours = Math.floor duration.asHours()
-        minutes = duration.minutes()
-        res += if hours then "#{hours}h" else ''
-        res += ' ' if hours and minutes
-        res += "#{minutes}m" if minutes
-        res += '0' if !res
+
       if time
         if moment.isDuration time
           hours = Math.floor time.asHours()
@@ -58,10 +52,21 @@ ngModule.run ['$rootScope', (($rootScope) ->
         else
           hours = Math.floor (time = time.get('timeMin')) / 60
           minutes = time % 60
-        res += ' / '
-        res += if hours then "#{hours}h " else ''
+        if hours || minutes
+          res += if hours then "#{hours}h " else ''
+#          res += ' ' if hours && minutes
+          res += "#{minutes}m" if minutes
+        else res += '0'
+      else if typeof time == null then res += '0'
+
+      if doc && (duration = doc.get(prop))
+        res += ' / ' if typeof time != 'undefined' && $rootScope.dataService.showTimeSpent
+        hours = Math.floor duration.asHours()
+        minutes = duration.minutes()
+        res += if hours then "#{hours}h" else ''
         res += ' ' if hours and minutes
         res += "#{minutes}m" if minutes
+        res += '0' if !res
       return res)
 
     taskPeriodLight: ((duration) ->
@@ -103,18 +108,23 @@ ngModule.run ['$rootScope', (($rootScope) ->
       return if !date then '' else date.format 'DD.MM.YYYY')
 
     splitDuration: ((duration, time) ->
-      hours = Math.floor duration.asHours()
-      minutes = duration.minutes()
-      res = if hours then "#{hours}h" else ''
-      res += " #{minutes}m" if minutes
-      res = '0' if !res
+      res = ''
       if time
         hours = Math.floor (time = time.get('timeMin')) / 60
         minutes = time % 60
-        res += ' / '
-        res += if hours then "#{hours}h " else ''
-        res += ' ' if hours and minutes
-        res += "#{minutes}m" if minutes
+        if hours || minutes
+          res += if hours then "#{hours}h " else ''
+#          res += ' ' if hours && minutes
+          res += "#{minutes}m" if minutes
+        else res += '0'
+      else if typeof time == null then res += '0'
+      if duration
+        res += ' / ' if typeof time != 'undefined' && $rootScope.dataService.showTimeSpent
+        hours = Math.floor duration.asHours()
+        minutes = duration.minutes()
+        res = if hours then "#{hours}h" else ''
+        res += " #{minutes}m" if minutes
+        res = '0' if !res
       return res)
 
   return)]
