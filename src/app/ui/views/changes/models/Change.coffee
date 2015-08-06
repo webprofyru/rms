@@ -10,5 +10,7 @@ module.exports = class Change extends DSObject
   @propStr 'prop'
   @propStr 'value'
   @propStr 'conflict'
+  @propStr 'error'
+  @propBool 'isDark'
   @end()
 

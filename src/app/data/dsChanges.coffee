@@ -28,8 +28,6 @@ ngModule.factory 'dsChanges', [
     class DSChanges extends DSChangesBase
       @begin 'DSChanges'
 
-  # Note: Below is commeted out, since at the moment we don't have editable people
-  #    @propSet 'people', Person.Editable
       @propSet 'tasks', Task.Editable
 
       @propObj 'dataService' # Note: It's propObj (not Doc) cause dsChanges must not have ref+1 to dsDataService
@@ -62,7 +60,7 @@ ngModule.factory 'dsChanges', [
           $u = DSDataEditable(Task.Editable).$u # TODO: Make this comes from project rights
           if (changes = localStorageService.get('changes'))
             if changes.ver == CHANGES_PERSISTANCE_VER && changes.source.url == config.get('teamwork') && changes.source.token == config.get('token')
-              peopleSet = @get('dataService').findDataSet @, {type: Person.docType, mode: 'original'}
+              peopleSet = @get('dataService').findDataSet @, {type: Person, mode: 'original'}
               @__unwatchStatus2 = peopleSet.watchStatus @, ((source, status, prevStatus, unwatch) =>
                 return if !(status == 'ready')
                 unwatch() # only once
@@ -119,42 +117,50 @@ ngModule.factory 'dsChanges', [
             tasks}
         return)
 
-      save: do (saveInProgress = null) => ((isContinue) ->
-        return saveInProgress.promise if saveInProgress && !isContinue
-        saveInProgress = $q.defer() if !isContinue
+      save: do (saveInProgress = null) => ((tasks) ->
+        return saveInProgress.promise if saveInProgress && !tasks
+        if !tasks # it's first task in the line, so let's record others
+          saveInProgress = $q.defer()
+          tasks = (task.addRef @ for taskKey, task of @get('tasks'))
+        newReponsible = null
         upd = {'todo-item': taskUpd = {}}
-        task = change = newReponsible = null
-        for taskKey, nextTask of @get('tasks')
-          task = nextTask
-          change = _.clone task.__change # clone() makes possible to continue to edit data while updates gets saved to the server
-          taskUpd['content'] = task.get('title') # required by TeamworkAPI
-          for propName, propChange of change
-            switch propName
-              when 'title' then undefined
-              when 'split'
-                taskUpd['description'] = RMSData.put task.get('description'), if split = propChange.v then {split: propChange.v.valueOf()} else null
-                taskUpd['start-date'] = if split == null || (duedate = task.get('duedate')) == null then '' else split.firstDate(duedate).format('YYYYMMDD')
-              when 'duedate'
-                taskUpd['due-date'] = dueDateStr = if propChange.v then propChange.v.format('YYYYMMDD') else ''
-                taskUpd['start-date'] = dueDateStr if (startDate = task.get('startDate')) != null && startDate > task.get('duedate')
-              when 'estimate'
-                taskUpd['estimated-minutes'] = if propChange.v then Math.floor propChange.v.asMinutes() else '0'
-              when 'responsible'
-                taskUpd['responsible-party-id'] = if (newReponsible = propChange.v) then [propChange.v.get('id')] else []
-              else console.error "change.save(): Property #{propName} not expected to be changed"
-          break # process only one first task
 
-        if !task # it's nothing to save
-          saveInProgress.resolve()
+        if !(task = tasks.shift()) # it's nothing to save
+          if (tasks = (task.addRef @ for taskKey, task of @get('tasks') when !task.__change.__error)).length > 0
+            @save(tasks) # save new non-error tasks, if any new had apperes while save procedure
+            return
+          allTasksSaved = true
+          for k of @get('tasks') # if any task left, it's error task
+            allTasksSaved = false
+            break
+          saveInProgress.resolve(allTasksSaved)
           promise = saveInProgress.promise
           saveInProgress = null
           return promise
+        change = _.clone task.__change # clone() makes possible to continue to edit data while updates gets saved to the server
+        taskUpd['content'] = task.get('title') # required by TeamworkAPI
+        commentsOrSplit = false
+        for propName, propChange of change when propName != '__error' && propName != '__refreshView'
+          switch propName
+            when 'title' then undefined
+            when 'comments' then undefined
+            when 'split'
+              taskUpd['description'] = RMSData.put task.get('description'), if split = propChange.v then {split: propChange.v.valueOf()} else null
+              taskUpd['start-date'] = if split == null || (duedate = task.get('duedate')) == null then '' else split.firstDate(duedate).format('YYYYMMDD')
+            when 'duedate'
+              taskUpd['due-date'] = dueDateStr = if propChange.v then propChange.v.format('YYYYMMDD') else ''
+              taskUpd['start-date'] = dueDateStr if (startDate = task.get('startDate')) != null && startDate > task.get('duedate')
+            when 'estimate'
+              taskUpd['estimated-minutes'] = if propChange.v then Math.floor propChange.v.asMinutes() else '0'
+            when 'responsible'
+              taskUpd['responsible-party-id'] = if (newReponsible = propChange.v) then [propChange.v.get('id')] else []
+            else
+              console.error "change.save(): Property #{propName} not expected to be changed"
 
-        task.addRef @
-
-        actionError = (=>
-          # TODO: Add error visualization
-          @set 'cancel', null
+        actionError = ((error, isCancelled) =>
+          if !isCancelled
+            console.error 'error: ', error
+            @set 'cancel', null
           task.release @
           saveInProgress.reject()
           saveInProgress = null
@@ -163,19 +169,43 @@ ngModule.factory 'dsChanges', [
         saveTaskAction = (=>
           @get('source').httpPut("tasks/#{task.get('id')}.json", upd, @set('cancel', $q.defer()))
           .then(
-            ((resp) => # ok
+            ((resp) =>
               @set 'cancel', null
               if (resp.status == 200) # 0 means that request was canceled
+                delete change.__error
                 DSDigest.block (=>
-                  for propName, propChange of change
+                  for propName, propChange of change when propName != '__refreshView'
                     task.$ds_doc.set propName, propChange.v # states that change was delivered to the server, and now server object SHOULD has this val
-                  task.release @
                   return)
-                @save(true) # save next edited object, if any
+
+                # add comments, if any
+                if (comments = task.get('comments')) != null
+                  (saveComment = (=>
+                    if !(nextComment = comments.shift())
+                      task.release @
+                      @save(tasks) # save next edited object, if any
+                    else # save nextComment
+                      upd =
+                        comment:
+                          'content-type': 'html'
+                          body: nextComment
+                          isprivate: false
+                      @get('source').httpPost("tasks/#{task.get('id')}/comments.json", upd, @set('cancel', $q.defer()))
+                      .then ((resp) =>
+                        @set 'cancel', null
+                        if (resp.status == 201) # 0 means that request was canceled
+                          saveComment.call @
+                        else actionError(resp, resp.status == 0)
+                        return), actionError
+                    return)).call @
+                else
+                  task.release @
+                  @save(tasks) # save next edited object, if any
               else
+                task.__change.__error = resp.data.MESSAGE
+                task.__change.__refreshView?()
                 task.release @
-                saveInProgress.reject()
-                saveInProgress = null
+                @save(tasks) # save next edited object, if any
               return), actionError))
 
         if newReponsible == null
@@ -189,12 +219,13 @@ ngModule.factory 'dsChanges', [
                 project.set 'people', projectPeople = {}
                 projectPeople[p.id] = true for p in resp.data.people
                 @addPersonToProject project, newReponsible, saveTaskAction, actionError
+              else actionError(resp, resp.status == 0)
               return), actionError)
         else if !projectPeople.hasOwnProperty(newReponsible.get('id')) # person is not on a project
           @addPersonToProject project, newReponsible, saveTaskAction
         else saveTaskAction()
 
-        return saveInProgress.promise)
+        return saveInProgress.promise);
 
       addPersonToProject: ((project, person, nextAction, actionError) ->
         @get('source').httpPost("projects/#{project.get('id')}/people/#{person.get('id')}.json", null, @set('cancel', $q.defer()))
@@ -204,6 +235,7 @@ ngModule.factory 'dsChanges', [
             if (resp.status == 200 || resp.status == 409) # 0 - means that request was canceled, 409 - User is already on project
               project.get('people')[person.get('id')] = true
               nextAction()
+            else actionError(resp, resp.status == 0)
             return), actionError)
         return)
 

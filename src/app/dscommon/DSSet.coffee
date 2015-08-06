@@ -122,9 +122,12 @@ module.exports = class DSSet extends DSObjectBase
     (evt = @evt).push listener
     return if isOwnerDSData
     @addRef owner
+    active = true
     return (=>
-      @release owner
-      _.remove evt, ((v) -> v == listener)
+      if active
+        active = false
+        @release owner
+        _.remove evt, ((v) -> v == listener)
       return))
 
   addRef: ((referry) ->

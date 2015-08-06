@@ -2,6 +2,7 @@ module.exports = (ngModule = angular.module 'ui/tasks/rmsTaskEdit', [
   require '../../data/dsChanges'
   require '../../data/dsDataService'
   require './TaskSplitWeekView'
+  require './addCommentAndSave'
 ]).name
 
 assert = require('../../dscommon/util').assert
@@ -17,8 +18,8 @@ PersonDayStat = require '../../models/PersonDayStat'
 splitViewWeeksCount = 3
 
 ngModule.directive 'rmsTaskEdit', [
-  'TaskSplitWeekView', 'dsDataService', 'dsChanges', '$rootScope', '$window', '$timeout',
-  ((TaskSplitWeekView, dsDataService, dsChanges, $rootScope, $window, $timeout) ->
+  'TaskSplitWeekView', 'dsDataService', 'dsChanges', 'addCommentAndSave', '$rootScope', '$window', '$timeout',
+  ((TaskSplitWeekView, dsDataService, dsChanges, addCommentAndSave, $rootScope, $window, $timeout) ->
     restrict: 'A'
     scope: true
     link: (($scope, element, attrs) ->
@@ -125,14 +126,12 @@ ngModule.directive 'rmsTaskEdit', [
       $scope.close = close = (->
         $rootScope.modal = {type: null}
         return)
-      $scope.save = (->
+
+      $scope.save = (($event) ->
         # Fix duedate, estimate if split
         if (split = edit.split) != null && (lastSplitDate = split.lastDate(edit.splitDuedate)) != null
           # Rule: If split then duedate is last date of split
           edit.duedate = lastSplitDate
-
-          # TODO: Think of: We should keep estimate, duedate and split consisted, but this could ruine by removing changes one-by-one
-          # TODO: I need the same logic while saving on server
 
           # Rule: If total split not equal to estimate, then split gets fixed
 
@@ -145,19 +144,18 @@ ngModule.directive 'rmsTaskEdit', [
             split.fixEstimate diff
 
         # Actual save...
-        (hist = dsChanges.get('hist')).startBlock()
-        try
-          DSDigest.block (=>
-            task.set 'title', edit.title
-            task.set 'duedate', edit.duedate
-            task.set 'estimate', edit.estimate
-            task.set 'responsible', edit.responsible
-            task.set 'split', if edit.isSplit && edit.split.valueOf().length > 0 then edit.split else null
-            return)
-        finally
-          hist.endBlock()
-        close()
+        # TODO: How to get to know that shift is pressed
+        addCommentAndSave task, !$event.shiftKey,
+          title: edit.title
+          duedate: edit.duedate
+          estimate: edit.estimate
+          responsible: edit.responsible
+          split: if edit.isSplit && edit.split.valueOf().length > 0 then edit.split else null
+        .then ((saved) ->
+          close() if saved
+          return)
         return)
+
       $scope.showTimeLeft = ((dayModel) ->
         return '' if (timeLeft = dayModel.get('timeLeft')) == null
         plan = dayModel.get('plan')
@@ -192,7 +190,7 @@ ngModule.directive 'rmsTaskEdit', [
 
         splitWithinWeek = (->
           personDayStatSet = dsDataService.findDataSet $scope,
-            type: PersonDayStat.name
+            type: PersonDayStat
             mode: 'edited'
             startDate: weekStart = moment(d).startOf 'week'
             endDate: moment(d).endOf 'week'

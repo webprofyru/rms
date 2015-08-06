@@ -42,13 +42,20 @@ ngModule.factory 'PeopleWithJson', [
         if assert
           error.invalidArg 'dsDataService' if !(dsDataService instanceof DSDataServiceBase)
 
-        (teamworkPeople = @set 'teamworkPeople', dsDataService.findDataSet @, (_.assign {}, @params, {type: 'TeamworkPeople'})).release @
+        (teamworkPeople = @set 'teamworkPeople', dsDataService.findDataSet @, (_.assign {}, @params, {type: Person, source: true})).release @
         people = @get 'peopleSet'
 
+        onError = ((error, isCancelled) =>
+          if !isCancelled
+            console.error 'error: ', error
+            @set 'cancel', null
+          @_endLoad false
+          return)
+        
         load = (=>
-          return if !@_startLoad()
+          return unless @_startLoad()
           cancel = @set('cancel', $q.defer())
-          $http.get 'data/people.json', cancel
+          $http.get "data/people.json?t=#{new Date().getTime()}", cancel
           .then(
             ((resp) => # ok
               if (resp.status == 200) # 0 means that request was canceled
@@ -64,22 +71,17 @@ ngModule.factory 'PeopleWithJson', [
                   people.merge @, map
                   @_endLoad true
                   return)
-              return),
-            (=> # error
-              @set 'cancel', null
-              @_endLoad false
-              return))
+              else onError(resp, resp.status == 0)
+              return), onError)
           return)
 
-        updateStatus = ((source, status) =>
+        @_unwatchA = teamworkPeople.watchStatus @, ((source, status) =>
           if !(status == (prevStatus = @get('status')))
             switch status
               when 'ready' then DSDigest.block load
               when 'update' then DSDigest.block load
               when 'nodata' then @set 'status', 'nodata'
           return)
-
-        @_unwatchA = teamworkPeople.watchStatus @, updateStatus
 
         @init = null
         return)

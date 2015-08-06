@@ -16,7 +16,7 @@ module.exports = ((itemType) ->
   return if classes.hasOwnProperty(itemType.docType) && (clazz = classes[itemType.docType]).itemType == itemType then clazz
   else classes[itemType.name] =
     class DSDataEditable extends DSData
-      @begin "DSDataEditable<#{itemType.name}>"
+      @begin "DSDataEditable<#{itemType.docType}>"
 
       @propDoc 'original', DSSet
       @propDoc 'changes', DSSet
@@ -63,7 +63,7 @@ module.exports = ((itemType) ->
 
         load = (=>
 
-          return if !@_startLoad()
+          @_startLoad() # result is not checked intentionally, so we could set 'load' state while source object is in 'load' state
 
           getEdtItem = ((srcItem) =>
             if assert
@@ -136,11 +136,26 @@ module.exports = ((itemType) ->
 
         sets = [original, changes]
         updateStatus = ((source, status) =>
+          inUpdate = false
           if !((newStatus = DSDocument.integratedStatus(sets)) == (prevStatus = @get('status')))
             switch newStatus
-              when 'ready' then DSDigest.block load # it's only once, since 'update' is not assigned to state
-              when 'update' then if @_startLoad() then @_endLoad true # process update right away
-              when 'nodata' then @set 'status', 'nodata'
+              when 'ready'
+                if inUpdate
+                  inUpdate = false
+                  @_endLoad true
+                else
+                  DSDigest.block load # it's only once, since 'update' is not assigned to state
+              when 'load'
+                @_startLoad()
+              when 'update'
+                if @_startLoad()
+                  inUpdate = true
+              when 'nodata'
+                if inUpdate
+                  inUpdate = false
+                  @_endLoad false
+                else
+                  @set 'status', 'nodata'
           return)
 
         @_unwatchA = original.watchStatus @, updateStatus

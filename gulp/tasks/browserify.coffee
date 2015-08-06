@@ -1,88 +1,63 @@
-# browserify task
-#   ---------------
-#   Bundle javascripty things with browserify!
-#
-#   This task is set up to generate multiple separate bundles, from
-#   different sources, and to use Watchify when run from the default task.
-#
-#   See browserify.bundleConfigs in gulp/config.js
-#
+browserify = require 'browserify'
+watchify = require 'watchify'
+bundleLogger = require '../util/bundleLogger'
+gulp = require 'gulp'
+gutil = require 'gulp-util'
+handleErrors = require '../util/handleErrors'
+source = require 'vinyl-source-stream2'
+transform = require 'vinyl-transform'
+rename = require 'gulp-rename'
+buffer = require 'vinyl-buffer'
 
-browserify = require("browserify")
-watchify = require("watchify")
-bundleLogger = require("../util/bundleLogger")
-gulp = require("gulp")
-handleErrors = require("../util/handleErrors")
-source = require("vinyl-source-stream2")
-transform = require("vinyl-transform")
+uglify = require 'gulp-uglifyjs'
+
 config = require("../config").browserify
-
-collapse = require("bundle-collapser")
 
 gulp.task "browserify", ((callback) ->
   bundleQueue = config.bundleConfigs.length
-  browserifyThis = (bundleConfig) ->
-    bundler = browserify(
+  browserifyThis = ((bundleConfig) ->
 
-      # Required watchify args
+    bundler = browserify
       cache: {}
       packageCache: {}
-      fullPaths: true
-
-    # Specify the entry point of your app
+      fullPaths: false
       entries: bundleConfig.entries
-
-    # Add file extentions to make optional in your requires
       extensions: config.extensions
-
-    # Enable source maps!
-      debug: config.debug)
+      debug: config.debug
 
     bundle = (->
-
-      # Log when bundling starts
       bundleLogger.start bundleConfig.outputName
 
-      # Report compile errors
-
-      # Use vinyl-source-stream to make the
-      # stream gulp compatible. Specifiy the
-      # desired output filename here.
-
-#      bundleCollapsed = transform((filename) ->
-#        return collapse(filename))
-
-      # Specify the output destination
-      return bundler.bundle()
-        .on("error", handleErrors)
+      res = bundler.bundle()
+        .on('error', handleErrors)
         .pipe(source(bundleConfig.outputName))
-#        .pipe(transform(collapse))
-#        .pipe(bundleCollapsed)
+        .pipe(buffer())
+
+      if !gutil.env.dev
+        res = res
+          .pipe(rename(extname: '.min.js'))
+          .pipe(uglify())
+
+      res = res
         .pipe(gulp.dest(bundleConfig.dest))
-        .on("end", reportFinished))
+        .on("end", reportFinished)
 
-    if global.isWatching
+      return res)
 
-      # Wrap with watchify and rebundle on changes
-      bundler = watchify(bundler)
-
-      # Rebundle on update
-      bundler.on "update", bundle
+    bundler = watchify(bundler)
+    bundler.on "update", bundle
 
     reportFinished = (->
-
-      # Log when bundling completes
       bundleLogger.end bundleConfig.outputName
       if bundleQueue
         bundleQueue--
-
-        # If queue is empty, tell gulp the task is complete.
-        # https://github.com/gulpjs/gulp/blob/master/docs/API.md#accept-a-callback
         callback()  if bundleQueue is 0
       return)
 
     bundle()
 
-  # Start bundling with Browserify for each bundleConfig specified
+    return)
+
   config.bundleConfigs.forEach browserifyThis
+
   return)

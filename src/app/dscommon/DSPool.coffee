@@ -74,9 +74,12 @@ module.exports = class DSPool extends DSObjectBase
       throw new Error "Pool '#{DSObjectBase.desc @}' watch functionality is not enabled" if !@evt
     (evt = @evt).push w = {lst: listener}
     @addRef owner
+    active = true
     return (=>
-      @release owner
-      _.remove evt, w
+      if active
+        active = false
+        @release owner
+        _.remove evt, w
       return))
 
   @end()

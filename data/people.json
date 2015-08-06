@@ -5,6 +5,12 @@
             "name": "Все"
         },
         {
+            "role": "All but managers",
+            "name": "Все кроме менеджеров",
+            "special": "notSupervisors",
+            "groupRole": true
+        },
+        {
             "role": "Designers Only",
             "name": "Только дизайнеры",
             "roles": "Art-director, Designer, Jr. Designer",
@@ -14,12 +20,6 @@
             "role": "Webmasters Only",
             "name": "Только вебмастера",
             "roles": "Markuper, Programmer",
-            "groupRole": true
-        },
-        {
-            "role": "All but managers",
-            "name": "Все кроме менеджеров",
-            "special": "notSupervisors",
             "groupRole": true
         },
         {
@@ -118,7 +118,7 @@
         },
         {
             "id": 88203,
-            "role": "Manager",
+            "role": "Analyst",
             "name": "Алия Галимова",
             "email": "a.galimova@webprofy.ru"
         },
@@ -127,12 +127,6 @@
             "role": "Programmer",
             "name": "Андрей Васильев",
             "email": "a.vasilyev@webprofy.ru"
-        },
-        {
-            "id": 77665,
-            "role": "Manager",
-            "name": "Антон Виноградник",
-            "email": "a.vinogradnik@webprofy.ru"
         },
         {
             "id": 54199,
@@ -207,12 +201,6 @@
             "email": "i.saburov@webprofy.ru"
         },
         {
-            "id": 104312,
-            "role": "Analyst",
-            "name": "Инна Ирха",
-            "email": "i.irha@team.kokoc.com"
-        },
-        {
             "id": 90620,
             "role": "Designer",
             "name": "Лев Большаков",
@@ -253,12 +241,6 @@
             "role": "Manager",
             "name": "Ольга Бояршинова",
             "email": "o.boyarshinova@webprofy.ru"
-        },
-        {
-            "id": 78158,
-            "role": "Manager, Analyst",
-            "name": "Ольга Косенко",
-            "email": "o.kosenko@kokoc.com"
         },
         {
             "id": 56392,
@@ -325,6 +307,66 @@
           "role": "Manager",
           "name": "Ольга Черноусова",
           "email": "o.chernousova@webprofy.ru"
+        },
+        {
+          "id": 115545,
+          "role": "Manager",
+          "name": "Анна Комарова",
+          "email": "a.komarova@webprofy.ru"
+        },
+        {
+          "id": 113363,
+          "role": "Manager",
+          "name": "Валерия Брызгалина",
+          "email": "v.bryzgalina@webprofy.ru"
+        },
+        {
+          "id": 115566,
+          "role": "Markuper",
+          "name": "Александр Верхотуров",
+          "email": "a.verkhoturov@webprofy.ru"
+        },
+        {
+          "id": 119518,
+          "role": "Tester",
+          "name": "Татьяна Урзова",
+          "email": "utatyana2002@mail.ru"
+        },
+        {
+          "id": 119628,
+          "role": "Tester",
+          "name": "Артур Хасанов",
+          "email": "art.khassanov@gmail.com"
+        },
+        {
+          "id": 118060,
+          "role": "Tester",
+          "name": "Елена Лялина",
+          "email": "lyalina.alena@gmail.com"
+        },
+        {
+          "id": 118361,
+          "role": "Tester",
+          "name": "Анастасия Лебедева",
+          "email": "an.lebedeva@kokoc.com"
+        },
+        {
+          "id": 120604,
+          "role": "Programmer",
+          "name": "Никита Миликов",
+          "email": "n.milikov@webprofy.ru"
+        },
+        {
+            "id": 120883,
+            "role": "Programmer, Markuper",
+            "name": "Алексей Степанов",
+            "email": "a.stepanov@webprofy.ru"
+        },
+        {
+            "id": 121030,
+            "role": "Programmer, Markuper",
+            "name": "Валерий серов",
+            "email": "v.serov@webprofy.ru"
         }
     ]
 }

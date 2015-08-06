@@ -1,8 +1,8 @@
 assert = require('./util').assert
 error = require('./util').error
 
-DSObject = require('./DSObject')
-DSPool = require('./DSPool')
+DSObject = require './DSObject'
+DSPool = require './DSPool'
 
 module.exports = class DSDataServiceBase extends DSObject
   @begin 'DSDataService'

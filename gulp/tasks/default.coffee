@@ -1,3 +1,8 @@
-gulp = require("gulp")
+gulp = require 'gulp'
+gulpsync = require("gulp-sync")(gulp)
 
-gulp.task "default", ["watch", "copyLibs", "copyData"]
+gulp.task "default", gulpsync.sync [ # sync
+  'cleanup'
+  'build'
+  # async
+  ['watch', 'browserSync']]

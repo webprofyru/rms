@@ -6,5 +6,6 @@ module.exports = class Day extends DSObject
   @propNum 'index'
   @propNum 'x'
   @propDuration 'workTime'
+  @propDuration 'timeSpent'
   @end()
 

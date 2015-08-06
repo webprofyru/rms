@@ -15,11 +15,14 @@ module.exports = class Person extends DSDocument
 
   @propNum 'id', 0
   @propStr 'name'
+  @propStr 'firstName'
   @propStr 'avatar'
   @propStr 'email'
   @propDSEnum 'roles'
 
   @propNum 'companyId'
+
+  @propBool 'currentUser'
 
   @propDuration 'contractTime'
 

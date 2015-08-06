@@ -44,9 +44,9 @@ ngModule.factory 'PersonDayStatData', [(->
       if assert
         error.invalidArg 'dsDataService' if !(dsDataService instanceof DSDataServiceBase)
 
-      (tasks = @set 'tasks', dsDataService.findDataSet @, (_.assign {}, @params, {type: 'Task', filter: 'assigned'})).release @
+      (tasks = @set 'tasks', dsDataService.findDataSet @, (_.assign {}, @params, {type: Task, filter: 'assigned'})).release @
       tasksItems = tasks.items
-      (people = @set 'people', dsDataService.findDataSet @, {type: 'Person', mode: @params.mode}).release @
+      (people = @set 'people', dsDataService.findDataSet @, {type: Person, mode: @params.mode}).release @
       peopleItems = people.items
       personDayStats = @get('personDayStats')
 

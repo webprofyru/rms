@@ -31,7 +31,7 @@ module.exports =  class DSData extends DSObject
     @set 'status', switch status
       when 'nodata' then 'load'
       when 'ready' then 'update'
-    return @$ds_ref > 0) # switching to 'update' can release this object - see @addDataSource
+    return @$ds_ref > 1) # switching to 'update' can release this object - see @addDataSource
 
   _endLoad: ((isSuccess) ->
     @set 'status', if isSuccess then 'ready' else 'nodata'

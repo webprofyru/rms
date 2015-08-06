@@ -1,0 +1,72 @@
+module.exports = (ngModule = angular.module 'data/TasksWithTimeTracking', [
+  require '../dscommon/DSDataSimple'
+]).name
+
+assert = require('../dscommon/util').assert
+error = require('../dscommon/util').error
+
+DSSet = require '../dscommon/DSSet'
+DSEnum = require '../dscommon/DSEnum'
+DSData = require '../dscommon/DSData'
+DSDigest = require '../dscommon/DSDigest'
+DSDataServiceBase = require '../dscommon/DSDataServiceBase'
+
+Task = require '../models/Task'
+TaskTimeTracking = require '../models/TaskTimeTracking'
+
+ngModule.factory 'TasksWithTimeTracking', [
+  'DSDataSimple', 'DSDataSource', '$rootScope', '$http', '$q',
+  ((DSDataSimple, DSDataSource, $rootScope, $http, $q) ->
+
+    return class TasksWithTimeTracking extends DSData
+
+      @begin 'TasksWithTimeTracking'
+
+      @addPool()
+
+      @propDoc 'srcTasks', DSSet
+      @propDoc 'srcTasksTimeTracking', DSSet
+
+      @propObj 'cancel', null
+
+      @propSet 'tasks', Task
+
+      @ds_dstr.push (->
+        cancel.resolve() if cancel = @get('cancel')
+        @__unwatchA?()
+        @__unwatchB?()
+        return)
+
+      clear: (->
+        DSData::clear.call @
+        cancel.resolve() if cancel = @get('cancel')
+        return)
+
+      init: ((dsDataService) ->
+        if assert
+          error.invalidArg 'dsDataService' if !(dsDataService instanceof DSDataServiceBase)
+
+        (srcTasks = @set 'srcTasks', dsDataService.findDataSet @, {mode: 'original', type: Task, filter: 'all', source: true}).release @
+
+        (srcTasksTimeTracking = @set 'srcTasksTimeTracking', dsDataService.findDataSet @, {mode: 'original', type: TaskTimeTracking}).release @
+
+        tasks = @get 'tasksSet'
+
+        @__unwatchA = srcTasks.watch @,
+          add: ((task) ->
+            if task.get('timeTracking') == null
+              task.set 'timeTracking', TaskTimeTracking.pool.find @, task.$ds_key
+            tasks.add @, task
+            return)
+          remove: ((task) ->
+            tasks.remove task
+            return)
+
+        @__unwatchB = srcTasks.watchStatus @, ((source, status) =>
+          @set 'status', status
+          return)
+
+        @init = null
+        return)
+
+      @end())]

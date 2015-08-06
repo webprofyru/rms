@@ -1,8 +1,9 @@
 module.exports = (ngModule = angular.module 'ui/views/view2/View2', [
   require '../../../data/dsChanges'
   require '../../../data/dsDataService'
-  require('../../../dscommon/DSView')
-  require('../view1/View1')
+  require '../../../dscommon/DSView'
+  require '../view1/View1'
+  require '../../tasks/addCommentAndSave'
 ]).name
 
 assert = require('../../../dscommon/util').assert
@@ -73,27 +74,18 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', ((View1, DSV
     @end())]
 
 ngModule.directive 'rmsView2DayDropTask', [
-  'dsChanges', '$rootScope',
-  ((dsChanges, $rootScope) ->
+  'dsChanges', '$rootScope', 'addCommentAndSave',
+  ((dsChanges, $rootScope, addCommentAndSave) ->
     restrict: 'A'
     scope: true
     link: (($scope, element, attrs) ->
       element.on 'dragover', ((e)->
         return false)
       element.on 'drop', ((e)->
-        e.stopPropagation()
-        DSDigest.block (->
-          (hist = dsChanges.get('hist')).startBlock()
-          try
-            (task = $rootScope.modal.task).set 'responsible', null
-            task.set 'duedate', $scope.day.get 'date'
-          finally
-            hist.endBlock()
-          return)
+        addCommentAndSave $rootScope.modal.task, !e.shiftKey,
+          responsible: null
+          duedate: $scope.day.get 'date'
         $rootScope.$digest()
         return false)
       return)
   )]
-
-
-

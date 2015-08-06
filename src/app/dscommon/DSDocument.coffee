@@ -74,17 +74,20 @@ module.exports = class DSDocument extends DSObject
         return)
 
       __onChange: ((item, propName, value, oldVal) -> # react on server obj property change
-        if (change = @__change) && change.hasOwnProperty(propName) && (val = (prop = change[propName]).v) == value # server val is the same as last edition of the propName
+        if (change = @__change) && change.hasOwnProperty(propName) && item.__props[propName].equal((val = (prop = change[propName]).v), value) # server val is the same as last edition of the propName
           @$ds_chg.$ds_hist.setSameAsServer @, propName
           s.release @ if (s = prop.s) instanceof DSObjectBase
           val.release @ if val instanceof DSObjectBase
           delete change[propName]
-          if _.isEmpty change
+          empty = true
+          for propName in change when propName != '__error' && propName != '__refreshView'
+            empty = false
+            break
+          if empty
             delete @.__change
             @$ds_chg.remove @
         else if @$ds_evt
-          for lst in @$ds_evt by -1
-            lst.__onChange.call lst, @, propName, value, oldVal
+          lst.__onChange.call lst, @, propName, value, oldVal for lst in @$ds_evt by -1
         return)
 
       props = Editable::__props = originalDocClass::__props # same props as on server version of document class
@@ -120,7 +123,8 @@ module.exports = class DSDocument extends DSObject
                   v.release @ if (v = changePair.v) instanceof DSObject
                   s.release @ if (s = changePair.s) instanceof DSObject
                   delete change[propName]
-                  if _.isEmpty change
+                  empty = true; (empty = false; break) for k of change when k != '__error' && k != '__refreshView'
+                  if empty
                     if @$ds_evt # send change event before remove. This makes possible corrent exclude items from DSSet on change event
                       lst.__onChange.call lst, @, propName, value, oldVal for lst in @$ds_evt by -1
                     delete @.__change

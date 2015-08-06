@@ -37,20 +37,31 @@ ngModule.run ['$rootScope', (($rootScope) ->
       date = doc.get(prop)
       return if !date then '' else date.format 'DD.MM')
 
-    taskPeriod: ((doc, prop) ->
+    taskPeriod: ((doc, prop, time) -> # Hacx: time parameter is quick solution to add spent time to estimate
       if assert
         if doc
           error.invalidArg 'doc' if !(doc instanceof DSObject)
           error.invalidArg 'prop' if !((props = doc.__proto__.__props).hasOwnProperty prop)
           throw new Error "Expected property with type 'duration', but property '#{prop}' has type #{type}" if !((type = props[prop].type) == 'duration')
-      return '' if !doc
-      duration = doc.get(prop)
-      return '' if !duration
-      hours = Math.floor duration.asHours()
-      minutes = duration.minutes()
-      res = if hours then "#{hours}h" else ''
-      res += " #{minutes}m" if minutes
-      res = '0' if !res
+      res = ''
+      if doc && (duration = doc.get(prop))
+        hours = Math.floor duration.asHours()
+        minutes = duration.minutes()
+        res += if hours then "#{hours}h" else ''
+        res += ' ' if hours and minutes
+        res += "#{minutes}m" if minutes
+        res += '0' if !res
+      if time
+        if moment.isDuration time
+          hours = Math.floor time.asHours()
+          minutes = time.minutes()
+        else
+          hours = Math.floor (time = time.get('timeMin')) / 60
+          minutes = time % 60
+        res += ' / '
+        res += if hours then "#{hours}h " else ''
+        res += ' ' if hours and minutes
+        res += "#{minutes}m" if minutes
       return res)
 
     taskPeriodLight: ((duration) ->
@@ -91,12 +102,19 @@ ngModule.run ['$rootScope', (($rootScope) ->
         error.invalidArg 'date' if !(!date || moment.isMoment(date))
       return if !date then '' else date.format 'DD.MM.YYYY')
 
-    splitDuration: ((duration) ->
+    splitDuration: ((duration, time) ->
       hours = Math.floor duration.asHours()
       minutes = duration.minutes()
       res = if hours then "#{hours}h" else ''
       res += " #{minutes}m" if minutes
       res = '0' if !res
+      if time
+        hours = Math.floor (time = time.get('timeMin')) / 60
+        minutes = time % 60
+        res += ' / '
+        res += if hours then "#{hours}h " else ''
+        res += ' ' if hours and minutes
+        res += "#{minutes}m" if minutes
       return res)
 
   return)]

@@ -23,7 +23,7 @@ ngModule.directive "uiLayout", [
     $window = $($window)
     return {
       restrict: 'A'
-      controller: (($scope) ->
+      controller: ['$scope', (($scope) ->
         $scope.layout = @
         # TODO: Add config persistence
         @area1 = {}
@@ -60,7 +60,7 @@ ngModule.directive "uiLayout", [
   #        console.info "area1: #{@area1.width}, #{@area1.height}, area2: #{@area2.width}, #{@area2.height}, area3: #{@area3.width}, #{@area3.height}; vResizer: #{@vResizer}, hResizer: #{@hResizer}"
           digest() if change && !noDigest
           return)
-        return)
+        return)]
       link: (($scope, element, attrs, uiLayout) ->
         $window.on 'resize', onResize = (->
           uiLayout.setSize $window.width(), $window.height()
@@ -97,60 +97,6 @@ ngModule.directive 'uiLayoutResizer', ['$document', (($document) ->
       return)}
   return)]
 
-
-### Header ###
-#ngModule.directive 'uiLayoutHeader', ['config', ((config) ->
-#  return {
-#    restrict: 'A'
-#    controller: (($scope) ->
-#      @element = @h3 = @filters = @actions = null
-#      @update = (->
-#        return if !(config.hasRoles && @element != null && @filters != null && @actions != null)
-#        total = @element.width()
-#        h3Width = @h3.width()
-#        actionsWidth = @actions.width()
-#        console.info 'total: ', total, ', h3Width: ', h3Width, '; actionsWidth: ', actionsWidth
-#        labelAndFilterWidth = (total - (h3Width + actionsWidth)) / 3 - 20
-#        console.info 'labelAndFilterWidth: ', labelAndFilterWidth
-#        console.info 'toggle: ', (spanWidth = if labelAndFilterWidth > 60 then 180 else 0) != 0
-#        $('span', @filters).toggle (spanWidth = if labelAndFilterWidth > 180 then 180 else 0) != 0
-#        $('.ui-select', @filters).width filterWidth = labelAndFilterWidth - spanWidth
-#        console.info 'spanWidth: ', spanWidth, '; filterWidth: ', filterWidth
-#        return)
-#      @setFilters = ((@filters) -> @update(); return)
-#      @setActions = ((@actions) -> @update(); return)
-#      $scope.$on 'layout-update', (=> @update(); return)
-#      return)
-#    link: (($scope, element, attrs, self) ->
-#      self.h3 = $('h3', (self.element = element))
-#      return)}
-#  return)]
-#
-#ngModule.directive 'uiLayoutHeaderFilters', ['config', ((config) ->
-#  return {
-#    restrict: 'A'
-#    require: '^uiLayoutHeader'
-#    link: (($scope, element, attrs, uiLayoutHeader) ->
-#      console.info 'uiLayoutHeaderFilters'
-#      uiLayoutHeader.setFilters element
-#      return)}
-#  return)]
-#
-#ngModule.directive 'uiLayoutHeaderActions', ['config', ((config) ->
-#  return {
-#    restrict: 'A'
-#    require: '^uiLayoutHeader'
-#    link: (($scope, element, attrs, uiLayoutHeader) ->
-#      console.info 'uiLayoutHeaderActions'
-#      uiLayoutHeader.setActions element
-#      $scope.$on 'layout-update', update = (->
-#        element.toggleClass 'narrow', config.hasRoles && $scope.layout.width < 1100
-#        uiLayoutHeader.update()
-#        return)
-#      update()
-#      return)}
-#  return)]
-
 # Note: We cannot use DOM Element in Angular expresion, so we need a wrapper.
 # Details from Angular - https://docs.angularjs.org/error/$parse/isecdom
 
@@ -163,7 +109,7 @@ class DOMWrapper
 ngModule.directive 'uiLayoutContainer', ['$document', (($document) ->
   return {
     restrict: 'A'
-    link: (($scope, element, attrs, uiLayoutContainer) ->
+    link: (($scope, element, attrs) ->
       $scope.uiContainer = new DOMWrapper(element)
       return)}
   return)]

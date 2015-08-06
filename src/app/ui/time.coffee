@@ -1,12 +1,13 @@
 module.exports = time =
     today: moment().startOf('day')
+    historyLimit: moment().startOf('week').subtract(2, 'weeks')
 
-updateToday = (->
+(updateToday = (->
     # every minute
     setTimeout (->
         time.today = moment().startOf('day')
         updateToday()
-        return), 60000
-    return)()
+        return), moment().startOf('day').add(1, 'day').add(20, 'seconds').valueOf() - (new Date()).getTime()
+    return))()
 
 

@@ -1,10 +1,11 @@
 assert = require('./util').assert
 error = require('./util').error
 
-DSHistory = require('./DSHistory')
-DSPool = require('./DSPool')
-DSData = require('./DSData')
-DSDocument = require('./DSDocument')
+DSHistory = require './DSHistory'
+DSPool = require './DSPool'
+DSData = require './DSData'
+DSDocument = require './DSDocument'
+DSDigest = require './DSDigest'
 
 module.exports = class DSChangesBase extends DSData
   @begin 'DSChangesBase'
@@ -37,16 +38,18 @@ module.exports = class DSChangesBase extends DSData
     return @get('count') > 0)
 
   reset: (->
-    (hist = @get('hist')).startReset()
-    try
-      for s in @__proto__.__sets
-        # Note: I should clone list first, since it will be modified by inner actions
-        for item in _.map (set = @["_#{s}"]).items, ((v) -> v)
-          originalItem = item.$ds_doc
-          for propName in (propName for propName of item.__change)
-            item.set propName, originalItem.get(propName)
-    finally
-      hist.endReset()
+    DSDigest.block (=>
+      (hist = @get('hist')).startReset()
+      try
+        for s in @__proto__.__sets
+          # Note: I should clone list first, since it will be modified by inner actions
+          for item in _.map (set = @["_#{s}"]).items, ((v) -> v)
+            originalItem = item.$ds_doc
+            for propName of item.__change when propName != '__error' && propName != '__refreshView'
+              item.set propName, originalItem.get(propName)
+      finally
+        hist.endReset()
+      return)
     return)
 
   changesToMap: (->
@@ -57,7 +60,7 @@ module.exports = class DSChangesBase extends DSData
       for itemKey, item of set.items
         resSet[itemKey] = (itemChanges = {})
         for propName, propChange of item.__change
-          if (write = props[propName].write)
+          if propName != '__error' && propName != '__refreshView' && (write = props[propName].write)
             itemChanges[propName] =
               v: if propChange.v == null then null else write(propChange.v)
               s: if propChange.s == null then null else write(propChange.s)

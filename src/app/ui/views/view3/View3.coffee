@@ -2,6 +2,7 @@ module.exports = (ngModule = angular.module 'ui/views/view3/View3', [
   require '../../../config'
   require '../../../data/dsDataService'
   require('../../../dscommon/DSView')
+  require '../../tasks/addCommentAndSave'
 ]).name
 
 assert = require('../../../dscommon/util').assert
@@ -100,16 +101,16 @@ ngModule.factory 'View3', ['DSView', 'config', '$log', ((DSView, config, $log) -
     @end())]
 
 ngModule.directive 'rmsView3DropTask', [
-  '$rootScope',
-  (($rootScope) ->
+  '$rootScope', 'addCommentAndSave',
+  (($rootScope, addCommentAndSave) ->
     restrict: 'A'
     scope: true
     link: (($scope, element, attrs) ->
       element.on 'dragover', ((e)->
         return false)
       element.on 'drop', ((e)->
-        e.stopPropagation()
-        $rootScope.modal.task.set 'duedate', null
+        addCommentAndSave $rootScope.modal.task, !e.shiftKey,
+          duedate: null
         $rootScope.$digest()
         return false)
       return)

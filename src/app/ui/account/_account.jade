@@ -1,0 +1,9 @@
+#modal-login(ng-init='loginIsShown=false' ng-class='{show:loginIsShown}' ng-if='isShowAccount' rms-account='')
+    form.body
+        .company
+            input(type='text' placeholder='teamwork url' ng-model='url')
+        .token
+            input(type='text' placeholder='access token' ng-model='token')
+        .btn-group
+            button.btn(type='submit' ng-click='save()') Save
+            button.btn.right(type='button' ng-click='close()') Close

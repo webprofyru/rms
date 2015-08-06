@@ -47,11 +47,11 @@ module.exports = util =
     invalidListValue: ((index, invalidValue) ->
       throw new Error "Invalid value '#{invalidValue}' at position #{index}"
       return)
-    duplicatedProperty: ((clazz, propName) ->
-      throw new Error "Class '#{clazz.name}': Prop '#{propName}': Duplicated property name"
+    duplicatedProperty: ((type, propName) ->
+      throw new Error "Class '#{type.docType}': Prop '#{propName}': Duplicated property name"
       return)
-    propIsReadOnly: ((clazz, propName) ->
-      throw new Error "Class '#{clazz.name}': Prop '#{propName}': Property is read-only"
+    propIsReadOnly: ((type, propName) ->
+      throw new Error "Class '#{type.docType}': Prop '#{propName}': Property is read-only"
       return)
     invalidValue: ((object, propName, invalidValue) ->
       throw new Error "Obj '#{object}': Prop '#{propName}': Invalid value '#{invalidValue}'"

@@ -2,7 +2,8 @@ module.exports = (ngModule = angular.module 'ui/views/view1/View1', [
   require '../../../config'
   require '../../../data/dsChanges'
   require '../../../data/dsDataService'
-  require('../../../dscommon/DSView')
+  require '../../../dscommon/DSView'
+  require '../../tasks/addCommentAndSave'
 ]).name
 
 assert = require('../../../dscommon/util').assert
@@ -13,6 +14,7 @@ DSDigest = require '../../../dscommon/DSDigest'
 Task = require('../../../models/Task')
 Person = require('../../../models/Person')
 PersonDayStat = require('../../../models/PersonDayStat')
+PersonTimeTracking = require('../../../models/PersonTimeTracking')
 
 # View specific models
 Day = require('./models/Day')
@@ -25,7 +27,7 @@ ngModule.controller 'View1', ['$scope', 'View1', '$rootScope', (($scope, View1, 
   $scope.expandedHeight = ((row)->
       return '' if !row.expand
       return "height:100px" if _.isEmpty row.tasks
-      return "height:#{52 * _.max(row.tasks, 'y').y + 100}px")
+      return "height:#{55 * _.max(row.tasks, 'y').y + 98}px")
   return)]
 
 ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, config, $rootScope, $log) ->
@@ -33,9 +35,10 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
   return class View1 extends DSView
     @begin 'View1'
 
-    @propData 'people', Person, {}
-    @propData 'tasks', Task, {filter: 'assigned'}
+    @propData 'people', Person, {watch: ['roles', 'companyId']}
+    @propData 'tasks', Task, {filter: 'assigned', watch: ['responsible', 'duedate', 'split']}
     @propData 'personDayStat', PersonDayStat, {}
+    @propData 'personTimeTracking', PersonTimeTracking, {watch: []}
 
     @propMoment 'startDate'
     @propList 'days', Day
@@ -65,11 +68,11 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
 
         $scope.filterCompanies = [
           {id: null, name: 'All'}
-          $scope.selectedCompany = {id: 23872, name: 'WebProfy'}]
+          $scope.selectedCompany = {id: 23872, name: 'WebProfy'}
+          {id: 50486, name: 'Freelancers'}]
 
-      $scope.$watch (=> [@get('startDate')?.valueOf(), $scope.mode]), ((args) =>
-        [startDateVal, mode] = args
-        @dataUpdate {startDate: moment(startDateVal), endDate: moment(startDateVal).add(6, 'days'), mode}
+      $scope.$watch (=> [@get('startDate')?.valueOf(), $scope.mode, $scope.dataService.showTimeSpent]), (([startDateVal, mode, showTimeSpent]) =>
+        @dataUpdate {startDate: moment(startDateVal), endDate: moment(startDateVal).add(6, 'days'), mode, showTimeSpent}
         return), true
 
       $scope.$watch (-> [$scope.selectedRole, $scope.selectedCompany, $scope.selectedLoad]), (=> @__dirty++), true
@@ -93,6 +96,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
       return)
 
     render: (->
+
       if !((peopleStatus = @get('data').get('peopleStatus')) == 'ready' || peopleStatus == 'update')
         @get('rowsList').merge @, []
         return
@@ -109,11 +113,11 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
 
       filter = (-> true)
       hiddenPeople = @get('hiddenPeople')
-      for k of hiddenPeople
+      for k of hiddenPeople # is there at least one person within the map
         filter = ((person) -> !hiddenPeople.hasOwnProperty(person.$ds_key))
         break
 
-      if config.get('hasRoles')
+      if config.get('hasRoles') # it's WebProfy extended case
 
         if @scope.selectedCompany?.id
           companyId = @scope.selectedCompany.id
@@ -165,17 +169,22 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
           row.set 'person', person
           return row)
 
-      # Tenmp array for calculate total work time by days
+      # Temp array for calculate total work time by days
       daysTemp =  _.map [0..6], (-> moment.duration(0))
+      timeSpentTemp = _.map [0..6], (-> moment.duration(0))
 
       if !(((tasksStatus = @get('data').get('tasksStatus')) == 'ready' || tasksStatus == 'update') &&
            ((personDayStatStatus = @get('data').get('personDayStatStatus')) == 'ready' || personDayStatStatus == 'update'))
-        _.forEach rows, ((row) =>
+        _.forEach rows, ((row) => # clear all
           row.get('tasksList').merge @, []
           row.set 'personDayStat', null
           return)
-      else
+      else # render
         tasksByPerson = _.groupBy @data.tasks, ((task) -> task.get('responsible').$ds_key)
+        timeByPerson = null
+        if @data.personTimeTrackingStatus == 'ready' # note: in 'update' state we should hide
+          timeSpentTemp = _.map [0..6], (-> moment.duration(0))
+          timeByPerson = _.groupBy (personTimeTracking = @data.personTimeTracking), ((task) -> task.get('personId'))
         _.forEach rows, ((row) =>
 
           # fill totals
@@ -184,35 +193,75 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
 
           # create collection of taskView
           tasksPool = row.get 'tasksPool'
-          taskViews = row.get('tasksList').merge @, _.map tasksByPerson[row.$ds_key], ((task) =>
+          takenTime = {}
+          taskViews = _.map tasksByPerson[row.$ds_key], ((task) =>
             taskView = tasksPool.find @, task.$ds_key
             taskView.set 'task', task
+            if timeByPerson # link time to active tasks # mark as taken time for non-completed split tasks. time will be used in getTime method below
+              if (split = task.get('split'))
+                duedate = task.get('duedate')
+                start = if (firstDate = split.firstDate(duedate)) <= startDate then 0 else moment.duration(firstDate.diff(startDate)).asDays()
+                for day in @get('days')[start..6]
+                  if (time = personTimeTracking["#{row.$ds_key}-#{task.$ds_key}-#{day.get('date').valueOf()}"])
+                    takenTime[time.$ds_key] = true
+              else if (time = personTimeTracking["#{row.$ds_key}-#{task.$ds_key}-#{task.get('duedate').valueOf()}"]) # set time for non-completed non-split tasks
+                  takenTime[time.$ds_key] = true
+                  taskView.set 'time', time
+              else # no time for this task
+                taskView.set 'time', null
             return taskView)
+          if timeByPerson && (timeByThisPerson = timeByPerson[row.$ds_key])
+            # add taskViews for the PersonTimeTracking objectы left after linking to a tasks
+            for time in timeByThisPerson when !takenTime[time.$ds_key]
+              taskViews.push (taskView = tasksPool.find @, time.$ds_key)
+              taskView.set 'time', time
+            # update timeSpent in dayStats
+            timeTrackingByDates = _.groupBy timeByThisPerson, ((personTTracking) -> personTTracking.get('date').valueOf())
+            for dayStat, i in personDayStat.get('dayStats')
+              if dayTimeTrackingByDates = timeTrackingByDates[dayStat.get('day').valueOf()]
+                timeSpentTemp[i].add(dayStat.set('timeSpent', (_.reduce dayTimeTrackingByDates, ((res, val) -> res.add(val.get('timeMin'), 'm')), moment.duration())))
+              else dayStat.set 'timeSpent', null
+          else dayStat.set 'timeSpent', null for dayStat in personDayStat.get('dayStats')
 
-          View1.layoutTaskView startDate, taskViews
+          row.get('tasksList').merge @, taskViews
+
+          getTime = null
+          if timeByPerson
+            getTime = ((taskView, date) -> # this method is used to put time into split-tasks
+              return if (time = personTimeTracking["#{row.$ds_key}-#{taskView.get('task').$ds_key}-#{date.valueOf()}"]) then time else null)
+
+          View1.layoutTaskView startDate, taskViews, getTime
 
           return)
 
-        # fill total work time by days
-        _.forEach days, ((day, index) ->
-          day.set 'workTime', daysTemp[index]
-          return)
+      # fill total work time by days - top of the whole view1 matrix
+      _.forEach days, ((day, index) ->
+        day.set 'workTime', daysTemp[index]
+        day.set 'timeSpent', if (timeSpentTemp[index].valueOf() == 0) then null else timeSpentTemp[index]
+        return)
       return)
 
     tasksSortRule = ((left, right) ->
+      leftTask = left.get('task')
+      rightTask = right.get('task')
+
+      return left.get('time').get('taskId') - right.get('time').get('taskId') if leftTask == null and rightTask == null
+      return 1 if leftTask == null
+      return -1 if rightTask == null
+
       leftLen = if (leftSplit = (leftTask = left.get('task')).get('split')) == null then 1 else moment.duration(moment(leftSplit.lastDate(leftTask.get('duedate'))).diff(leftSplit.startDate)).asDays()
       rightLen = if (rightSplit = (rightTask = right.get('task')).get('split')) == null then 1 else moment.duration(moment(rightSplit.lastDate(rightTask.get('duedate'))).diff(rightSplit.startDate)).asDays()
       return leftLen - rightLen if leftLen != rightLen
       return rightTask.get('id') - leftTask.get('id'))
 
-    positionTaskView = ((pos, taskView, taskStartDate, day) ->
+    positionTaskView = ((pos, taskView, taskStartDate, day, getTime) ->
       taskView.set 'x', day
       dayPos = pos[day]
       if day == 0 then y = dayPos.length
       else
         break for v, y in dayPos when typeof v == 'undefined'
       taskView.set 'y', y
-      if (split = (task = taskView.get('task')).get('split')) == null
+      if (task = taskView.get('task')) == null || (split = task.get('split')) == null
         taskView.set 'split', null
         taskView.set 'len', 1 # one day task - no split
         dayPos.length++ if y == dayPos.length
@@ -221,30 +270,45 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
         len = taskView.set 'len', Math.min(moment.duration(moment(split.lastDate(task.get('duedate'))).diff(taskStartDate)).asDays() + 1, 7 - day)
         viewSplit = taskView.set 'split', []
         for s in [0...len] # mark next days
-          if (plan = split.get(task.duedate, if s == 0 then taskStartDate else moment(taskStartDate).add(s, 'day'))) != null
-            viewSplit.push {x: s, plan}
+          date = if s == 0 then taskStartDate else moment(taskStartDate).add(s, 'day')
+          time = if getTime then getTime(taskView, date) else null
+          if (plan = split.get(task.duedate, date)) != null || time != null
+            viewSplit.push {x: s, plan, time}
           dpos.length = y if (dpos = pos[day + s]).length <= y
           dpos[y] = true
       return y)
 
-    # It's common functionality used in View1 and View2
-    @layoutTaskView = ((startDate, taskViews) ->
+    # It's common functionality used in View1 and View2.  Parameter getTime is only used in View1
+    @layoutTaskView = ((startDate, taskViews, getTime) ->
       maxY = 0
       # fill taskViews with respect to split
-      if !_.some taskViews, ((taskView) -> taskView.get('task').get('split')) # simple case, then all taskViews are one day long
-        tasksByDay = _.groupBy taskViews, ((taskView) -> taskView.get('task').get('duedate').valueOf())
+      if !_.some taskViews, ((taskView) -> taskView.get('task')?.get('split')) # simple case, then all taskViews are one day long
+        tasksByDay = _.groupBy taskViews, ((taskView) ->
+          (if (time = taskView.get('time')) then time.get('date') else taskView.get('task').get('duedate')).valueOf())
         _.forEach tasksByDay, ((taskViews, date) ->
-          x = moment.duration(taskViews[0].get('task').get('duedate').diff(startDate)).asDays()
-          taskViews.sort ((left, right) -> right.get('task').get('id') - left.get('task').get('id'))
-          _.forEach taskViews, ((task, i) ->
-            task.set 'x', x
-            maxY = Math.max maxY, task.set 'y', i
-            task.set 'len', 1
-            task.set 'split', null
+          x = moment.duration((if (time = taskViews[0].get('time')) then time.get('date') else taskViews[0].get('task').get('duedate')).diff(startDate)).asDays()
+
+          taskViews.sort ((left, right) ->
+            leftTask = left.get('task')
+            rightTask = right.get('task')
+            return left.get('time').get('taskId') - right.get('time').get('taskId') if leftTask == null and rightTask == null
+            return 1 if leftTask == null
+            return -1 if rightTask == null
+            return rightTask.get('id') - leftTask.get('id'))
+
+          _.forEach taskViews, ((taskView, i) ->
+            taskView.set 'x', x
+            maxY = Math.max maxY, taskView.set 'y', i
+            taskView.set 'len', 1
+            taskView.set 'split', null
             return)
           return)
       else # there are long taskViews, so we should place them with respect to split.firstDate and make sure that taskViews are not get overlapped
-        tasksByDay = _.groupBy taskViews, ((taskView) -> duedate = (task = taskView.get('task')).get('duedate'); (if (split = task.get('split')) != null then split.firstDate(duedate) else duedate).valueOf())
+        tasksByDay = _.groupBy taskViews, ((taskView) ->
+          if (task = taskView.get('task'))
+            duedate = task.get('duedate')
+            return (if (split = task.get('split')) != null then split.firstDate(duedate) else duedate).valueOf()
+          return taskView.get('time').get('date').valueOf())
         pos = ([] for i in [0..6]) # matrix there we will mark that positions is busy
         groupDates = (+t for t of tasksByDay).sort()
         for d in groupDates # process taskViews started before the startDate
@@ -253,14 +317,14 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
           if day < 0
             day = 0
             taskStartDate = startDate
-          _.forEach tasksForTheDay, ((taskView) -> maxY = Math.max maxY, positionTaskView pos, taskView, taskStartDate, day; return)
+          _.forEach tasksForTheDay, ((taskView) -> maxY = Math.max maxY, positionTaskView(pos, taskView, taskStartDate, day, getTime); return)
       return maxY)
 
     @end())]
 
 ngModule.directive 'rmsView1DropTask', [
-  '$rootScope', 'dsChanges',
-  (($rootScope, dsChanges) ->
+    'View1', '$rootScope', 'dsChanges', 'addCommentAndSave',
+  ((View1, $rootScope, dsChanges, addCommentAndSave) ->
     restrict: 'A'
     scope: true
     link: (($scope, element, attrs) ->
@@ -270,17 +334,21 @@ ngModule.directive 'rmsView1DropTask', [
         day = _.findIndex $('.drop-zone', element), ((value)->
           $v = $(value)
           return $v.offset().left + $v.width() >= e.originalEvent.clientX)
+
+        if !(e.ctrlKey && (scope = (modal = $rootScope.modal).scope).view instanceof View1 && !modal.task.split)
+          tasks = [$rootScope.modal.task]
+        else # group movement, if task has no split and 'ctrl' key is pressed while operation
+          col = scope.taskView.x
+          tasks = (taskView.get('task') for taskView in scope.row.get('tasks') when !taskView.split && taskView.x == col && taskView.task.get('project') == modal.task.get('project'))
+
         if(day < 0)
-          (task = $rootScope.modal.task).set 'responsible', $scope.row.get 'person'
+          addCommentAndSave tasks, !e.shiftKey,
+            responsible: $scope.row.get('person')
         else
-          DSDigest.block (->
-            (hist = dsChanges.get('hist')).startBlock()
-            try
-              (task = $rootScope.modal.task).set 'responsible', $scope.row.get 'person'
-              task.set 'duedate', $scope.view.get('days')[day].get('date')
-            finally
-              hist.endBlock()
-            return)
+          addCommentAndSave tasks, !e.shiftKey,
+            responsible: $scope.row.get('person')
+            duedate: $scope.view.get('days')[day].get('date')
+
         $rootScope.$digest()
         return false)
       return))]

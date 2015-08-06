@@ -3,4 +3,5 @@
 .idea
 .iml
 .ipr
+build
 node_modules

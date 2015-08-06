@@ -26,6 +26,8 @@ module.exports = (ngModule = angular.module 'ui/ui', [
   require './tasks/TaskSplitWeekView'
   require './tasks/rmsTaskInfo'
 
+  require './tasks/addCommentAndSave'
+
   require './layout'
   require './filters'
 

@@ -14,6 +14,8 @@
       width: auto
 
   table.header
+    &.original-tasks
+      background-color: $color-header-original-tasks
     height: 40px
     width: 100%
     td.text
@@ -50,14 +52,14 @@
   @include breakpoint(1400px)
     table.header
       td.actions
-        width: 460px
+        width: 490px
         .action-buttons
           width: 100%
 
   @include breakpoint(0px 1400px)
     table.header
       td.actions
-        width: 260px
+        width: 290px
         .action-buttons
           width: 100%
 

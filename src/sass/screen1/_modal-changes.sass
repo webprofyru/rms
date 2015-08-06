@@ -8,7 +8,6 @@
   -moz-transform: translate(-50%, 0)
   transform: translate(-50%, 0)
   width: 70%
-  height: 25rem
   padding: 5px 15px
   border: 1px solid $color-header-dark
   background-color: #EDE9E9
@@ -19,8 +18,10 @@
   .main-table
     table-layout: fixed
     width: 100%
-    tr:nth-child(odd)
+    tr.dark
       background-color: darken(#EDE9E9, 10%)
+    tr.error
+      color: red
     th
       background-color: #EDE9E9
     td, th
@@ -49,7 +50,6 @@
         border-right: none
   .table-scroll
     table-layout: fixed
-    height: 18rem
     overflow: scroll
     .icon-remove
       cursor: pointer
@@ -67,8 +67,11 @@
       font-weight: bold
       opacity: 0.6
       cursor: pointer
-      &:hover
+      &:hover:not(.disabled)
         background-color: darken($color-header-light, 10%)
+      &.disabled
+        cursor: default
+        opacity: 0.2
       table
         height: 100%
         td

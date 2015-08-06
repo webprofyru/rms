@@ -11,6 +11,8 @@ Task = require('../../models/Task')
 Person = require('../../models/Person')
 PersonDayStat = require('../../models/PersonDayStat')
 
+time = require '../time'
+
 ngModule.factory 'TaskSplitWeekView', ['DSView', '$log', ((DSView, $log) ->
 
   class DayModel extends DSObject
@@ -61,15 +63,14 @@ ngModule.factory 'TaskSplitWeekView', ['DSView', '$log', ((DSView, $log) ->
 
       initSplit = $scope.edit.split
       splitDuedate = $scope.edit.splitDuedate
-      todayVal = $scope.today.valueOf()
       date = moment(monday)
       @get('daysList').merge @, days = (for d in [0...7]
         dayModel = new DayModel @, "#{d}"
         do(dayModel, date) =>
           dayModel.set 'initPlan', initPlan = if initSplit == null then null else initSplit.get splitDuedate, date
           dayModel.set 'plan', split.day(getDuedate, date) # link view model to split days
-          if date.valueOf() == todayVal then dayModel.set 'select', true
-          else if date > todayVal
+          if date.valueOf() == time.today then dayModel.set 'select', true
+          else if date > time.today
             dayModel.__unwatch1 = $scope.$watch 'edit.duedate', ((duedate) ->
               dayModel.set 'select', duedate != null && date <= duedate
               return)

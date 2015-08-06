@@ -4,7 +4,7 @@ traceRefs = require('./util').traceRefs
 totalReleaseVerb = require('./util').totalReleaseVerb
 error = require('./util').error
 
-DSObjectBase = require('./DSObjectBase')
+DSObjectBase = require './DSObjectBase'
 
 module.exports = class DSList extends DSObjectBase
 

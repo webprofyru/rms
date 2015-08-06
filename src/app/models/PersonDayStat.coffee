@@ -15,6 +15,7 @@ module.exports = class PersonDayStat extends DSObject
     @propDuration 'contract' # time person expected to work by contract
     @propDuration 'tasksTotal' # total time of tasks planned for this person for this day
     @propDuration 'timeLeft' # = contract - tasksTotal, can be negative
+    @propDuration 'timeSpent' # work time report by worker.  Note: This field gets populate right in View1 logic
     @end()
 
   constructor: ((referry, key, person, days) ->

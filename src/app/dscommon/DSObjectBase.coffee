@@ -95,7 +95,7 @@ module.exports = class DSObjectBase
     return @)
 
   toString: (->
-    return "#{@__proto__.constructor.name}:#{@$ds_key}#{if typeof @$ds_pool == 'object' then '@' + @$ds_pool else ''}")
+    return "#{@__proto__.$ds_docType}:#{@$ds_key}#{if typeof @$ds_pool == 'object' then '@' + @$ds_pool else ''}")
 
   writeMap: (->
     res = {}
@@ -199,7 +199,7 @@ module.exports = class DSObjectBase
     else if opts.hasOwnProperty 'value'
       propDecl.value = opts.value
       propDecl.readonly = true
-      Object.defineProperty @::, opts.name, value: value
+      Object.defineProperty @::, opts.name, value: opts.value
     else if opts.hasOwnProperty 'func'
       propDecl.func = func = opts.func
       propDecl.readonly = true
@@ -270,9 +270,9 @@ module.exports = class DSObjectBase
       name
       type
       init: null
-      valid:
-        (if q = valid then ((value) -> return if (value == null || value instanceof type) && (value = q(value)) != undefined then value else undefined)
-        else ((value) -> return if value == null || value instanceof type then value else undefined))
+      valid
+#        (if q = valid then ((value) -> return if (value == null || value instanceof type) && (value = q(value)) != undefined then value else undefined)
+#        else ((value) -> return if value == null || value instanceof type then value else undefined))
       write: ((v) -> if v != null then v.$ds_key else null)
       read: ((v) -> return null)
       equal: ((l, r) -> l == r)
@@ -310,6 +310,7 @@ module.exports = class DSObjectBase
       error.invalidArg 'values' for s in values when !typeof s == 'string'
     valid = if q = valid then ((value) -> return if (value == null || values.indexOf(value) >= 0) && q(value) then value else undefined)
     else ((value) -> return if value == null || values.indexOf(value) >= 0 then value else undefined)
+    localName = "_#{name}"
     return @prop {
       name
       type: 'enum'
@@ -353,7 +354,6 @@ module.exports = class DSObjectBase
       read: ((v) -> if v != null then moment.duration(v) else null)
       init: null})
 
-  # TODO: Consider remove this method
   @onAnyPropChange: ((listener) ->
     if assert
       error.invalidArg 'listener' if typeof listener != 'function'

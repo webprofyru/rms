@@ -16,7 +16,7 @@ module.exports = class TaskSplit
         type: 'taskRelativeSplit'
         valid
         read: ((v) -> if v != null then new TaskSplit(v) else null)
-        str: (-> 'split')
+        str: ((v) -> if v then 'split' else '')
         equal: ((l, r) ->
           return l == r if l == null || r == null
           return false if (leftList = l?.list).length != (rightList = r?.list).length

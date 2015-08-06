@@ -8,13 +8,16 @@ DSDocument = require('../dscommon/DSDocument')
 Project = require('./Project')
 Person = require('./Person')
 TodoList = require('./TodoList')
+TaskTimeTracking = require('./TaskTimeTracking')
 
+Comments = require('./types/Comments')
 TaskSplit = require('./types/TaskSplit')
 
 module.exports = class Task extends DSDocument
   @begin 'Task'
 
   @addPool true
+  Comments.addPropType @
   TaskSplit.addPropType @
 
   @str = ((v) -> if v == null then '' else v.get('title'))
@@ -39,9 +42,37 @@ module.exports = class Task extends DSDocument
   @propTaskRelativeSplit 'split'
 
   @propStr 'description'
+  @propComments 'comments'
 
-#  @propCalc 'isOverdue', (-> (duedate = @get('duedate')) != null && duedate < time.today)
+  # Note: null - time tracking is not expected, (timeTracking.isReady == false) - time data is not loaded yet
+  @propDoc 'timeTracking', TaskTimeTracking
+  @propStr 'firstTimeEntryId'
+
+  @propBool 'completed'
+  @propBool 'isReady'
+
+  #  @propCalc 'isOverdue', (-> (duedate = @get('duedate')) != null && duedate < time.today)
   isOverdue: (-> (duedate = @get('duedate')) != null && duedate < time.today)
+
+  timeWithinEstimate: (->
+    return 0 if (estimate = @get('estimate')) == null
+    return Math.min(100, Math.round(@get('timeTracking').get('totalMin') * 100 / estimate.asMinutes())))
+
+  timeAboveEstimate: (->
+    return 0 if (estimate = @get('estimate')) == null
+    return if ((percent = Math.round(@get('timeTracking').get('totalMin') * 100 / estimate.asMinutes())) <= 100) then 0 else if percent > 200 then 100 else (percent - 100))
+
+  timeReported: (->
+    return '' if (estimate = @get('estimate')) == null
+    return if ((percent = Math.round(@get('timeTracking').get('totalMin') * 100 / estimate.asMinutes())) > 200) then "#{percent} %" else '')
+
+  setVisible: ((isVisible) ->
+    if isVisible
+      if (@__visCount = (@__visCount || 0) + 1) == 1
+        @get('timeTracking')?.setVisible true
+    else if --@__visCount == 0
+        @get('timeTracking')?.setVisible false
+    return)
 
   @end()
 

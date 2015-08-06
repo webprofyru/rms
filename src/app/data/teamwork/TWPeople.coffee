@@ -8,7 +8,7 @@ error = require('../../dscommon/util').error
 
 Person = require '../../models/Person'
 
-ngModule.factory 'TWPeople', ['DSDataSimple', 'DSDataSource', ((DSDataSimple, DSDataSource) ->
+ngModule.factory 'TWPeople', ['DSDataSimple', 'DSDataSource', '$q', ((DSDataSimple, DSDataSource, $q) ->
 
   return class TWPeople extends DSDataSimple
 
@@ -38,9 +38,11 @@ ngModule.factory 'TWPeople', ['DSDataSimple', 'DSDataSource', ((DSDataSimple, DS
 
         person.set 'id', +jsonPerson['id']
         person.set 'name', "#{jsonPerson['last-name']} #{jsonPerson['first-name'].charAt(0).toUpperCase()}.".trim()
+        person.set 'firstName', jsonPerson['first-name'].trim()
         person.set 'avatar', jsonPerson['avatar-url']
         person.set 'email', jsonPerson['email-address']
         person.set 'companyId', +jsonPerson['company-id']
+        person.set 'currentUser', false
 
       @get('peopleSet').merge @, peopleMap
 

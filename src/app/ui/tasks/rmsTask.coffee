@@ -55,6 +55,7 @@ ngModule.directive 'rmsTask', ['$rootScope', '$timeout', (($rootScope, $timeout)
             $rootScope.modal =
               type: 'drag-start'
               task: $scope.$eval attrs.rmsTask
+              scope: $scope
             element.addClass 'drag-start'
             $rootScope.$digest()
             e.dataTransfer.setDragImage($('#task-drag-ghost')[0], 20, 20)
@@ -74,15 +75,13 @@ ngModule.directive 'rmsTask', ['$rootScope', '$timeout', (($rootScope, $timeout)
       return)
     )]
 
-ngModule.directive 'rmsSplitClass', ['$rootScope', '$timeout', (($rootScope, $timeout) ->
+ngModule.directive 'setTaskVisible', [(() ->
     restrict: 'A'
-    require: 'ngModel'
-    link: (($scope, element, attrs, model) ->
-      model.$render = (->
-        if model.$viewValue.split?
-          element.addClass('split')
-#          $scope.lengthInDay = model.$viewValue.get('len')
-          console.log model.$viewValue
+    link: (($scope, element, attrs) ->
+      path = attrs.setTaskVisible
+      $scope.$eval "#{path}.setVisible(true)"
+      $scope.$on '$destroy', (->
+        $scope.$eval "#{path}.setVisible(false)"
         return)
       return)
     )]

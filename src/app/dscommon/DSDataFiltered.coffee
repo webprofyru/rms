@@ -14,9 +14,9 @@ module.exports = ((itemType) ->
 
   # Note: During testing same named classes might change for every test, so we need to check items.type
   return if classes.hasOwnProperty(itemType.docType) && (clazz = classes[itemType.docType]).itemType == itemType then clazz
-  else classes[itemType.name] =
+  else classes[itemType.docType] =
     class DSDataFiltered extends DSData
-      @begin "DSDataFiltered<#{itemType.name}>"
+      @begin "DSDataFiltered<#{itemType.docType}>"
 
       @propDoc 'original', DSSet
 
@@ -52,7 +52,7 @@ module.exports = ((itemType) ->
 
         load = (=>
 
-          return if !@_startLoad()
+          @_startLoad() # result is not checked intentionally, so we could set 'load' state while source object is in 'load' state
 
           for itemKey, item of originalItems
             if filter(item)
@@ -82,11 +82,26 @@ module.exports = ((itemType) ->
           return)
 
         @_unwatchA = original.watchStatus @, ((source, status) =>
+          inUpdate = false
           if !((newStatus = original.get('status')) == (prevStatus = @get('status')))
             switch newStatus
-              when 'ready' then DSDigest.block load # it's only once, since 'update' is not assigned to state
-              when 'update' then if @_startLoad() then @_endLoad true # process update right away
-              when 'nodata' then @set 'status', 'nodata'
+              when 'ready'
+                if inUpdate
+                  inUpdate = false
+                  @_endLoad true
+                else
+                  DSDigest.block load # it's only once, since 'update' is not assigned to state
+              when 'load'
+                @_startLoad()
+              when 'update'
+                if @_startLoad()
+                  inUpdate = true
+              when 'nodata'
+                if inUpdate
+                  inUpdate = false
+                  @_endLoad false
+                else
+                  @set 'status', 'nodata'
           return)
 
         @init = null

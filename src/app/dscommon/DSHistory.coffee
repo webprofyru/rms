@@ -1,10 +1,10 @@
 assert = require('./util').assert
 error = require('./util').error
 
-DSObjectBase = require('./DSObjectBase')
-DSObject = require('./DSObject')
-DSDigest = require('./DSDigest')
-DSDocument = require('./DSDocument')
+DSObjectBase = require './DSObjectBase'
+DSObject = require './DSObject'
+DSDigest = require './DSDigest'
+DSDocument = require './DSDocument'
 
 module.exports = class DSHistory extends DSObject
   @begin 'DSHistory'

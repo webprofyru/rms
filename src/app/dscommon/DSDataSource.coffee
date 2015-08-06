@@ -57,21 +57,21 @@ ngModule.factory 'DSDataSource', ['$q', '$http', (($q, $http) ->
         @set 'status', 'ready'
       return)
 
-    httpGet: ((requestUrl, cancelDefer)->
+    httpGet: ((requestUrl, cancelDefer) ->
       @cancelDefers.push cancelDefer
       removeCancelDefer = ((resp) => _.remove @cancelDefers, cancelDefer; return resp)
       opts = {timeout: cancelDefer.promise}
       if @authHeader then opts.headers = {Authorization: @authHeader}
       return $http.get("#{@url}#{requestUrl}", opts).then(removeCancelDefer, removeCancelDefer))
 
-    httpPost: ((postUrl, payload, cancelDefer)->
+    httpPost: ((postUrl, payload, cancelDefer) ->
       @cancelDefers.push cancelDefer
       removeCancelDefer = ((resp) => _.remove @cancelDefers, cancelDefer; return resp)
       opts = {timeout: cancelDefer.promise}
       if @authHeader then opts.headers = {Authorization: @authHeader}
       return $http.post("#{@url}#{postUrl}", payload, opts).then(removeCancelDefer, removeCancelDefer))
 
-    httpPut: ((postUrl, payload, cancelDefer)->
+    httpPut: ((postUrl, payload, cancelDefer) ->
       @cancelDefers.push cancelDefer
       removeCancelDefer = ((resp) => _.remove @cancelDefers, cancelDefer; return resp)
       opts = {timeout: cancelDefer.promise}

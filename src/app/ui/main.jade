@@ -1,11 +1,14 @@
 #screen1(ui-layout='', style='width:{{layout.width}}px;height:{{layout.height + 40}}px')
 
-    include ./views/view1/view1.jade
+  include ./views/view1/_view1.jade
 
-    div(ng-switch='modal.type')
-        include ./tasks/taskEdit.jade
-        include ./tasks/taskInfo.jade
-        include ./tasks/taskDragGhost.jade
-        include ./views/changes/changes.jade
+  div(ng-switch='modal.type')
+    include ./tasks/_taskEdit.jade
+    include ./tasks/_taskInfo.jade
+    include ./tasks/_taskDragGhost.jade
+    include ./views/changes/_changes.jade
 
-include ./account/account.jade
+  div(ng-if='addCommentAndSave')
+    include ./tasks/_addCommentAndSave.jade
+
+include ./account/_account.jade

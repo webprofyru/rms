@@ -6,6 +6,7 @@ module.exports = (ngModule = angular.module 'ui/views/changes/ViewChanges', [
 assert = require('../../../dscommon/util').assert
 
 DSObject = require('../../../dscommon/DSObject')
+DSDigest = require('../../../dscommon/DSDigest')
 
 Task = require('../../../models/Task')
 Person = require('../../../models/Person')
@@ -19,7 +20,7 @@ ngModule.run ['$rootScope', (($rootScope) ->
 
 ngModule.controller 'ViewChanges', ['$scope', 'ViewChanges', 'dsChanges', '$rootScope', (($scope, ViewChanges, dsChanges, $rootScope) ->
   $scope.view = new ViewChanges $scope, 'viewChanges'
-  $scope.save = (-> dsChanges.save().then(-> $rootScope.modal = {type: null}; return); return)
+  $scope.save = (-> dsChanges.save().then((allTasksSaved) -> if allTasksSaved then $rootScope.modal = {type: null}; return); return)
   $scope.reset = (-> dsChanges.reset(); $rootScope.modal = {type: null}; return)
   return)]
 
@@ -32,7 +33,7 @@ ngModule.directive 'viewChangesFix', [
       header.width data.width()
       return))]
 
-ngModule.factory 'ViewChanges', ['DSView', '$log', ((DSView, $log) ->
+ngModule.factory 'ViewChanges', ['DSView', 'dsChanges', '$log', ((DSView, dsChanges, $log) ->
 
   return class ViewChange extends DSView
     @begin 'ViewChange'
@@ -47,6 +48,11 @@ ngModule.factory 'ViewChanges', ['DSView', '$log', ((DSView, $log) ->
       @dataUpdate {}
       return)
 
+    @ds_dstr.push (->
+      for taskKey, task of @get('data').get('tasksSet').items
+        delete task.__change.__refreshView
+      return)
+
     render: (->
       if !((tasksStatus = @get('data').get('tasksStatus')) == 'ready' || tasksStatus == 'update')
         @get('changesList').merge @, []
@@ -55,21 +61,49 @@ ngModule.factory 'ViewChanges', ['DSView', '$log', ((DSView, $log) ->
       poolChanges = @get 'poolChanges'
       changes = []
       props = (tasksSet = @get('data').get('tasksSet')).type::__props
+      isDark = false
+      refreshView = (=>
+        @__dirty++ # force render(), since changes is not DSDocument, so it does not produce change events
+        return)
       for taskKey, task of tasksSet.items
-        for propName, propChange of task.__change
+        isDark = !isDark
+        isFirst = true
+        task.__change.__refreshView = refreshView
+        remove = do (task) -> (->
+          (hist = dsChanges.get('hist')).startBlock()
+          try
+            DSDigest.block (->
+              for propName, propChange of task.__change when propName != '__error' && propName != '__refreshView'
+                task.set propName, task.$ds_doc.get(propName)
+              return)
+          finally
+            hist.endBlock()
+          refreshView()
+          return)
+        for propName, propChange of task.__change when propName != '__error' && propName != '__refreshView' && propName != 'comments'
           prop = props[propName]
           changes.push(change = poolChanges.find @, "#{task.$ds_key}.#{propName}")
-          change.set 'doc', task
+          change.set 'isDark', isDark
+          if isFirst
+            isFirst = false
+            change.set 'doc', task
           change.set 'prop', propName
           change.set 'value',
             if (v = propChange.v) == null then ' -' else prop.str(propChange.v)
           change.set 'conflict',
             if prop.equal((conflictValue = task.$ds_doc.get(propName)), propChange.s) then null
             else if conflictValue == null then ' -' else prop.str(conflictValue)
-          change.remove = do (self = @, task, propName) -> (->
-            task.set propName, task.$ds_doc.get(propName) # set edited-doc property value to the current prop value of server-doc
-            self.__dirty++ # force render(), since if it's not a last change in the task there will be no change-event from changes
-            return)
+          if remove
+            change.remove = remove
+            remove = null
+#          change.remove = do (task, propName) -> (->
+#            task.set propName, task.$ds_doc.get(propName) # set edited-doc property value to the current prop value of server-doc
+#            refreshView()
+#            return)
+        if task.__change.__error
+          changes.push(change = poolChanges.find @, "#{task.$ds_key}.__error")
+          change.set 'isDark', isDark
+          change.set 'error', task.__change.__error
 
       @get('changesList').merge @, changes
       return)

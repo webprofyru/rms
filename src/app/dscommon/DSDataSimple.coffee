@@ -32,23 +32,28 @@ ngModule.factory 'DSDataSimple', ['DSDataSource', '$rootScope', '$q', ((DSDataSo
         throw new Error 'load(): Source is not specified' if !@get('source')
         throw new Error 'load(): Request is not specified' if !(typeof (request = @get('request')) == 'string' && request.length > 0)
 
-      return if !@_startLoad()
+      return unless @_startLoad()
 
       cancel = @set('cancel', $q.defer())
+
+      onError = ((error, isCancelled) =>
+        if !isCancelled
+          console.error 'error: ', error
+          @set 'cancel', null
+        @_endLoad false
+        return)
+
       return (
         switch (method = @get 'method')
           when 'httpGet' then @get('source').httpGet(@get('request'), cancel)
-          when 'httpPost' then @get('source').httpPost(@get('request'), null, cancel)
-          when 'httpPut' then @get('source').httpPut(@get('request'), null, cancel))
+          when 'httpPost' then @get('source').httpPost(@get('request'), @params.json, cancel)
+          when 'httpPut' then @get('source').httpPut(@get('request'), @params.json, cancel))
         .then(
           ((resp) => # ok
             if (resp.status == 200) # 0 means that request was canceled
               @set 'cancel', null
               @_endLoad DSDigest.block (=> @importResponse(resp.data, resp.status))
-            return),
-          (=> # error
-            @set 'cancel', null
-            @_endLoad false
-            return)))
+            else onError(resp, resp.status == 0)
+            return), onError))
 
     @end())]

@@ -1,17 +1,23 @@
-gulp = require("gulp")
-browserSync = require("browser-sync")
-sass = require("gulp-sass")
-sourcemaps = require("gulp-sourcemaps")
-handleErrors = require("../util/handleErrors")
-config = require("../config").sass
-autoprefixer = require("gulp-autoprefixer")
+gulp = require 'gulp'
+gutil = require 'gulp-util'
+sass = require 'gulp-sass'
+handleErrors = require '../util/handleErrors'
+autoprefixer = require 'gulp-autoprefixer'
+minifyCss = require 'gulp-minify-css'
+rename = require 'gulp-rename'
 
-gulp.task "sass", ["images"], (->
-  return gulp.src(config.src)
-#    .pipe(sourcemaps.init())
-    .pipe(sass(config.settings))
-      .on("error", handleErrors)
-#    .pipe(sourcemaps.write())
+config = require('../config').sass
+
+gulp.task "sass", (->
+  res = gulp.src(config.src)
+    .pipe(sass(config.settings)).on("error", handleErrors)
     .pipe(autoprefixer(browsers: ["last 2 version"]))
-    .pipe(gulp.dest(config.dest))
-    .pipe(browserSync.reload(stream: true)))
+
+  if !gutil.env.dev
+    res = res
+      .pipe(minifyCss())
+      .pipe(rename(extname: '.min.css'))
+
+  res.pipe(gulp.dest(config.dest))
+
+  return res)
