@@ -2,20 +2,22 @@
 
 ### Build
 
-download nodejs from http://nodejs.org/
+* download nodejs from http://nodejs.org/
 
-install node.js
+* install node.js
 
-npm install
+* npm install
 
-npm install gulp
+* npm install gulp
 
-gulp
+* gulp
 
-### In case of error, while gulp
+* result in the /build folder
 
-npm uninstall gulp
+### Development
 
-npm install gulp
+To have not compressed scripts and not minified css: *gulp --dev*
 
-See https://github.com/dlmanning/gulp-sass/issues/174 for details
+To have script testing _http://localhost:3000/test.html_ working: *gulp --test*
+
+
