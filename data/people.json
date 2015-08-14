@@ -1,4 +1,4 @@
-﻿{
+{
     "roles": [
         {
             "role": null,
@@ -357,10 +357,10 @@
           "email": "n.milikov@webprofy.ru"
         },
         {
-            "id": 120883,
-            "role": "Programmer, Markuper",
-            "name": "Алексей Степанов",
-            "email": "a.stepanov@webprofy.ru"
+            "id": 121686,
+            "role": "Programmer",
+            "name": "Максим Васильев",
+            "email": "m.vasilyev@webprofy.ru"
         },
         {
             "id": 121030,
