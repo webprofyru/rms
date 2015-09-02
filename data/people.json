@@ -5,21 +5,27 @@
             "name": "Все"
         },
         {
-            "role": "All but managers",
-            "name": "Все кроме менеджеров",
+            "role": "Except managers",
+            "name": "Except managers",
             "special": "notSupervisors",
             "groupRole": true
         },
         {
-            "role": "Designers Only",
-            "name": "Только дизайнеры",
-            "roles": "Art-director, Designer, Jr. Designer",
+            "role": "Designers only",
+            "name": "Designers only",
+            "roles": "Art-director, Designer, Jr. Designer, Analyst",
             "groupRole": true
         },
         {
-            "role": "Webmasters Only",
-            "name": "Только вебмастера",
+            "role": "Webmasters only",
+            "name": "Webmasters only",
             "roles": "Markuper, Programmer",
+            "groupRole": true
+        },
+        {
+            "role": "QA+content only",
+            "name": "QA+content only",
+            "roles": "Tester, Content-manager",
             "groupRole": true
         },
         {
@@ -118,7 +124,7 @@
         },
         {
             "id": 88203,
-            "role": "Analyst",
+            "role": "Analyst, Manager",
             "name": "Алия Галимова",
             "email": "a.galimova@webprofy.ru"
         },
@@ -345,14 +351,14 @@
           "email": "lyalina.alena@gmail.com"
         },
         {
-          "id": 118361,
-          "role": "Tester",
-          "name": "Анастасия Лебедева",
-          "email": "an.lebedeva@kokoc.com"
+          "id": 122253,
+          "role": "Markuper, Content-manager",
+          "name": "Мария Артемова",
+          "email": "m.artemova@webprofy.ru"
         },
         {
           "id": 120604,
-          "role": "Programmer, Markuper",
+          "role": "Programmer",
           "name": "Никита Миликов",
           "email": "n.milikov@webprofy.ru"
         },
