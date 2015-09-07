@@ -2,7 +2,7 @@
     "roles": [
         {
             "role": null,
-            "name": "Все"
+            "name": "Р’СЃРµ"
         },
         {
             "role": "Except managers",
@@ -30,53 +30,53 @@
         },
         {
             "role": "Art-director",
-            "name": "Арт-директор",
+            "name": "РђСЂС‚-РґРёСЂРµРєС‚РѕСЂ",
             "supervisor": true
         },
         {
             "role": "Designer",
-            "name": "Дизайнер"
+            "name": "Р”РёР·Р°Р№РЅРµСЂ"
         },
         {
             "role": "Jr. Designer",
-            "name": "Техдизайнер"
+            "name": "РўРµС…РґРёР·Р°Р№РЅРµСЂ"
         },
         {
             "role": "Copywriter",
-            "name": "Копирайтер"
+            "name": "РљРѕРїРёСЂР°Р№С‚РµСЂ"
         },
         {
             "role": "Manager",
-            "name": "Менеджер",
+            "name": "РњРµРЅРµРґР¶РµСЂ",
             "supervisor": true
         },
         {
             "role": "Programmer",
-            "name": "Программист"
+            "name": "РџСЂРѕРіСЂР°РјРјРёСЃС‚"
         },
         {
             "role": "Markuper",
-            "name": "Верстальщик"
+            "name": "Р’РµСЂСЃС‚Р°Р»СЊС‰РёРє"
         },
         {
             "role": "Tester",
-            "name": "Тестер"
+            "name": "РўРµСЃС‚РµСЂ"
         },
         {
             "role": "Content-manager",
-            "name": "Контент-менеджер"
+            "name": "РљРѕРЅС‚РµРЅС‚-РјРµРЅРµРґР¶РµСЂ"
         },
         {
             "role": "Analyst",
-            "name": "Аналитик"
+            "name": "РђРЅР°Р»РёС‚РёРє"
         },
         {
             "role": "Flasher",
-            "name": "Флешер"
+            "name": "Р¤Р»РµС€РµСЂ"
         },
         {
           "role": "Technologist",
-          "name": "Технолог"
+          "name": "РўРµС…РЅРѕР»РѕРі"
         }
     ],
     "people": [
@@ -89,289 +89,289 @@
         {
             "id": 100079,
             "role": "Art-director",
-            "name": "Александр Колесников",
+            "name": "РђР»РµРєСЃР°РЅРґСЂ РљРѕР»РµСЃРЅРёРєРѕРІ",
             "email": "a.kolesnikov@webprofy.ru"
         },
         {
             "id": 95061,
             "role": "Designer, Markuper",
-            "name": "Александр Хрусталев",
+            "name": "РђР»РµРєСЃР°РЅРґСЂ РҐСЂСѓСЃС‚Р°Р»РµРІ",
             "email": "frost.pixel@gmail.com"
         },
         {
             "id": 97669,
             "role": "Manager",
-            "name": "Алексей Калмыков",
+            "name": "РђР»РµРєСЃРµР№ РљР°Р»РјС‹РєРѕРІ",
             "email": "a.kalmykov@webprofy.ru"
         },
         {
             "id": 98348,
             "role": "Programmer, Markuper",
-            "name": "Алексей Климов",
+            "name": "РђР»РµРєСЃРµР№ РљР»РёРјРѕРІ",
             "email": "a.klimov@webprofy.ru"
         },
         {
             "id": 88204,
             "role": "Manager",
-            "name": "Алексей Мерзляков",
+            "name": "РђР»РµРєСЃРµР№ РњРµСЂР·Р»СЏРєРѕРІ",
             "email": "a.merzlyakov@kokoc.com"
         },
         {
             "id": 48693,
             "role": "Art-director",
-            "name": "Алексей Шевцов",
+            "name": "РђР»РµРєСЃРµР№ РЁРµРІС†РѕРІ",
             "email": "a.shevtsov@webprofy.ru"
         },
         {
             "id": 88203,
             "role": "Analyst, Manager",
-            "name": "Алия Галимова",
+            "name": "РђР»РёСЏ Р“Р°Р»РёРјРѕРІР°",
             "email": "a.galimova@webprofy.ru"
         },
         {
             "id": 96180,
             "role": "Programmer",
-            "name": "Андрей Васильев",
+            "name": "РђРЅРґСЂРµР№ Р’Р°СЃРёР»СЊРµРІ",
             "email": "a.vasilyev@webprofy.ru"
         },
         {
             "id": 54199,
             "role": "Copywriter",
-            "name": "Антон Скобин",
+            "name": "РђРЅС‚РѕРЅ РЎРєРѕР±РёРЅ",
             "email": "a.skobin@webprofy.ru"
         },
         {
             "id": 98754,
             "role": "Art-director",
-            "name": "Антон Тихомиров",
+            "name": "РђРЅС‚РѕРЅ РўРёС…РѕРјРёСЂРѕРІ",
             "email": "a.tikhomirov@webprofy.ru"
         },
         {
             "id": 48790,
             "role": "Analyst",
-            "name": "Артём Николенко",
+            "name": "РђСЂС‚С‘Рј РќРёРєРѕР»РµРЅРєРѕ",
             "email": "a.nikolenko@team.kokoc.com"
         },
         {
             "id": 98446,
             "role": "Analyst",
-            "name": "Артем Яськов",
+            "name": "РђСЂС‚РµРј РЇСЃСЊРєРѕРІ",
             "email": "yaskov@team.kokoc.com"
         },
         {
             "id": 96178,
             "role": "Programmer, Markuper",
-            "name": "Валентин Хонин",
+            "name": "Р’Р°Р»РµРЅС‚РёРЅ РҐРѕРЅРёРЅ",
             "email": "v.khonin@webprofy.ru"
         },
         {
             "id": 48688,
             "role": "Manager",
-            "name": "Галина Игнатьева",
+            "name": "Р“Р°Р»РёРЅР° РРіРЅР°С‚СЊРµРІР°",
             "email": "i.galina@kokoc.com"
         },
         {
             "id": 102943,
             "role": "Programmer, Markuper",
-            "name": "Григорий Красильников",
+            "name": "Р“СЂРёРіРѕСЂРёР№ РљСЂР°СЃРёР»СЊРЅРёРєРѕРІ",
             "email": "g.krasilnikov@webprofy.ru"
         },
         {
             "id": 48687,
             "role": "Programmer, Markuper",
-            "name": "Денис Коровкин",
+            "name": "Р”РµРЅРёСЃ РљРѕСЂРѕРІРєРёРЅ",
             "email": "d.korovkin@webprofy.ru"
         },
         {
             "id": 57093,
             "role": "Flasher",
-            "name": "Дмитрий Кочкин (флэшер)",
+            "name": "Р”РјРёС‚СЂРёР№ РљРѕС‡РєРёРЅ (С„Р»СЌС€РµСЂ)",
             "email": "banner-prom@mail.ru"
         },
         {
             "id": 77667,
             "role": "Designer",
-            "name": "Евгения Харитонова",
+            "name": "Р•РІРіРµРЅРёСЏ РҐР°СЂРёС‚РѕРЅРѕРІР°",
             "email": "e.kharitonova@webprofy.ru"
         },
         {
             "id": 96181,
             "role": "Markuper",
-            "name": "Игорь Лесневский",
+            "name": "РРіРѕСЂСЊ Р›РµСЃРЅРµРІСЃРєРёР№",
             "email": "igor@sozdavatel.ru"
         },
         {
             "id": 48685,
             "role": "Manager",
-            "name": "Илья Сабуров",
+            "name": "РР»СЊСЏ РЎР°Р±СѓСЂРѕРІ",
             "email": "i.saburov@webprofy.ru"
         },
         {
             "id": 90620,
             "role": "Designer",
-            "name": "Лев Большаков",
+            "name": "Р›РµРІ Р‘РѕР»СЊС€Р°РєРѕРІ",
             "email": "melkortheshadow@gmail.com"
         },
         {
             "id": 101600,
             "role": "Designer",
-            "name": "Максим Дранев",
+            "name": "РњР°РєСЃРёРј Р”СЂР°РЅРµРІ",
             "email": "maksik26@mail.ru"
         },
         {
             "id": 97614,
             "role": "Designer",
-            "name": "Мария Русакова",
+            "name": "РњР°СЂРёСЏ Р СѓСЃР°РєРѕРІР°",
             "email": "m.rusakova@webprofy.ru"
         },
         {
             "id": 80753,
             "role": "Markuper",
-            "name": "Наталья Рябоконь",
+            "name": "РќР°С‚Р°Р»СЊСЏ Р СЏР±РѕРєРѕРЅСЊ",
             "email": "natalia.riabokon@gmail.com"
         },
         {
             "id": 49788,
             "role": "Designer",
-            "name": "Наталья Черепенина",
+            "name": "РќР°С‚Р°Р»СЊСЏ Р§РµСЂРµРїРµРЅРёРЅР°",
             "email": "n.cherepenina@webprofy.ru"
         },
         {
             "id": 97175,
             "role": "Programmer, Markuper",
-            "name": "Николай Скинтеев",
+            "name": "РќРёРєРѕР»Р°Р№ РЎРєРёРЅС‚РµРµРІ",
             "email": "n.skinteev@webprofy.ru"
         },
         {
             "id": 77666,
             "role": "Manager",
-            "name": "Ольга Бояршинова",
+            "name": "РћР»СЊРіР° Р‘РѕСЏСЂС€РёРЅРѕРІР°",
             "email": "o.boyarshinova@webprofy.ru"
         },
         {
             "id": 56392,
             "role": "Designer",
-            "name": "Ольга Чухаленко",
+            "name": "РћР»СЊРіР° Р§СѓС…Р°Р»РµРЅРєРѕ",
             "email": "o.chukhalenko@webprofy.ru"
         },
         {
             "id": 101833,
             "role": "Programmer, Markuper",
-            "name": "Роберт Ахмеров",
+            "name": "Р РѕР±РµСЂС‚ РђС…РјРµСЂРѕРІ",
             "email": "r.ahmerov@webprofy.ru"
         },
         {
             "id": 103052,
             "role": "Analyst",
-            "name": "Сергей Антипин",
+            "name": "РЎРµСЂРіРµР№ РђРЅС‚РёРїРёРЅ",
             "email": "top@kokoc.com"
         },
         {
             "id": 95959,
             "role": "Programmer",
-            "name": "Сергей Дудин",
+            "name": "РЎРµСЂРіРµР№ Р”СѓРґРёРЅ",
             "email": "bronxide@mail.ru"
         },
         {
             "id": 88217,
             "role": "Programmer",
-            "name": "Сергей Лубягин",
+            "name": "РЎРµСЂРіРµР№ Р›СѓР±СЏРіРёРЅ",
             "email": "lubyagin.sergey@rbscorp.ru"
         },
         {
             "id": 54196,
             "role": "Designer",
-            "name": "Сергей Ульященков",
+            "name": "РЎРµСЂРіРµР№ РЈР»СЊСЏС‰РµРЅРєРѕРІ",
             "email": "punkrockbabo@gmail.com"
         },
         {
             "id": 92517,
             "role": "Programmer, Markuper",
-            "name": "Сергей Ястребов",
+            "name": "РЎРµСЂРіРµР№ РЇСЃС‚СЂРµР±РѕРІ",
             "email": "s.yastrebov@webprofy.ru"
         },
         {
             "id": 78180,
             "role": "Tester, Content-manager",
-            "name": "Татьяна Верхотурова",
+            "name": "РўР°С‚СЊСЏРЅР° Р’РµСЂС…РѕС‚СѓСЂРѕРІР°",
             "email": "t.verkhoturova@webprofy.ru"
         },
         {
             "id": 102862,
             "role": "Tester, Content-manager",
-            "name": "Татьяна Коровкина",
+            "name": "РўР°С‚СЊСЏРЅР° РљРѕСЂРѕРІРєРёРЅР°",
             "email": "ayaka@koneko.ru"
         },
         {
             "id": 101832,
             "role": "Content-manager",
-            "name": "Юлия Калмыкова",
+            "name": "Р®Р»РёСЏ РљР°Р»РјС‹РєРѕРІР°",
             "email": "jill007@gmail.com"
         },
         {
           "id": 115063,
           "role": "Manager",
-          "name": "Ольга Черноусова",
+          "name": "РћР»СЊРіР° Р§РµСЂРЅРѕСѓСЃРѕРІР°",
           "email": "o.chernousova@webprofy.ru"
         },
         {
           "id": 115545,
           "role": "Manager",
-          "name": "Анна Комарова",
+          "name": "РђРЅРЅР° РљРѕРјР°СЂРѕРІР°",
           "email": "a.komarova@webprofy.ru"
         },
         {
           "id": 113363,
           "role": "Manager",
-          "name": "Валерия Брызгалина",
+          "name": "Р’Р°Р»РµСЂРёСЏ Р‘СЂС‹Р·РіР°Р»РёРЅР°",
           "email": "v.bryzgalina@webprofy.ru"
         },
         {
           "id": 115566,
           "role": "Markuper",
-          "name": "Александр Верхотуров",
+          "name": "РђР»РµРєСЃР°РЅРґСЂ Р’РµСЂС…РѕС‚СѓСЂРѕРІ",
           "email": "a.verkhoturov@webprofy.ru"
         },
         {
           "id": 119518,
           "role": "Tester",
-          "name": "Татьяна Урзова",
+          "name": "РўР°С‚СЊСЏРЅР° РЈСЂР·РѕРІР°",
           "email": "utatyana2002@mail.ru"
         },
         {
           "id": 119628,
           "role": "Tester",
-          "name": "Артур Хасанов",
+          "name": "РђСЂС‚СѓСЂ РҐР°СЃР°РЅРѕРІ",
           "email": "art.khassanov@gmail.com"
         },
         {
           "id": 118060,
           "role": "Tester",
-          "name": "Елена Лялина",
+          "name": "Р•Р»РµРЅР° Р›СЏР»РёРЅР°",
           "email": "lyalina.alena@gmail.com"
         },
         {
           "id": 122253,
           "role": "Markuper, Content-manager",
-          "name": "Мария Артемова",
+          "name": "РњР°СЂРёСЏ РђСЂС‚РµРјРѕРІР°",
           "email": "m.artemova@webprofy.ru"
         },
         {
           "id": 120604,
-          "role": "Programmer",
-          "name": "Никита Миликов",
+          "role": "Programmer, Markuper",
+          "name": "РќРёРєРёС‚Р° РњРёР»РёРєРѕРІ",
           "email": "n.milikov@webprofy.ru"
         },
         {
             "id": 121686,
-            "role": "Programmer",
-            "name": "Максим Васильев",
+            "role": "Programmer, Markuper",
+            "name": "РњР°РєСЃРёРј Р’Р°СЃРёР»СЊРµРІ",
             "email": "m.vasilyev@webprofy.ru"
         },
         {
             "id": 121030,
             "role": "Programmer, Markuper",
-            "name": "Валерий серов",
+            "name": "Р’Р°Р»РµСЂРёР№ РЎРµСЂРѕРІ",
             "email": "v.serov@webprofy.ru"
         }
     ]
