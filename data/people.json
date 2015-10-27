@@ -1,4 +1,4 @@
-{
+﻿{
     "roles": [
         {
             "role": null,
@@ -124,7 +124,7 @@
         },
         {
             "id": 88203,
-            "role": "Analyst, Manager",
+            "role": "Analyst",
             "name": "Алия Галимова",
             "email": "a.galimova@webprofy.ru"
         },
@@ -358,13 +358,13 @@
         },
         {
           "id": 120604,
-          "role": "Programmer, Markuper",
+          "role": "Programmer",
           "name": "Никита Миликов",
           "email": "n.milikov@webprofy.ru"
         },
         {
             "id": 121686,
-            "role": "Programmer, Markuper",
+            "role": "Programmer",
             "name": "Максим Васильев",
             "email": "m.vasilyev@webprofy.ru"
         },
@@ -373,6 +373,18 @@
             "role": "Programmer, Markuper",
             "name": "Валерий Серов",
             "email": "v.serov@webprofy.ru"
+        },
+        {
+            "id": 134333,
+            "role": "Programmer, Markuper",
+            "name": "Роман Максимов",
+            "email": "r.maksimov@webprofy.ru"
+        },
+        {
+            "id": 133433,
+            "role": "Manager",
+            "name": "Николай Воронин",
+            "email": "n.voronin@webprofy.ru"
         }
     ]
 }
