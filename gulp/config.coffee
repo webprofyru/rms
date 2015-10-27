@@ -14,7 +14,7 @@ module.exports =
   cleanup: ["#{dest}/**/*", "!#{dest}/.git/**/*"]
 
   jadeScript:
-    src: "#{app}/svc/emails/_template.jade"
+    src: "#{app}/svc/emails/_emailTemplate.jade"
     dest: dest
 
   copyLibs:
