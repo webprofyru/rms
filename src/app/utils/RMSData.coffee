@@ -20,7 +20,7 @@ clear = ((description) ->
   return description if (start = description.search RMSDataStart) == -1
   if (end = description.search RMSDataEnd) != -1 && start < end # it's right
     startText = trimEndLF(description.substr 0, start)
-    endText = trimStartLF(description.substr (description.search /end/i) + 3)
+    endText = trimStartLF(description.substr(description.substr(start).search(/end/i) + 3 + start))
     return clear( # clear again
       if startText.length > 0
         if endText.length > 0 then "#{startText}\r\n\r\n#{endText}"
