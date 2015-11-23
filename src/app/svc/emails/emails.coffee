@@ -133,7 +133,7 @@ ctrl =
       if personRoles.get('Designer') || personRoles.get('Jr. Designer')
         cc += ', a.shevtsov@webprofy.ru, a.kolesnikov@webprofy.ru'
       if personRoles.get('Markuper')
-        cc += ', g.krasilnikov@webprofy.ru, s.yastrebov@webprofy.ru'
+        cc += ', n.skinteev@webprofy.ru, s.yastrebov@webprofy.ru'
 
       console.info 'to: ', to
       console.info 'cc: ', cc
