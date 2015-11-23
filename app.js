@@ -6,6 +6,7 @@ require('./utils/angular-local-storage.js');
 moment.locale('ru');
 
 
+
 },{"./ng-app":39,"./utils/angular-local-storage.js":64}],2:[function(require,module,exports){
 var DSObject, VER_MAJOR, VER_MINOR, assert, ngModule, serviceOwner, validate,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -126,6 +127,7 @@ ngModule.factory('config', [
     return config;
   })
 ]);
+
 
 
 },{"./dscommon/DSObject":24,"./dscommon/util":29}],3:[function(require,module,exports){
@@ -273,6 +275,7 @@ ngModule.factory('PeopleWithJson', [
     })(DSData);
   })
 ]);
+
 
 
 },{"../dscommon/DSData":13,"../dscommon/DSDataServiceBase":16,"../dscommon/DSDataSimple":17,"../dscommon/DSDigest":19,"../dscommon/DSEnum":21,"../dscommon/DSSet":27,"../dscommon/util":29,"../models/Person":30}],4:[function(require,module,exports){
@@ -558,6 +561,7 @@ ngModule.factory('PersonDayStatData', [
 ]);
 
 
+
 },{"../dscommon/DSData":13,"../dscommon/DSDataServiceBase":16,"../dscommon/DSDigest":19,"../dscommon/DSDocument":20,"../dscommon/DSSet":27,"../dscommon/util":29,"../models/Person":30,"../models/PersonDayStat":31,"../models/Task":34}],5:[function(require,module,exports){
 var DSData, DSDataServiceBase, DSDigest, DSEnum, DSSet, Task, TaskTimeTracking, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -670,6 +674,7 @@ ngModule.factory('TasksWithTimeTracking', [
     })(DSData);
   })
 ]);
+
 
 
 },{"../dscommon/DSData":13,"../dscommon/DSDataServiceBase":16,"../dscommon/DSDataSimple":17,"../dscommon/DSDigest":19,"../dscommon/DSEnum":21,"../dscommon/DSSet":27,"../dscommon/util":29,"../models/Task":34,"../models/TaskTimeTracking":35}],6:[function(require,module,exports){
@@ -1060,6 +1065,7 @@ ngModule.factory('dsChanges', [
 ]);
 
 
+
 },{"../dscommon/DSChangesBase":12,"../dscommon/DSDataEditable":14,"../dscommon/DSDataSource":18,"../dscommon/DSDigest":19,"../dscommon/util":29,"../models/Person":30,"../models/Task":34,"../utils/RMSData":63}],7:[function(require,module,exports){
 var DSChangesBase, DSDataEditable, DSDataFiltered, DSDataServiceBase, DSObject, Person, PersonTimeTracking, Task, TaskTimeTracking, assert, base64, error, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -1363,6 +1369,7 @@ ngModule.factory('dsDataService', [
 ]);
 
 
+
 },{"../config":2,"../dscommon/DSChangesBase":12,"../dscommon/DSDataEditable":14,"../dscommon/DSDataFiltered":15,"../dscommon/DSDataServiceBase":16,"../dscommon/DSDataSource":18,"../dscommon/DSObject":24,"../dscommon/util":29,"../models/Person":30,"../models/PersonTimeTracking":32,"../models/Task":34,"../models/TaskTimeTracking":35,"../utils/base64":65,"./PeopleWithJson":3,"./PersonDayStatData":4,"./TasksWithTimeTracking":5,"./dsChanges":6,"./teamwork/TWPeople":8,"./teamwork/TWTasks":9,"./teamwork/TWTimeTracking":10}],8:[function(require,module,exports){
 var Person, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -1428,6 +1435,7 @@ ngModule.factory('TWPeople', [
     })(DSDataSimple);
   })
 ]);
+
 
 
 },{"../../dscommon/DSDataSimple":17,"../../dscommon/DSDataSource":18,"../../dscommon/util":29,"../../models/Person":30}],9:[function(require,module,exports){
@@ -1816,6 +1824,7 @@ ngModule.factory('TWTasks', [
 ]);
 
 
+
 },{"../../dscommon/DSData":13,"../../dscommon/DSDataSimple":17,"../../dscommon/DSDataSource":18,"../../dscommon/DSDigest":19,"../../dscommon/util":29,"../../models/Person":30,"../../models/PersonTimeTracking":32,"../../models/Project":33,"../../models/Task":34,"../../models/TaskTimeTracking":35,"../../models/TodoList":36,"../../models/types/TaskSplit":38,"../../ui/time":49,"../../utils/RMSData":63}],10:[function(require,module,exports){
 var DSData, DSDigest, HISTORY_END_SEARCH_STEP, PersonTimeTracking, RMSData, Task, TaskSplit, TaskTimeTracking, WORK_ENTRIES_WHOLE_PAGE, assert, error, ngModule, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -2138,6 +2147,7 @@ ngModule.factory('TWTimeTracking', [
 ]);
 
 
+
 },{"../../config":2,"../../db":11,"../../dscommon/DSData":13,"../../dscommon/DSDataSimple":17,"../../dscommon/DSDataSource":18,"../../dscommon/DSDigest":19,"../../dscommon/util":29,"../../models/PersonTimeTracking":32,"../../models/Task":34,"../../models/TaskTimeTracking":35,"../../models/types/TaskSplit":38,"../../ui/time":49,"../../utils/RMSData":63}],11:[function(require,module,exports){
 var DSObject, assert, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -2214,6 +2224,7 @@ ngModule.factory('db', [
     return serviceOwner.add(new DB(serviceOwner, 'db'));
   })
 ]);
+
 
 
 },{"./dscommon/DSObject":24,"./dscommon/util":29}],12:[function(require,module,exports){
@@ -2431,6 +2442,7 @@ module.exports = DSChangesBase = (function(superClass) {
 })(DSData);
 
 
+
 },{"./DSData":13,"./DSDigest":19,"./DSDocument":20,"./DSHistory":22,"./DSPool":26,"./util":29}],13:[function(require,module,exports){
 var DSData, DSObject, assert, error, modeReleaseDataOnReload, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -2558,6 +2570,7 @@ module.exports = DSData = (function(superClass) {
   return DSData;
 
 })(DSObject);
+
 
 
 },{"./DSObject":24,"./util":29}],14:[function(require,module,exports){
@@ -2816,6 +2829,7 @@ module.exports = (function(itemType) {
 });
 
 
+
 },{"./DSData":13,"./DSDigest":19,"./DSDocument":20,"./DSSet":27,"./util":29}],15:[function(require,module,exports){
 var DSData, DSDigest, DSObject, DSSet, assert, classes, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -2981,6 +2995,7 @@ module.exports = (function(itemType) {
 });
 
 
+
 },{"./DSData":13,"./DSDigest":19,"./DSObject":24,"./DSSet":27,"./util":29}],16:[function(require,module,exports){
 var DSDataServiceBase, DSObject, DSPool, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -3083,6 +3098,7 @@ module.exports = DSDataServiceBase = (function(superClass) {
   return DSDataServiceBase;
 
 })(DSObject);
+
 
 
 },{"./DSObject":24,"./DSPool":26,"./util":29}],17:[function(require,module,exports){
@@ -3188,6 +3204,7 @@ ngModule.factory('DSDataSimple', [
     })(DSData);
   })
 ]);
+
 
 
 },{"./DSData":13,"./DSDigest":19,"./util":29}],18:[function(require,module,exports){
@@ -3354,6 +3371,7 @@ ngModule.factory('DSDataSource', [
 ]);
 
 
+
 },{"../utils/base64":65,"./DSDigest":19,"./DSObject":24,"./util":29}],19:[function(require,module,exports){
 var DSDigest, assert, error;
 
@@ -3452,6 +3470,7 @@ module.exports = DSDigest = (function() {
   return DSDigest;
 
 })();
+
 
 
 },{"./util":29}],20:[function(require,module,exports){
@@ -3757,6 +3776,7 @@ module.exports = DSDocument = (function(superClass) {
 })(DSObject);
 
 
+
 },{"./DSObject":24,"./DSObjectBase":25,"./DSSet":27,"./util":29}],21:[function(require,module,exports){
 var DSEnum, assert, error;
 
@@ -3944,6 +3964,7 @@ module.exports = DSEnum = (function() {
   return DSEnum;
 
 })();
+
 
 
 },{"./util":29}],22:[function(require,module,exports){
@@ -4193,6 +4214,7 @@ module.exports = DSHistory = (function(superClass) {
 })(DSObject);
 
 
+
 },{"./DSDigest":19,"./DSDocument":20,"./DSObject":24,"./DSObjectBase":25,"./util":29}],23:[function(require,module,exports){
 var DSList, DSObjectBase, assert, error, totalReleaseVerb, traceRefs, util,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -4292,6 +4314,7 @@ module.exports = DSList = (function(superClass) {
   return DSList;
 
 })(DSObjectBase);
+
 
 
 },{"./DSObjectBase":25,"./util":29}],24:[function(require,module,exports){
@@ -4486,6 +4509,7 @@ module.exports = DSObject = (function(superClass) {
   return DSObject;
 
 })(DSObjectBase);
+
 
 
 },{"./DSList":23,"./DSObjectBase":25,"./DSPool":26,"./DSSet":27,"./util":29}],25:[function(require,module,exports){
@@ -5377,6 +5401,7 @@ module.exports = DSObjectBase = (function() {
 })();
 
 
+
 },{"./util":29}],26:[function(require,module,exports){
 var DSDigest, DSObjectBase, DSPool, assert, error, traceWatch,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -5546,6 +5571,7 @@ module.exports = DSPool = (function(superClass) {
   return DSPool;
 
 })(DSObjectBase);
+
 
 
 },{"./DSDigest":19,"./DSObjectBase":25,"./util":29}],27:[function(require,module,exports){
@@ -5830,6 +5856,7 @@ module.exports = DSSet = (function(superClass) {
 })(DSObjectBase);
 
 
+
 },{"./DSObjectBase":25,"./util":29}],28:[function(require,module,exports){
 var DSObject, DSSet, assert, error, ngModule, traceView,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -6095,6 +6122,7 @@ ngModule.factory('DSView', [
 ]);
 
 
+
 },{"../data/dsDataService":7,"./DSObject":24,"./DSSet":27,"./util":29}],29:[function(require,module,exports){
 var ServiceOwner, util;
 
@@ -6207,6 +6235,7 @@ module.exports = util = {
 };
 
 
+
 },{}],30:[function(require,module,exports){
 var DSDocument, DSEnum, Person, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -6271,6 +6300,7 @@ module.exports = Person = (function(superClass) {
   return Person;
 
 })(DSDocument);
+
 
 
 },{"../dscommon/DSDocument":20,"../dscommon/DSEnum":21,"../dscommon/util":29}],31:[function(require,module,exports){
@@ -6367,6 +6397,7 @@ module.exports = PersonDayStat = (function(superClass) {
 })(DSObject);
 
 
+
 },{"../dscommon/DSObject":24,"../dscommon/util":29,"./Person":30}],32:[function(require,module,exports){
 var DSObject, PersonTimeTracking, Task,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -6402,6 +6433,7 @@ module.exports = PersonTimeTracking = (function(superClass) {
   return PersonTimeTracking;
 
 })(DSObject);
+
 
 
 },{"../dscommon/DSObject":24,"../models/Task":34}],33:[function(require,module,exports){
@@ -6445,6 +6477,7 @@ module.exports = Project = (function(superClass) {
   return Project;
 
 })(DSObject);
+
 
 
 },{"../dscommon/DSObject":24,"../dscommon/util":29}],34:[function(require,module,exports){
@@ -6612,6 +6645,7 @@ module.exports = Task = (function(superClass) {
 })(DSDocument);
 
 
+
 },{"../dscommon/DSDocument":20,"../dscommon/util":29,"../ui/time":49,"./Person":30,"./Project":33,"./TaskTimeTracking":35,"./TodoList":36,"./types/Comments":37,"./types/TaskSplit":38}],35:[function(require,module,exports){
 var DSObject, TaskTimeTracking,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -6645,6 +6679,7 @@ module.exports = TaskTimeTracking = (function(superClass) {
   return TaskTimeTracking;
 
 })(DSObject);
+
 
 
 },{"../dscommon/DSObject":24}],36:[function(require,module,exports){
@@ -6690,6 +6725,7 @@ module.exports = TodoList = (function(superClass) {
   return TodoList;
 
 })(DSObject);
+
 
 
 },{"../dscommon/DSObject":24,"../dscommon/util":29,"./Project":33}],37:[function(require,module,exports){
@@ -6814,6 +6850,7 @@ module.exports = Comments = (function() {
   return Comments;
 
 })();
+
 
 
 },{"../../dscommon/DSDocument":20,"../../dscommon/util":29}],38:[function(require,module,exports){
@@ -7143,6 +7180,7 @@ module.exports = TaskSplit = (function() {
 })();
 
 
+
 },{"../../dscommon/DSDocument":20,"../../dscommon/util":29}],39:[function(require,module,exports){
 var ngModule;
 
@@ -7161,6 +7199,7 @@ ngModule.config([
     $urlRouterProvider.otherwise('/');
   })
 ]);
+
 
 
 },{"./data/dsDataService":7,"./db":11,"./svc/emails/emails":40,"./ui/ui":50}],40:[function(require,module,exports){
@@ -7370,6 +7409,7 @@ ctrl = [
 ];
 
 
+
 },{"../../data/dsDataService":7,"../../models/Person":30,"../../models/Task":34,"../../utils/base64":65}],41:[function(require,module,exports){
 var ngModule;
 
@@ -7416,6 +7456,7 @@ ngModule.directive('rmsAccount', [
     };
   })
 ]);
+
 
 
 },{"../../config":2}],42:[function(require,module,exports){
@@ -7640,6 +7681,7 @@ ngModule.run([
 ]);
 
 
+
 },{"../dscommon/DSObject":24,"../dscommon/util":29}],43:[function(require,module,exports){
 var DOMWrapper, actionsMinWidth, actionsWidth, area1MinHeight, area1MinWidth, area2MinHeight, area3MinWidth, assert, error, headerHeight, ngModule, windowMinHeight, windowMinWidth;
 
@@ -7795,6 +7837,7 @@ ngModule.directive('uiLayoutContainer', [
     };
   })
 ]);
+
 
 
 },{"../dscommon/util":29}],44:[function(require,module,exports){
@@ -7995,6 +8038,7 @@ ngModule.factory('TaskSplitWeekView', [
     })(DSView);
   })
 ]);
+
 
 
 },{"../../dscommon/DSObject":24,"../../dscommon/DSView":28,"../../dscommon/util":29,"../../models/Person":30,"../../models/PersonDayStat":31,"../../models/Task":34,"../../models/types/TaskSplit":38,"../time":49}],45:[function(require,module,exports){
@@ -8214,6 +8258,7 @@ ngModule.factory('addCommentAndSave', [
 ]);
 
 
+
 },{"../../config":2,"../../data/dsChanges":6,"../../data/dsDataService":7,"../../dscommon/DSDigest":19,"../../dscommon/DSDocument":20,"../../dscommon/DSObject":24,"../../dscommon/util":29,"../../models/Person":30,"../../models/types/Comments":37}],46:[function(require,module,exports){
 var ngModule;
 
@@ -8397,6 +8442,7 @@ ngModule.directive('setTaskVisible', [
     };
   })
 ]);
+
 
 
 },{}],47:[function(require,module,exports){
@@ -8693,6 +8739,7 @@ ngModule.directive('rmsTaskEdit', [
 ]);
 
 
+
 },{"../../data/dsChanges":6,"../../data/dsDataService":7,"../../dscommon/DSDigest":19,"../../dscommon/util":29,"../../models/Person":30,"../../models/PersonDayStat":31,"../../models/types/TaskSplit":38,"../../ui/time":49,"./TaskSplitWeekView":44,"./addCommentAndSave":45}],48:[function(require,module,exports){
 var DSObject, assert, error, ngModule;
 
@@ -8744,6 +8791,7 @@ ngModule.directive('rmsTaskInfo', [
 ]);
 
 
+
 },{"../../dscommon/DSObject":24,"../../dscommon/util":29}],49:[function(require,module,exports){
 var time, updateToday;
 
@@ -8758,6 +8806,7 @@ module.exports = time = {
     updateToday();
   }), moment().startOf('day').add(1, 'day').add(20, 'seconds').valueOf() - (new Date()).getTime());
 }))();
+
 
 
 },{}],50:[function(require,module,exports){
@@ -8858,6 +8907,7 @@ uiCtrl = [
     });
   })
 ];
+
 
 
 },{"../dscommon/DSObjectBase":25,"../dscommon/util":29,"../models/PersonDayStat":31,"./account/rmsAccount":41,"./filters":42,"./layout":43,"./tasks/TaskSplitWeekView":44,"./tasks/addCommentAndSave":45,"./tasks/rmsTask":46,"./tasks/rmsTaskEdit":47,"./tasks/rmsTaskInfo":48,"./views/changes/ViewChanges":51,"./views/view1/View1":53,"./views/view2/View2":57,"./views/view3/View3":58,"./widgets/widgetDate":61,"./widgets/widgetDuration":62}],51:[function(require,module,exports){
@@ -9043,6 +9093,7 @@ ngModule.factory('ViewChanges', [
 ]);
 
 
+
 },{"../../../data/dsChanges":6,"../../../dscommon/DSDigest":19,"../../../dscommon/DSObject":24,"../../../dscommon/DSView":28,"../../../dscommon/util":29,"../../../models/Person":30,"../../../models/Task":34,"./models/Change":52}],52:[function(require,module,exports){
 var Change, DSDocument, DSObject, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -9082,6 +9133,7 @@ module.exports = Change = (function(superClass) {
   return Change;
 
 })(DSObject);
+
 
 
 },{"../../../../dscommon/DSDocument":20,"../../../../dscommon/DSObject":24,"../../../../dscommon/util":29}],53:[function(require,module,exports){
@@ -9680,6 +9732,7 @@ ngModule.directive('rmsView1DropTask', [
 ]);
 
 
+
 },{"../../../config":2,"../../../data/dsChanges":6,"../../../data/dsDataService":7,"../../../dscommon/DSDigest":19,"../../../dscommon/DSView":28,"../../../dscommon/util":29,"../../../models/Person":30,"../../../models/PersonDayStat":31,"../../../models/PersonTimeTracking":32,"../../../models/Task":34,"../../tasks/addCommentAndSave":45,"./models/Day":54,"./models/Row":55,"./models/TaskView":56}],54:[function(require,module,exports){
 var DSObject, Day,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -9711,6 +9764,7 @@ module.exports = Day = (function(superClass) {
   return Day;
 
 })(DSObject);
+
 
 
 },{"../../../../dscommon/DSObject":24}],55:[function(require,module,exports){
@@ -9756,6 +9810,7 @@ module.exports = Row = (function(superClass) {
 })(DSObject);
 
 
+
 },{"../../../../dscommon/DSObject":24,"../../../../dscommon/util":29,"../../../../models/Person":30,"../../../../models/PersonDayStat":31,"./TaskView":56}],56:[function(require,module,exports){
 var DSObject, PersonTimeTracking, Task, TaskView, validate,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -9795,6 +9850,7 @@ module.exports = TaskView = (function(superClass) {
   return TaskView;
 
 })(DSObject);
+
 
 
 },{"../../../../dscommon/DSObject":24,"../../../../dscommon/util":29,"../../../../models/PersonTimeTracking":32,"../../../../models/Task":34}],57:[function(require,module,exports){
@@ -9940,6 +9996,7 @@ ngModule.directive('rmsView2DayDropTask', [
     };
   })
 ]);
+
 
 
 },{"../../../data/dsChanges":6,"../../../data/dsDataService":7,"../../../dscommon/DSDigest":19,"../../../dscommon/DSView":28,"../../../dscommon/util":29,"../../../models/Task":34,"../../tasks/addCommentAndSave":45,"../view1/View1":53,"../view1/models/TaskView":56}],58:[function(require,module,exports){
@@ -10143,6 +10200,7 @@ ngModule.directive('rmsView3DropTask', [
 ]);
 
 
+
 },{"../../../config":2,"../../../data/dsDataService":7,"../../../dscommon/DSView":28,"../../../dscommon/util":29,"../../../models/Project":33,"../../../models/Task":34,"../../../models/TodoList":36,"../../tasks/addCommentAndSave":45,"./models/ProjectView":59,"./models/TodoListView":60}],59:[function(require,module,exports){
 var DSObject, Project, ProjectView, TodoListView, validate,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -10176,6 +10234,7 @@ module.exports = ProjectView = (function(superClass) {
   return ProjectView;
 
 })(DSObject);
+
 
 
 },{"../../../../dscommon/DSObject":24,"../../../../dscommon/util":29,"../../../../models/Project":33,"./TodoListView":60}],60:[function(require,module,exports){
@@ -10217,6 +10276,7 @@ module.exports = TodoListView = (function(superClass) {
 })(DSObject);
 
 
+
 },{"../../../../dscommon/DSObject":24,"../../../../dscommon/util":29,"../../../../models/Task":34,"../../../../models/TodoList":36}],61:[function(require,module,exports){
 var ngModule;
 
@@ -10256,6 +10316,7 @@ ngModule.directive('widgetDate', [
     };
   })
 ]);
+
 
 
 },{}],62:[function(require,module,exports){
@@ -10309,6 +10370,7 @@ ngModule.directive('widgetDuration', [
     };
   })
 ]);
+
 
 
 },{}],63:[function(require,module,exports){
@@ -10410,6 +10472,7 @@ module.exports = {
     return (description.length === 0 ? '' : "" + description) + ("\r\n\r\nRMS Data (DO NOT CHANGE!) " + (JSON.stringify(data)) + " END");
   })
 };
+
 
 
 },{"../dscommon/util":29}],64:[function(require,module,exports){
@@ -10949,6 +11012,7 @@ module.exports = {
     return output;
   })
 };
+
 
 
 },{}]},{},[1]);

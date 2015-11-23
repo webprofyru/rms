@@ -33,147 +33,146 @@ a:focus {
 a:active, a:hover {
   outline: none; }
 
-/* line 29, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 28, C:/SVN/rms/src/sass/lib/_normalize.sass */
 :focus {
   outline: none; }
 
-/* line 32, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 31, C:/SVN/rms/src/sass/lib/_normalize.sass */
 h1 {
   font-size: 2em;
   margin: 0.67em 0; }
 
-/* line 36, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 35, C:/SVN/rms/src/sass/lib/_normalize.sass */
 abbr[title] {
   border-bottom: 1px dotted; }
 
-/* line 39, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 38, C:/SVN/rms/src/sass/lib/_normalize.sass */
 b, strong {
   font-weight: bold; }
 
-/* line 42, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 41, C:/SVN/rms/src/sass/lib/_normalize.sass */
 dfn {
   font-style: italic; }
 
-/* line 45, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 44, C:/SVN/rms/src/sass/lib/_normalize.sass */
 hr {
   box-sizing: content-box;
   height: 0; }
 
-/* line 50, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 49, C:/SVN/rms/src/sass/lib/_normalize.sass */
 mark {
   background: #ff0;
   color: #000; }
 
-/* line 54, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 53, C:/SVN/rms/src/sass/lib/_normalize.sass */
 code, kbd, pre, samp {
   font-family: monospace, serif;
   font-size: 1em; }
 
-/* line 58, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 57, C:/SVN/rms/src/sass/lib/_normalize.sass */
 pre {
   white-space: pre-wrap; }
 
-/* line 61, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 60, C:/SVN/rms/src/sass/lib/_normalize.sass */
 q {
   quotes: "\201C" "\201D" "\2018" "\2019"; }
 
-/* line 64, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 63, C:/SVN/rms/src/sass/lib/_normalize.sass */
 small {
   font-size: 80%; }
 
-/* line 67, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 66, C:/SVN/rms/src/sass/lib/_normalize.sass */
 sub, sup {
   font-size: 75%;
   line-height: 0;
   position: relative;
   vertical-align: baseline; }
 
-/* line 73, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 72, C:/SVN/rms/src/sass/lib/_normalize.sass */
 sup {
   top: -0.5em; }
 
-/* line 76, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 75, C:/SVN/rms/src/sass/lib/_normalize.sass */
 sub {
   bottom: -0.25em; }
 
-/* line 79, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 78, C:/SVN/rms/src/sass/lib/_normalize.sass */
 img {
   border: 0; }
 
-/* line 82, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 81, C:/SVN/rms/src/sass/lib/_normalize.sass */
 svg:not(:root) {
   overflow: hidden; }
 
-/* line 85, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 84, C:/SVN/rms/src/sass/lib/_normalize.sass */
 figure {
   margin: 0; }
 
-/* line 88, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 87, C:/SVN/rms/src/sass/lib/_normalize.sass */
 fieldset {
   border: 1px solid #c0c0c0;
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em; }
 
-/* line 93, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 92, C:/SVN/rms/src/sass/lib/_normalize.sass */
 legend {
   border: 0;
   padding: 0; }
 
-/* line 97, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 96, C:/SVN/rms/src/sass/lib/_normalize.sass */
 button, input, select, textarea {
   font-family: inherit;
   font-size: 100%;
   margin: 0; }
 
-/* line 102, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 101, C:/SVN/rms/src/sass/lib/_normalize.sass */
 button, input {
   line-height: normal; }
 
-/* line 105, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 104, C:/SVN/rms/src/sass/lib/_normalize.sass */
 button, select {
   text-transform: none; }
 
-/* line 108, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 107, C:/SVN/rms/src/sass/lib/_normalize.sass */
 button, html input[type="button"], input[type="reset"], input[type="submit"] {
   -webkit-appearance: button;
   cursor: pointer; }
 
-/* line 112, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 111, C:/SVN/rms/src/sass/lib/_normalize.sass */
 button[disabled], html input[disabled] {
   cursor: default; }
 
-/* line 115, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 114, C:/SVN/rms/src/sass/lib/_normalize.sass */
 input[type="checkbox"], input[type="radio"] {
   box-sizing: border-box;
   padding: 0; }
 
-/* line 119, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 118, C:/SVN/rms/src/sass/lib/_normalize.sass */
 input[type="search"] {
   -webkit-appearance: textfield;
   box-sizing: content-box; }
 
-/* line 125, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 124, C:/SVN/rms/src/sass/lib/_normalize.sass */
 input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none; }
 
-/* line 128, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 127, C:/SVN/rms/src/sass/lib/_normalize.sass */
 button::-moz-focus-inner, input::-moz-focus-inner {
   border: 0;
   padding: 0; }
 
-/* line 132, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 131, C:/SVN/rms/src/sass/lib/_normalize.sass */
 textarea {
   overflow: auto;
   vertical-align: top; }
 
-/* line 136, C:/SVN/rms/src/sass/lib/_normalize.sass */
+/* line 135, C:/SVN/rms/src/sass/lib/_normalize.sass */
 table {
   border-collapse: collapse;
   border-spacing: 0; }
 
-/* line 26, stdin */
+/* line 18, C:/SVN/rms/src/sass/index.sass */
 html {
-  box-sizing: border-box;
   max-width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -188,9 +187,8 @@ html {
 input[type=number] {
   -moz-appearance: textfield; }
 
-/* line 4, C:/SVN/rms/src/sass/partials/_general.sass */
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+/* line 5, C:/SVN/rms/src/sass/partials/_general.sass */
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0; }
 
@@ -219,8 +217,8 @@ ul {
   height: 60px;
   position: relative;
   text-align: center;
-  -webkit-animation: rotate 2.0s infinite linear;
-  animation: rotate 2.0s infinite linear; }
+  -webkit-animation: rotate 2s infinite linear;
+  animation: rotate 2s infinite linear; }
 
 /* line 10, C:/SVN/rms/src/sass/partials/_loader.sass */
 .dot1, .dot2 {
@@ -231,35 +229,43 @@ ul {
   top: 0;
   background-color: #C6C6C6;
   border-radius: 100%;
-  -webkit-animation: bounce 2.0s infinite ease-in-out;
-  animation: bounce 2.0s infinite ease-in-out; }
+  -webkit-animation: bounce 2s infinite ease-in-out;
+  animation: bounce 2s infinite ease-in-out; }
 
 /* line 21, C:/SVN/rms/src/sass/partials/_loader.sass */
 .dot2 {
   top: auto;
   bottom: 0px;
-  -webkit-animation-delay: -1.0s;
-  animation-delay: -1.0s; }
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s; }
 
 @-webkit-keyframes rotate {
+  /* line 29, C:/SVN/rms/src/sass/partials/_loader.sass */
   100% {
     -webkit-transform: rotate(360deg); } }
 
 @keyframes rotate {
+  /* line 32, C:/SVN/rms/src/sass/partials/_loader.sass */
   100% {
     transform: rotate(360deg);
     -webkit-transform: rotate(360deg); } }
 
 @-webkit-keyframes bounce {
+  /* line 37, C:/SVN/rms/src/sass/partials/_loader.sass */
   0%, 100% {
     -webkit-transform: scale(0); }
+
+  /* line 39, C:/SVN/rms/src/sass/partials/_loader.sass */
   50% {
     -webkit-transform: scale(1); } }
 
 @keyframes bounce {
+  /* line 43, C:/SVN/rms/src/sass/partials/_loader.sass */
   0%, 100% {
     transform: scale(0);
     -webkit-transform: scale(0); }
+
+  /* line 46, C:/SVN/rms/src/sass/partials/_loader.sass */
   50% {
     transform: scale(1);
     -webkit-transform: scale(1); } }
@@ -514,34 +520,34 @@ ul {
     /* line 37, C:/SVN/rms/src/sass/screen1/_screen.sass */
     #screen1 .btn:disabled {
       opacity: 0.2; }
-  /* line 41, C:/SVN/rms/src/sass/screen1/_screen.sass */
+  /* line 40, C:/SVN/rms/src/sass/screen1/_screen.sass */
   #screen1 .selector {
     font-size: 12px; }
-    /* line 43, C:/SVN/rms/src/sass/screen1/_screen.sass */
+    /* line 42, C:/SVN/rms/src/sass/screen1/_screen.sass */
     #screen1 .selector > span {
       padding-right: 8px; }
-    /* line 45, C:/SVN/rms/src/sass/screen1/_screen.sass */
+    /* line 44, C:/SVN/rms/src/sass/screen1/_screen.sass */
     #screen1 .selector .input-wrapper {
       display: inline;
       position: relative; }
-      /* line 48, C:/SVN/rms/src/sass/screen1/_screen.sass */
+      /* line 47, C:/SVN/rms/src/sass/screen1/_screen.sass */
       #screen1 .selector .input-wrapper i {
         position: absolute;
         top: 2px;
         right: 4px;
         opacity: 0.4; }
-  /* line 52, C:/SVN/rms/src/sass/screen1/_screen.sass */
+  /* line 51, C:/SVN/rms/src/sass/screen1/_screen.sass */
   #screen1 input {
     padding: 3px 6px;
     border-radius: 3px;
     border: none; }
-  /* line 2, C:/SVN/rms/src/sass/screen1/_layout.sass */
+  /* line 1, C:/SVN/rms/src/sass/screen1/_layout.sass */
   #screen1 #container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%; }
-    /* line 6, C:/SVN/rms/src/sass/screen1/_layout.sass */
+    /* line 5, C:/SVN/rms/src/sass/screen1/_layout.sass */
     #screen1 #container div.header {
       box-sizing: border-box;
       max-width: 100%;
@@ -552,52 +558,52 @@ ul {
         content: " ";
         display: block;
         clear: both; }
-      /* line 8, C:/SVN/rms/src/sass/screen1/_layout.sass */
+      /* line 7, C:/SVN/rms/src/sass/screen1/_layout.sass */
       #screen1 #container div.header h3 {
         padding-left: 1rem;
         line-height: 40px;
         box-sizing: border-box;
         width: 14.28571%;
         float: left; }
-      /* line 12, C:/SVN/rms/src/sass/screen1/_layout.sass */
+      /* line 11, C:/SVN/rms/src/sass/screen1/_layout.sass */
       #screen1 #container div.header .action-buttons {
         box-sizing: border-box;
         width: 85.71429%;
         float: right;
         margin-right: 0;
         width: auto; }
-    /* line 16, C:/SVN/rms/src/sass/screen1/_layout.sass */
+    /* line 15, C:/SVN/rms/src/sass/screen1/_layout.sass */
     #screen1 #container table.header {
       height: 40px;
       width: 100%; }
-      /* line 17, C:/SVN/rms/src/sass/screen1/_layout.sass */
+      /* line 16, C:/SVN/rms/src/sass/screen1/_layout.sass */
       #screen1 #container table.header.original-tasks {
         background-color: #D5B374; }
-      /* line 22, C:/SVN/rms/src/sass/screen1/_layout.sass */
+      /* line 21, C:/SVN/rms/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.text h3 {
         width: 100%; }
-    @media (min-width: 1150px) {
-      /* line 28, C:/SVN/rms/src/sass/screen1/_layout.sass */
+    @media  (min-width: 1150px) {
+      /* line 27, C:/SVN/rms/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.text {
         width: 10%; }
-      /* line 30, C:/SVN/rms/src/sass/screen1/_layout.sass */
+      /* line 29, C:/SVN/rms/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.filters {
         width: 90%; }
-        /* line 33, C:/SVN/rms/src/sass/screen1/_layout.sass */
+        /* line 32, C:/SVN/rms/src/sass/screen1/_layout.sass */
         #screen1 #container table.header td.filters > span {
           box-sizing: border-box;
           width: 13.33333%;
           float: left; }
-        /* line 35, C:/SVN/rms/src/sass/screen1/_layout.sass */
+        /* line 34, C:/SVN/rms/src/sass/screen1/_layout.sass */
         #screen1 #container table.header td.filters .ui-select {
           box-sizing: border-box;
           width: 20%;
           float: left; } }
-    @media (min-width: 0px) and (max-width: 1150px) {
-      /* line 41, C:/SVN/rms/src/sass/screen1/_layout.sass */
+    @media  (min-width: 0px) and (max-width: 1150px) {
+      /* line 40, C:/SVN/rms/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.text {
         width: 15%; }
-      /* line 43, C:/SVN/rms/src/sass/screen1/_layout.sass */
+      /* line 42, C:/SVN/rms/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.filters {
         width: 85%;
         box-sizing: border-box;
@@ -609,45 +615,45 @@ ul {
           content: " ";
           display: block;
           clear: both; }
-        /* line 47, C:/SVN/rms/src/sass/screen1/_layout.sass */
+        /* line 46, C:/SVN/rms/src/sass/screen1/_layout.sass */
         #screen1 #container table.header td.filters > span {
           display: none; }
-        /* line 49, C:/SVN/rms/src/sass/screen1/_layout.sass */
+        /* line 48, C:/SVN/rms/src/sass/screen1/_layout.sass */
         #screen1 #container table.header td.filters .ui-select {
           box-sizing: border-box;
           width: 33.33333%;
           float: left; } }
-    @media (min-width: 1400px) {
-      /* line 54, C:/SVN/rms/src/sass/screen1/_layout.sass */
+    @media  (min-width: 1400px) {
+      /* line 53, C:/SVN/rms/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.actions {
         width: 500px; }
-        /* line 56, C:/SVN/rms/src/sass/screen1/_layout.sass */
+        /* line 55, C:/SVN/rms/src/sass/screen1/_layout.sass */
         #screen1 #container table.header td.actions .action-buttons {
           width: 100%; } }
-    @media (min-width: 0px) and (max-width: 1400px) {
-      /* line 61, C:/SVN/rms/src/sass/screen1/_layout.sass */
+    @media  (min-width: 0px) and (max-width: 1400px) {
+      /* line 60, C:/SVN/rms/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.actions {
         width: 290px; }
-        /* line 63, C:/SVN/rms/src/sass/screen1/_layout.sass */
+        /* line 62, C:/SVN/rms/src/sass/screen1/_layout.sass */
         #screen1 #container table.header td.actions .action-buttons {
           width: 100%; } }
-    /* line 66, C:/SVN/rms/src/sass/screen1/_layout.sass */
+    /* line 65, C:/SVN/rms/src/sass/screen1/_layout.sass */
     #screen1 #container .header {
       width: 100%;
       height: 40px;
       background: #D8D8D8; }
-      /* line 70, C:/SVN/rms/src/sass/screen1/_layout.sass */
+      /* line 69, C:/SVN/rms/src/sass/screen1/_layout.sass */
       #screen1 #container .header h3 {
         padding-left: 1rem;
         line-height: 40px;
         margin-top: 0;
         margin-botton: 0; }
-      /* line 76, C:/SVN/rms/src/sass/screen1/_layout.sass */
+      /* line 74, C:/SVN/rms/src/sass/screen1/_layout.sass */
       #screen1 #container .header .filters {
         box-sizing: border-box;
         width: 53.57143%;
         float: left; }
-        /* line 78, C:/SVN/rms/src/sass/screen1/_layout.sass */
+        /* line 76, C:/SVN/rms/src/sass/screen1/_layout.sass */
         #screen1 #container .header .filters > span {
           line-height: 40px;
           font-size: 14px;
@@ -655,18 +661,18 @@ ul {
           margin-top: -0.1rem;
           padding-left: 0.2rem;
           padding-right: 0.2rem; }
-        /* line 85, C:/SVN/rms/src/sass/screen1/_layout.sass */
+        /* line 83, C:/SVN/rms/src/sass/screen1/_layout.sass */
         #screen1 #container .header .filters .ui-select {
           margin-top: 0.4rem;
           padding-right: 0.5rem; }
-    /* line 91, C:/SVN/rms/src/sass/screen1/_layout.sass */
+    /* line 89, C:/SVN/rms/src/sass/screen1/_layout.sass */
     #screen1 #container #top-block {
       position: absolute;
       top: 40px;
       left: 0;
       width: 100%;
       background: #F0F0F0; }
-    /* line 96, C:/SVN/rms/src/sass/screen1/_layout.sass */
+    /* line 94, C:/SVN/rms/src/sass/screen1/_layout.sass */
     #screen1 #container #bottom-block {
       position: absolute;
       bottom: 0;
@@ -715,17 +721,17 @@ ul {
         #screen1 .task .task-body .due-date.up, #screen1 #task-drag-ghost .task-body .due-date.up {
           bottom: 1rem;
           background-color: inherit; }
-      /* line 38, C:/SVN/rms/src/sass/screen1/_task.sass */
+      /* line 36, C:/SVN/rms/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .split-task .duration, #screen1 #task-drag-ghost .task-body .split-task .duration {
         position: absolute;
         margin-left: 6px; }
-      /* line 41, C:/SVN/rms/src/sass/screen1/_task.sass */
+      /* line 39, C:/SVN/rms/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .task-progress, #screen1 #task-drag-ghost .task-body .task-progress {
         position: relative;
         height: 0.6rem;
         line-height: 0.7rem;
         margin-bottom: 0.1rem; }
-        /* line 46, C:/SVN/rms/src/sass/screen1/_task.sass */
+        /* line 44, C:/SVN/rms/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .percent, #screen1 #task-drag-ghost .task-body .task-progress .percent {
           position: absolute;
           height: 100%;
@@ -733,114 +739,114 @@ ul {
           color: #FFFFFF;
           text-align: center;
           font-size: 0.5rem; }
-        /* line 53, C:/SVN/rms/src/sass/screen1/_task.sass */
+        /* line 51, C:/SVN/rms/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .load, #screen1 #task-drag-ghost .task-body .task-progress .load {
           position: absolute;
           height: 100%;
           width: 100%; }
-          /* line 57, C:/SVN/rms/src/sass/screen1/_task.sass */
+          /* line 55, C:/SVN/rms/src/sass/screen1/_task.sass */
           #screen1 .task .task-body .task-progress .load img, #screen1 #task-drag-ghost .task-body .task-progress .load img {
             float: right;
             height: 0.6rem; }
-        /* line 60, C:/SVN/rms/src/sass/screen1/_task.sass */
+        /* line 58, C:/SVN/rms/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .spent, #screen1 #task-drag-ghost .task-body .task-progress .spent {
           position: absolute;
           height: 100%;
           width: 70%;
           background-color: #008800; }
-        /* line 65, C:/SVN/rms/src/sass/screen1/_task.sass */
+        /* line 63, C:/SVN/rms/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .overestimate, #screen1 #task-drag-ghost .task-body .task-progress .overestimate {
           position: absolute;
           height: 100%;
           width: 30%;
           background-color: #AA0000; }
-  /* line 74, C:/SVN/rms/src/sass/screen1/_task.sass */
+  /* line 72, C:/SVN/rms/src/sass/screen1/_task.sass */
   #screen1 #task-drag-ghost {
     width: 6rem;
     border-radius: 5px;
     font-size: 12px;
     position: absolute;
     bottom: 0; }
-  /* line 82, C:/SVN/rms/src/sass/screen1/_task.sass */
+  /* line 80, C:/SVN/rms/src/sass/screen1/_task.sass */
   #screen1 .task-body {
     background: #BCD2E9; }
-    /* line 84, C:/SVN/rms/src/sass/screen1/_task.sass */
+    /* line 82, C:/SVN/rms/src/sass/screen1/_task.sass */
     #screen1 .task-body:hover {
       background-color: #96b8dc; }
-    /* line 86, C:/SVN/rms/src/sass/screen1/_task.sass */
-    #screen1 .task-body.no-estimate:not(&.overdue) {
+    /* line 84, C:/SVN/rms/src/sass/screen1/_task.sass */
+    #screen1 .task-body.no-estimate:not(.overdue) {
       background: #D1F0ED; }
-      /* line 88, C:/SVN/rms/src/sass/screen1/_task.sass */
-      #screen1 .task-body.no-estimate:not(&.overdue):hover {
+      /* line 86, C:/SVN/rms/src/sass/screen1/_task.sass */
+      #screen1 .task-body.no-estimate:not(.overdue):hover {
         background-color: #abe3de; }
-    /* line 90, C:/SVN/rms/src/sass/screen1/_task.sass */
+    /* line 88, C:/SVN/rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.overdue {
       background: #FBC1C1; }
-      /* line 92, C:/SVN/rms/src/sass/screen1/_task.sass */
+      /* line 90, C:/SVN/rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.overdue:hover {
         background-color: #f89191; }
-    /* line 94, C:/SVN/rms/src/sass/screen1/_task.sass */
+    /* line 92, C:/SVN/rms/src/sass/screen1/_task.sass */
     #screen1 .task-body .loading {
       width: 100%;
       text-align: center; }
-      /* line 97, C:/SVN/rms/src/sass/screen1/_task.sass */
+      /* line 95, C:/SVN/rms/src/sass/screen1/_task.sass */
       #screen1 .task-body .loading img {
         margin-top: 0.5rem;
         height: 0.8rem; }
-    /* line 100, C:/SVN/rms/src/sass/screen1/_task.sass */
+    /* line 98, C:/SVN/rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.completed, #screen1 .task-body.loading {
       background: #A2FBA2; }
-      /* line 102, C:/SVN/rms/src/sass/screen1/_task.sass */
+      /* line 100, C:/SVN/rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.completed:hover, #screen1 .task-body.loading:hover {
         background-color: #71f971; }
-    /* line 104, C:/SVN/rms/src/sass/screen1/_task.sass */
+    /* line 102, C:/SVN/rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.workNotInDueDate {
       background: #F7BC50; }
-      /* line 106, C:/SVN/rms/src/sass/screen1/_task.sass */
+      /* line 104, C:/SVN/rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.workNotInDueDate:hover {
         background-color: #f5a91f; }
   /* line 1, C:/SVN/rms/src/sass/screen1/_actions.sass */
   #screen1 .action-buttons {
     float: right;
     padding: 3px 9px; }
-    @media (min-width: 0px) and (max-width: 1400px) {
-      /* line 8, C:/SVN/rms/src/sass/screen1/_actions.sass */
+    @media  (min-width: 0px) and (max-width: 1400px) {
+      /* line 7, C:/SVN/rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons li {
         width: 20px;
         margin-left: 5px; }
-        /* line 12, C:/SVN/rms/src/sass/screen1/_actions.sass */
+        /* line 10, C:/SVN/rms/src/sass/screen1/_actions.sass */
         #screen1 .action-buttons li table td:nth-child(2) {
           display: none; } }
-    @media (min-width: 1400px) {
-      /* line 16, C:/SVN/rms/src/sass/screen1/_actions.sass */
+    @media  (min-width: 1400px) {
+      /* line 13, C:/SVN/rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons .time-spent {
         margin-left: 20px; }
-      /* line 18, C:/SVN/rms/src/sass/screen1/_actions.sass */
+      /* line 15, C:/SVN/rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons .edited {
         width: 70px;
         margin-left: 20px; }
-      /* line 21, C:/SVN/rms/src/sass/screen1/_actions.sass */
+      /* line 18, C:/SVN/rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons .changes {
         width: 70px;
         margin-left: 20px; }
-        /* line 24, C:/SVN/rms/src/sass/screen1/_actions.sass */
+        /* line 21, C:/SVN/rms/src/sass/screen1/_actions.sass */
         #screen1 .action-buttons .changes.disabled {
           cursor: default;
           opacity: 0.2; }
-      /* line 27, C:/SVN/rms/src/sass/screen1/_actions.sass */
+      /* line 24, C:/SVN/rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons .undo, #screen1 .action-buttons .redo {
         margin-left: 10px; }
-        /* line 29, C:/SVN/rms/src/sass/screen1/_actions.sass */
+        /* line 26, C:/SVN/rms/src/sass/screen1/_actions.sass */
         #screen1 .action-buttons .undo.disabled, #screen1 .action-buttons .redo.disabled {
           cursor: default;
           opacity: 0.2; }
-      /* line 32, C:/SVN/rms/src/sass/screen1/_actions.sass */
+      /* line 29, C:/SVN/rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons .account {
         margin-left: 20px; } }
-    /* line 34, C:/SVN/rms/src/sass/screen1/_actions.sass */
+    /* line 31, C:/SVN/rms/src/sass/screen1/_actions.sass */
     #screen1 .action-buttons .account {
       float: right; }
-    /* line 37, C:/SVN/rms/src/sass/screen1/_actions.sass */
+    /* line 34, C:/SVN/rms/src/sass/screen1/_actions.sass */
     #screen1 .action-buttons li {
       float: left;
       height: 30px;
@@ -850,153 +856,153 @@ ul {
       font-size: 13px;
       opacity: 0.6;
       cursor: pointer; }
-      /* line 46, C:/SVN/rms/src/sass/screen1/_actions.sass */
+      /* line 43, C:/SVN/rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons li:hover:not(.disabled) {
         background-color: #bfbfbf; }
-      /* line 48, C:/SVN/rms/src/sass/screen1/_actions.sass */
+      /* line 45, C:/SVN/rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons li.active:hover {
-        background-color: #8c8c8c; }
-      /* line 50, C:/SVN/rms/src/sass/screen1/_actions.sass */
+        background-color: #8b8b8b; }
+      /* line 47, C:/SVN/rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons li > img {
         width: 20px;
         text-align: center;
         width: 17px;
         margin-top: 2px; }
-      /* line 55, C:/SVN/rms/src/sass/screen1/_actions.sass */
+      /* line 52, C:/SVN/rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons li.refresh > img, #screen1 .action-buttons li.time-spent > img {
         margin-top: 5px; }
-      /* line 57, C:/SVN/rms/src/sass/screen1/_actions.sass */
+      /* line 54, C:/SVN/rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons li.active {
         background-color: #595959; }
-      /* line 59, C:/SVN/rms/src/sass/screen1/_actions.sass */
+      /* line 56, C:/SVN/rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons li table {
         height: 100%; }
-        /* line 61, C:/SVN/rms/src/sass/screen1/_actions.sass */
+        /* line 58, C:/SVN/rms/src/sass/screen1/_actions.sass */
         #screen1 .action-buttons li table td {
           vertical-align: middle;
           line-height: 1; }
-          /* line 62, C:/SVN/rms/src/sass/screen1/_actions.sass */
+          /* line 59, C:/SVN/rms/src/sass/screen1/_actions.sass */
           #screen1 .action-buttons li table td img {
             width: 20px;
             margin-top: 2px; }
-          /* line 67, C:/SVN/rms/src/sass/screen1/_actions.sass */
+          /* line 64, C:/SVN/rms/src/sass/screen1/_actions.sass */
           #screen1 .action-buttons li table td:nth-child(2) {
             padding-left: 3px; }
-  /* line 2, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
+  /* line 1, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
   #screen1 .vertical-lines {
     position: absolute;
     width: 100%;
     height: 100%; }
-    /* line 7, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
+    /* line 6, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col {
       position: absolute;
       pointer-events: none;
       border-right: 1px dashed #c2ccd1;
       height: 100%; }
-    /* line 14, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
+    /* line 12, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col1 {
       box-sizing: border-box;
       width: 23.33333%;
       float: left; }
-    /* line 14, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
+    /* line 12, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col2 {
       box-sizing: border-box;
       width: 26.66667%;
       float: left; }
-    /* line 14, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
+    /* line 12, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col3 {
       box-sizing: border-box;
       width: 36.66667%;
       float: left; }
-    /* line 14, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
+    /* line 12, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col4 {
       box-sizing: border-box;
       width: 46.66667%;
       float: left; }
-    /* line 14, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
+    /* line 12, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col5 {
       box-sizing: border-box;
       width: 56.66667%;
       float: left; }
-    /* line 14, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
+    /* line 12, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col6 {
       box-sizing: border-box;
       width: 66.66667%;
       float: left; }
-    /* line 14, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
+    /* line 12, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col7 {
       box-sizing: border-box;
       width: 76.66667%;
       float: left; }
-    /* line 14, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
+    /* line 12, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col8 {
       box-sizing: border-box;
       width: 86.66667%;
       float: left; }
-    /* line 14, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
+    /* line 12, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col9 {
       box-sizing: border-box;
       width: 96.66667%;
       float: left; }
-    /* line 14, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
+    /* line 12, C:/SVN/rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col10 {
       box-sizing: border-box;
       width: 100%;
       float: left;
       margin-left: 0;
       margin-right: 0; }
-  /* line 4, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+  /* line 3, C:/SVN/rms/src/sass/screen1/_top-block.sass */
   #screen1 .total {
     position: absolute;
     height: 100%;
     box-sizing: border-box;
     width: 10%;
     float: left; }
-    /* line 9, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+    /* line 8, C:/SVN/rms/src/sass/screen1/_top-block.sass */
     #screen1 .total.day0 {
       margin-left: 26.66667%; }
-    /* line 9, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+    /* line 8, C:/SVN/rms/src/sass/screen1/_top-block.sass */
     #screen1 .total.day1 {
       margin-left: 36.66667%; }
-    /* line 9, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+    /* line 8, C:/SVN/rms/src/sass/screen1/_top-block.sass */
     #screen1 .total.day2 {
       margin-left: 46.66667%; }
-    /* line 9, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+    /* line 8, C:/SVN/rms/src/sass/screen1/_top-block.sass */
     #screen1 .total.day3 {
       margin-left: 56.66667%; }
-    /* line 9, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+    /* line 8, C:/SVN/rms/src/sass/screen1/_top-block.sass */
     #screen1 .total.day4 {
       margin-left: 66.66667%; }
-    /* line 9, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+    /* line 8, C:/SVN/rms/src/sass/screen1/_top-block.sass */
     #screen1 .total.day5 {
       margin-left: 76.66667%; }
-    /* line 9, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+    /* line 8, C:/SVN/rms/src/sass/screen1/_top-block.sass */
     #screen1 .total.day6 {
       margin-left: 86.66667%; }
-  /* line 15, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+  /* line 14, C:/SVN/rms/src/sass/screen1/_top-block.sass */
   #screen1 #top-block .sub-header .left-space {
     box-sizing: border-box;
     width: 23.33333%;
     float: left;
     min-height: 1px;
     padding-left: 1rem; }
-    /* line 19, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+    /* line 18, C:/SVN/rms/src/sass/screen1/_top-block.sass */
     #screen1 #top-block .sub-header .left-space .input-wrapper {
       display: block;
       width: 120px; }
-      /* line 22, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+      /* line 21, C:/SVN/rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .sub-header .left-space .input-wrapper input {
         width: 100%; }
-      /* line 24, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+      /* line 23, C:/SVN/rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .sub-header .left-space .input-wrapper i {
         top: 14px;
         right: -6px; }
-  /* line 27, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+  /* line 26, C:/SVN/rms/src/sass/screen1/_top-block.sass */
   #screen1 #top-block .sub-header .prev-next-week {
     box-sizing: border-box;
     width: 3.33333%;
     float: left; }
-  /* line 29, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+  /* line 28, C:/SVN/rms/src/sass/screen1/_top-block.sass */
   #screen1 #top-block .sub-header .day {
     box-sizing: border-box;
     width: 10%;
@@ -1005,80 +1011,81 @@ ul {
     line-height: 1.5;
     padding-top: 4px;
     text-align: center; }
-    /* line 35, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+    /* line 34, C:/SVN/rms/src/sass/screen1/_top-block.sass */
     #screen1 #top-block .sub-header .day > small {
       display: block;
       color: #FAFAFA; }
-  /* line 38, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+  /* line 37, C:/SVN/rms/src/sass/screen1/_top-block.sass */
   #screen1 #top-block .sub-header .btn {
     padding: 0 8px;
     height: 30px;
     margin-top: 5px;
     line-height: 30px; }
-  /* line 44, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+  /* line 43, C:/SVN/rms/src/sass/screen1/_top-block.sass */
   #screen1 #top-block .people {
     overflow: hidden; }
-    /* line 46, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+    /* line 45, C:/SVN/rms/src/sass/screen1/_top-block.sass */
     #screen1 #top-block .people > ul {
       overflow-y: scroll; }
-    /* line 48, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+    /* line 47, C:/SVN/rms/src/sass/screen1/_top-block.sass */
     #screen1 #top-block .people .people-table {
       width: 100%; }
-    /* line 50, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+    /* line 49, C:/SVN/rms/src/sass/screen1/_top-block.sass */
     #screen1 #top-block .people .person-row {
+      position: relative;
       overflow: hidden;
       border-bottom: 1px solid #c2ccd1;
       height: 2rem;
       line-height: 2rem;
-      transition: all 0.2s ease; }
-      /* line 57, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+      transition: all .2s ease; }
+      /* line 56, C:/SVN/rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .person-info {
         box-sizing: border-box;
         width: 23.33333%;
         float: left;
         padding-left: 0.2rem;
         padding-right: 0.2rem; }
-        /* line 61, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+        /* line 60, C:/SVN/rms/src/sass/screen1/_top-block.sass */
         #screen1 #top-block .people .person-row .person-info table {
           width: 100%; }
-          /* line 63, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+          /* line 62, C:/SVN/rms/src/sass/screen1/_top-block.sass */
           #screen1 #top-block .people .person-row .person-info table td {
             vertical-align: top; }
-          /* line 65, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+          /* line 64, C:/SVN/rms/src/sass/screen1/_top-block.sass */
           #screen1 #top-block .people .person-row .person-info table .hide {
             width: 1rem; }
-            /* line 67, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+            /* line 66, C:/SVN/rms/src/sass/screen1/_top-block.sass */
             #screen1 #top-block .people .person-row .person-info table .hide img {
               padding-right: 0.3rem;
               padding-top: 0.3rem;
               opacity: 0.5;
               cursor: pointer; }
-          /* line 72, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+          /* line 71, C:/SVN/rms/src/sass/screen1/_top-block.sass */
           #screen1 #top-block .people .person-row .person-info table .avatar {
             width: 2rem;
             margin-right: 0.3rem; }
-          /* line 75, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+          /* line 74, C:/SVN/rms/src/sass/screen1/_top-block.sass */
           #screen1 #top-block .people .person-row .person-info table .name {
             text-align: left;
             font-size: 12px; }
-          /* line 78, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+          /* line 77, C:/SVN/rms/src/sass/screen1/_top-block.sass */
           #screen1 #top-block .people .person-row .person-info table .expand {
             text-align: right;
             font-size: 14px;
             cursor: pointer; }
-            /* line 82, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+            /* line 81, C:/SVN/rms/src/sass/screen1/_top-block.sass */
             #screen1 #top-block .people .person-row .person-info table .expand i {
               background: whitesmoke;
               padding: 3px 5px;
               border-radius: 5px; }
-      /* line 86, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+      /* line 85, C:/SVN/rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .estimate {
         box-sizing: border-box;
         width: 3.33333%;
         float: left;
         font-size: 12px;
         text-align: center; }
-      /* line 91, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+      /* line 90, C:/SVN/rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .total .task-count {
         display: block;
         position: absolute;
@@ -1087,7 +1094,7 @@ ul {
         font-size: 11px;
         line-height: 1;
         opacity: 0.5; }
-      /* line 99, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+      /* line 98, C:/SVN/rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .total .person-day-time {
         position: absolute;
         width: 100%;
@@ -1095,21 +1102,21 @@ ul {
         display: block;
         padding-left: 5px;
         font-size: 10px; }
-      /* line 106, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+      /* line 105, C:/SVN/rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .total .loaded {
         position: absolute;
         width: 0%;
         height: 100%; }
-        /* line 110, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+        /* line 109, C:/SVN/rms/src/sass/screen1/_top-block.sass */
         #screen1 #top-block .people .person-row .total .loaded.green {
           background-color: #69D869; }
-        /* line 113, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+        /* line 111, C:/SVN/rms/src/sass/screen1/_top-block.sass */
         #screen1 #top-block .people .person-row .total .loaded.red {
           background-color: #EF6363; }
-        /* line 116, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+        /* line 113, C:/SVN/rms/src/sass/screen1/_top-block.sass */
         #screen1 #top-block .people .person-row .total .loaded.light-yellow {
           background-color: #eee3a1; }
-      /* line 118, C:/SVN/rms/src/sass/screen1/_top-block.sass */
+      /* line 115, C:/SVN/rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .tasks {
         display: block;
         position: absolute;
@@ -1241,33 +1248,33 @@ ul {
             /* line 59, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
             #screen1 #sidebar .content-block .tasks-block li table td h3 {
               padding-left: 5px; }
-      /* line 66, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
+      /* line 61, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
       #screen1 #sidebar .content-block .task-list {
         padding-left: 20px;
         padding-bottom: 10px; }
-        /* line 69, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
+        /* line 64, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .task-list .task-list-title {
           cursor: pointer; }
-          /* line 71, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
+          /* line 66, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
           #screen1 #sidebar .content-block .task-list .task-list-title i {
             display: inline-block; }
-          /* line 73, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
+          /* line 68, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
           #screen1 #sidebar .content-block .task-list .task-list-title h4 {
             display: inline-block;
             padding-left: 5px; }
-      /* line 76, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
+      /* line 71, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
       #screen1 #sidebar .content-block .task-list-items {
         padding-left: 20px;
         margin-left: 1rem;
         width: 100%;
         table-layout: fixed; }
-        /* line 81, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
+        /* line 76, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .task-list-items .col {
           line-height: 13px; }
-        /* line 83, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
+        /* line 78, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .task-list-items .col1 {
           width: 50%; }
-          /* line 85, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
+          /* line 80, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
           #screen1 #sidebar .content-block .task-list-items .col1 div {
             overflow: hidden;
             height: 20px;
@@ -1280,7 +1287,7 @@ ul {
             border-radius: 5px;
             border: 1px solid #96b8dc;
             padding: 2px 6px; }
-        /* line 97, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
+        /* line 92, C:/SVN/rms/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .task-list-items .col2 {
           width: 2rem;
           text-align: center;
@@ -1301,17 +1308,17 @@ ul {
     /* line 4, C:/SVN/rms/src/sass/screen1/_modal-task-info.sass */
     #screen1 .show#modal-task-info, #screen1 .show#modal-task {
       display: block; }
-  /* line 17, C:/SVN/rms/src/sass/screen1/_modal-task-info.sass */
+  /* line 16, C:/SVN/rms/src/sass/screen1/_modal-task-info.sass */
   #screen1 #modal-task-info {
     width: 270px; }
-    /* line 21, C:/SVN/rms/src/sass/screen1/_modal-task-info.sass */
+    /* line 20, C:/SVN/rms/src/sass/screen1/_modal-task-info.sass */
     #screen1 #modal-task-info li .task-info-label {
       box-sizing: border-box;
       width: 28.57143%;
       float: left;
       text-align: right;
       padding-right: 10px; }
-    /* line 25, C:/SVN/rms/src/sass/screen1/_modal-task-info.sass */
+    /* line 24, C:/SVN/rms/src/sass/screen1/_modal-task-info.sass */
     #screen1 #modal-task-info li .task-info-value {
       box-sizing: border-box;
       width: 71.42857%;
