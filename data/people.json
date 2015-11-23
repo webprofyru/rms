@@ -87,12 +87,6 @@
             "email": "alexey@zorkaltsev.com"
         },
         {
-            "id": 100079,
-            "role": "Art-director",
-            "name": "Александр Колесников",
-            "email": "a.kolesnikov@webprofy.ru"
-        },
-        {
             "id": 95061,
             "role": "Designer, Markuper",
             "name": "Александр Хрусталев",
@@ -171,12 +165,6 @@
             "email": "i.galina@kokoc.com"
         },
         {
-            "id": 102943,
-            "role": "Programmer, Markuper",
-            "name": "Григорий Красильников",
-            "email": "g.krasilnikov@webprofy.ru"
-        },
-        {
             "id": 48687,
             "role": "Programmer, Markuper",
             "name": "Денис Коровкин",
@@ -190,7 +178,7 @@
         },
         {
             "id": 77667,
-            "role": "Designer",
+            "role": "Art-director",
             "name": "Евгения Харитонова",
             "email": "e.kharitonova@webprofy.ru"
         },
@@ -255,12 +243,6 @@
             "email": "o.chukhalenko@webprofy.ru"
         },
         {
-            "id": 101833,
-            "role": "Programmer, Markuper",
-            "name": "Роберт Ахмеров",
-            "email": "r.ahmerov@webprofy.ru"
-        },
-        {
             "id": 103052,
             "role": "Analyst",
             "name": "Сергей Антипин",
@@ -297,18 +279,6 @@
             "email": "t.verkhoturova@webprofy.ru"
         },
         {
-            "id": 102862,
-            "role": "Tester, Content-manager",
-            "name": "Татьяна Коровкина",
-            "email": "ayaka@koneko.ru"
-        },
-        {
-            "id": 101832,
-            "role": "Content-manager",
-            "name": "Юлия Калмыкова",
-            "email": "jill007@gmail.com"
-        },
-        {
           "id": 115063,
           "role": "Manager",
           "name": "Ольга Черноусова",
@@ -322,7 +292,7 @@
         },
         {
           "id": 113363,
-          "role": "Manager",
+          "role": "Manager, Content-manager",
           "name": "Валерия Брызгалина",
           "email": "v.bryzgalina@webprofy.ru"
         },
@@ -375,10 +345,16 @@
             "email": "v.serov@webprofy.ru"
         },
         {
-            "id": 134333,
-            "role": "Programmer, Markuper",
-            "name": "Роман Максимов",
-            "email": "r.maksimov@webprofy.ru"
+            "id": 143237,
+            "role": "Tester, Content-manager",
+            "name": "Владислав Топорков",
+            "email": "v.toporkov@webprofy.ru"
+        },
+        {
+            "id": 139419,
+            "role": "Tester, Content-manager",
+            "name": "Владимир Васильев",
+            "email": "v.vasilyev@webprofy.ru"
         },
         {
             "id": 133433,
