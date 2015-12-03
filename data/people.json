@@ -28,6 +28,10 @@
             "roles": "Tester, Content-manager",
             "groupRole": true
         },
+		{
+			"role": "GroupYastrebov",
+			"name": "Group Yastrebov"
+        },
         {
             "role": "Art-director",
             "name": "Арт-директор",
@@ -77,17 +81,7 @@
         {
           "role": "Technologist",
           "name": "Технолог"
-        },
-		{
-          "role": "GroupYastrebov",
-          "name": "GroupYastrebov"
-        },
-		{
-            "role": "Group Yastrebov",
-            "name": "Group Yastrebov",
-            "roles": "GroupYastrebov",
-            "groupRole": true
-        },
+        }
     ],
     "people": [
         {
@@ -278,7 +272,7 @@
         },
         {
             "id": 92517,
-            "role": "Programmer, Markuper",
+            "role": "Programmer, Markuper, GroupYastrebov",
             "name": "Сергей Ястребов",
             "email": "s.yastrebov@webprofy.ru"
         },
