@@ -77,7 +77,17 @@
         {
           "role": "Technologist",
           "name": "Технолог"
-        }
+        },
+		{
+          "role": "GroupYastrebov",
+          "name": "GroupYastrebov"
+        },
+		{
+            "role": "Group Yastrebov",
+            "name": "Group Yastrebov",
+            "roles": "GroupYastrebov",
+            "groupRole": true
+        },
     ],
     "people": [
         {
@@ -334,13 +344,13 @@
         },
         {
             "id": 121686,
-            "role": "Programmer",
+            "role": "Programmer, GroupYastrebov",
             "name": "Максим Васильев",
             "email": "m.vasilyev@webprofy.ru"
         },
         {
             "id": 121030,
-            "role": "Programmer, Markuper",
+            "role": "Programmer, Markuper, GroupYastrebov",
             "name": "Валерий Серов",
             "email": "v.serov@webprofy.ru"
         },
