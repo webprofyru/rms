@@ -29,8 +29,8 @@
             "groupRole": true
         },
 		{
-          "role": "GroupYastrebov",
-          "name": "Group Yastrebov"
+			"role": "GroupYastrebov",
+			"name": "Group Yastrebov"
         },
         {
             "role": "Art-director",
@@ -272,7 +272,7 @@
         },
         {
             "id": 92517,
-            "role": "Programmer, Markuper",
+            "role": "Programmer, Markuper, GroupYastrebov",
             "name": "Сергей Ястребов",
             "email": "s.yastrebov@webprofy.ru"
         },
