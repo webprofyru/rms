@@ -91,6 +91,18 @@
     background: $color-task-red
     &:hover
       background-color: darken($color-task-red, 10%)
+  &.grade-easy
+    background: lighten($color-task-blue, 10%)
+    &:hover
+      background-color: darken($color-task-blue, 10%)
+  &.grade-hard
+    background: darken($color-task-blue, 10%)
+    &:hover
+      background-color: darken($color-task-blue, 20%)
+  &.grade-complex
+    background: darken($color-task-blue, 20%)
+    &:hover
+      background-color: darken($color-task-blue, 30%)
   .loading
     width: 100%
     text-align: center
