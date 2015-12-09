@@ -7,6 +7,7 @@ mixin task(path, time, ngIf)
         .spent(style='width:{{#{path}.timeWithinEstimate()}}%')
         .overestimate(style='width:{{#{path}.timeAboveEstimate()}}%')
         .percent {{#{path}.timeReported()}}
+    span.project {{#{path}.project.name}}
     span.title {{#{path}.title}}
     span.duration(ng-if='!taskView.split' rms-task-duration='') {{filter.taskPeriod(#{path},'estimate'#{time ? ',' + time : ''})}}
     span.due-date(rms-task-due-date='') {{filter.shortDate(#{path},'duedate')}}
