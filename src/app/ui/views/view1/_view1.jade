@@ -52,7 +52,7 @@ include ../../tasks/_timeTracking.jade
                     button.btn(ng-click='view.periodChange(1)')
                         i.fa.fa-caret-right
             .people(ng-if="view.data.peopleStatus == 'ready' || view.data.peopleStatus == 'update'")
-                .scroll-viewport(style='height:{{layout.area1.height}}px')
+                .scroll-viewport(style='height:{{layout.area1.height - 42}}px')
                     .scroll-body
                         .vertical-lines
                             - var n = 1
