@@ -29,6 +29,14 @@
             "groupRole": true
         },
         {
+            "role": "GroupYastrebov",
+            "name": "Group Yastrebov"
+        },
+        {
+            "role": "GroupSkinteev",
+            "name": "Group Skinteev"
+        },
+        {
             "role": "Art-director",
             "name": "Арт-директор",
             "supervisor": true
@@ -183,6 +191,12 @@
             "email": "e.kharitonova@webprofy.ru"
         },
         {
+            "id": 146695,
+            "role": "Programmer, Markuper, GroupSkinteev",
+            "name": "Иван Аникин",
+            "email": "i.anikin@webprofy.ru"
+        },
+        {
             "id": 96181,
             "role": "Markuper",
             "name": "Игорь Лесневский",
@@ -225,8 +239,14 @@
             "email": "n.cherepenina@webprofy.ru"
         },
         {
+          "id": 120604,
+          "role": "Programmer, GroupSkinteev",
+          "name": "Никита Миликов",
+          "email": "n.milikov@webprofy.ru"
+        },
+        {
             "id": 97175,
-            "role": "Programmer, Markuper",
+            "role": "Programmer, Markuper, GroupSkinteev",
             "name": "Николай Скинтеев",
             "email": "n.skinteev@webprofy.ru"
         },
@@ -268,7 +288,7 @@
         },
         {
             "id": 92517,
-            "role": "Programmer, Markuper",
+            "role": "Programmer, Markuper, GroupYastrebov",
             "name": "Сергей Ястребов",
             "email": "s.yastrebov@webprofy.ru"
         },
@@ -327,20 +347,14 @@
           "email": "m.artemova@webprofy.ru"
         },
         {
-          "id": 120604,
-          "role": "Programmer",
-          "name": "Никита Миликов",
-          "email": "n.milikov@webprofy.ru"
-        },
-        {
             "id": 121686,
-            "role": "Programmer",
+            "role": "Programmer, GroupYastrebov",
             "name": "Максим Васильев",
             "email": "m.vasilyev@webprofy.ru"
         },
         {
             "id": 121030,
-            "role": "Programmer, Markuper",
+            "role": "Programmer, Markuper, GroupYastrebov",
             "name": "Валерий Серов",
             "email": "v.serov@webprofy.ru"
         },
