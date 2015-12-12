@@ -4,54 +4,57 @@ ngModule.run ['$rootScope', (($rootScope) ->
   $rootScope.modal = {type: null}
   return)]
 
-ngModule.directive 'rmsTaskDuration', ['$rootScope', '$timeout', (($rootScope, $timeout) ->
-    restrict: 'A'
-    require: '^rmsTask'
-    link: (($scope, element, attrs, rmsTask) ->
-      if attrs.rmsTaskDuration.length > 0
-        return unless $scope.$eval attrs.rmsTaskDuration
-      rmsTask.setDuration element
-      $scope.$on '$destroy', (->
-        rmsTask.setDuration null
-        return)
-      return))]
+# Zork: This functionality slows down digest cycle, since <element>.width() and .positions() takes to long.  Would be nice to figure out another way of adding 'up' class to duedate
 
-ngModule.directive 'rmsTaskDueDate', ['$rootScope', '$timeout', (($rootScope, $timeout) ->
-    restrict: 'A'
-    require: '^rmsTask'
-    link: (($scope, element, attrs, rmsTask) ->
-      rmsTask.setDuedate element
-      $scope.$on '$destroy', (->
-        rmsTask.setDuedate null
-        return)
-      return))]
+#ngModule.directive 'rmsTaskDuration', ['$rootScope', '$timeout', (($rootScope, $timeout) ->
+#    restrict: 'A'
+#    require: '^rmsTask'
+#    link: (($scope, element, attrs, rmsTask) ->
+#      if attrs.rmsTaskDuration.length > 0
+#        return unless $scope.$eval attrs.rmsTaskDuration
+#      rmsTask.setDuration element
+#      $scope.$on '$destroy', (->
+#        rmsTask.setDuration null
+#        return)
+#      return))]
+#
+#ngModule.directive 'rmsTaskDueDate', ['$rootScope', '$timeout', (($rootScope, $timeout) ->
+#    restrict: 'A'
+#    require: '^rmsTask'
+#    link: (($scope, element, attrs, rmsTask) ->
+#      rmsTask.setDuedate element
+#      $scope.$on '$destroy', (->
+#        rmsTask.setDuedate null
+#        return)
+#      return))]
 
 ngModule.directive 'rmsTask', ['$rootScope', '$timeout', (($rootScope, $timeout) ->
     restrict: 'A'
     require: 'ngModel'
-    controller: ['$scope', (($scope) ->
-      @unwatch = null
-      fix = (=>
-        if (duration = @duration) && (duedate = @duedate)
-          if !@unwatch
-            @unwatch = $scope.$watch (-> return (duration.position().left + duration.width()) >= duedate.position().left),
-              ((overlap) ->
-                $scope.overlap = overlap
-                duedate.toggleClass 'up', overlap
-                return)
-        else if @unwatch
-          @unwatch()
-          @unwatch = null
-        return)
-      @setDuration = ((durationElement) =>
-        $scope.duration = @duration = durationElement
-        fix()
-        return)
-      @setDuedate = ((duedateElement) =>
-        $scope.duedate = @duedate = duedateElement
-        fix()
-        return)
-      return)]
+#    controller: ['$scope', (($scope) ->
+#      @unwatch = null
+#      fix = (=>
+#        if (duration = @duration) && (duedate = @duedate)
+#          if !@unwatch
+#            @unwatch = $scope.$watch (-> return (duration.position().left + duration.width()) >= duedate.position().left),
+#              ((overlap) ->
+#                console.info 'overlap'
+#                $scope.overlap = overlap
+#                duedate.toggleClass 'up', overlap
+#                return)
+#        else if @unwatch
+#          @unwatch()
+#          @unwatch = null
+#        return)
+#      @setDuration = ((durationElement) =>
+#        $scope.duration = @duration = durationElement
+#        fix()
+#        return)
+#      @setDuedate = ((duedateElement) =>
+#        $scope.duedate = @duedate = duedateElement
+#        fix()
+#        return)
+#      return)]
     link: (($scope, element, attrs, model) ->
       element.on 'click', ((e)->
         e.stopPropagation()
