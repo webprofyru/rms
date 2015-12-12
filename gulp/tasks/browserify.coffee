@@ -60,4 +60,4 @@ gulp.task "browserify", ((callback) ->
 
   config.bundleConfigs.forEach browserifyThis
 
-  return)
+  return false)

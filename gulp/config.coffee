@@ -11,7 +11,7 @@ data = './data'
 
 module.exports =
 
-  cleanup: ["#{dest}/**/*", "!#{dest}/.git/**/*"]
+  cleanup: dest
 
   jadeScript:
     src: "#{app}/svc/emails/_emailTemplate.jade"

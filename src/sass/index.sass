@@ -15,6 +15,9 @@ $narrow: 0 40rem
 $wide: 40rem
 $wide-border: 10%
 
+// initial susy layout
+@include layout(100% 1 0 border-box)
+
 // base font size
 $ms-base: 1rem
 $base-font-size: $ms-base
@@ -23,8 +26,6 @@ html
   @include container
   font-family: 'Roboto', sans-serif
 
-// initial susy layout
-@include layout(100% 1 0 border-box)
 
 $wide-container: layout(80% 1 0)
 

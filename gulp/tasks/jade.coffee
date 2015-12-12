@@ -7,7 +7,12 @@ jade = require('gulp-jade')
 rename = require('gulp-rename')
 config = require("../config")
 
-gulp.task "jade", (->
+gulp.task "jade", ((cb) ->
+
+  cnt = 2
+  end = (->
+    cb() if --cnt == 0
+    return)
 
   jadeOpts =
     locals:
@@ -17,14 +22,16 @@ gulp.task "jade", (->
   gulp.src(config.jade.src).pipe(jade(jadeOpts)).on("error", handleErrors)
 #    .pipe(changed(config.jade.dest)) # Zork: Don't know why, but this blocks index.html update, when some included jade is changed
     .pipe(gulp.dest(config.jade.dest))
-    .pipe(browserSync.reload(stream: true))
+    .on('end', end)
+#    .pipe(browserSync.reload(stream: true))
 
   # dev pages
   gulp.src(config.jade.indexSrc).pipe(jade(jadeOpts)).on("error", handleErrors)
     .pipe(rename('emails.html'))
     .pipe(changed(config.jade.dest))
     .pipe(gulp.dest(config.jade.dest))
-    .pipe(browserSync.reload(stream: true))
+    .on('end', end)
+#    .pipe(browserSync.reload(stream: true))
 
   # dev pages
 #  gulp.src(config.jade.indexSrc).pipe(jade(jadeOpts)).on("error", handleErrors)
@@ -44,9 +51,11 @@ gulp.task "jade", (->
 
   # test.html
   if gutil.env.test
+    cnt++
     gulp.src(config.test.src).pipe(jade(jadeOpts)).on("error", handleErrors)
       .pipe(changed(config.test.dest))
       .pipe(gulp.dest(config.test.dest))
-      .pipe(browserSync.reload(stream: true))
+      .on('end', end)
+#      .pipe(browserSync.reload(stream: true))
 
-  return)
+  return false)
