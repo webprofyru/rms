@@ -95,10 +95,6 @@
   background: $color-task-blue
   &:hover
     background-color: darken($color-task-blue, 10%)
-  &.no-estimate:not(&.overdue)
-    background: $color-task-bright-blue
-    &:hover
-      background-color: darken($color-task-bright-blue, 10%)
   &.grade-easy
     background: lighten($color-task-blue, 10%)
     &:hover
@@ -111,6 +107,13 @@
     background: darken($color-task-blue, 20%)
     &:hover
       background-color: darken($color-task-blue, 30%)
+  &.no-estimate
+    background: white
+    &:hover
+      background-color: darken($color-task-bright-blue, 10%)
+    .duration:before
+      content: '[?]'
+      color: red
   &.overdue
     background: $color-task-red
     &:hover
