@@ -35,7 +35,7 @@ ngModule.run([
 
 VER_MAJOR = 1;
 
-VER_MINOR = 0;
+VER_MINOR = 1;
 
 ngModule.factory('config', [
   '$http', 'localStorageService', (function($http, localStorageService) {
@@ -66,6 +66,12 @@ ngModule.factory('config', [
       Config.propNum('vResizer');
 
       Config.propStr('currentUserId');
+
+      Config.propStr('selectedRole');
+
+      Config.propNum('selectedCompany');
+
+      Config.propNum('selectedLoad');
 
       Config.propNum('histStart', -1);
 
@@ -152,7 +158,7 @@ DSDataServiceBase = require('../dscommon/DSDataServiceBase');
 Person = require('../models/Person');
 
 ngModule.factory('PeopleWithJson', [
-  'DSDataSimple', 'DSDataSource', '$rootScope', '$http', '$q', (function(DSDataSimple, DSDataSource, $rootScope, $http, $q) {
+  'DSDataSimple', 'DSDataSource', 'config', '$rootScope', '$http', '$q', (function(DSDataSimple, DSDataSource, config, $rootScope, $http, $q) {
     var PeopleWithJson;
     return PeopleWithJson = (function(superClass) {
       extend(PeopleWithJson, superClass);
@@ -221,11 +227,19 @@ ngModule.factory('PeopleWithJson', [
               if (resp.status === 200) {
                 _this.set('cancel', null);
                 DSDigest.block((function() {
-                  var i, len, map, person, personInfo, personKey, ref, ref1;
-                  $rootScope.peopleRoles = resp.data.roles;
+                  var i, j, k, len, len1, map, peopleRoles, person, personInfo, personKey, ref, ref1, selectedRole;
+                  peopleRoles = $rootScope.peopleRoles = resp.data.roles;
+                  if ((selectedRole = config.get('selectedRole'))) {
+                    for (j = 0, len = peopleRoles.length; j < len; j++) {
+                      i = peopleRoles[j];
+                      if (i.role === selectedRole) {
+                        $rootScope.selectedRole = i;
+                      }
+                    }
+                  }
                   ref = resp.data.people;
-                  for (i = 0, len = ref.length; i < len; i++) {
-                    personInfo = ref[i];
+                  for (k = 0, len1 = ref.length; k < len1; k++) {
+                    personInfo = ref[k];
                     if (teamworkPeople.items.hasOwnProperty(personKey = "" + personInfo.id)) {
                       teamworkPeople.items[personKey].set('roles', new DSEnum(personInfo.role));
                     }
@@ -6590,6 +6604,25 @@ module.exports = Task = (function(superClass) {
     }
   });
 
+  Task.prototype.grade = (function() {
+    var estimate;
+    if ((estimate = this.get('estimate')) === null) {
+      return '';
+    }
+    if (estimate.asMinutes() < 60) {
+      return 'easy';
+    }
+    if (estimate.asMinutes() >= 60 && estimate.asMinutes() < 240) {
+      return 'medium';
+    }
+    if (estimate.asMinutes() >= 240 && estimate.asMinutes() < 480) {
+      return 'hard';
+    }
+    if (estimate.asMinutes() >= 480) {
+      return 'complex';
+    }
+  });
+
   Task.prototype.setVisible = (function(isVisible) {
     var ref, ref1;
     if (isVisible) {
@@ -9051,7 +9084,7 @@ ngModule.controller('View1', [
       if (_.isEmpty(row.tasks)) {
         return "height:100px";
       }
-      return "height:" + (55 * _.max(row.tasks, 'y').y + 98) + "px";
+      return "height:" + (65 * _.max(row.tasks, 'y').y + 98) + "px";
     });
   })
 ]);
@@ -9098,12 +9131,10 @@ ngModule.factory('View1', [
       View1.propNum('hiddenPeopleCount', 0);
 
       class1 = (function($scope, key) {
+        var i, j, l, len1, len2, ref, ref1, selectedCompany, selectedLoad;
         DSView.call(this, $scope, key);
         this.scope = $scope;
         this.set('startDate', moment().startOf('week'));
-        $scope.selectedRole = null;
-        $scope.selectedCompany = null;
-        $scope.selectedLoad = null;
         $scope.filterLoad = [
           $scope.selectedLoad = {
             id: 0,
@@ -9116,6 +9147,15 @@ ngModule.factory('View1', [
             name: 'Overload'
           }
         ];
+        if ((selectedLoad = config.get('selectedLoad'))) {
+          ref = $scope.filterLoad;
+          for (j = 0, len1 = ref.length; j < len1; j++) {
+            i = ref[j];
+            if (i.id === selectedLoad) {
+              $scope.selectedLoad = i;
+            }
+          }
+        }
         if (config.hasRoles) {
           $scope.filterCompanies = [
             {
@@ -9129,11 +9169,20 @@ ngModule.factory('View1', [
               name: 'Freelancers'
             }
           ];
+          if ((selectedCompany = config.get('selectedCompany'))) {
+            ref1 = $scope.filterCompanies;
+            for (l = 0, len2 = ref1.length; l < len2; l++) {
+              i = ref1[l];
+              if (i.id === selectedCompany) {
+                $scope.selectedCompany = i;
+              }
+            }
+          }
         }
         $scope.$watch(((function(_this) {
           return function() {
-            var ref;
-            return [(ref = _this.get('startDate')) != null ? ref.valueOf() : void 0, $scope.mode, $scope.dataService.showTimeSpent];
+            var ref2;
+            return [(ref2 = _this.get('startDate')) != null ? ref2.valueOf() : void 0, $scope.mode, $scope.dataService.showTimeSpent];
           };
         })(this)), ((function(_this) {
           return function(arg) {
@@ -9150,7 +9199,14 @@ ngModule.factory('View1', [
         $scope.$watch((function() {
           return [$scope.selectedRole, $scope.selectedCompany, $scope.selectedLoad];
         }), ((function(_this) {
-          return function() {
+          return function(arg) {
+            var selectedCompany, selectedLoad, selectedRole;
+            selectedRole = arg[0], selectedCompany = arg[1], selectedLoad = arg[2];
+            if ($rootScope.peopleRoles) {
+              config.set('selectedRole', selectedRole ? selectedRole.role : null);
+            }
+            config.set('selectedCompany', selectedCompany ? selectedCompany.id : null);
+            config.set('selectedLoad', selectedLoad ? selectedLoad.id : 0);
             return _this.__dirty++;
           };
         })(this)), true);
@@ -9245,7 +9301,7 @@ ngModule.factory('View1', [
           }
           if (((ref3 = this.scope.selectedLoad) != null ? ref3.id : void 0) !== 0) {
             if (this.get('data').get('personDayStatStatus') !== 'ready') {
-              retrun;
+              return;
             }
             personDayStat = this.get('data').get('personDayStat');
             loadFilter = this.scope.selectedLoad.id === 1 ? (function(person) {

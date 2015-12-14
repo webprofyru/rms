@@ -685,47 +685,60 @@ ul {
     /* line 7, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
     #screen1 .task .task-body, #screen1 #task-drag-ghost .task-body {
       overflow: hidden;
-      height: 45px;
+      height: 55px;
       padding: 0.2rem 0.2rem 0 0.2rem;
       border-radius: 5px;
-      line-height: 15px; }
-      /* line 14, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      line-height: 15px;
+      position: relative; }
+      /* line 15, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task .task-body.split > .duration, #screen1 #task-drag-ghost .task-body.split > .duration {
         display: none; }
-      /* line 16, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 17, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .title, #screen1 #task-drag-ghost .task-body .title {
         display: block;
         overflow: hidden;
         height: 15px;
-        text-overflow: ellipsis; }
-      /* line 21, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+        text-overflow: ellipsis;
+        white-space: nowrap; }
+      /* line 23, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      #screen1 .task .task-body .project, #screen1 #task-drag-ghost .task-body .project {
+        display: block;
+        overflow: hidden;
+        height: 15px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 10px;
+        opacity: 0.6; }
+      /* line 31, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .duration, #screen1 #task-drag-ghost .task-body .duration {
         position: absolute;
         left: 0.3rem;
         bottom: 0.2rem;
         font-size: 10px; }
-      /* line 26, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 36, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .due-date, #screen1 #task-drag-ghost .task-body .due-date {
         position: absolute;
         padding-left: 0.2rem;
         right: 0.3rem;
         bottom: 0.2rem;
         font-size: 10px; }
-        /* line 27, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+        /* line 37, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .due-date.up, #screen1 #task-drag-ghost .task-body .due-date.up {
           bottom: 1rem;
           background-color: inherit; }
-      /* line 38, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 48, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .split-task .duration, #screen1 #task-drag-ghost .task-body .split-task .duration {
         position: absolute;
         margin-left: 6px; }
-      /* line 41, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 51, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .task-progress, #screen1 #task-drag-ghost .task-body .task-progress {
-        position: relative;
-        height: 0.6rem;
-        line-height: 0.7rem;
-        margin-bottom: 0.1rem; }
-        /* line 46, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 0.2rem;
+        line-height: 0.7rem; }
+        /* line 58, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .percent, #screen1 #task-drag-ghost .task-body .task-progress .percent {
           position: absolute;
           height: 100%;
@@ -733,70 +746,88 @@ ul {
           color: #FFFFFF;
           text-align: center;
           font-size: 0.5rem; }
-        /* line 53, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+        /* line 65, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .load, #screen1 #task-drag-ghost .task-body .task-progress .load {
           position: absolute;
           height: 100%;
           width: 100%; }
-          /* line 57, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+          /* line 69, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
           #screen1 .task .task-body .task-progress .load img, #screen1 #task-drag-ghost .task-body .task-progress .load img {
             float: right;
             height: 0.6rem; }
-        /* line 60, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+        /* line 72, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .spent, #screen1 #task-drag-ghost .task-body .task-progress .spent {
           position: absolute;
           height: 100%;
           width: 70%;
           background-color: #008800; }
-        /* line 65, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+        /* line 77, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .overestimate, #screen1 #task-drag-ghost .task-body .task-progress .overestimate {
           position: absolute;
           height: 100%;
           width: 30%;
           background-color: #AA0000; }
-  /* line 74, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+  /* line 86, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
   #screen1 #task-drag-ghost {
     width: 6rem;
     border-radius: 5px;
     font-size: 12px;
     position: absolute;
     bottom: 0; }
-  /* line 82, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+  /* line 94, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
   #screen1 .task-body {
     background: #BCD2E9; }
-    /* line 84, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 96, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
     #screen1 .task-body:hover {
       background-color: #96b8dc; }
-    /* line 86, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 98, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
     #screen1 .task-body.no-estimate:not(&.overdue) {
       background: #D1F0ED; }
-      /* line 88, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 100, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task-body.no-estimate:not(&.overdue):hover {
         background-color: #abe3de; }
-    /* line 90, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 102, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    #screen1 .task-body.grade-easy {
+      background: #e2ecf6; }
+      /* line 104, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      #screen1 .task-body.grade-easy:hover {
+        background-color: #96b8dc; }
+    /* line 106, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    #screen1 .task-body.grade-hard {
+      background: #96b8dc; }
+      /* line 108, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      #screen1 .task-body.grade-hard:hover {
+        background-color: #6f9ed0; }
+    /* line 110, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    #screen1 .task-body.grade-complex {
+      background: #6f9ed0; }
+      /* line 112, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      #screen1 .task-body.grade-complex:hover {
+        background-color: #4985c3; }
+    /* line 114, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
     #screen1 .task-body.overdue {
       background: #FBC1C1; }
-      /* line 92, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 116, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task-body.overdue:hover {
         background-color: #f89191; }
-    /* line 94, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 118, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
     #screen1 .task-body .loading {
       width: 100%;
       text-align: center; }
-      /* line 97, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 121, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task-body .loading img {
         margin-top: 0.5rem;
         height: 0.8rem; }
-    /* line 100, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 124, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
     #screen1 .task-body.completed, #screen1 .task-body.loading {
       background: #A2FBA2; }
-      /* line 102, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 126, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task-body.completed:hover, #screen1 .task-body.loading:hover {
         background-color: #71f971; }
-    /* line 104, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 128, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
     #screen1 .task-body.workNotInDueDate {
       background: #F7BC50; }
-      /* line 106, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 130, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task-body.workNotInDueDate:hover {
         background-color: #f5a91f; }
   /* line 1, C:/SVN/_WebProfyManagement/src/sass/screen1/_actions.sass */
