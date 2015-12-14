@@ -2,6 +2,7 @@ module.exports = (ngModule = angular.module 'data/dsDataService', [
   require './PeopleWithJson'
   require './TasksWithTimeTracking'
   require './teamwork/TWPeople'
+  require './teamwork/TWTags'
   require './teamwork/TWTasks'
   require './teamwork/TWTimeTracking'
   require './PersonDayStatData'
@@ -32,8 +33,8 @@ ngModule.run ['dsDataService', '$rootScope', ((dsDataService, $rootScope) ->
   return)]
 
 ngModule.factory 'dsDataService', [
- 'TWPeople', 'TWTasks', 'TWTimeTracking', 'PeopleWithJson', 'TasksWithTimeTracking', 'PersonDayStatData', 'DSDataSource', 'dsChanges', 'config', '$http', '$rootScope', '$q',
- ((TWPeople, TWTasks, TWTimeTracking, PeopleWithJson, TasksWithTimeTracking, PersonDayStatData, DSDataSource, dsChanges, config, $http, $rootScope, $q) ->
+ 'TWPeople', 'TWTags', 'TWTasks', 'TWTimeTracking', 'PeopleWithJson', 'TasksWithTimeTracking', 'PersonDayStatData', 'DSDataSource', 'dsChanges', 'config', '$http', '$rootScope', '$q',
+ ((TWPeople, TWTags, TWTasks, TWTimeTracking, PeopleWithJson, TasksWithTimeTracking, PersonDayStatData, DSDataSource, dsChanges, config, $http, $rootScope, $q) ->
 
     class DSDataService extends DSDataServiceBase
       @begin 'DSDataService'
@@ -155,6 +156,11 @@ ngModule.factory 'dsDataService', [
                 delete params.source
                 (data = TWPeople.pool.find(@, params)).init? @
                 (set = data.get('peopleSet')).addRef owner; data.release @
+                return set
+              when 'Tags'
+                delete params.source
+                (data = TWTags.pool.find(@, params)).init? @
+                (set = data.get('tagSet')).addRef owner; data.release @
                 return set
               when 'Task'
 # Version 2 - request all non-completed tasks at once.  This resolves plenty of issues

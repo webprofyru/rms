@@ -8,6 +8,7 @@ DSDocument = require('../dscommon/DSDocument')
 Project = require('./Project')
 Person = require('./Person')
 TodoList = require('./TodoList')
+Tag = require('./Tag')
 TaskTimeTracking = require('./TaskTimeTracking')
 
 Comments = require('./types/Comments')
@@ -50,6 +51,8 @@ module.exports = class Task extends DSDocument
 
   @propBool 'completed'
   @propBool 'isReady'
+
+  # @propList 'tags', Tag
 
   #  @propCalc 'isOverdue', (-> (duedate = @get('duedate')) != null && duedate < time.today)
   isOverdue: (-> (duedate = @get('duedate')) != null && duedate < time.today)
