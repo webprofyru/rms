@@ -66,6 +66,13 @@ module.exports = class Task extends DSDocument
     return '' if (estimate = @get('estimate')) == null
     return if ((percent = Math.round(@get('timeTracking').get('totalMin') * 100 / estimate.asMinutes())) > 200) then "#{percent} %" else '')
 
+  grade: (->
+    return '' if (estimate = @get('estimate')) == null
+    return 'easy' if (estimate.asMinutes() < 60)
+    return 'medium' if (estimate.asMinutes() >= 60 && estimate.asMinutes() < 240)
+    return 'hard' if (estimate.asMinutes() >= 240 && estimate.asMinutes() < 480)
+    return 'complex' if (estimate.asMinutes() >= 480))
+
   setVisible: ((isVisible) ->
     if isVisible
       if (@__visCount = (@__visCount || 0) + 1) == 1

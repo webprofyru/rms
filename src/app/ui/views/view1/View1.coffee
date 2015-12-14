@@ -27,7 +27,7 @@ ngModule.controller 'View1', ['$scope', 'View1', '$rootScope', (($scope, View1, 
   $scope.expandedHeight = ((row)->
       return '' if !row.expand
       return "height:100px" if _.isEmpty row.tasks
-      return "height:#{55 * _.max(row.tasks, 'y').y + 98}px")
+      return "height:#{65 * _.max(row.tasks, 'y').y + 98}px")
   return)]
 
 ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, config, $rootScope, $log) ->
@@ -55,10 +55,6 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
       @scope = $scope
       @set 'startDate', moment().startOf('week')
 
-      $scope.selectedRole = null
-      $scope.selectedCompany = null
-      $scope.selectedLoad = null
-
       $scope.filterLoad = [
         $scope.selectedLoad = {id: 0, name: 'All'}
         {id: -1, name: 'Underload'}
@@ -76,6 +72,10 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
         return), true
 
       $scope.$watch (-> [$scope.selectedRole, $scope.selectedCompany, $scope.selectedLoad]), (=> @__dirty++), true
+
+      $scope.selectedRole = config.get('selectedRole')
+      $scope.selectedCompany = config.get('selectedCompany')
+      $scope.selectedLoad = config.get('selectedLoad')
 
       return)
 
@@ -96,6 +96,9 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
       return)
 
     render: (->
+      config.set('selectedRole', angular.copy(@scope.selectedRole))
+      config.set('selectedCompany', angular.copy(@scope.selectedCompany))
+      config.set('selectedLoad', angular.copy(@scope.selectedLoad))
 
       if !((peopleStatus = @get('data').get('peopleStatus')) == 'ready' || peopleStatus == 'update')
         @get('rowsList').merge @, []
@@ -145,7 +148,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
             filter = ((person) -> f1(person) && person.get('roles')?.get(role))
 
         if @scope.selectedLoad?.id != 0
-          retrun if @get('data').get('personDayStatStatus') != 'ready'
+          return if @get('data').get('personDayStatStatus') != 'ready'
           personDayStat = @get('data').get('personDayStat')
           loadFilter = if @scope.selectedLoad.id == 1
             ((person) ->

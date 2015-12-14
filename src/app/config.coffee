@@ -36,6 +36,10 @@ ngModule.factory 'config',
 
       @propStr 'currentUserId'
 
+      @propObj 'selectedRole'
+      @propObj 'selectedCompany'
+      @propObj 'selectedLoad'
+
       @propNum 'histStart', -1 # first page of time-entries history within time.historyLimit range
 
       @onAnyPropChange ((item, propName, newVal, oldVal) -> # save to local storage

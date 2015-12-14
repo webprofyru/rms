@@ -81,7 +81,7 @@ include ../../tasks/_timeTracking.jade
                                     span.task-count(ng-if='dayStat.tasksCount>0').task-count {{dayStat.tasksCount}}
                                 .tasks(ng-if='row.expand', style="{{expandedHeight(row)}}")
                                     ul
-                                        li.task(ng-repeat='taskView in row.tasks' style="left:{{((3 * taskView.x + 8) * (100/30)).toFixed(5)}}%;top:{{Math.round(taskView.y*55)}}px;width:{{((taskView.len * 3 - 0.2) * (100/30)).toFixed(5)}}%")
+                                        li.task(ng-repeat='taskView in row.tasks' style="left:{{((3 * taskView.x + 8) * (100/30)).toFixed(5)}}%;top:{{Math.round(taskView.y*65)}}px;width:{{((taskView.len * 3 - 0.2) * (100/30)).toFixed(5)}}%")
                                             +task('taskView.task', 'taskView.time', 'taskView.task')
                                             +timeTracking()
 
