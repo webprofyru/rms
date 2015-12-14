@@ -17,7 +17,7 @@ ngModule.run ['$rootScope', 'config', (($rootScope, config) ->
   return)]
 
 VER_MAJOR = 1
-VER_MINOR = 0
+VER_MINOR = 1
 
 ngModule.factory 'config',
   ['$http', 'localStorageService',
@@ -36,9 +36,9 @@ ngModule.factory 'config',
 
       @propStr 'currentUserId'
 
-      @propObj 'selectedRole'
-      @propObj 'selectedCompany'
-      @propObj 'selectedLoad'
+      @propStr 'selectedRole'
+      @propNum 'selectedCompany'
+      @propNum 'selectedLoad'
 
       @propNum 'histStart', -1 # first page of time-entries history within time.historyLimit range
 

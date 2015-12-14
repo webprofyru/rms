@@ -8,7 +8,7 @@ error = require('../../dscommon/util').error
 
 Person = require '../../models/Person'
 
-ngModule.factory 'TWPeople', ['DSDataSimple', 'DSDataSource', '$q', ((DSDataSimple, DSDataSource, $q) ->
+ngModule.factory 'TWPeople', ['DSDataSimple', 'DSDataSource', '$rootScope', '$q', ((DSDataSimple, DSDataSource, $rootScope, $q) ->
 
   return class TWPeople extends DSDataSimple
 

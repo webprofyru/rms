@@ -60,6 +60,10 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
         {id: -1, name: 'Underload'}
         {id: 1, name: 'Overload'}]
 
+      if (selectedLoad = config.get('selectedLoad'))
+        for i in $scope.filterLoad when i.id == selectedLoad
+          $scope.selectedLoad = i
+
       if config.hasRoles # it's webProfy
 
         $scope.filterCompanies = [
@@ -67,15 +71,20 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
           $scope.selectedCompany = {id: 23872, name: 'WebProfy'}
           {id: 50486, name: 'Freelancers'}]
 
+        if (selectedCompany = config.get('selectedCompany'))
+          for i in $scope.filterCompanies when i.id == selectedCompany
+            $scope.selectedCompany = i
+
       $scope.$watch (=> [@get('startDate')?.valueOf(), $scope.mode, $scope.dataService.showTimeSpent]), (([startDateVal, mode, showTimeSpent]) =>
         @dataUpdate {startDate: moment(startDateVal), endDate: moment(startDateVal).add(6, 'days'), mode, showTimeSpent}
         return), true
 
-      $scope.$watch (-> [$scope.selectedRole, $scope.selectedCompany, $scope.selectedLoad]), (=> @__dirty++), true
-
-      $scope.selectedRole = config.get('selectedRole')
-      $scope.selectedCompany = config.get('selectedCompany')
-      $scope.selectedLoad = config.get('selectedLoad')
+      $scope.$watch (-> [$scope.selectedRole, $scope.selectedCompany, $scope.selectedLoad]), (([selectedRole, selectedCompany, selectedLoad]) =>
+        if $rootScope.peopleRoles
+          config.set 'selectedRole', if selectedRole then selectedRole.role else null
+        config.set 'selectedCompany', if selectedCompany then selectedCompany.id else null
+        config.set 'selectedLoad', if selectedLoad then selectedLoad.id else 0
+        @__dirty++), true
 
       return)
 
@@ -96,10 +105,6 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
       return)
 
     render: (->
-      config.set('selectedRole', angular.copy(@scope.selectedRole))
-      config.set('selectedCompany', angular.copy(@scope.selectedCompany))
-      config.set('selectedLoad', angular.copy(@scope.selectedLoad))
-
       if !((peopleStatus = @get('data').get('peopleStatus')) == 'ready' || peopleStatus == 'update')
         @get('rowsList').merge @, []
         return

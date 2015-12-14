@@ -14,8 +14,8 @@ DSDataServiceBase = require '../dscommon/DSDataServiceBase'
 Person = require '../models/Person'
 
 ngModule.factory 'PeopleWithJson', [
-  'DSDataSimple', 'DSDataSource', '$rootScope', '$http', '$q',
-  ((DSDataSimple, DSDataSource, $rootScope, $http, $q) ->
+  'DSDataSimple', 'DSDataSource', 'config', '$rootScope', '$http', '$q',
+  ((DSDataSimple, DSDataSource, config, $rootScope, $http, $q) ->
 
     return class PeopleWithJson extends DSData
 
@@ -61,7 +61,10 @@ ngModule.factory 'PeopleWithJson', [
               if (resp.status == 200) # 0 means that request was canceled
                 @set 'cancel', null
                 DSDigest.block (=>
-                  $rootScope.peopleRoles = resp.data.roles # set roles to those who are in the list
+                  peopleRoles = $rootScope.peopleRoles = resp.data.roles # set roles to those who are in the list
+                  if (selectedRole = config.get('selectedRole'))
+                    for i in peopleRoles when i.role == selectedRole
+                      $rootScope.selectedRole = i
                   for personInfo in resp.data.people
                     if teamworkPeople.items.hasOwnProperty(personKey = "#{personInfo.id}")
                       teamworkPeople.items[personKey].set 'roles', new DSEnum personInfo.role
