@@ -42,14 +42,14 @@ include ../../tasks/_timeTracking.jade
                     //            i.fa.fa-search
                     //            span.demo-msg not working
                 .prev-next-week
-                    button.btn(ng-click='view.periodChange(-1)')
+                    button.btn(ng-click='view.periodChange(-1)' rms-view1-mouse-over-week-change='-1')
                         i.fa.fa-caret-left
                 .day(ng-repeat='day in view.days')
                     //strong(ng-bind-html='filter.calendarHeader(day, "date")')
                     div(ng-bind-html='filter.calendarHeader(day, "date")')
                     small(ng-bind-html='filter.taskPeriod(day, "workTime", day.timeSpent)')
                 .prev-next-week
-                    button.btn(ng-click='view.periodChange(1)')
+                    button.btn(ng-click='view.periodChange(1)' rms-view1-mouse-over-week-change='1')
                         i.fa.fa-caret-right
             .people(ng-if="view.data.peopleStatus == 'ready' || view.data.peopleStatus == 'update'")
                 .scroll-viewport(style='height:{{layout.area1.height - 42}}px')

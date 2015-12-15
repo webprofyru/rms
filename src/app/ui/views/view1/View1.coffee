@@ -22,7 +22,7 @@ Row = require('./models/Row')
 TaskView = require('./models/TaskView')
 
 ngModule.controller 'View1', ['$scope', 'View1', '$rootScope', (($scope, View1, $rootScope) ->
-  $scope.view = new View1 $scope, 'view1'
+  $rootScope.view1 = $scope.view = new View1 $scope, 'view1'
   $scope.$on '$destroy', (-> delete $rootScope.view1; return)
   $scope.expandedHeight = ((row)->
       return '' if !row.expand
@@ -360,4 +360,19 @@ ngModule.directive 'rmsView1DropTask', [
         $rootScope.$digest()
         return false)
       return))]
+
+ngModule.directive 'rmsView1MouseOverWeekChange', [
+    'View1', '$rootScope', 'dsChanges', 'addCommentAndSave',
+  ((View1, $rootScope, dsChanges, addCommentAndSave) ->
+    restrict: 'A'
+    link: (($scope, element, attrs) ->
+      direction = $scope.$eval attrs.rmsView1MouseOverWeekChange
+      lastTimeStamp = 0
+      element.on 'dragover', ((e)->
+        if e.timeStamp > lastTimeStamp
+          lastTimeStamp = e.timeStamp + 5000
+          $rootScope.view1.periodChange direction
+          $rootScope.$digest()
+        return false)
+      ))]
 
