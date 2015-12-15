@@ -37,7 +37,7 @@ ngModule.factory 'TWTags', ['DSDataSimple', 'DSDataSource', '$q', ((DSDataSimple
         tag = Tag.pool.find @, "#{jsonTag['id']}", tagMap
 
         tag.set 'id', +jsonTag['id']
-        tag.set 'name', "#{jsonTag['name']}"
+        tag.set 'name', jsonTag['name']
         tag.set 'color', jsonTag['color']
 
       @get('tagSet').merge @, tagMap

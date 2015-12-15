@@ -8,7 +8,7 @@ error = require('../../dscommon/util').error
 
 time = require '../../ui/time'
 
-Tag = require '../../models/Tag'
+# Tag = require '../../models/Tag'
 Task = require '../../models/Task'
 Person = require '../../models/Person'
 TodoList = require '../../models/TodoList'
@@ -53,7 +53,7 @@ ngModule.factory 'TWTasks', ['DSDataSimple', 'DSDataSource', '$q', ((DSDataSimpl
       @peopleMap = {}
       @projectMap = {}
       @todoListMap = {}
-      @tagsMap = {}
+      # @tagsMap = {}
 
       if assert
         console.error "TWTasks:ctor: setVisible expects that their will be only one instance of TWTasks object" if PersonTimeTracking::hasOwnProperty('setVisible')
@@ -154,9 +154,9 @@ ngModule.factory 'TWTasks', ['DSDataSimple', 'DSDataSource', '$q', ((DSDataSimpl
       project = Project.pool.find @, "#{jsonTask['project-id']}", @projectMap
       todoList = TodoList.pool.find @, "#{jsonTask['todo-list-id']}", @todoListMap
       todoList.set 'project', project
-      #tags = Tag.pool.find @, "#{jsonTask['tags']}", @tagsMap
-      tags = jsonTask['tags']
-      console.log tags
+      # tags = Tag.pool.find @, "#{jsonTask['tags']}", @tagsMap
+      tags = jsonTask['tags'] || null
+      # console.log tags
 
       task.set 'creator', person
       task.set 'project', project
@@ -175,7 +175,7 @@ ngModule.factory 'TWTasks', ['DSDataSimple', 'DSDataSource', '$q', ((DSDataSimpl
         desc = RMSData.clear desc
         task.set 'split', split = new TaskSplit data.split if data.hasOwnProperty('split') && duedateStr != null
       task.set 'description', desc
-      # task.set 'tags', jsonTask['tags']
+      task.set 'tags', tags
 
       # Note: First person is taken as responsible
       # Note: In 'notassigned' case this property not exist

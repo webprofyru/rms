@@ -8,7 +8,7 @@ DSDocument = require('../dscommon/DSDocument')
 Project = require('./Project')
 Person = require('./Person')
 TodoList = require('./TodoList')
-Tag = require('./Tag')
+# Tag = require('./Tag')
 TaskTimeTracking = require('./TaskTimeTracking')
 
 Comments = require('./types/Comments')
@@ -51,6 +51,7 @@ module.exports = class Task extends DSDocument
 
   @propBool 'completed'
   @propBool 'isReady'
+  @propObj 'tags'
 
   # @propList 'tags', Tag
 
@@ -75,6 +76,12 @@ module.exports = class Task extends DSDocument
     return 'medium' if (estimate.asMinutes() >= 60 && estimate.asMinutes() < 240)
     return 'hard' if (estimate.asMinutes() >= 240 && estimate.asMinutes() < 480)
     return 'complex' if (estimate.asMinutes() >= 480))
+
+  isPlan: (->
+    if (tags = @get('tags'))
+      for tag in tags when tag.name == 'План' 
+        return true
+    return false)
 
   setVisible: ((isVisible) ->
     if isVisible

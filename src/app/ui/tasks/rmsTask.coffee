@@ -75,6 +75,10 @@ ngModule.directive 'rmsTask', ['$rootScope', '$timeout', (($rootScope, $timeout)
             return), 0
         return)
 
+      element.on 'contextmenu', ((e)->
+        console.info 'right click'
+        return true)
+
       element.on 'mouseover', ((e)->
         e.stopPropagation()
         if 0 <= ['task-info', null].indexOf($rootScope.modal.type)
