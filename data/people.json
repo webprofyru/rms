@@ -250,6 +250,12 @@
             "name": "Николай Скинтеев",
             "email": "n.skinteev@webprofy.ru"
         },
+		{
+            "id": 150752,
+            "role": "Programmer, Markuper, GroupSkinteev",
+            "name": "Александр Муравьев",
+            "email": "a.muravyev@webprofy.ru"
+        },
         {
             "id": 77666,
             "role": "Manager",
@@ -359,22 +365,10 @@
             "email": "v.serov@webprofy.ru"
         },
 		{
-            "id": 150752,
-            "role": "Programmer, Markuper, GroupYastrebov",
-            "name": "Александр Муравьев",
-            "email": "a.muravyev@webprofy.ru"
-        },
-		{
             "id": 150753,
             "role": "Programmer, Markuper, GroupYastrebov",
             "name": "Анатолий Куречко",
             "email": "a.kyrecho@webprofy.ru"
-        },
-		{
-            "id": 150750,
-            "role": "Programmer, Markuper, GroupYastrebov",
-            "name": "Илья Маслов",
-            "email": "i.maslov@webprofy.ru"
         },
         {
             "id": 143237,
