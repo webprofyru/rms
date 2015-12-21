@@ -144,8 +144,7 @@ ngModule.directive 'rmsTaskEdit', [
             split.fixEstimate diff
 
         # Actual save...
-        # TODO: How to get to know that shift is pressed
-        addCommentAndSave task, !$event.shiftKey,
+        addCommentAndSave task, $event.shiftKey, # Zork: I turned this over - now you have to keep shift, if you need to make a comment
           title: edit.title
           duedate: edit.duedate
           estimate: edit.estimate

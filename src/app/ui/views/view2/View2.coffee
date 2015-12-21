@@ -82,7 +82,7 @@ ngModule.directive 'rmsView2DayDropTask', [
       element.on 'dragover', ((e)->
         return false)
       element.on 'drop', ((e)->
-        addCommentAndSave $rootScope.modal.task, !e.shiftKey,
+        addCommentAndSave $rootScope.modal.task, e.shiftKey, # Zork: I turned this over - now you have to keep shift, if you need to make a comment
           responsible: null
           duedate: $scope.day.get 'date'
         $rootScope.$digest()

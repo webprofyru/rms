@@ -350,10 +350,10 @@ ngModule.directive 'rmsView1DropTask', [
           tasks = (taskView.get('task') for taskView in scope.row.get('tasks') when !taskView.split && taskView.x == col && taskView.task.get('project') == modal.task.get('project'))
 
         if(day < 0)
-          addCommentAndSave tasks, !e.shiftKey,
+          addCommentAndSave tasks, e.shiftKey, # Zork: I turned this over - now you have to keep shift, if you need to make a comment
             responsible: $scope.row.get('person')
         else
-          addCommentAndSave tasks, !e.shiftKey,
+          addCommentAndSave tasks, e.shiftKey, # Zork: I turned this over - now you have to keep shift, if you need to make a comment
             responsible: $scope.row.get('person')
             duedate: $scope.view.get('days')[day].get('date')
 
