@@ -12,6 +12,7 @@ DSDigest = require '../../../dscommon/DSDigest'
 
 # Global models
 Task = require('../../../models/Task')
+Tag = require('../../../models/Tag')
 Person = require('../../../models/Person')
 PersonDayStat = require('../../../models/PersonDayStat')
 PersonTimeTracking = require('../../../models/PersonTimeTracking')
@@ -331,7 +332,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
     @end())]
 
 ngModule.directive 'rmsView1DropTask', [
-    'View1', '$rootScope', 'dsChanges', 'addCommentAndSave',
+  'View1', '$rootScope', 'dsChanges', 'addCommentAndSave',
   ((View1, $rootScope, dsChanges, addCommentAndSave) ->
     restrict: 'A'
     scope: true
@@ -362,7 +363,7 @@ ngModule.directive 'rmsView1DropTask', [
       return))]
 
 ngModule.directive 'rmsView1MouseOverWeekChange', [
-    'View1', '$rootScope', 'dsChanges', 'addCommentAndSave',
+  'View1', '$rootScope', 'dsChanges', 'addCommentAndSave',
   ((View1, $rootScope, dsChanges, addCommentAndSave) ->
     restrict: 'A'
     link: (($scope, element, attrs) ->

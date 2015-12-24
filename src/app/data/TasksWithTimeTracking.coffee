@@ -6,7 +6,7 @@ assert = require('../dscommon/util').assert
 error = require('../dscommon/util').error
 
 DSSet = require '../dscommon/DSSet'
-DSEnum = require '../dscommon/DSEnum'
+DSTags = require '../dscommon/DSTags'
 DSData = require '../dscommon/DSData'
 DSDigest = require '../dscommon/DSDigest'
 DSDataServiceBase = require '../dscommon/DSDataServiceBase'

@@ -24,6 +24,7 @@ ngModule.run ['$rootScope', (($rootScope) ->
 ngModule.factory 'addCommentAndSave', [
   'dsDataService', 'dsChanges', 'config', '$rootScope', '$q',
   ((dsDataService, dsChanges, config, $rootScope, $q) ->
+
     class AddCommentAndSave extends DSObject
       @begin 'AddCommentAndSave'
 
@@ -58,7 +59,7 @@ ngModule.factory 'addCommentAndSave', [
               continue
             if !propDesc.equal(document.get(propName), value = changes[propName])
               anyChange = true
-              newChanges.push {propName, value,  text: propDesc.str(value)}
+              newChanges.push {propName, value,  text: (if value == null then '-' else propDesc.str(value))}
             delete changes[propName]
         for propName of changes
           console.error "Doc #{document.toString()}: Has no property '#{propName}'"
@@ -81,13 +82,13 @@ ngModule.factory 'addCommentAndSave', [
           if showDialog
             $rootScope.addCommentAndSave = @
           else
-            @addDocumentAndSave()
+            @saveWOComment()
             @freeDocs()
 
         return promise)
 
       save: (->
-        @addDocumentAndSave()
+        @addCommentAndSave()
         $rootScope.addCommentAndSave = null
         return)
 
@@ -106,7 +107,7 @@ ngModule.factory 'addCommentAndSave', [
         @set 'changes', null
         return)
 
-      addDocumentAndSave: (->
+      addCommentAndSave: (->
         DSDigest.block (=>
           (hist = dsChanges.get('hist')).startBlock()
           try
@@ -138,6 +139,24 @@ ngModule.factory 'addCommentAndSave', [
 
         @freeDocs()
 
+        @__deferred.resolve true
+        delete @__deferred
+        return)
+
+      saveWOComment: (->
+        DSDigest.block (=>
+          (hist = dsChanges.get('hist')).startBlock()
+          try
+            doc = @get('document')
+            docs = null if (docs = @get('documents')).length == 0
+            for change in @get('changes')
+              if docs
+                doc.set change.propName, change.value for doc in docs
+              else doc.set change.propName, change.value
+          finally
+            hist.endBlock()
+          return)
+        @freeDocs()
         @__deferred.resolve true
         delete @__deferred
         return)

@@ -85,12 +85,16 @@
         {
           "role": "Technologist",
           "name": "Технолог"
+        },
+        {
+          "role": "Teamlead",
+          "name": "Тимлид"
         }
     ],
     "people": [
         {
             "id": 112015,
-            "role": "Programmer",
+            "role": "Programmer,Teamlead",
             "name": "Alexey Zorkaltsev",
             "email": "alexey@zorkaltsev.com"
         },
@@ -174,7 +178,7 @@
         },
         {
             "id": 48687,
-            "role": "Programmer, Markuper",
+            "role": "Programmer, Markuper, Teamlead",
             "name": "Денис Коровкин",
             "email": "d.korovkin@webprofy.ru"
         },
@@ -204,7 +208,7 @@
         },
         {
             "id": 48685,
-            "role": "Manager",
+            "role": "Manager, Teamlead",
             "name": "Илья Сабуров",
             "email": "i.saburov@webprofy.ru"
         },
@@ -246,15 +250,9 @@
         },
         {
             "id": 97175,
-            "role": "Programmer, Markuper, GroupSkinteev",
+            "role": "Programmer, Markuper, GroupSkinteev, Teamlead",
             "name": "Николай Скинтеев",
             "email": "n.skinteev@webprofy.ru"
-        },
-		{
-            "id": 150752,
-            "role": "Programmer, Markuper, GroupSkinteev",
-            "name": "Александр Муравьев",
-            "email": "a.muravyev@webprofy.ru"
         },
         {
             "id": 77666,
@@ -294,7 +292,7 @@
         },
         {
             "id": 92517,
-            "role": "Programmer, Markuper, GroupYastrebov",
+            "role": "Programmer, Markuper, GroupYastrebov, Teamlead",
             "name": "Сергей Ястребов",
             "email": "s.yastrebov@webprofy.ru"
         },
@@ -365,10 +363,22 @@
             "email": "v.serov@webprofy.ru"
         },
 		{
+            "id": 150752,
+            "role": "Programmer, Markuper, GroupYastrebov",
+            "name": "Александр Муравьев",
+            "email": "a.muravyev@webprofy.ru"
+        },
+		{
             "id": 150753,
             "role": "Programmer, Markuper, GroupYastrebov",
             "name": "Анатолий Куречко",
             "email": "a.kyrecho@webprofy.ru"
+        },
+		{
+            "id": 150750,
+            "role": "Programmer, Markuper, GroupYastrebov",
+            "name": "Илья Маслов",
+            "email": "i.maslov@webprofy.ru"
         },
         {
             "id": 143237,

@@ -129,12 +129,10 @@ ngModule.directive 'rmsTaskEdit', [
 
       $scope.save = (($event) ->
         # Fix duedate, estimate if split
-        if (split = edit.split) != null && (lastSplitDate = split.lastDate(edit.splitDuedate)) != null
-          # Rule: If split then duedate is last date of split
-          edit.duedate = lastSplitDate
+        if edit.isSplit && edit.split.list.length > 0
+          edit.duedate = edit.splitDuedate
 
           # Rule: If total split not equal to estimate, then split gets fixed
-
           splitTotal = split.total
           if (estimate = edit.estimate) == null
             # Rule: if estimate is not defined it becomes a sum of splitted time

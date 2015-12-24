@@ -2,12 +2,12 @@ assert = require('../dscommon/util').assert
 error = require('../dscommon/util').error
 
 DSDocument = require('../dscommon/DSDocument')
-DSEnum = require('../dscommon/DSEnum')
+DSTags = require('../dscommon/DSTags')
 
 module.exports = class Person extends DSDocument
   @begin 'Person'
 
-  DSEnum.addPropType @
+  DSTags.addPropType @
 
   @addPool()
 
@@ -18,7 +18,7 @@ module.exports = class Person extends DSDocument
   @propStr 'firstName'
   @propStr 'avatar'
   @propStr 'email'
-  @propDSEnum 'roles'
+  @propDSTags 'roles'
 
   @propNum 'companyId'
 

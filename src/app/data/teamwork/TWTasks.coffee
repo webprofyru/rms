@@ -9,6 +9,7 @@ error = require('../../dscommon/util').error
 time = require '../../ui/time'
 
 Task = require '../../models/Task'
+Tag = require '../../models/Tag'
 Person = require '../../models/Person'
 TodoList = require '../../models/TodoList'
 Project = require '../../models/Project'
@@ -17,6 +18,7 @@ PersonTimeTracking = require '../../models/PersonTimeTracking'
 
 DSData = require '../../dscommon/DSData'
 DSDigest = require '../../dscommon/DSDigest'
+DSTags = require '../../dscommon/DSTags'
 
 TaskSplit = require '../../models/types/TaskSplit'
 RMSData = require '../../utils/RMSData'
@@ -179,6 +181,20 @@ ngModule.factory 'TWTasks', ['DSDataSimple', 'DSDataSource', '$q', ((DSDataSimpl
       # Note: Data below comes with from people.json, and making it different causes unwanted visual effects
       #          person.set 'name', "#{jsonTask['creator-firstname']} #{jsonTask['creator-lastname']}".trim()
       #          person.set 'avatar', jsonTask['creator-avatar-url']
+
+      if jsonTask.hasOwnProperty 'tags'
+        tags = null
+        for tag in jsonTask['tags']
+          if tag.name == 'План' # Note: It's hardcoded tag name
+            task.set 'plan', true
+          else
+            tagDoc = (tags ?= {})[tag.name] = Tag.pool.find @, tag.name
+            tagDoc.set 'id', tag.id
+            tagDoc.set 'name', tag.name
+            tagDoc.set 'color', tag.color
+        if tags != null
+          task.set 'tags', new DSTags(tags)
+          v.release @ for k, v of tags
 
       todoList.set 'id', parseInt jsonTask['todo-list-id']
       todoList.set 'name', jsonTask['todo-list-name']

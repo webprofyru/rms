@@ -6,7 +6,7 @@ assert = require('../dscommon/util').assert
 error = require('../dscommon/util').error
 
 DSSet = require '../dscommon/DSSet'
-DSEnum = require '../dscommon/DSEnum'
+DSTags = require '../dscommon/DSTags'
 DSData = require '../dscommon/DSData'
 DSDigest = require '../dscommon/DSDigest'
 DSDataServiceBase = require '../dscommon/DSDataServiceBase'
@@ -67,7 +67,7 @@ ngModule.factory 'PeopleWithJson', [
                       $rootScope.selectedRole = i
                   for personInfo in resp.data.people
                     if teamworkPeople.items.hasOwnProperty(personKey = "#{personInfo.id}")
-                      teamworkPeople.items[personKey].set 'roles', new DSEnum personInfo.role
+                      teamworkPeople.items[personKey].set 'roles', new DSTags personInfo.role
                   map = {} # copy whole list of people
                   for personKey, person of teamworkPeople.items
                     map[personKey] = person; person.addRef @

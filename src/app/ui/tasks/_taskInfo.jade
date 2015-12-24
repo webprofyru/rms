@@ -9,3 +9,8 @@
         li
             span.task-info-label Title:
             span.task-info-value {{task.title}}
+        li(ng-if='task.tags')
+            span.task-info-label Tags:
+            span.task-info-value.tags
+              span.task-tag(ng-repeat='(key, tag) in task.tags.map' style='background-color: {{tag.color}}') {{tag.name}}
+

@@ -102,12 +102,12 @@ module.exports = class TaskSplit
   shift: ((newDuedate, oldDuedate) ->
     if assert
       switch arguments.length
-        when 1
-          error.invalidArg 'diff' if !typeof newDuedate == 'number'
+        when 1 then error.invalidArg 'diff' unless typeof newDuedate == 'number'
         when 2
-          error.invalidArg 'newDuedate' if !moment.isMoment(newDuedate)
-          error.invalidArg 'oldDuedate' if !moment.isMoment(oldDuedate)
+          error.invalidArg 'newDuedate' unless moment.isMoment(newDuedate)
+          error.invalidArg 'oldDuedate' unless moment.isMoment(oldDuedate)
         else throw new Error 'Invalid arguments'
+    delete @value
     diff = if typeof newDuedate == 'number' then newDuedate else newDuedate.diff oldDuedate
     if diff != 0
       list[i] -= diff for t, i in (list = @list) by 2

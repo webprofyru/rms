@@ -63,18 +63,18 @@ ngModule.factory 'PersonDayStatData', [(->
           if tasksByPerson.hasOwnProperty(personKey = (person = personDayStat.get('person')).$ds_key)
             personTasks = tasksByPerson[personKey]
             for task in personTasks
-              duedate = task.duedate
-              if (split = task.get('split')) != null
-                for d, i in (splitVal = split.list) by 2
-                  n = moment(duedate).add(d).diff(startDate) // (24 * 60 * 60 * 1000)
+              if (duedate = task.duedate) != null # Zork: Duedate might become null once we delete due date in task edit dialog
+                if (split = task.get('split')) != null
+                  for d, i in (splitVal = split.list) by 2
+                    n = moment(duedate).add(d).diff(startDate) // (24 * 60 * 60 * 1000)
+                    if 0 <= n < dayStats.length
+                      tasksTotal[n].add(splitVal[i + 1])
+                      tasksCounts[n]++
+                else
+                  n = (duedate.valueOf() - startDate.valueOf()) // (24 * 60 * 60 * 1000)
                   if 0 <= n < dayStats.length
-                    tasksTotal[n].add(splitVal[i + 1])
+                    tasksTotal[n].add estimate if (estimate = task.get('estimate')) != null
                     tasksCounts[n]++
-              else
-                n = (task.get('duedate').valueOf() - startDate.valueOf()) // (24 * 60 * 60 * 1000)
-                if 0 <= n < dayStats.length
-                  tasksTotal[n].add estimate if (estimate = task.get('estimate')) != null
-                  tasksCounts[n]++
           contractTime = person.get('contractTime')
           totalPeriodTime = moment.duration(0)
           for s, i in dayStats

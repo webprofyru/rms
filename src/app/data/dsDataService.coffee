@@ -3,6 +3,7 @@ module.exports = (ngModule = angular.module 'data/dsDataService', [
   require './TasksWithTimeTracking'
   require './teamwork/TWPeople'
   require './teamwork/TWTasks'
+  require './teamwork/TWTags'
   require './teamwork/TWTimeTracking'
   require './PersonDayStatData'
   require './dsChanges'
@@ -32,8 +33,8 @@ ngModule.run ['dsDataService', '$rootScope', ((dsDataService, $rootScope) ->
   return)]
 
 ngModule.factory 'dsDataService', [
- 'TWPeople', 'TWTasks', 'TWTimeTracking', 'PeopleWithJson', 'TasksWithTimeTracking', 'PersonDayStatData', 'DSDataSource', 'dsChanges', 'config', '$http', '$rootScope', '$q',
- ((TWPeople, TWTasks, TWTimeTracking, PeopleWithJson, TasksWithTimeTracking, PersonDayStatData, DSDataSource, dsChanges, config, $http, $rootScope, $q) ->
+ 'TWPeople', 'TWTasks', 'TWTags', 'TWTimeTracking', 'PeopleWithJson', 'TasksWithTimeTracking', 'PersonDayStatData', 'DSDataSource', 'dsChanges', 'config', '$http', '$rootScope', '$q',
+ ((TWPeople, TWTasks, TWTags, TWTimeTracking, PeopleWithJson, TasksWithTimeTracking, PersonDayStatData, DSDataSource, dsChanges, config, $http, $rootScope, $q) ->
 
     class DSDataService extends DSDataServiceBase
       @begin 'DSDataService'
@@ -99,6 +100,10 @@ ngModule.factory 'dsDataService', [
         DSDataServiceBase::findDataSet.call @, owner, params
 
         switch params.type.docType
+          when 'Tag'
+            (data = TWTags.pool.find @, params).init? @
+            (set = data.get('tagsSet')).addRef owner; data.release @
+            return set
           when 'PersonDayStat'
             (data = PersonDayStatData.pool.find @, params).init? @
             (set = data.get('personDayStatsSet')).addRef owner; data.release @
@@ -189,6 +194,8 @@ ngModule.factory 'dsDataService', [
           srcParams = _.assign {}, v.params, params
           requestParams = {type: type = v.type, mode: mode = srcParams.mode}
           switch (docType = type.docType)
+            when 'Tag'
+              undefined
             when 'Person'
               undefined
             when 'PersonDayStat'

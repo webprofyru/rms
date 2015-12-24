@@ -10,15 +10,19 @@ Person = require('./Person')
 TodoList = require('./TodoList')
 TaskTimeTracking = require('./TaskTimeTracking')
 
+DSTags = require('../dscommon/DSTags')
+
 Comments = require('./types/Comments')
 TaskSplit = require('./types/TaskSplit')
 
 module.exports = class Task extends DSDocument
   @begin 'Task'
 
-  @addPool true
   Comments.addPropType @
   TaskSplit.addPropType @
+  DSTags.addPropType @
+
+  @addPool true
 
   @str = ((v) -> if v == null then '' else v.get('title'))
 
@@ -50,6 +54,9 @@ module.exports = class Task extends DSDocument
 
   @propBool 'completed'
   @propBool 'isReady'
+
+  @propBool 'plan'
+  @propDSTags 'tags'
 
   #  @propCalc 'isOverdue', (-> (duedate = @get('duedate')) != null && duedate < time.today)
   isOverdue: (-> (duedate = @get('duedate')) != null && duedate < time.today)
