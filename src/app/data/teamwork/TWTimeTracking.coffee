@@ -159,7 +159,6 @@ ngModule.factory 'TWTimeTracking', [
 
         pageLoad = ((page) =>
           if pages.hasOwnProperty page
-#            console.info "cached page: #{page}"
             if DSDigest.block (-> importResponse(pages[page]))
               pageLoad page + 1 # load next page
             else # finilize loading
@@ -169,14 +168,6 @@ ngModule.factory 'TWTimeTracking', [
             .then(((resp) => # ok
               if (resp.status == 200) # 0 means that request was canceled
                 @set 'cancel', null
-    # This code is part of commented out Version2 - see below
-    #            database.then ((db) ->
-    #              tran = db.transaction ['timetracking'], 'readwrite'
-    #              store = tran.objectStore 'timetracking'
-    #              store.put
-    #                page: page
-    #                data: resp.data['time-entries']
-    #              return)
                 if !(entries = resp.data['time-entries']) # empty page
                   finalizeLoad()
                 else if moment(entries[entries.length - 1]['date']) < time.historyLimit # whole page is no interesting already
@@ -193,27 +184,22 @@ ngModule.factory 'TWTimeTracking', [
               return), onError)
           return)
 
-  # Version 3: only load history starting from time.historyLimit moment - two previous week.  Uses dihatory to find out first interesting page of data
-        topPage = 0
+        # Only load history starting from time.historyLimit moment - two previous week.  Uses dihatoьy to find out first interesting page of data
+        topPage = 1
         endPage = HISTORY_END_SEARCH_STEP
 
         if ((histStart = config.get('histStart')) >= 0)
-#          console.info 'histStart', histStart
           pageLoad histStart
         else
-#          console.info "time.historyLimit: #{time.historyLimit.format()}"
           (findFirstPage = ((page) =>
-            @get('source').httpGet("time_entries.json?page=#{page}&pageSize=500", @set('cancel', $q.defer()))
+            @get('source').httpGet("time_entries.json?page=#{page}&pageSize=#{WORK_ENTRIES_WHOLE_PAGE}", @set('cancel', $q.defer()))
             .then(((resp) => # ok
               if (resp.status == 200) # 0 means that request was canceled
                 @set 'cancel', null
                 if !(entries = resp.data['time-entries'])
-#                  console.info "missing page: #{page}"
                   findFirstPage topPage + Math.floor(((endPage = page) - topPage) / 2)
                 else
-#                  console.info "top: #{topPage}; end: #{endPage}; page: #{page}; f: #{entries[0]['date']}; l: #{entries[entries.length - 1]['date']}"
                   if moment(entries[0]['date']) >= time.historyLimit
-#                    console.info 'A'
                     if topPage == page # found
                       config.set 'histStart', page
                       if (DSDigest.block (-> importResponse(entries)))
@@ -224,7 +210,6 @@ ngModule.factory 'TWTimeTracking', [
                       pages[page] = entries
                       findFirstPage topPage + Math.floor(((endPage = page) - topPage) / 2)
                   else if moment(entries[entries.length - 1]['date']) < time.historyLimit
-#                    console.info 'B'
                     if endPage == page # move interval up by step
                       [topPage, endPage] = [endPage, endPage + HISTORY_END_SEARCH_STEP]
                       findFirstPage endPage
@@ -243,31 +228,5 @@ ngModule.factory 'TWTimeTracking', [
               return), onError)
             return))(endPage)
         return)
-
-  # Version 2: with IndexedDB, which keeps whole history in local db, and only updates very emd of data - last month
-  #      database.then(
-  #        ((db) =>
-  #          presumeThatReportsAreNotChangingBeforeThisTime = moment().subtract(1, 'month')
-  #          (loadFromDB = ((page) ->
-  #            tran = db.transaction ['timetracking'], 'readwrite'
-  #            store = tran.objectStore 'timetracking'
-  #            request = store.get page
-  #            request.onsuccess = (=>
-  #              data = request.result.data
-  #              if moment(data[data.length - 1]['createdAt'], 'YYYYMMDD') < presumeThatReportsAreNotChangingBeforeThisTime
-  #                DSDigest.block (-> importResponse(data))
-  #                loadFromDB.call @, page + 1
-  #              else
-  #                pageLoad page
-  #              return)
-  #            request.onerror = (=>
-  #              pageLoad page
-  #              return)
-  #            return)).call 1
-  #          return),
-  #        (-> # no db
-  #          pageLoad 1
-  #          return))
-  #      return)
 
       @end())]
