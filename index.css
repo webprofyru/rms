@@ -781,53 +781,57 @@ ul {
     #screen1 .task-body:hover {
       background-color: #96b8dc; }
     /* line 98, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
-    #screen1 .task-body.no-estimate:not(&.overdue) {
-      background: #D1F0ED; }
-      /* line 100, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
-      #screen1 .task-body.no-estimate:not(&.overdue):hover {
-        background-color: #abe3de; }
-    /* line 102, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
     #screen1 .task-body.grade-easy {
       background: #e2ecf6; }
-      /* line 104, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 100, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task-body.grade-easy:hover {
         background-color: #96b8dc; }
-    /* line 106, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 102, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
     #screen1 .task-body.grade-hard {
       background: #96b8dc; }
-      /* line 108, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 104, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task-body.grade-hard:hover {
         background-color: #6f9ed0; }
-    /* line 110, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 106, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
     #screen1 .task-body.grade-complex {
       background: #6f9ed0; }
-      /* line 112, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 108, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task-body.grade-complex:hover {
         background-color: #4985c3; }
-    /* line 114, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 110, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    #screen1 .task-body.no-estimate {
+      background: white; }
+      /* line 112, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      #screen1 .task-body.no-estimate:hover {
+        background-color: #abe3de; }
+      /* line 114, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      #screen1 .task-body.no-estimate .duration:before {
+        content: '[?]';
+        color: red; }
+    /* line 117, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
     #screen1 .task-body.overdue {
       background: #FBC1C1; }
-      /* line 116, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 119, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task-body.overdue:hover {
         background-color: #f89191; }
-    /* line 118, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 121, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
     #screen1 .task-body .loading {
       width: 100%;
       text-align: center; }
-      /* line 121, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 124, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task-body .loading img {
         margin-top: 0.5rem;
         height: 0.8rem; }
-    /* line 124, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 127, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
     #screen1 .task-body.completed, #screen1 .task-body.loading {
       background: #A2FBA2; }
-      /* line 126, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 129, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task-body.completed:hover, #screen1 .task-body.loading:hover {
         background-color: #71f971; }
-    /* line 128, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 131, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
     #screen1 .task-body.workNotInDueDate {
       background: #F7BC50; }
-      /* line 130, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 133, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task-body.workNotInDueDate:hover {
         background-color: #f5a91f; }
   /* line 1, C:/SVN/_WebProfyManagement/src/sass/screen1/_actions.sass */
@@ -1349,6 +1353,18 @@ ul {
       box-sizing: border-box;
       width: 71.42857%;
       float: left; }
+      /* line 27, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+      #screen1 #modal-task-info li .task-info-value.tags {
+        font-size: 0.8rem;
+        margin-top: -2px;
+        margin-left: -4px; }
+      /* line 31, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+      #screen1 #modal-task-info li .task-info-value .task-tag {
+        float: left;
+        color: white;
+        padding: 0 4px;
+        margin-top: 4px;
+        margin-left: 4px; }
   /* line 1, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
   #screen1 #modal-task {
     display: inline-table;
