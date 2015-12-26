@@ -33,6 +33,7 @@ ngModule.factory 'addCommentAndSave', [
       @propList 'documents', DSDocument
       @propObj 'changes'
       @propStr 'reason', ''
+      @propBool 'plansChange'
 
       show: ((document, showDialog, changes) ->
         if assert
@@ -41,6 +42,15 @@ ngModule.factory 'addCommentAndSave', [
           error.invalidArg 'changes' if !(changes != null && typeof changes == 'object')
 
         @__deferred =  $q.defer()
+
+        # set plansChange to true, only if new plan value is false and there is at least one document with plan equal to true
+        if changes.hasOwnProperty('plan') && !changes.plan
+          if Array.isArray(document)
+            for doc in document when doc.get('plan')
+              plansChange = @set 'plansChange', true
+              break
+          else if document.get('plan')
+            plansChange = @set 'plansChange', true
 
         if Array.isArray(document)
           doc.addRef @ for doc in document
@@ -79,7 +89,7 @@ ngModule.factory 'addCommentAndSave', [
 
           @set 'changes', newChanges
 
-          if showDialog
+          if showDialog || plansChange
             $rootScope.addCommentAndSave = @
           else
             @saveWOComment()

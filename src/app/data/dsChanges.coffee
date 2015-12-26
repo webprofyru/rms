@@ -154,6 +154,16 @@ ngModule.factory 'dsChanges', [
               taskUpd['estimated-minutes'] = if propChange.v then Math.floor propChange.v.asMinutes() else '0'
             when 'responsible'
               taskUpd['responsible-party-id'] = if (newReponsible = propChange.v) then [propChange.v.get('id')] else []
+            when 'plan'
+              taskUpd['tags'] = v =
+                if (tags = task.get('tags')?.map)
+                  if propChange.v
+                    newTags = (tag for tag of tags)
+                    newTags.unshift(config.planTag) # add tag
+                  else
+                    newTags = (tag for tag of tags when tag != config.planTag) # remove tag
+                  newTags.join()
+                else if propChange.v then config.planTag else ''
             else
               console.error "change.save(): Property #{propName} not expected to be changed"
 

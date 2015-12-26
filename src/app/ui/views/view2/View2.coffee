@@ -37,10 +37,14 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', ((View1, DSV
     @propList 'tasksNotAssigned', TaskView
     @propNum  'tasksNotAssignedHeight', 0
 
+    @ds_dstr.push (->
+      @__unwatchA()
+      return)
+
     constructor: (($scope, key) ->
       DSView.call @, $scope, key
 
-      $scope.$watch (-> [$scope.$parent.view.startDate?.valueOf(), $scope.mode]), ((args) =>
+      @__unwatchA = $scope.$watch (-> [$scope.$parent.view.startDate?.valueOf(), $scope.mode]), ((args) =>
         [startDateVal, mode] = args
         @dataUpdate {startDate: moment(startDateVal), endDate: moment(startDateVal).add(6, 'days'), mode}
         return), true
@@ -85,6 +89,7 @@ ngModule.directive 'rmsView2DayDropTask', [
         addCommentAndSave $rootScope.modal.task, e.shiftKey, # Zork: I turned this over - now you have to keep shift, if you need to make a comment
           responsible: null
           duedate: $scope.day.get 'date'
+          plan: false
         $rootScope.$digest()
         return false)
       return)

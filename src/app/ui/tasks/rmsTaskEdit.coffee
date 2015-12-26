@@ -127,7 +127,10 @@ ngModule.directive 'rmsTaskEdit', [
         $rootScope.modal = {type: null}
         return)
 
-      $scope.save = (($event) ->
+      $scope.save = (($event, plan) ->
+        if assert
+          error.invalidArg 'plan' unless typeof plan == 'undefined' || typeof plan == 'boolean'
+
         # Fix duedate, estimate if split
         if edit.isSplit && edit.split.list.length > 0
           edit.duedate = edit.splitDuedate
@@ -142,12 +145,14 @@ ngModule.directive 'rmsTaskEdit', [
             split.fixEstimate diff
 
         # Actual save...
-        addCommentAndSave task, $event.shiftKey, # Zork: I turned this over - now you have to keep shift, if you need to make a comment
+        update =
           title: edit.title
           duedate: edit.duedate
           estimate: edit.estimate
           responsible: edit.responsible
           split: if edit.isSplit && edit.split.valueOf().length > 0 then edit.split else null
+        update.plan = plan if typeof plan == 'boolean'
+        addCommentAndSave task, $event.shiftKey, update
         .then ((saved) ->
           close() if saved
           return)

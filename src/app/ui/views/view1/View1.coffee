@@ -50,6 +50,12 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
     @propObj 'hiddenPeople', {}
     @propNum 'hiddenPeopleCount', 0
 
+    @ds_dstr.push (->
+      @__unwatchA()
+      @__unwatchB()
+      @__unwatchC()
+      return)
+
     constructor: (($scope, key) ->
       DSView.call @, $scope, key
 
@@ -76,16 +82,23 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
           for i in $scope.filterCompanies when i.id == selectedCompany
             $scope.selectedCompany = i
 
-      $scope.$watch (=> [@get('startDate')?.valueOf(), $scope.mode, $scope.dataService.showTimeSpent]), (([startDateVal, mode, showTimeSpent]) =>
+      @__unwatchA = $scope.$watch (=> [@get('startDate')?.valueOf(), $scope.mode, $scope.dataService.showTimeSpent]), (([startDateVal, mode, showTimeSpent]) =>
         @dataUpdate {startDate: moment(startDateVal), endDate: moment(startDateVal).add(6, 'days'), mode, showTimeSpent}
         return), true
 
-      $scope.$watch (-> [$scope.selectedRole, $scope.selectedCompany, $scope.selectedLoad]), (([selectedRole, selectedCompany, selectedLoad]) =>
+      @__unwatchB = $scope.$watch (-> [$scope.selectedRole, $scope.selectedCompany, $scope.selectedLoad]), (([selectedRole, selectedCompany, selectedLoad]) =>
         if $rootScope.peopleRoles
           config.set 'selectedRole', if selectedRole then selectedRole.role else null
         config.set 'selectedCompany', if selectedCompany then selectedCompany.id else null
         config.set 'selectedLoad', if selectedLoad then selectedLoad.id else 0
         @__dirty++), true
+
+      @__unwatchC = $scope.$watch (=> [config.get('currentUserId'), @get('data').get('peopleStatus')]), (([currentUserId, peopleStatus]) =>
+        unless currentUserId != null && (peopleStatus == 'ready' || peopleStatus == 'update')
+          config.set 'currentUser', null
+          return
+        config.set 'currentUser', @get('data').get('people')[currentUserId]
+        return), true
 
       return)
 
@@ -353,10 +366,12 @@ ngModule.directive 'rmsView1DropTask', [
         if(day < 0)
           addCommentAndSave tasks, e.shiftKey, # Zork: I turned this over - now you have to keep shift, if you need to make a comment
             responsible: $scope.row.get('person')
+            plan: false
         else
           addCommentAndSave tasks, e.shiftKey, # Zork: I turned this over - now you have to keep shift, if you need to make a comment
             responsible: $scope.row.get('person')
             duedate: $scope.view.get('days')[day].get('date')
+            plan: false
 
         $rootScope.$digest()
         return false)

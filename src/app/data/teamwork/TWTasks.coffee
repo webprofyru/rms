@@ -23,7 +23,7 @@ DSTags = require '../../dscommon/DSTags'
 TaskSplit = require '../../models/types/TaskSplit'
 RMSData = require '../../utils/RMSData'
 
-ngModule.factory 'TWTasks', ['DSDataSimple', 'DSDataSource', '$q', ((DSDataSimple, DSDataSource, $q) ->
+ngModule.factory 'TWTasks', ['DSDataSimple', 'DSDataSource', 'config', '$q', ((DSDataSimple, DSDataSource, config, $q) ->
 
   return class TWTasks extends DSData
 
@@ -182,17 +182,24 @@ ngModule.factory 'TWTasks', ['DSDataSimple', 'DSDataSource', '$q', ((DSDataSimpl
       #          person.set 'name', "#{jsonTask['creator-firstname']} #{jsonTask['creator-lastname']}".trim()
       #          person.set 'avatar', jsonTask['creator-avatar-url']
 
-      if jsonTask.hasOwnProperty 'tags'
+      if !jsonTask.hasOwnProperty 'tags'
+        task.set 'tags', null
+        task.set 'plan', false
+      else
         tags = null
+        plan = false
         for tag in jsonTask['tags']
-          if tag.name == 'План' # Note: It's hardcoded tag name
-            task.set 'plan', true
+          if tag.name == config.planTag # Note: It's hardcoded tag name
+            plan = true
           else
             tagDoc = (tags ?= {})[tag.name] = Tag.pool.find @, tag.name
             tagDoc.set 'id', tag.id
             tagDoc.set 'name', tag.name
             tagDoc.set 'color', tag.color
-        if tags != null
+        task.set 'plan', plan
+        if tags == null
+          task.set 'tags', null
+        else
           task.set 'tags', new DSTags(tags)
           v.release @ for k, v of tags
 

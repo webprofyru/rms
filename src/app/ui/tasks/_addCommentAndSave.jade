@@ -1,5 +1,6 @@
 #modal-add-comment
   form
+    h3(ng-if='addCommentAndSave.plansChange') Enter a reason to change plans (<span class='required'>Required</span>)
     .author {{addCommentAndSave.currentUser.name}}:
     table.changes
       tr(ng-repeat='change in addCommentAndSave.changes')
@@ -13,7 +14,7 @@
         td.name &nbsp;
         td.value
           .actions
-            button.save(type='submit' ng-click='addCommentAndSave.save()') Save
+            button.save(type='submit' ng-disabled='addCommentAndSave.plansChange && addCommentAndSave.reason.trim() == ""' ng-click='addCommentAndSave.save()') Save
             button.cancel(ng-click='addCommentAndSave.cancel()') Cancel
 
 

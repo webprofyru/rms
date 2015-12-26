@@ -31,12 +31,16 @@ ngModule.factory 'View3', ['DSView', 'config', '$log', ((DSView, config, $log) -
     @propPool 'poolProjects', ProjectView
     @propList 'projects', ProjectView
 
+    @ds_dstr.push (->
+      @__unwatchA()
+      return)
+
     constructor: (($scope, key) ->
       DSView.call @, $scope, key
 
       @expandedProj = {}
 
-      $scope.$watch (-> [$scope.mode, $scope.$parent.view.startDate?.valueOf(), $scope.sidebarTabs.active]),
+      @__unwatchA = $scope.$watch (-> [$scope.mode, $scope.$parent.view.startDate?.valueOf(), $scope.sidebarTabs.active]),
         ((args) =>
           [mode, startDateVal, active] = args
           switch active
@@ -111,6 +115,7 @@ ngModule.directive 'rmsView3DropTask', [
       element.on 'drop', ((e)->
         addCommentAndSave $rootScope.modal.task, e.shiftKey, # Zork: I turned this over - now you have to keep shift, if you need to make a comment
           duedate: null
+          plan: false
         $rootScope.$digest()
         return false)
       return)

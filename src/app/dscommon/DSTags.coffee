@@ -23,6 +23,10 @@ module.exports = class DSTags extends DSObjectBase
         init: null})
     return)
 
+  @ds_dstr.push (->
+    v.release @ if v instanceof DSObjectBase for k, v of @map
+    return)
+
   constructor: ((enums) ->
     if assert
       if arguments.length == 1 && typeof (src = arguments[0]) == 'object'

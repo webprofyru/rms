@@ -3,6 +3,7 @@ validate = require('./dscommon/util').validate
 serviceOwner = require('./dscommon/util').serviceOwner
 
 DSObject = require './dscommon/DSObject'
+Person = require './models/Person'
 
 module.exports = (ngModule = angular.module 'config', [
   'LocalStorageModule'
@@ -31,10 +32,15 @@ ngModule.factory 'config',
       @propCalc 'hasRoles', (-> @teamwork == 'http://teamwork.webprofy.ru/')
       @propCalc 'hasTimeReports', (-> @teamwork == 'http://teamwork.webprofy.ru/' || @teamwork == 'http://delightsoft.teamworkpm.net/')
 
+      @propConst 'planTag', 'План'
+      @propConst 'teamleadRole', 'Teamlead'
+
       @propNum 'hResizer'
       @propNum 'vResizer'
 
       @propStr 'currentUserId'
+      @propDoc 'currentUser', Person
+      @propCalc 'canUserSetPlan', (-> @currentUser?.roles?.get(@teamleadRole) || @teamwork == 'http://delightsoft.teamworkpm.net/')
 
       @propStr 'selectedRole'
       @propNum 'selectedCompany'
@@ -43,6 +49,7 @@ ngModule.factory 'config',
       @propNum 'histStart', -1 # first page of time-entries history within time.historyLimit range
 
       @onAnyPropChange ((item, propName, newVal, oldVal) -> # save to local storage
+        return if propName == 'currentUserId' || propName == 'currentUser' # those props always taken from teamwork
         if propName == 'teamwork' || propName == 'token'
           @set 'histStart', -1
         if typeof newVal != 'undefined'
