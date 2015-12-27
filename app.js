@@ -704,7 +704,7 @@ ngModule.factory('TasksWithTimeTracking', [
 
 
 },{"../dscommon/DSData":14,"../dscommon/DSDataServiceBase":17,"../dscommon/DSDataSimple":18,"../dscommon/DSDigest":20,"../dscommon/DSSet":27,"../dscommon/DSTags":28,"../dscommon/util":30,"../models/Task":36,"../models/TaskTimeTracking":37}],6:[function(require,module,exports){
-var CHANGES_PERSISTANCE_VER, DSChangesBase, DSDataEditable, DSDigest, Person, RMSData, Task, assert, error, ngModule, serviceOwner,
+var CHANGES_PERSISTANCE_VER, Comments, DSChangesBase, DSDataEditable, DSDigest, Person, RMSData, Task, assert, error, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -725,6 +725,8 @@ DSDataEditable = require('../dscommon/DSDataEditable');
 Person = require('../models/Person');
 
 Task = require('../models/Task');
+
+Comments = require('../models/types/Comments');
 
 RMSData = require('../utils/RMSData');
 
@@ -808,7 +810,7 @@ ngModule.factory('dsChanges', [
                   }
                   unwatch();
                   DSDigest.block((function() {
-                    var f, j, len, loadList, person, personKey, ref, ref1, set, step1, task, taskChange, taskEditable, taskKey, tasksSet, tasksSetPool;
+                    var f, i, len, loadList, person, personKey, ref, ref1, set, step1, task, taskChange, taskEditable, taskKey, tasksSet, tasksSetPool;
                     Task.pool.enableWatch(false);
                     step1 = _this.mapToChanges(changes.changes);
                     ref = step1.load.Person;
@@ -818,8 +820,8 @@ ngModule.factory('dsChanges', [
                         console.error('Person #{personKey} missing in server data');
                       } else {
                         person = peopleSet.items[personKey];
-                        for (j = 0, len = loadList.length; j < len; j++) {
-                          f = loadList[j];
+                        for (i = 0, len = loadList.length; i < len; i++) {
+                          f = loadList[i];
                           f(person);
                         }
                       }
@@ -1009,7 +1011,7 @@ ngModule.factory('dsChanges', [
           saveTaskAction = ((function(_this) {
             return function() {
               return _this.get('source').httpPut("tasks/" + (task.get('id')) + ".json", upd, _this.set('cancel', $q.defer())).then((function(resp) {
-                var base, comment, html, i, j, len, ref1;
+                var base, comment, html;
                 _this.set('cancel', null);
                 if (resp.status === 200) {
                   delete change.__error;
@@ -1023,9 +1025,7 @@ ngModule.factory('dsChanges', [
                   }));
                   if ((comments = task.get('comments')) !== null) {
                     html = '';
-                    ref1 = comments.list;
-                    for (i = j = 0, len = ref1.length; j < len; i = ++j) {
-                      comment = ref1[i];
+                    while ((comment = comments.shift())) {
                       html += "<p>" + comment + "</p>";
                     }
                     upd = {
@@ -1064,13 +1064,13 @@ ngModule.factory('dsChanges', [
           } else if ((projectPeople = (project = task.get('project')).get('people')) === null) {
             this.get('source').httpGet("projects/" + (project.get('id')) + "/people.json", this.set('cancel', $q.defer())).then(((function(_this) {
               return function(resp) {
-                var j, len, p, ref1;
+                var i, len, p, ref1;
                 _this.set('cancel', null);
                 if (resp.status === 200) {
                   project.set('people', projectPeople = {});
                   ref1 = resp.data.people;
-                  for (j = 0, len = ref1.length; j < len; j++) {
-                    p = ref1[j];
+                  for (i = 0, len = ref1.length; i < len; i++) {
+                    p = ref1[i];
                     projectPeople[p.id] = true;
                   }
                   _this.addPersonToProject(project, newReponsible, saveTaskAction, actionError);
@@ -1112,7 +1112,7 @@ ngModule.factory('dsChanges', [
 ]);
 
 
-},{"../dscommon/DSChangesBase":13,"../dscommon/DSDataEditable":15,"../dscommon/DSDataSource":19,"../dscommon/DSDigest":20,"../dscommon/util":30,"../models/Person":31,"../models/Task":36,"../utils/RMSData":65}],7:[function(require,module,exports){
+},{"../dscommon/DSChangesBase":13,"../dscommon/DSDataEditable":15,"../dscommon/DSDataSource":19,"../dscommon/DSDigest":20,"../dscommon/util":30,"../models/Person":31,"../models/Task":36,"../models/types/Comments":39,"../utils/RMSData":65}],7:[function(require,module,exports){
 var DSChangesBase, DSDataEditable, DSDataFiltered, DSDataServiceBase, DSObject, Person, PersonTimeTracking, Task, TaskTimeTracking, assert, base64, error, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
