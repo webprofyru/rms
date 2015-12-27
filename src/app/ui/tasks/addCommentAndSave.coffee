@@ -28,7 +28,6 @@ ngModule.factory 'addCommentAndSave', [
     class AddCommentAndSave extends DSObject
       @begin 'AddCommentAndSave'
 
-      @propDoc 'currentUser', Person
       @propDoc 'document', DSDocument
       @propList 'documents', DSDocument
       @propObj 'changes'
@@ -83,10 +82,6 @@ ngModule.factory 'addCommentAndSave', [
           delete @__deferred
         else
 
-          people = dsDataService.findDataSet @, {type: Person, mode: 'original'}
-          @set 'currentUser', people.items[config.get('currentUserId')]
-          people.release @
-
           @set 'changes', newChanges
 
           if showDialog || plansChange
@@ -110,7 +105,6 @@ ngModule.factory 'addCommentAndSave', [
         return)
 
       freeDocs: (->
-        @set 'currentUser', null
         @set 'reason', ''
         @set 'document', null
         @get('documentsList').merge @, []
@@ -123,25 +117,40 @@ ngModule.factory 'addCommentAndSave', [
           try
             doc = @get('document')
             docs = null if (docs = @get('documents')).length == 0
-            comment = ''
+
+# Version 2: One comment per save, event if user had commented few changed
             for change in @get('changes')
-              comment += '<br/>' if comment.length > 0
-              comment += "<b>#{change.propName}</b>: #{change.text}"
-              if docs
-                doc.set change.propName, change.value for doc in docs
+              if docs then doc.set change.propName, change.value for doc in docs
               else doc.set change.propName, change.value
-            if (note = @get('reason').trim()).length > 0
-              comment += '<br/>' if comment.length > 0
-              comment += "<b>reason</b>:<br/><p>#{@get('reason')}</p>"
+            if (comment = @get('reason').trim()).length > 0
+              setComment = ((doc) =>
+                comments = if (comments = doc.get('comments')) == null then new Comments else comments.clone()
+                comments.add comment
+                doc.set 'comments', comments
+                return)
+              if docs then setComment doc for doc in docs
+              else setComment doc
 
-            setComment = ((doc) =>
-              comments = if (comments = doc.get('comments')) == null then new Comments else comments.clone()
-              comments.add comment
-              doc.set 'comments', comments
-              return)
-
-            if docs then setComment doc for doc in docs
-            else setComment doc
+# Version 1: When all changes being reflected in the comment
+#            comment = ''
+#            for change in @get('changes')
+#              comment += '<br/>' if comment.length > 0
+#              comment += "<b>#{change.propName}</b>: #{change.text}"
+#              if docs
+#                doc.set change.propName, change.value for doc in docs
+#              else doc.set change.propName, change.value
+#            if (note = @get('reason').trim()).length > 0
+#              comment += '<br/>' if comment.length > 0
+#              comment += "<b>reason</b>:<br/><p>#{@get('reason')}</p>"
+#
+#            setComment = ((doc) =>
+#              comments = if (comments = doc.get('comments')) == null then new Comments else comments.clone()
+#              comments.add comment
+#              doc.set 'comments', comments
+#              return)
+#
+#            if docs then setComment doc for doc in docs
+#            else setComment doc
 
           finally
             hist.endBlock()

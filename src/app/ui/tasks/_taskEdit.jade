@@ -74,7 +74,7 @@ form#modal-task(ng-switch-when='task-edit' rms-task-edit='')
     .form-btn-row
         .btn-group
             button.btn(type='submit' ng-if='!viewonly' ng-disabled='!changes' ng-click='save($event, false)') Save
-            button.btn.plan(ng-if='task.$u.plan && config.canUserSetPlan && !task.plan' ng-click='save($event, true)') {{changes ? 'Save & ' : ''}} Add to plan
-            button.btn.plan(ng-if='task.$u.plan && config.canUserSetPlan && task.plan && changes' ng-click='save($event, true)') Save & Keep in plan
+            button.btn.plan(ng-disabled='!edit.duedate' ng-if='task.$u.plan && config.canUserSetPlan && !task.plan' ng-click='save($event, true)') {{changes ? 'Save & ' : ''}} Add to plan
+            button.btn.plan(ng-disabled='!edit.duedate' ng-if='task.$u.plan && config.canUserSetPlan && task.plan && changes' ng-click='save($event, true)') Save & Keep in plan
             button.btn.plan(ng-if='task.$u.plan && config.canUserSetPlan && task.plan && !changes' ng-click='save($event, false)') {{changes ? 'Save & ' : ''}} Remove from plan
             button.btn.right(ng-click='close()') Close

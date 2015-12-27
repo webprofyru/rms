@@ -1,7 +1,7 @@
 #modal-add-comment
   form
     h3(ng-if='addCommentAndSave.plansChange') Enter a reason to change plans (<span class='required'>Required</span>)
-    .author {{addCommentAndSave.currentUser.name}}:
+    .author {{config.currentUser.name}}:
     table.changes
       tr(ng-repeat='change in addCommentAndSave.changes')
         td.name {{change.propName}}:

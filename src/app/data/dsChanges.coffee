@@ -155,6 +155,11 @@ ngModule.factory 'dsChanges', [
             when 'responsible'
               taskUpd['responsible-party-id'] = if (newReponsible = propChange.v) then [propChange.v.get('id')] else []
             when 'plan'
+              comments = if (comments = task.get('comments')) == null then new Comments else comments.clone()
+              comments.unshift(
+                if propChange.v then "Поставлено в план на #{task.get('duedate').format 'DD.MM.YYYY'}"
+                else "Снято с плана.  Причина:")
+              task.set 'comments', comments
               taskUpd['tags'] = v =
                 if (tags = task.get('tags')?.map)
                   if propChange.v
@@ -190,24 +195,44 @@ ngModule.factory 'dsChanges', [
 
                 # add comments, if any
                 if (comments = task.get('comments')) != null
-                  (saveComment = (=>
-                    if !(nextComment = comments.shift())
+
+# Version 2: Combined all new comments into one teamwork comment
+                  html = ''
+                  for comment, i in comments.list
+                    html += "<p>#{comment}</p>"
+                  upd =
+                    comment:
+                      'content-type': 'html'
+                      body: html
+                      isprivate: false
+                  @get('source').httpPost("tasks/#{task.get('id')}/comments.json", upd, @set('cancel', $q.defer()))
+                  .then ((resp) =>
+                    @set 'cancel', null
+                    if (resp.status == 201) # 0 means that request was canceled
                       task.release @
                       @save(tasks) # save next edited object, if any
-                    else # save nextComment
-                      upd =
-                        comment:
-                          'content-type': 'html'
-                          body: nextComment
-                          isprivate: false
-                      @get('source').httpPost("tasks/#{task.get('id')}/comments.json", upd, @set('cancel', $q.defer()))
-                      .then ((resp) =>
-                        @set 'cancel', null
-                        if (resp.status == 201) # 0 means that request was canceled
-                          saveComment.call @
-                        else actionError(resp, resp.status == 0)
-                        return), actionError
-                    return)).call @
+                    else actionError(resp, resp.status == 0)
+                    return), actionError
+
+# Version 1: Every comment as separated document
+#                  (saveComment = (=>
+#                    if !(nextComment = comments.shift())
+#                      task.release @
+#                      @save(tasks) # save next edited object, if any
+#                    else # save nextComment
+#                      upd =
+#                        comment:
+#                          'content-type': 'html'
+#                          body: nextComment
+#                          isprivate: false
+#                      @get('source').httpPost("tasks/#{task.get('id')}/comments.json", upd, @set('cancel', $q.defer()))
+#                      .then ((resp) =>
+#                        @set 'cancel', null
+#                        if (resp.status == 201) # 0 means that request was canceled
+#                          saveComment.call @
+#                        else actionError(resp, resp.status == 0)
+#                        return), actionError
+#                    return)).call @
                 else
                   task.release @
                   @save(tasks) # save next edited object, if any

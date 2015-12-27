@@ -361,7 +361,7 @@ ngModule.directive 'rmsView1DropTask', [
           tasks = [$rootScope.modal.task]
         else # group movement, if task has no split and 'ctrl' key is pressed while operation
           col = scope.taskView.x
-          tasks = (taskView.get('task') for taskView in scope.row.get('tasks') when !taskView.split && taskView.x == col && taskView.task.get('project') == modal.task.get('project'))
+          tasks = (taskView.get('task') for taskView in scope.row.get('tasks') when !taskView.split && taskView.x == col && !taskView.task.plan && taskView.task.get('project') == modal.task.get('project'))
 
         if(day < 0)
           addCommentAndSave tasks, e.shiftKey, # Zork: I turned this over - now you have to keep shift, if you need to make a comment

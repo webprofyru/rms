@@ -45,6 +45,10 @@ module.exports = class Comments
     @list.push comment
     return)
 
+  unshift: ((comment) ->
+    @list.unshift comment
+    return)
+
   shift: (->
     return @list.shift())
 
