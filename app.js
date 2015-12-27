@@ -7,7 +7,7 @@ moment.locale('ru');
 
 
 },{"./ng-app":41,"./utils/angular-local-storage.js":66}],2:[function(require,module,exports){
-var DSObject, VER_MAJOR, VER_MINOR, assert, ngModule, serviceOwner, validate,
+var DSObject, Person, VER_MAJOR, VER_MINOR, assert, ngModule, serviceOwner, validate,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -18,6 +18,8 @@ validate = require('./dscommon/util').validate;
 serviceOwner = require('./dscommon/util').serviceOwner;
 
 DSObject = require('./dscommon/DSObject');
+
+Person = require('./models/Person');
 
 module.exports = (ngModule = angular.module('config', ['LocalStorageModule'])).name;
 
@@ -61,11 +63,22 @@ ngModule.factory('config', [
         return this.teamwork === 'http://teamwork.webprofy.ru/' || this.teamwork === 'http://delightsoft.teamworkpm.net/';
       }));
 
+      Config.propConst('planTag', 'План');
+
+      Config.propConst('teamleadRole', 'Teamlead');
+
       Config.propNum('hResizer');
 
       Config.propNum('vResizer');
 
       Config.propStr('currentUserId');
+
+      Config.propDoc('currentUser', Person);
+
+      Config.propCalc('canUserSetPlan', (function() {
+        var ref, ref1;
+        return ((ref = this.currentUser) != null ? (ref1 = ref.roles) != null ? ref1.get(this.teamleadRole) : void 0 : void 0) || this.teamwork === 'http://delightsoft.teamworkpm.net/';
+      }));
 
       Config.propStr('selectedRole');
 
@@ -76,6 +89,9 @@ ngModule.factory('config', [
       Config.propNum('histStart', -1);
 
       Config.onAnyPropChange((function(item, propName, newVal, oldVal) {
+        if (propName === 'currentUserId' || propName === 'currentUser') {
+          return;
+        }
         if (propName === 'teamwork' || propName === 'token') {
           this.set('histStart', -1);
         }
@@ -134,7 +150,7 @@ ngModule.factory('config', [
 ]);
 
 
-},{"./dscommon/DSObject":24,"./dscommon/util":30}],3:[function(require,module,exports){
+},{"./dscommon/DSObject":24,"./dscommon/util":30,"./models/Person":31}],3:[function(require,module,exports){
 var DSData, DSDataServiceBase, DSDigest, DSSet, DSTags, Person, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -874,7 +890,7 @@ ngModule.factory('dsChanges', [
 
       DSChanges.prototype.save = (function(saveInProgress) {
         return function(tasks) {
-          var actionError, allTasksSaved, change, commentsOrSplit, dueDateStr, duedate, k, newReponsible, project, projectPeople, promise, propChange, propName, saveTaskAction, split, startDate, task, taskKey, taskUpd, upd;
+          var actionError, allTasksSaved, change, commentsOrSplit, dueDateStr, duedate, k, newReponsible, newTags, project, projectPeople, promise, propChange, propName, ref, saveTaskAction, split, startDate, tag, tags, task, taskKey, taskUpd, upd, v;
           if (saveInProgress && !tasks) {
             return saveInProgress.promise;
           }
@@ -952,6 +968,25 @@ ngModule.factory('dsChanges', [
                 case 'responsible':
                   taskUpd['responsible-party-id'] = (newReponsible = propChange.v) ? [propChange.v.get('id')] : [];
                   break;
+                case 'plan':
+                  taskUpd['tags'] = v = (tags = (ref = task.get('tags')) != null ? ref.map : void 0) ? (propChange.v ? (newTags = (function() {
+                    var results;
+                    results = [];
+                    for (tag in tags) {
+                      results.push(tag);
+                    }
+                    return results;
+                  })(), newTags.unshift(config.planTag)) : newTags = (function() {
+                    var results;
+                    results = [];
+                    for (tag in tags) {
+                      if (tag !== config.planTag) {
+                        results.push(tag);
+                      }
+                    }
+                    return results;
+                  })(), newTags.join()) : propChange.v ? config.planTag : '';
+                  break;
                 default:
                   console.error("change.save(): Property " + propName + " not expected to be changed");
               }
@@ -1027,13 +1062,13 @@ ngModule.factory('dsChanges', [
           } else if ((projectPeople = (project = task.get('project')).get('people')) === null) {
             this.get('source').httpGet("projects/" + (project.get('id')) + "/people.json", this.set('cancel', $q.defer())).then(((function(_this) {
               return function(resp) {
-                var i, len, p, ref;
+                var i, len, p, ref1;
                 _this.set('cancel', null);
                 if (resp.status === 200) {
                   project.set('people', projectPeople = {});
-                  ref = resp.data.people;
-                  for (i = 0, len = ref.length; i < len; i++) {
-                    p = ref[i];
+                  ref1 = resp.data.people;
+                  for (i = 0, len = ref1.length; i < len; i++) {
+                    p = ref1[i];
                     projectPeople[p.id] = true;
                   }
                   _this.addPersonToProject(project, newReponsible, saveTaskAction, actionError);
@@ -1556,7 +1591,7 @@ TaskSplit = require('../../models/types/TaskSplit');
 RMSData = require('../../utils/RMSData');
 
 ngModule.factory('TWTasks', [
-  'DSDataSimple', 'DSDataSource', '$q', (function(DSDataSimple, DSDataSource, $q) {
+  'DSDataSimple', 'DSDataSource', 'config', '$q', (function(DSDataSimple, DSDataSource, config, $q) {
     var TWTasks;
     return TWTasks = (function(superClass) {
       var class1, importTask, isTaskInDatesRange, loadCompletedTaskForPersonTimeTracking, releaseMaps;
@@ -1747,7 +1782,7 @@ ngModule.factory('TWTasks', [
       });
 
       importTask = (function(task, jsonTask) {
-        var data, date, desc, duedateStr, estimate, i, k, len, person, project, ref, resp, split, tag, tagDoc, tags, timeIsLogged, todoList, v;
+        var data, date, desc, duedateStr, estimate, i, k, len, person, plan, project, ref, resp, split, tag, tagDoc, tags, timeIsLogged, todoList, v;
         person = Person.pool.find(this, "" + jsonTask['creator-id'], this.peopleMap);
         project = Project.pool.find(this, "" + jsonTask['project-id'], this.projectMap);
         todoList = TodoList.pool.find(this, "" + jsonTask['todo-list-id'], this.todoListMap);
@@ -1777,13 +1812,17 @@ ngModule.factory('TWTasks', [
           task.set('responsible', (resp = jsonTask['responsible-party-ids'].split(',')).length > 0 ? Person.pool.find(this, "" + resp[0], this.peopleMap) : null);
         }
         person.set('id', parseInt(jsonTask['creator-id']));
-        if (jsonTask.hasOwnProperty('tags')) {
+        if (!jsonTask.hasOwnProperty('tags')) {
+          task.set('tags', null);
+          task.set('plan', false);
+        } else {
           tags = null;
+          plan = false;
           ref = jsonTask['tags'];
           for (i = 0, len = ref.length; i < len; i++) {
             tag = ref[i];
-            if (tag.name === 'План') {
-              task.set('plan', true);
+            if (tag.name === config.planTag) {
+              plan = true;
             } else {
               tagDoc = (tags != null ? tags : tags = {})[tag.name] = Tag.pool.find(this, tag.name);
               tagDoc.set('id', tag.id);
@@ -1791,7 +1830,10 @@ ngModule.factory('TWTasks', [
               tagDoc.set('color', tag.color);
             }
           }
-          if (tags !== null) {
+          task.set('plan', plan);
+          if (tags === null) {
+            task.set('tags', null);
+          } else {
             task.set('tags', new DSTags(tags));
             for (k in tags) {
               v = tags[k];
@@ -5820,6 +5862,22 @@ module.exports = DSTags = (function(superClass) {
     });
   });
 
+  DSTags.ds_dstr.push((function() {
+    var k, v;
+    if ((function() {
+      var ref, results;
+      ref = this.map;
+      results = [];
+      for (k in ref) {
+        v = ref[k];
+        results.push(v instanceof DSObjectBase);
+      }
+      return results;
+    }).call(this)) {
+      v.release(this);
+    }
+  }));
+
   class1 = (function(enums) {
     var i, k, key, len, map, ref, ref1, src, v, value;
     if (assert) {
@@ -8269,8 +8327,10 @@ ngModule.factory('addCommentAndSave', [
 
       AddCommentAndSave.propStr('reason', '');
 
+      AddCommentAndSave.propBool('plansChange');
+
       AddCommentAndSave.prototype.show = (function(document, showDialog, changes) {
-        var anyChange, doc, i, len, newChanges, people, promise, propDesc, propName, ref, value;
+        var anyChange, doc, i, j, len, len1, newChanges, people, plansChange, promise, propDesc, propName, ref, value;
         if (assert) {
           if (!(document !== null && ((Array.isArray(document) && document.length > 0 && document[0] instanceof DSDocument) || document instanceof DSDocument))) {
             error.invalidArg('document');
@@ -8283,9 +8343,23 @@ ngModule.factory('addCommentAndSave', [
           }
         }
         this.__deferred = $q.defer();
+        if (changes.hasOwnProperty('plan') && !changes.plan) {
+          if (Array.isArray(document)) {
+            for (i = 0, len = document.length; i < len; i++) {
+              doc = document[i];
+              if (!(doc.get('plan'))) {
+                continue;
+              }
+              plansChange = this.set('plansChange', true);
+              break;
+            }
+          } else if (document.get('plan')) {
+            plansChange = this.set('plansChange', true);
+          }
+        }
         if (Array.isArray(document)) {
-          for (i = 0, len = document.length; i < len; i++) {
-            doc = document[i];
+          for (j = 0, len1 = document.length; j < len1; j++) {
+            doc = document[j];
             doc.addRef(this);
           }
           this.get('documentsList').merge(this, document);
@@ -8335,7 +8409,7 @@ ngModule.factory('addCommentAndSave', [
           this.set('currentUser', people.items[config.get('currentUserId')]);
           people.release(this);
           this.set('changes', newChanges);
-          if (showDialog) {
+          if (showDialog || plansChange) {
             $rootScope.addCommentAndSave = this;
           } else {
             this.saveWOComment();
@@ -8759,8 +8833,13 @@ ngModule.directive('rmsTaskEdit', [
             type: null
           };
         });
-        $scope.save = (function($event) {
-          var diff, estimate, splitTotal;
+        $scope.save = (function($event, plan) {
+          var diff, estimate, splitTotal, update;
+          if (assert) {
+            if (!(typeof plan === 'undefined' || typeof plan === 'boolean')) {
+              error.invalidArg('plan');
+            }
+          }
           if (edit.isSplit && edit.split.list.length > 0) {
             edit.duedate = edit.splitDuedate;
             splitTotal = split.total;
@@ -8770,13 +8849,17 @@ ngModule.directive('rmsTaskEdit', [
               split.fixEstimate(diff);
             }
           }
-          addCommentAndSave(task, $event.shiftKey, {
+          update = {
             title: edit.title,
             duedate: edit.duedate,
             estimate: edit.estimate,
             responsible: edit.responsible,
             split: edit.isSplit && edit.split.valueOf().length > 0 ? edit.split : null
-          }).then((function(saved) {
+          };
+          if (typeof plan === 'boolean') {
+            update.plan = plan;
+          }
+          addCommentAndSave(task, $event.shiftKey, update).then((function(saved) {
             if (saved) {
               close();
             }
@@ -9337,6 +9420,12 @@ ngModule.factory('View1', [
 
       View1.propNum('hiddenPeopleCount', 0);
 
+      View1.ds_dstr.push((function() {
+        this.__unwatchA();
+        this.__unwatchB();
+        this.__unwatchC();
+      }));
+
       class1 = (function($scope, key) {
         var i, j, l, len1, len2, ref, ref1, selectedCompany, selectedLoad;
         DSView.call(this, $scope, key);
@@ -9386,7 +9475,7 @@ ngModule.factory('View1', [
             }
           }
         }
-        $scope.$watch(((function(_this) {
+        this.__unwatchA = $scope.$watch(((function(_this) {
           return function() {
             var ref2;
             return [(ref2 = _this.get('startDate')) != null ? ref2.valueOf() : void 0, $scope.mode, $scope.dataService.showTimeSpent];
@@ -9403,7 +9492,7 @@ ngModule.factory('View1', [
             });
           };
         })(this)), true);
-        $scope.$watch((function() {
+        this.__unwatchB = $scope.$watch((function() {
           return [$scope.selectedRole, $scope.selectedCompany, $scope.selectedLoad];
         }), ((function(_this) {
           return function(arg) {
@@ -9415,6 +9504,21 @@ ngModule.factory('View1', [
             config.set('selectedCompany', selectedCompany ? selectedCompany.id : null);
             config.set('selectedLoad', selectedLoad ? selectedLoad.id : 0);
             return _this.__dirty++;
+          };
+        })(this)), true);
+        this.__unwatchC = $scope.$watch(((function(_this) {
+          return function() {
+            return [config.get('currentUserId'), _this.get('data').get('peopleStatus')];
+          };
+        })(this)), ((function(_this) {
+          return function(arg) {
+            var currentUserId, peopleStatus;
+            currentUserId = arg[0], peopleStatus = arg[1];
+            if (!(currentUserId !== null && (peopleStatus === 'ready' || peopleStatus === 'update'))) {
+              config.set('currentUser', null);
+              return;
+            }
+            config.set('currentUser', _this.get('data').get('people')[currentUserId]);
           };
         })(this)), true);
       });
@@ -9855,12 +9959,14 @@ ngModule.directive('rmsView1DropTask', [
           }
           if (day < 0) {
             addCommentAndSave(tasks, e.shiftKey, {
-              responsible: $scope.row.get('person')
+              responsible: $scope.row.get('person'),
+              plan: false
             });
           } else {
             addCommentAndSave(tasks, e.shiftKey, {
               responsible: $scope.row.get('person'),
-              duedate: $scope.view.get('days')[day].get('date')
+              duedate: $scope.view.get('days')[day].get('date'),
+              plan: false
             });
           }
           $rootScope.$digest();
@@ -10067,9 +10173,13 @@ ngModule.factory('View2', [
 
       View2.propNum('tasksNotAssignedHeight', 0);
 
+      View2.ds_dstr.push((function() {
+        this.__unwatchA();
+      }));
+
       class1 = (function($scope, key) {
         DSView.call(this, $scope, key);
-        $scope.$watch((function() {
+        this.__unwatchA = $scope.$watch((function() {
           var ref;
           return [(ref = $scope.$parent.view.startDate) != null ? ref.valueOf() : void 0, $scope.mode];
         }), ((function(_this) {
@@ -10144,7 +10254,8 @@ ngModule.directive('rmsView2DayDropTask', [
         element.on('drop', (function(e) {
           addCommentAndSave($rootScope.modal.task, e.shiftKey, {
             responsible: null,
-            duedate: $scope.day.get('date')
+            duedate: $scope.day.get('date'),
+            plan: false
           });
           $rootScope.$digest();
           return false;
@@ -10202,10 +10313,14 @@ ngModule.factory('View3', [
 
       View3.propList('projects', ProjectView);
 
+      View3.ds_dstr.push((function() {
+        this.__unwatchA();
+      }));
+
       class1 = (function($scope, key) {
         DSView.call(this, $scope, key);
         this.expandedProj = {};
-        $scope.$watch((function() {
+        this.__unwatchA = $scope.$watch((function() {
           var ref;
           return [$scope.mode, (ref = $scope.$parent.view.startDate) != null ? ref.valueOf() : void 0, $scope.sidebarTabs.active];
         }), ((function(_this) {
@@ -10345,7 +10460,8 @@ ngModule.directive('rmsView3DropTask', [
         }));
         element.on('drop', (function(e) {
           addCommentAndSave($rootScope.modal.task, e.shiftKey, {
-            duedate: null
+            duedate: null,
+            plan: false
           });
           $rootScope.$digest();
           return false;
