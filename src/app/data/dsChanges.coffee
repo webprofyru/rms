@@ -13,6 +13,7 @@ DSDataEditable = require('../dscommon/DSDataEditable')
 
 Person = require('../models/Person')
 Task = require('../models/Task')
+Comments = require('../models/types/Comments')
 
 RMSData = require('../utils/RMSData')
 
@@ -198,7 +199,7 @@ ngModule.factory 'dsChanges', [
 
 # Version 2: Combined all new comments into one teamwork comment
                   html = ''
-                  for comment, i in comments.list
+                  while (comment = comments.shift())
                     html += "<p>#{comment}</p>"
                   upd =
                     comment:
