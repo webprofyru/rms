@@ -808,7 +808,7 @@ ngModule.factory('dsChanges', [
                   }
                   unwatch();
                   DSDigest.block((function() {
-                    var f, i, len, loadList, person, personKey, ref, ref1, set, step1, task, taskChange, taskEditable, taskKey, tasksSet, tasksSetPool;
+                    var f, j, len, loadList, person, personKey, ref, ref1, set, step1, task, taskChange, taskEditable, taskKey, tasksSet, tasksSetPool;
                     Task.pool.enableWatch(false);
                     step1 = _this.mapToChanges(changes.changes);
                     ref = step1.load.Person;
@@ -818,8 +818,8 @@ ngModule.factory('dsChanges', [
                         console.error('Person #{personKey} missing in server data');
                       } else {
                         person = peopleSet.items[personKey];
-                        for (i = 0, len = loadList.length; i < len; i++) {
-                          f = loadList[i];
+                        for (j = 0, len = loadList.length; j < len; j++) {
+                          f = loadList[j];
                           f(person);
                         }
                       }
@@ -890,7 +890,7 @@ ngModule.factory('dsChanges', [
 
       DSChanges.prototype.save = (function(saveInProgress) {
         return function(tasks) {
-          var actionError, allTasksSaved, change, commentsOrSplit, dueDateStr, duedate, k, newReponsible, newTags, project, projectPeople, promise, propChange, propName, ref, saveTaskAction, split, startDate, tag, tags, task, taskKey, taskUpd, upd, v;
+          var actionError, allTasksSaved, change, comments, commentsOrSplit, dueDateStr, duedate, k, newReponsible, newTags, project, projectPeople, promise, propChange, propName, ref, saveTaskAction, split, startDate, tag, tags, task, taskKey, taskUpd, upd, v;
           if (saveInProgress && !tasks) {
             return saveInProgress.promise;
           }
@@ -969,6 +969,9 @@ ngModule.factory('dsChanges', [
                   taskUpd['responsible-party-id'] = (newReponsible = propChange.v) ? [propChange.v.get('id')] : [];
                   break;
                 case 'plan':
+                  comments = (comments = task.get('comments')) === null ? new Comments : comments.clone();
+                  comments.unshift(propChange.v ? "Поставлено в план на " + (task.get('duedate').format('DD.MM.YYYY')) : "Снято с плана.  Причина:");
+                  task.set('comments', comments);
                   taskUpd['tags'] = v = (tags = (ref = task.get('tags')) != null ? ref.map : void 0) ? (propChange.v ? (newTags = (function() {
                     var results;
                     results = [];
@@ -1006,7 +1009,7 @@ ngModule.factory('dsChanges', [
           saveTaskAction = ((function(_this) {
             return function() {
               return _this.get('source').httpPut("tasks/" + (task.get('id')) + ".json", upd, _this.set('cancel', $q.defer())).then((function(resp) {
-                var base, comments, saveComment;
+                var base, comment, html, i, j, len, ref1;
                 _this.set('cancel', null);
                 if (resp.status === 200) {
                   delete change.__error;
@@ -1019,29 +1022,28 @@ ngModule.factory('dsChanges', [
                     }
                   }));
                   if ((comments = task.get('comments')) !== null) {
-                    (saveComment = (function() {
-                      var nextComment;
-                      if (!(nextComment = comments.shift())) {
+                    html = '';
+                    ref1 = comments.list;
+                    for (i = j = 0, len = ref1.length; j < len; i = ++j) {
+                      comment = ref1[i];
+                      html += "<p>" + comment + "</p>";
+                    }
+                    upd = {
+                      comment: {
+                        'content-type': 'html',
+                        body: html,
+                        isprivate: false
+                      }
+                    };
+                    _this.get('source').httpPost("tasks/" + (task.get('id')) + "/comments.json", upd, _this.set('cancel', $q.defer())).then((function(resp) {
+                      _this.set('cancel', null);
+                      if (resp.status === 201) {
                         task.release(_this);
                         _this.save(tasks);
                       } else {
-                        upd = {
-                          comment: {
-                            'content-type': 'html',
-                            body: nextComment,
-                            isprivate: false
-                          }
-                        };
-                        _this.get('source').httpPost("tasks/" + (task.get('id')) + "/comments.json", upd, _this.set('cancel', $q.defer())).then((function(resp) {
-                          _this.set('cancel', null);
-                          if (resp.status === 201) {
-                            saveComment.call(_this);
-                          } else {
-                            actionError(resp, resp.status === 0);
-                          }
-                        }), actionError);
+                        actionError(resp, resp.status === 0);
                       }
-                    })).call(_this);
+                    }), actionError);
                   } else {
                     task.release(_this);
                     _this.save(tasks);
@@ -1062,13 +1064,13 @@ ngModule.factory('dsChanges', [
           } else if ((projectPeople = (project = task.get('project')).get('people')) === null) {
             this.get('source').httpGet("projects/" + (project.get('id')) + "/people.json", this.set('cancel', $q.defer())).then(((function(_this) {
               return function(resp) {
-                var i, len, p, ref1;
+                var j, len, p, ref1;
                 _this.set('cancel', null);
                 if (resp.status === 200) {
                   project.set('people', projectPeople = {});
                   ref1 = resp.data.people;
-                  for (i = 0, len = ref1.length; i < len; i++) {
-                    p = ref1[i];
+                  for (j = 0, len = ref1.length; j < len; j++) {
+                    p = ref1[j];
                     projectPeople[p.id] = true;
                   }
                   _this.addPersonToProject(project, newReponsible, saveTaskAction, actionError);
@@ -7077,6 +7079,10 @@ module.exports = Comments = (function() {
     this.list.push(comment);
   });
 
+  Comments.prototype.unshift = (function(comment) {
+    this.list.unshift(comment);
+  });
+
   Comments.prototype.shift = (function() {
     return this.list.shift();
   });
@@ -8317,8 +8323,6 @@ ngModule.factory('addCommentAndSave', [
 
       AddCommentAndSave.begin('AddCommentAndSave');
 
-      AddCommentAndSave.propDoc('currentUser', Person);
-
       AddCommentAndSave.propDoc('document', DSDocument);
 
       AddCommentAndSave.propList('documents', DSDocument);
@@ -8330,7 +8334,7 @@ ngModule.factory('addCommentAndSave', [
       AddCommentAndSave.propBool('plansChange');
 
       AddCommentAndSave.prototype.show = (function(document, showDialog, changes) {
-        var anyChange, doc, i, j, len, len1, newChanges, people, plansChange, promise, propDesc, propName, ref, value;
+        var anyChange, doc, i, j, len, len1, newChanges, plansChange, promise, propDesc, propName, ref, value;
         if (assert) {
           if (!(document !== null && ((Array.isArray(document) && document.length > 0 && document[0] instanceof DSDocument) || document instanceof DSDocument))) {
             error.invalidArg('document');
@@ -8402,12 +8406,6 @@ ngModule.factory('addCommentAndSave', [
           this.__deferred.resolve(true);
           delete this.__deferred;
         } else {
-          people = dsDataService.findDataSet(this, {
-            type: Person,
-            mode: 'original'
-          });
-          this.set('currentUser', people.items[config.get('currentUserId')]);
-          people.release(this);
           this.set('changes', newChanges);
           if (showDialog || plansChange) {
             $rootScope.addCommentAndSave = this;
@@ -8432,7 +8430,6 @@ ngModule.factory('addCommentAndSave', [
       });
 
       AddCommentAndSave.prototype.freeDocs = (function() {
-        this.set('currentUser', null);
         this.set('reason', '');
         this.set('document', null);
         this.get('documentsList').merge(this, []);
@@ -8442,21 +8439,16 @@ ngModule.factory('addCommentAndSave', [
       AddCommentAndSave.prototype.addCommentAndSave = (function() {
         DSDigest.block(((function(_this) {
           return function() {
-            var change, comment, doc, docs, hist, i, j, k, len, len1, len2, note, ref, setComment;
+            var change, comment, doc, docs, hist, i, j, k, len, len1, len2, ref, setComment;
             (hist = dsChanges.get('hist')).startBlock();
             try {
               doc = _this.get('document');
               if ((docs = _this.get('documents')).length === 0) {
                 docs = null;
               }
-              comment = '';
               ref = _this.get('changes');
               for (i = 0, len = ref.length; i < len; i++) {
                 change = ref[i];
-                if (comment.length > 0) {
-                  comment += '<br/>';
-                }
-                comment += "<b>" + change.propName + "</b>: " + change.text;
                 if (docs) {
                   for (j = 0, len1 = docs.length; j < len1; j++) {
                     doc = docs[j];
@@ -8466,25 +8458,21 @@ ngModule.factory('addCommentAndSave', [
                   doc.set(change.propName, change.value);
                 }
               }
-              if ((note = _this.get('reason').trim()).length > 0) {
-                if (comment.length > 0) {
-                  comment += '<br/>';
-                }
-                comment += "<b>reason</b>:<br/><p>" + (_this.get('reason')) + "</p>";
-              }
-              setComment = (function(doc) {
-                var comments;
-                comments = (comments = doc.get('comments')) === null ? new Comments : comments.clone();
-                comments.add(comment);
-                doc.set('comments', comments);
-              });
-              if (docs) {
-                for (k = 0, len2 = docs.length; k < len2; k++) {
-                  doc = docs[k];
+              if ((comment = _this.get('reason').trim()).length > 0) {
+                setComment = (function(doc) {
+                  var comments;
+                  comments = (comments = doc.get('comments')) === null ? new Comments : comments.clone();
+                  comments.add(comment);
+                  doc.set('comments', comments);
+                });
+                if (docs) {
+                  for (k = 0, len2 = docs.length; k < len2; k++) {
+                    doc = docs[k];
+                    setComment(doc);
+                  }
+                } else {
                   setComment(doc);
                 }
-              } else {
-                setComment(doc);
               }
             } finally {
               hist.endBlock();
@@ -9950,7 +9938,7 @@ ngModule.directive('rmsView1DropTask', [
               results = [];
               for (j = 0, len1 = ref.length; j < len1; j++) {
                 taskView = ref[j];
-                if (!taskView.split && taskView.x === col && taskView.task.get('project') === modal.task.get('project')) {
+                if (!taskView.split && taskView.x === col && !taskView.task.plan && taskView.task.get('project') === modal.task.get('project')) {
                   results.push(taskView.get('task'));
                 }
               }
