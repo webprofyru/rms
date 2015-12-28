@@ -16,7 +16,7 @@
     ol
       li Письмо отправляется на ящик исполнителю плюс в копию письма ставится адрес managers@webprofy.ru
       li Для дизайнеров в копию дописываются a.shevtsov@webprofy.ru и a.kolesnikov@webprofy.ru
-      li Для верстальщиков в копию дописываются g.krasilnikov@webprofy.ru и s.yastrebov@webprofy.ru
+      li Для верстальщиков в копию дописываются n.skinteev@webprofy.ru и s.yastrebov@webprofy.ru
       li Оранжевым выделяются часы для задач и задач в списках с название содержащим слово "бронь"
       li Письма уходят с адреса "Татьяна Верхотурова <t.verkhoturova@webprofy.ru>"
       li Задачи из списка <a target='_blank' href='http://teamwork.webprofy.ru/tasklists/462667'>ОТПУСКА</a> в план не включаются
@@ -30,7 +30,7 @@
     button.sendOut(ng-click='sendOut()' ng-disabled='!emails || !isDateCheckOk()') Отправить рассылку
   .report
     .person(ng-repeat='email in emails')
-      .name {{$index}}. {{email.person.name}}: Привет, {{email.toName}}! (Итого: {{email.totalHours}})
+      .name {{$index + 1}}. {{email.person.name}}: Привет, {{email.toName}}! (Итого: {{email.totalHours}})
       .status(ng-class='{notSent: email.status == "notSent", sent: email.status != "notSent"}') {{email.status == 'notSent' ? 'не отправлено' : 'отправлено'}}
       table.projects
         tr(ng-repeat='project in email.projects')
