@@ -37,7 +37,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
     @begin 'View1'
 
     @propData 'people', Person, {watch: ['roles', 'companyId']}
-    @propData 'tasks', Task, {filter: 'assigned', watch: ['responsible', 'duedate', 'split']}
+    @propData 'tasks', Task, {filter: 'assigned', watch: ['responsible', 'duedate', 'split', 'plan', 'estimate']}
     @propData 'personDayStat', PersonDayStat, {}
     @propData 'personTimeTracking', PersonTimeTracking, {watch: []}
 
@@ -263,18 +263,30 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
         return)
       return)
 
-    tasksSortRule = ((left, right) ->
-      leftTask = left.get('task')
-      rightTask = right.get('task')
+    # 1. planned tasks comes first
+    # 2. longer tasks comes first
+    @tasksSortRule = tasksSortRule = ((leftTask, rightTask) ->
+      if (leftPlan = leftTask.get('plan')) != rightTask.get('plan')
+        return if leftPlan then -1 else 1
 
-      return left.get('time').get('taskId') - right.get('time').get('taskId') if leftTask == null and rightTask == null
+      if (leftEstimate = leftTask.get('estimate')?.valueOf()) != (rightEstimate = rightTask.get('estimate')?.valueOf())
+        return 1 if typeof leftEstimate == 'undefined'
+        return -1 if typeof rightEstimate == 'undefined'
+        return rightEstimate - leftEstimate
+
+      return rightTask.get('id') - leftTask.get('id'))
+
+    # 1. planned tasks comes first
+    # 2. longer tasks comes first
+    @taskViewsSortRule = taskViewsSortRule = ((leftView, rightView) ->
+      leftTask = leftView.get('task')
+      rightTask = rightView.get('task')
+
+      return rightView.get('time').get('taskId') - leftView.get('time').get('taskId') if leftTask == null and rightTask == null
       return 1 if leftTask == null
       return -1 if rightTask == null
 
-      leftLen = if (leftSplit = (leftTask = left.get('task')).get('split')) == null then 1 else moment.duration(moment(leftSplit.lastDate(leftTask.get('duedate'))).diff(leftSplit.startDate)).asDays()
-      rightLen = if (rightSplit = (rightTask = right.get('task')).get('split')) == null then 1 else moment.duration(moment(rightSplit.lastDate(rightTask.get('duedate'))).diff(rightSplit.startDate)).asDays()
-      return leftLen - rightLen if leftLen != rightLen
-      return rightTask.get('id') - leftTask.get('id'))
+      return tasksSortRule leftTask, rightTask)
 
     positionTaskView = ((pos, taskView, taskStartDate, day, getTime) ->
       taskView.set 'x', day
@@ -308,16 +320,8 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
         tasksByDay = _.groupBy taskViews, ((taskView) ->
           (if (time = taskView.get('time')) then time.get('date') else taskView.get('task').get('duedate')).valueOf())
         _.forEach tasksByDay, ((taskViews, date) ->
+          taskViews.sort taskViewsSortRule
           x = moment.duration((if (time = taskViews[0].get('time')) then time.get('date') else taskViews[0].get('task').get('duedate')).diff(startDate)).asDays()
-
-          taskViews.sort ((left, right) ->
-            leftTask = left.get('task')
-            rightTask = right.get('task')
-            return left.get('time').get('taskId') - right.get('time').get('taskId') if leftTask == null and rightTask == null
-            return 1 if leftTask == null
-            return -1 if rightTask == null
-            return rightTask.get('id') - leftTask.get('id'))
-
           _.forEach taskViews, ((taskView, i) ->
             taskView.set 'x', x
             maxY = Math.max maxY, taskView.set 'y', i
@@ -332,9 +336,9 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
             return (if (split = task.get('split')) != null then split.firstDate(duedate) else duedate).valueOf()
           return taskView.get('time').get('date').valueOf())
         pos = ([] for i in [0..6]) # matrix there we will mark that positions is busy
-        groupDates = (+t for t of tasksByDay).sort()
+        groupDates = (parseInt(t) for t of tasksByDay).sort()
         for d in groupDates # process taskViews started before the startDate
-          (tasksForTheDay = tasksByDay[d]).sort tasksSortRule
+          (tasksForTheDay = tasksByDay[d]).sort taskViewsSortRule
           day = moment.duration((taskStartDate = moment(d)).diff(startDate)).asDays()
           if day < 0
             day = 0
