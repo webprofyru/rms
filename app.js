@@ -9371,7 +9371,7 @@ ngModule.factory('View1', [
   'DSView', 'config', '$rootScope', '$log', (function(DSView, config, $rootScope, $log) {
     var View1;
     return View1 = (function(superClass) {
-      var class1, positionTaskView, tasksSortRule;
+      var class1, positionTaskView, taskViewsSortRule, tasksSortRule;
 
       extend(View1, superClass);
 
@@ -9387,7 +9387,7 @@ ngModule.factory('View1', [
 
       View1.propData('tasks', Task, {
         filter: 'assigned',
-        watch: ['responsible', 'duedate', 'split']
+        watch: ['responsible', 'duedate', 'split', 'plan', 'estimate']
       });
 
       View1.propData('personDayStat', PersonDayStat, {});
@@ -9762,12 +9762,33 @@ ngModule.factory('View1', [
         }));
       });
 
-      tasksSortRule = (function(left, right) {
-        var leftLen, leftSplit, leftTask, rightLen, rightSplit, rightTask;
-        leftTask = left.get('task');
-        rightTask = right.get('task');
+      View1.tasksSortRule = tasksSortRule = (function(leftTask, rightTask) {
+        var leftEstimate, leftPlan, ref, ref1, rightEstimate;
+        if ((leftPlan = leftTask.get('plan')) !== rightTask.get('plan')) {
+          if (leftPlan) {
+            return -1;
+          } else {
+            return 1;
+          }
+        }
+        if ((leftEstimate = (ref = leftTask.get('estimate')) != null ? ref.valueOf() : void 0) !== (rightEstimate = (ref1 = rightTask.get('estimate')) != null ? ref1.valueOf() : void 0)) {
+          if (typeof leftEstimate === 'undefined') {
+            return 1;
+          }
+          if (typeof rightEstimate === 'undefined') {
+            return -1;
+          }
+          return rightEstimate - leftEstimate;
+        }
+        return rightTask.get('id') - leftTask.get('id');
+      });
+
+      View1.taskViewsSortRule = taskViewsSortRule = (function(leftView, rightView) {
+        var leftTask, rightTask;
+        leftTask = leftView.get('task');
+        rightTask = rightView.get('task');
         if (leftTask === null && rightTask === null) {
-          return left.get('time').get('taskId') - right.get('time').get('taskId');
+          return rightView.get('time').get('taskId') - leftView.get('time').get('taskId');
         }
         if (leftTask === null) {
           return 1;
@@ -9775,12 +9796,7 @@ ngModule.factory('View1', [
         if (rightTask === null) {
           return -1;
         }
-        leftLen = (leftSplit = (leftTask = left.get('task')).get('split')) === null ? 1 : moment.duration(moment(leftSplit.lastDate(leftTask.get('duedate'))).diff(leftSplit.startDate)).asDays();
-        rightLen = (rightSplit = (rightTask = right.get('task')).get('split')) === null ? 1 : moment.duration(moment(rightSplit.lastDate(rightTask.get('duedate'))).diff(rightSplit.startDate)).asDays();
-        if (leftLen !== rightLen) {
-          return leftLen - rightLen;
-        }
-        return rightTask.get('id') - leftTask.get('id');
+        return tasksSortRule(leftTask, rightTask);
       });
 
       positionTaskView = (function(pos, taskView, taskStartDate, day, getTime) {
@@ -9840,22 +9856,8 @@ ngModule.factory('View1', [
           }));
           _.forEach(tasksByDay, (function(taskViews, date) {
             var time, x;
+            taskViews.sort(taskViewsSortRule);
             x = moment.duration(((time = taskViews[0].get('time')) ? time.get('date') : taskViews[0].get('task').get('duedate')).diff(startDate)).asDays();
-            taskViews.sort((function(left, right) {
-              var leftTask, rightTask;
-              leftTask = left.get('task');
-              rightTask = right.get('task');
-              if (leftTask === null && rightTask === null) {
-                return left.get('time').get('taskId') - right.get('time').get('taskId');
-              }
-              if (leftTask === null) {
-                return 1;
-              }
-              if (rightTask === null) {
-                return -1;
-              }
-              return rightTask.get('id') - leftTask.get('id');
-            }));
             _.forEach(taskViews, (function(taskView, i) {
               taskView.set('x', x);
               maxY = Math.max(maxY, taskView.set('y', i));
@@ -9884,13 +9886,13 @@ ngModule.factory('View1', [
             var results;
             results = [];
             for (t in tasksByDay) {
-              results.push(+t);
+              results.push(parseInt(t));
             }
             return results;
           })()).sort();
           for (j = 0, len1 = groupDates.length; j < len1; j++) {
             d = groupDates[j];
-            (tasksForTheDay = tasksByDay[d]).sort(tasksSortRule);
+            (tasksForTheDay = tasksByDay[d]).sort(taskViewsSortRule);
             day = moment.duration((taskStartDate = moment(d)).diff(startDate)).asDays();
             if (day < 0) {
               day = 0;
@@ -10146,11 +10148,13 @@ ngModule.factory('View2', [
       View2.begin('View2');
 
       View2.propData('tasksOverdue', Task, {
-        filter: 'overdue'
+        filter: 'overdue',
+        watch: ['duedate', 'plan', 'estimate']
       });
 
       View2.propData('tasksNotAssigned', Task, {
-        filter: 'notassigned'
+        filter: 'notassigned',
+        watch: ['duedate', 'split', 'plan', 'estimate']
       });
 
       View2.propList('tasksOverdue', Task);
@@ -10195,14 +10199,7 @@ ngModule.factory('View2', [
               return task;
             };
           })(this)));
-          tasksOverdue.sort(function(left, right) {
-            var l, r;
-            if ((l = left.get('duedate').valueOf()) === (r = right.get('duedate').valueOf())) {
-              return 0;
-            } else {
-              return r - l;
-            }
-          });
+          tasksOverdue.sort(View1.tasksSortRule);
           this.get('tasksOverdueList').merge(this, tasksOverdue);
         }
         if (!((status = this.get('data').get('tasksNotAssignedStatus')) === 'ready' || status === 'update')) {

@@ -28,7 +28,7 @@ buf.push("<tr style=\"height:17px\"><td style=\"padding:0px 3px;vertical-align:b
   }
 }).call(this);
 
-var n = 4
+var n = 20
 while (n-- > 0)
 {
 buf.push("<tr style=\"height:17px\"><td style=\"padding:0px 3px;vertical-align:bottom\"></td><td style=\"padding:0px 3px;vertical-align:bottom;text-align:center\"></td><td style=\"padding:0px 3px;vertical-align:bottom\"></td><td style=\"padding:0px 3px;vertical-align:bottom\"></td></tr>");
