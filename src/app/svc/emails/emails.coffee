@@ -51,7 +51,7 @@ ctrl =
         type: Task
         mode: 'original'
         filter: 'assigned'
-        startDate: startDate = moment().startOf('day')
+        startDate: startDate = moment().startOf('week')
         endDate: endDate = moment(startDate).add(6, 'days')}
 
       formatHours = ((project) ->

@@ -36,7 +36,7 @@ module.exports = class Comments
     if arguments.length == 1 && typeof (src = arguments[0]) == 'object' && src.__proto__ == Comments::
       @list = src.list.slice()
     else
-      @list = []
+      @list = persisted || []
     return)
 
   clone: (-> return new Comments(@))

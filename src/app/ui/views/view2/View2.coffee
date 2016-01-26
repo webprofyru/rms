@@ -28,8 +28,8 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', ((View1, DSV
   return class View2 extends DSView
     @begin 'View2'
 
-    @propData 'tasksOverdue', Task, {filter: 'overdue'}
-    @propData 'tasksNotAssigned', Task, {filter: 'notassigned'}
+    @propData 'tasksOverdue', Task, {filter: 'overdue', watch: ['duedate', 'plan', 'estimate']}
+    @propData 'tasksNotAssigned', Task, {filter: 'notassigned', watch: ['duedate', 'split', 'plan', 'estimate']}
 
     @propList 'tasksOverdue', Task
 
@@ -58,7 +58,7 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', ((View1, DSV
         @get('tasksOverdueList').merge @, []
       else
         tasksOverdue = _.map @get('data').get('tasksOverdue'), ((task) => task.addRef @; return task)
-        tasksOverdue.sort((left, right) -> if (l = left.get('duedate').valueOf()) == (r = right.get('duedate').valueOf()) then 0 else r - l)
+        tasksOverdue.sort View1.tasksSortRule
         @get('tasksOverdueList').merge @, tasksOverdue
 
       if !((status = @get('data').get('tasksNotAssignedStatus')) == 'ready' || status == 'update')
