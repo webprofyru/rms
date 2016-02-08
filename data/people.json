@@ -93,6 +93,12 @@
     ],
     "people": [
         {
+            "id": 171133,
+            "role": "Tester, Content-manager",
+            "name": "Виктория Лобова",
+            "email": "v.lobova@webprofy.ru"
+        },
+        {
             "id": 112015,
             "role": "Programmer,Teamlead",
             "name": "Alexey Zorkaltsev",
