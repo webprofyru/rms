@@ -93,6 +93,12 @@
     ],
     "people": [
         {
+            "id": 171133,
+            "role": "Tester, Content-manager",
+            "name": "Виктория Лобова",
+            "email": "v.lobova@webprofy.ru"
+        },
+        {
             "id": 112015,
             "role": "Programmer,Teamlead",
             "name": "Alexey Zorkaltsev",
@@ -362,24 +368,26 @@
             "name": "Валерий Серов",
             "email": "v.serov@webprofy.ru"
         },
+         {
+            "id": 169025,
+            "role": "Programmer, Markuper, GroupYastrebov",
+            "name": "Андрей Курницкий",
+            "email": "a.kurnitskii@webprofy.ru"
+        },
+        
+        {
+            "id": 170618,
+            "role": "Programmer, Markuper, GroupYastrebov",
+            "name": "Фёдор Калинин",
+            "email": "f.kalinin@webprofy.ru"
+        },
 		{
             "id": 150752,
             "role": "Programmer, Markuper, GroupSkinteev",
             "name": "Александр Муравьев",
             "email": "a.muravyev@webprofy.ru"
         },
-		{
-            "id": 150753,
-            "role": "Programmer, Markuper, GroupYastrebov",
-            "name": "Анатолий Куречко",
-            "email": "a.kyrecho@webprofy.ru"
-        },
-		{
-            "id": 150750,
-            "role": "Programmer, Markuper, GroupYastrebov",
-            "name": "Илья Маслов",
-            "email": "i.maslov@webprofy.ru"
-        },
+
         {
             "id": 143237,
             "role": "Tester, Content-manager",
