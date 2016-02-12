@@ -97,7 +97,7 @@
             "role": "Tester, Content-manager",
             "name": "Виктория Лобова",
             "email": "v.lobova@webprofy.ru"
-        },
+        },    	
         {
             "id": 112015,
             "role": "Programmer,Teamlead",
@@ -374,12 +374,17 @@
             "name": "Андрей Курницкий",
             "email": "a.kurnitskii@webprofy.ru"
         },
-        
-        {
+         {
             "id": 170618,
             "role": "Programmer, Markuper, GroupYastrebov",
             "name": "Фёдор Калинин",
             "email": "f.kalinin@webprofy.ru"
+        },
+        {
+            "id": 171302,
+            "role": "Programmer, Markuper, GroupYastrebov",
+            "name": "Павел Истомин",
+            "email": "p.istomin@webprofy.ru"
         },
 		{
             "id": 150752,
@@ -387,7 +392,6 @@
             "name": "Александр Муравьев",
             "email": "a.muravyev@webprofy.ru"
         },
-
         {
             "id": 143237,
             "role": "Tester, Content-manager",

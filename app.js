@@ -9424,9 +9424,6 @@ ngModule.factory('View1', [
             id: 0,
             name: 'All'
           }, {
-            id: 2,
-            name: 'Plan'
-          }, {
             id: -1,
             name: 'Underload'
           }, {
@@ -9531,7 +9528,7 @@ ngModule.factory('View1', [
       });
 
       View1.prototype.render = (function() {
-        var companyId, days, daysTemp, f0, f1, f2, filter, hiddenPeople, j, k, len1, loadFilter, peopleStatus, personDayStat, personDayStatStatus, personTimeTracking, poolRows, r, ref, ref1, ref2, ref3, ref4, role, rolesMap, rows, selectedPeople, selectedRole, startDate, tasksByPerson, tasksStatus, timeByPerson, timeSpentTemp;
+        var companyId, days, daysTemp, f0, f1, f2, filter, hiddenPeople, j, k, len1, loadFilter, peopleStatus, personDayStat, personDayStatStatus, personTimeTracking, poolRows, r, ref, ref1, ref2, ref3, role, rolesMap, rows, selectedPeople, selectedRole, startDate, tasksByPerson, tasksStatus, timeByPerson, timeSpentTemp;
         if (!((peopleStatus = this.get('data').get('peopleStatus')) === 'ready' || peopleStatus === 'update')) {
           this.get('rowsList').merge(this, []);
           return;
@@ -9601,7 +9598,7 @@ ngModule.factory('View1', [
               });
             }
           }
-          if (((ref3 = this.scope.selectedLoad) != null ? ref3.id : void 0) !== 0 && this.scope.selectedLoad.id < 2) {
+          if (((ref3 = this.scope.selectedLoad) != null ? ref3.id : void 0) !== 0) {
             if (this.get('data').get('personDayStatStatus') !== 'ready') {
               return;
             }
@@ -9667,11 +9664,7 @@ ngModule.factory('View1', [
             };
           })(this)));
         } else {
-          tasksByPerson = ((ref4 = this.scope.selectedLoad) != null ? ref4.id : void 0) === 2 ? _.groupBy(_.filter(this.data.tasks, (function(t) {
-            return t.plan;
-          })), (function(task) {
-            return task.get('responsible').$ds_key;
-          })) : _.groupBy(this.data.tasks, (function(task) {
+          tasksByPerson = _.groupBy(this.data.tasks, (function(task) {
             return task.get('responsible').$ds_key;
           }));
           timeByPerson = null;
@@ -9685,26 +9678,26 @@ ngModule.factory('View1', [
           }
           _.forEach(rows, ((function(_this) {
             return function(row) {
-              var dayStat, dayStats, dayTimeTrackingByDates, ds, getTime, i, l, len2, len3, len4, len5, m, n, o, ref5, ref6, ref7, takenTime, taskView, taskViews, tasksPool, time, timeByThisPerson, timeTrackingByDates;
+              var dayStat, dayStats, dayTimeTrackingByDates, ds, getTime, i, l, len2, len3, len4, len5, m, n, o, ref4, ref5, ref6, takenTime, taskView, taskViews, tasksPool, time, timeByThisPerson, timeTrackingByDates;
               row.set('personDayStat', personDayStat = _this.data.get('personDayStat')[row.$ds_key]);
-              ref5 = dayStats = personDayStat.get('dayStats');
-              for (i = l = 0, len2 = ref5.length; l < len2; i = ++l) {
-                ds = ref5[i];
+              ref4 = dayStats = personDayStat.get('dayStats');
+              for (i = l = 0, len2 = ref4.length; l < len2; i = ++l) {
+                ds = ref4[i];
                 daysTemp[i].add(ds.get('tasksTotal'));
               }
               tasksPool = row.get('tasksPool');
               takenTime = {};
               taskViews = _.map(tasksByPerson[row.$ds_key], (function(task) {
-                var day, duedate, firstDate, len3, m, ref6, split, start, taskView, time;
+                var day, duedate, firstDate, len3, m, ref5, split, start, taskView, time;
                 taskView = tasksPool.find(_this, task.$ds_key);
                 taskView.set('task', task);
                 if (timeByPerson) {
                   if ((split = task.get('split'))) {
                     duedate = task.get('duedate');
                     start = (firstDate = split.firstDate(duedate)) <= startDate ? 0 : moment.duration(firstDate.diff(startDate)).asDays();
-                    ref6 = _this.get('days').slice(start, 7);
-                    for (m = 0, len3 = ref6.length; m < len3; m++) {
-                      day = ref6[m];
+                    ref5 = _this.get('days').slice(start, 7);
+                    for (m = 0, len3 = ref5.length; m < len3; m++) {
+                      day = ref5[m];
                       if ((time = personTimeTracking[row.$ds_key + "-" + task.$ds_key + "-" + (day.get('date').valueOf())])) {
                         takenTime[time.$ds_key] = true;
                       }
@@ -9730,9 +9723,9 @@ ngModule.factory('View1', [
                 timeTrackingByDates = _.groupBy(timeByThisPerson, (function(personTTracking) {
                   return personTTracking.get('date').valueOf();
                 }));
-                ref6 = personDayStat.get('dayStats');
-                for (i = n = 0, len4 = ref6.length; n < len4; i = ++n) {
-                  dayStat = ref6[i];
+                ref5 = personDayStat.get('dayStats');
+                for (i = n = 0, len4 = ref5.length; n < len4; i = ++n) {
+                  dayStat = ref5[i];
                   if (dayTimeTrackingByDates = timeTrackingByDates[dayStat.get('day').valueOf()]) {
                     timeSpentTemp[i].add(dayStat.set('timeSpent', _.reduce(dayTimeTrackingByDates, (function(res, val) {
                       return res.add(val.get('timeMin'), 'm');
@@ -9742,9 +9735,9 @@ ngModule.factory('View1', [
                   }
                 }
               } else {
-                ref7 = personDayStat.get('dayStats');
-                for (o = 0, len5 = ref7.length; o < len5; o++) {
-                  dayStat = ref7[o];
+                ref6 = personDayStat.get('dayStats');
+                for (o = 0, len5 = ref6.length; o < len5; o++) {
+                  dayStat = ref6[o];
                   dayStat.set('timeSpent', null);
                 }
               }
@@ -9947,10 +9940,8 @@ ngModule.directive('rmsView1DropTask', [
               results = [];
               for (j = 0, len1 = ref.length; j < len1; j++) {
                 taskView = ref[j];
-                if (taskView === scope.taskView || (!taskView.split && taskView.x === col && !taskView.task.plan)) {
+                if (!taskView.split && taskView.x === col && !taskView.task.plan && taskView.task.get('project') === modal.task.get('project')) {
                   results.push(taskView.get('task'));
-                } else {
-                  results.push(void 0);
                 }
               }
               return results;
