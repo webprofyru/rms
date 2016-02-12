@@ -1,10 +1,10 @@
-DSEnum = require '../../src/app/dscommon/DSEnum'
+DSTags = require '../../src/app/dscommon/DSTags'
 
-describe '120 DSEnum', ->
+describe '120 DSTags', ->
 
   it 'general', ->
 
-    e1 = new DSEnum 'c, b'
+    e1 = new DSTags 'c, b'
     e2 = e1.clone()
     e3 = e2.clone()
 

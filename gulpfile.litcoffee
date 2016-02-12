@@ -12,7 +12,7 @@
 ==============================
 , с использование ds-gulp-builder (https://www.npmjs.com/package/ds-gulp-builder,  https://github.com/delightsoft/DSGulpBuilder)
 
-    {task, async, sync, go, gutil} = require('ds-gulp-builder')(gulp = require('gulp'))
+    {task, async, sync, go, gutil, errorHandler} = require('ds-gulp-builder')(gulp = require('gulp'))
 
 Для gulp-задач, которых нет в ds-gulp-builder подключаем необходимые npm-пакеты
 
@@ -31,13 +31,15 @@
 
     tasks = []
 
-Основное приложение
-------------------------------
-
+    
 Файлы для правильной работы GitHub Pages (gh-pages)
+------------------------------
 
     tasks.push task('gh-CNAME').copy('./src/CNAME').dest('./build')
     tasks.push task('gh-nojekyll').copy('./src/.nojekyll').dest('./build')
+
+Основное приложение
+------------------------------
 
 JS
 
@@ -45,7 +47,7 @@ JS
 
 HTML
 
-    tasks.push task('app-html').jade('./src/app/index.jade').dest('./build')
+    tasks.push task('app-html').jade('./src/app').duplicate('index.html': 'emails.html').dest('./build')
 
 CSS
 
@@ -73,7 +75,7 @@ Data
 
 JS
 
-      tasks.push task('tests-js').browserify('./test/test.coffee').dest('./build')
+      tasks.push task('tests-js').browserify('./test/test.coffee', min: false).dest('./build')
 
 HTML
 
@@ -98,7 +100,6 @@ JS
 
       tasks.push taskName
 
-
       gulp.task taskName, (cb) ->
 
 В качестве результата мы возвращаем pipe, так что дальше gulp сам разберется когда считать что задача выполнена.
@@ -106,20 +107,18 @@ JS
 
         gulp.src src
         .pipe jade {client: true}
-        .on 'error', (err) ->
-          # TODO: Код обработки ошибок надо вынести в ds-gulp-builder как общую функцию
-          notify.onError
-            title: "Task '#{taskName}': Error"
-            message: '<%= error %>'
-          .apply @, Array::slice.call arguments
-          return
+        .on 'error', errorHandler taskName
         .pipe changed path.dirname dest, hasChanged: changed.compareSha1Digest
         .pipe gulp.dest dest
 
       GLOBAL.gulp.watch src, [taskName]
 
+Чтобы было удобно работать с кодом, мы запускаем browserSync
+
+    browserSync = task('browserSync').browserSync('./build', port: 3000, debug: false)
+
 И всё запускаем :)
 ------------------------------
 
-    if gutil.env.dev then go tasks
-    else go sync [clearFolders, tasks]
+    if gutil.env.dev then go sync [tasks, browserSync]
+    else go sync [clearFolders, tasks, browserSync]

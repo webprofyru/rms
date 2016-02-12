@@ -4,7 +4,7 @@ require './100 Basic/110 DSObject.beginEnd'
 require './100 Basic/112 DSObject.prop'
 #require './100 Basic/114 DSObject.refCounter' # Disable, since it causes debug tool false-activation
 require './100 Basic/116 DSObject.map'
-require './100 Basic/120 DSEnum'
+require './100 Basic/120 DSTags'
 require './100 Basic/140 DSPool'
 require './100 Basic/150 DSSet'
 require './100 Basic/160 DSList'

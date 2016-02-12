@@ -16,10 +16,7 @@ html(lang="en" ng-app="app")
     link(href='libs/jQuery-Timepicker-Addon-1.5/jquery-ui-timepicker-addon.css' rel='stylesheet' type='text/css')
     link(href='libs/ui-select-0.10.0/select.min.css' rel='stylesheet' type='text/css')
 
-    if !dev
-      link(href='index.min.css' rel='stylesheet' type='text/css')
-    else
-      link(href='index.css' rel='stylesheet' type='text/css')
+    link(href='index#{min}.css' rel='stylesheet' type='text/css')
 
   body(layout='')
     div(ui-view)
@@ -40,7 +37,4 @@ html(lang="en" ng-app="app")
     script(src='libs/jQuery-Timepicker-Addon-1.5/jquery-ui-timepicker-addon.min.js')
     script(src='libs/ui-select-0.10.0/select.min.js')
 
-    if !dev
-      script(src="app.min.js")
-    else
-      script(src="app.js")
+    script(src="app#{min}.js")
