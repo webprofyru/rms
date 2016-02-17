@@ -1,5 +1,6 @@
 module.exports = (ngModule = angular.module 'dscommon/DSView', [
-  require '../data/dsDataService'
+  # TODO: I need to make general data service (new name DSConnector)
+  require '../app/data/dsDataService'
 ]).name
 
 traceView = require('./util').traceView

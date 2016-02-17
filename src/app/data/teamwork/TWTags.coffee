@@ -1,18 +1,18 @@
 module.exports = (ngModule = angular.module 'data/teamwork/TWTags', [
-  require '../../dscommon/DSDataSource'
-  require '../../dscommon/DSDataSimple'
+  require '../../../dscommon/DSDataSource'
+  require './DSDataTeamworkPaged'
 ]).name
 
-assert = require('../../dscommon/util').assert
-error = require('../../dscommon/util').error
+assert = require('../../../dscommon/util').assert
+error = require('../../../dscommon/util').error
 
 Tag = require '../../models/Tag'
 
 # Zork: Note: This code is not in use.  Instead we are loading tags right with loading tasks.  Might be later this code will be used in task tags editing.
 
-ngModule.factory 'TWTags', ['DSDataSimple', 'DSDataSource', '$rootScope', '$q', ((DSDataSimple, DSDataSource, $rootScope, $q) ->
+ngModule.factory 'TWTags', ['DSDataTeamworkPaged', 'DSDataSource', '$rootScope', '$q', ((DSDataTeamworkPaged, DSDataSource, $rootScope, $q) ->
 
-  return class TWTags extends DSDataSimple
+  return class TWTags extends DSDataTeamworkPaged
 
     @begin 'TWTags'
 
@@ -28,23 +28,30 @@ ngModule.factory 'TWTags', ['DSDataSimple', 'DSDataSource', '$rootScope', '$q', 
       @set 'request', "tags.json"
       @__unwatch2 = DSDataSource.setLoadAndRefresh.call @, dsDataService
       @init = null
+      @tagsMap = {}
       return)
 
-    importResponse: ((json) ->
+    importResponse: (json) ->
 
-      tagsMap = {}
+      cnt = 0
 
       for jsonTag in json['tags']
 
-        person = Tag.pool.find @, jsonTag['name'], tagsMap
+        ++cnt
+
+        person = Tag.pool.find @, jsonTag['name'], @tagsMap
 
         person.set 'id', parseInt jsonTag['id']
         person.set 'name', jsonTag['name']
         person.set 'color', jsonTag['color']
 
-      @get('tagsSet').merge @, tagsMap
+      cnt
 
-      return true)
+    finalizeLoad: ->
+
+      @get('tagsSet').merge @, @tagsMap
+
+      return
 
     @end())]
 

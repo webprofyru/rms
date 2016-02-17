@@ -1,5 +1,5 @@
-assert = require('../dscommon/util').assert
-error = require('../dscommon/util').error
+assert = require('../../dscommon/util').assert
+error = require('../../dscommon/util').error
 
 module.exports = (ngModule  = angular.module  'ui/layout', []).name
 

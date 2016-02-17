@@ -1,4 +1,4 @@
-base64 = require '../../utils/base64'
+base64 = require '../../../utils/base64'
 
 Task = require '../../models/Task'
 Person = require '../../models/Person'
@@ -168,12 +168,8 @@ ctrl =
 
       return)
 
-
     $scope.sendOut = (->
       $scope.state = 'inProgress'
       sendEmail 0
       return)
     return)]
-
-
-

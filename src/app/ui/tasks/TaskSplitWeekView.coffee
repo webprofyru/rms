@@ -1,10 +1,10 @@
 module.exports = (ngModule = angular.module 'ui/tasks/TaskSplitWeekView', [
-  require('../../dscommon/DSView')
+  require('../../../dscommon/DSView')
 ]).name
 
-assert = require('../../dscommon/util').assert
+assert = require('../../../dscommon/util').assert
 
-DSObject = require('../../dscommon/DSObject')
+DSObject = require('../../../dscommon/DSObject')
 
 TaskSplit = require('../../models/types/TaskSplit')
 Task = require('../../models/Task')

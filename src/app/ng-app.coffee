@@ -2,8 +2,6 @@ module.exports = (ngModule = angular.module 'app', [
   'ui.router' # static/libs/angular-ui/ui-router-0.2.13/angular-ui-router.js
   'ui.select' # static/libs/ui-select-0.10.0/select.js
 
-  'LocalStorageModule' # from https://github.com/grevory/angular-local-storage/blob/master/src/angular-local-storage.js
-
   require './ui/ui'
   require './data/dsDataService'
   require './svc/emails/emails'

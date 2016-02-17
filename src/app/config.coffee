@@ -1,12 +1,14 @@
-assert = require('./dscommon/util').assert
-validate = require('./dscommon/util').validate
-serviceOwner = require('./dscommon/util').serviceOwner
+assert = require('../dscommon/util').assert
+validate = require('../dscommon/util').validate
+serviceOwner = require('../dscommon/util').serviceOwner
 
-DSObject = require './dscommon/DSObject'
+DSObject = require '../dscommon/DSObject'
 Person = require './models/Person'
 
+require '../utils/angular-local-storage.js'
+
 module.exports = (ngModule = angular.module 'config', [
-  'LocalStorageModule'
+  'LocalStorageModule' # from https://github.com/grevory/angular-local-storage/blob/master/src/angular-local-storage.js
 ]).name
 
 ngModule.config ['localStorageServiceProvider', ((localStorageServiceProvider) ->

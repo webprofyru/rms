@@ -1,9 +1,9 @@
 module.exports = (ngModule = angular.module 'ui/tasks/rmsTaskInfo', []).name
 
-assert = require('../../dscommon/util').assert
-error = require('../../dscommon/util').error
+assert = require('../../../dscommon/util').assert
+error = require('../../../dscommon/util').error
 
-DSObject = require('../../dscommon/DSObject')
+DSObject = require('../../../dscommon/DSObject')
 
 ngModule.directive 'rmsTaskInfo', ['$rootScope', '$window', (($rootScope, $window) ->
     restrict: 'A'

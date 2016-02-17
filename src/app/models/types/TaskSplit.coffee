@@ -1,7 +1,7 @@
-assert = require('../../dscommon/util').assert
-error = require('../../dscommon/util').error
+assert = require('../../../dscommon/util').assert
+error = require('../../../dscommon/util').error
 
-DSDocument = require('../../dscommon/DSDocument')
+DSDocument = require('../../../dscommon/DSDocument')
 
 module.exports = class TaskSplit
   @addPropType = ((clazz) ->

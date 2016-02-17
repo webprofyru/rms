@@ -1,5 +1,5 @@
-assert = require('../dscommon/util').assert
-error = require('../dscommon/util').error
+assert = require('../../dscommon/util').assert
+error = require('../../dscommon/util').error
 
 RMSDataStart = /RMS\s*Data\s*\(DO NOT CHANGE!?\)/i
 RMSDataEnd = /}\s*END/i

@@ -1,10 +1,9 @@
 module.exports = (ngModule = angular.module 'data/teamwork/TWTasks', [
-  require '../../dscommon/DSDataSource'
-  require '../../dscommon/DSDataSimple'
+  require '../../../dscommon/DSDataSource'
 ]).name
 
-assert = require('../../dscommon/util').assert
-error = require('../../dscommon/util').error
+assert = require('../../../dscommon/util').assert
+error = require('../../../dscommon/util').error
 
 time = require '../../ui/time'
 
@@ -16,14 +15,14 @@ Project = require '../../models/Project'
 TaskTimeTracking = require '../../models/TaskTimeTracking'
 PersonTimeTracking = require '../../models/PersonTimeTracking'
 
-DSData = require '../../dscommon/DSData'
-DSDigest = require '../../dscommon/DSDigest'
-DSTags = require '../../dscommon/DSTags'
+DSData = require '../../../dscommon/DSData'
+DSDigest = require '../../../dscommon/DSDigest'
+DSTags = require '../../../dscommon/DSTags'
 
 TaskSplit = require '../../models/types/TaskSplit'
 RMSData = require '../../utils/RMSData'
 
-ngModule.factory 'TWTasks', ['DSDataSimple', 'DSDataSource', 'config', '$q', ((DSDataSimple, DSDataSource, config, $q) ->
+ngModule.factory 'TWTasks', ['DSDataSource', 'config', '$q', ((DSDataSource, config, $q) ->
 
   return class TWTasks extends DSData
 
@@ -45,6 +44,11 @@ ngModule.factory 'TWTasks', ['DSDataSimple', 'DSDataSource', 'config', '$q', ((D
       @__unwatch1()
       @__unwatch2()
       return)
+
+    clear: ->
+      DSData::clear.call @
+      cancel.resolve() if cancel = @get('cancel')
+      return # clear
 
     @propObj 'visiblePersonTTracking', {}
 

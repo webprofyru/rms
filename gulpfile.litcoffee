@@ -113,6 +113,22 @@ JS
 
       GLOBAL.gulp.watch src, [taskName]
 
+Reports
+------------------------------
+Отчеты это самостоятельное angularjs приложение, так как оно использует другие библиотеки, которые
+не нужны в основном RMS приложении.
+
+JS
+
+    tasks.push task('reports-js').browserify('./src/reports/reports.coffee').dest('./build')
+
+HTML
+
+    tasks.push task('reports-html').jade('./src/reports').dest('./build')
+
+browserSync
+------------------------------
+
 Чтобы было удобно работать с кодом, мы запускаем browserSync
 
     browserSync = task('browserSync').browserSync('./build', port: 3000, debug: false)

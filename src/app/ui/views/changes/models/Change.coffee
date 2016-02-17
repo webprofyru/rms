@@ -1,8 +1,8 @@
-assert = require('../../../../dscommon/util').assert
-error = require('../../../../dscommon/util').error
+assert = require('../../../../../dscommon/util').assert
+error = require('../../../../../dscommon/util').error
 
-DSObject = require('../../../../dscommon/DSObject')
-DSDocument = require('../../../../dscommon/DSDocument')
+DSObject = require('../../../../../dscommon/DSObject')
+DSDocument = require('../../../../../dscommon/DSDocument')
 
 module.exports = class Change extends DSObject
   @begin 'Change'

@@ -5,11 +5,11 @@ module.exports = (ngModule = angular.module 'ui/tasks/rmsTaskEdit', [
   require './addCommentAndSave'
 ]).name
 
-assert = require('../../dscommon/util').assert
+assert = require('../../../dscommon/util').assert
 
 time = require('../../ui/time')
 
-DSDigest = require '../../dscommon/DSDigest'
+DSDigest = require '../../../dscommon/DSDigest'
 
 Person = require '../../models/Person'
 TaskSplit = require '../../models/types/TaskSplit'

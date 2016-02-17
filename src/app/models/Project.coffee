@@ -1,7 +1,7 @@
-assert = require('../dscommon/util').assert
-error = require('../dscommon/util').error
+assert = require('../../dscommon/util').assert
+error = require('../../dscommon/util').error
 
-DSObject = require('../dscommon/DSObject')
+DSObject = require('../../dscommon/DSObject')
 
 module.exports = class Project extends DSObject
   @begin 'Project'
@@ -12,6 +12,7 @@ module.exports = class Project extends DSObject
 
   @propNum 'id', 0
   @propStr 'name'
+  @propStr 'status'
 
   @propObj 'people'
 

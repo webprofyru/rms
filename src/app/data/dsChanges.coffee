@@ -1,15 +1,15 @@
 module.exports = (ngModule = angular.module 'data/dsDataChanges', [
   'LocalStorageModule'
-  require('../dscommon/DSDataSource')
+  require('../../dscommon/DSDataSource')
 ]).name
 
-assert = require('../dscommon/util').assert
-serviceOwner = require('../dscommon/util').serviceOwner
-error = require('../dscommon/util').error
+assert = require('../../dscommon/util').assert
+serviceOwner = require('../../dscommon/util').serviceOwner
+error = require('../../dscommon/util').error
 
-DSDigest = require('../dscommon/DSDigest')
-DSChangesBase = require('../dscommon/DSChangesBase')
-DSDataEditable = require('../dscommon/DSDataEditable')
+DSDigest = require('../../dscommon/DSDigest')
+DSChangesBase = require('../../dscommon/DSChangesBase')
+DSDataEditable = require('../../dscommon/DSDataEditable')
 
 Person = require('../models/Person')
 Task = require('../models/Task')

@@ -1,7 +1,7 @@
-assert = require('../dscommon/util').assert
-error = require('../dscommon/util').error
+assert = require('../../dscommon/util').assert
+error = require('../../dscommon/util').error
 
-DSObject = require '../dscommon/DSObject'
+DSObject = require '../../dscommon/DSObject'
 
 Person = require './Person'
 

@@ -1,16 +1,16 @@
 module.exports = (ngModule = angular.module 'data/teamwork/TWPeople', [
-  require '../../dscommon/DSDataSource'
-  require '../../dscommon/DSDataSimple'
+  require '../../../dscommon/DSDataSource'
+  require './DSDataTeamworkPaged'
 ]).name
 
-assert = require('../../dscommon/util').assert
-error = require('../../dscommon/util').error
+assert = require('../../../dscommon/util').assert
+error = require('../../../dscommon/util').error
 
 Person = require '../../models/Person'
 
-ngModule.factory 'TWPeople', ['DSDataSimple', 'DSDataSource', '$rootScope', '$q', ((DSDataSimple, DSDataSource, $rootScope, $q) ->
+ngModule.factory 'TWPeople', ['DSDataTeamworkPaged', 'DSDataSource', '$rootScope', '$q', ((DSDataTeamworkPaged, DSDataSource, $rootScope, $q) ->
 
-  return class TWPeople extends DSDataSimple
+  return class TWPeople extends DSDataTeamworkPaged
 
     @begin 'TWPeople'
 
@@ -26,15 +26,18 @@ ngModule.factory 'TWPeople', ['DSDataSimple', 'DSDataSource', '$rootScope', '$q'
       @set 'request', "people.json"
       @__unwatch2 = DSDataSource.setLoadAndRefresh.call @, dsDataService
       @init = null
+      @peopleMap = {}
       return)
 
-    importResponse: ((json) ->
+    importResponse: (json) ->
 
-      peopleMap = {}
+      cnt = 0
 
       for jsonPerson in json['people']
 
-        person = Person.pool.find @, "#{jsonPerson['id']}", peopleMap
+        ++cnt
+
+        person = Person.pool.find @, "#{jsonPerson['id']}", @peopleMap
 
         person.set 'id', +jsonPerson['id']
         person.set 'name', "#{jsonPerson['last-name']} #{jsonPerson['first-name'].charAt(0).toUpperCase()}.".trim()
@@ -44,8 +47,10 @@ ngModule.factory 'TWPeople', ['DSDataSimple', 'DSDataSource', '$rootScope', '$q'
         person.set 'companyId', +jsonPerson['company-id']
         person.set 'currentUser', false
 
-      @get('peopleSet').merge @, peopleMap
+      cnt
 
-      return true)
+    finalizeLoad: ->
+      @get('peopleSet').merge @, @peopleMap
+      return
 
     @end())]

@@ -1,7 +1,7 @@
-assert = require('../dscommon/util').assert
-error = require('../dscommon/util').error
+assert = require('../../dscommon/util').assert
+error = require('../../dscommon/util').error
 
-DSObject = require('../dscommon/DSObject')
+DSObject = require('../../dscommon/DSObject')
 Project = require('./Project')
 
 module.exports = class TodoList extends DSObject

@@ -1,22 +1,21 @@
 module.exports = (ngModule = angular.module 'data/TasksWithTimeTracking', [
-  require '../dscommon/DSDataSimple'
 ]).name
 
-assert = require('../dscommon/util').assert
-error = require('../dscommon/util').error
+assert = require('../../dscommon/util').assert
+error = require('../../dscommon/util').error
 
-DSSet = require '../dscommon/DSSet'
-DSTags = require '../dscommon/DSTags'
-DSData = require '../dscommon/DSData'
-DSDigest = require '../dscommon/DSDigest'
-DSDataServiceBase = require '../dscommon/DSDataServiceBase'
+DSSet = require '../../dscommon/DSSet'
+DSTags = require '../../dscommon/DSTags'
+DSData = require '../../dscommon/DSData'
+DSDigest = require '../../dscommon/DSDigest'
+DSDataServiceBase = require '../../dscommon/DSDataServiceBase'
 
 Task = require '../models/Task'
 TaskTimeTracking = require '../models/TaskTimeTracking'
 
 ngModule.factory 'TasksWithTimeTracking', [
-  'DSDataSimple', 'DSDataSource', '$rootScope', '$http', '$q',
-  ((DSDataSimple, DSDataSource, $rootScope, $http, $q) ->
+  'DSDataSource', '$rootScope', '$http', '$q',
+  ((DSDataSource, $rootScope, $http, $q) ->
 
     return class TasksWithTimeTracking extends DSData
 

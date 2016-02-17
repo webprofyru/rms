@@ -1,4 +1,4 @@
-DSObject = require('../dscommon/DSObject')
+DSObject = require('../../dscommon/DSObject')
 
 Task = require('../models/Task')
 

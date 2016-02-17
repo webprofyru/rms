@@ -1,4 +1,4 @@
-DSObject = require('../dscommon/DSObject')
+DSObject = require('../../dscommon/DSObject')
 
 module.exports = class TaskTimeTracking extends DSObject
   @begin 'TaskTimeTracking'

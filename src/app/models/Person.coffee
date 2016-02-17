@@ -1,8 +1,8 @@
-assert = require('../dscommon/util').assert
-error = require('../dscommon/util').error
+assert = require('../../dscommon/util').assert
+error = require('../../dscommon/util').error
 
-DSDocument = require('../dscommon/DSDocument')
-DSTags = require('../dscommon/DSTags')
+DSDocument = require('../../dscommon/DSDocument')
+DSTags = require('../../dscommon/DSTags')
 
 module.exports = class Person extends DSDocument
   @begin 'Person'
@@ -23,6 +23,8 @@ module.exports = class Person extends DSDocument
   @propNum 'companyId'
 
   @propBool 'currentUser'
+
+  @propBool 'missing' # in the reporting we may have deal with a case when person is deleted
 
   @propDuration 'contractTime'
 

@@ -1,8 +1,8 @@
-assert = require('./dscommon/util').assert
+assert = require('../dscommon/util').assert
 
-serviceOwner = require('./dscommon/util').serviceOwner
+serviceOwner = require('../dscommon/util').serviceOwner
 
-DSObject = require './dscommon/DSObject'
+DSObject = require '../dscommon/DSObject'
 
 module.exports = (ngModule = angular.module 'db', [
 ]).name

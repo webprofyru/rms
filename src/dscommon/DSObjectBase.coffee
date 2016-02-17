@@ -31,7 +31,7 @@ module.exports = class DSObjectBase
 
   constructor: ((referry, key) ->
     if assert
-      throw new Error 'Cannot instantiate DSObjectBsse direct' if @__proto__.constructor == DSObjectBase
+      throw new Error 'Cannot instantiate DSObjectBаse directly' if @__proto__.constructor == DSObjectBase
       error.invalidArg 'referry' if !((typeof referry == 'object' && referry != window) || typeof referry == 'function')
       error.invalidArg 'key' if typeof key != 'string'
     @$ds_key = key

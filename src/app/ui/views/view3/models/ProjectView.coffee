@@ -1,5 +1,5 @@
-DSObject = require('../../../../dscommon/DSObject')
-validate = require('../../../../dscommon/util').validate
+DSObject = require('../../../../../dscommon/DSObject')
+validate = require('../../../../../dscommon/util').validate
 
 Project = require('../../../../models/Project')
 TodoListView = require('./TodoListView')

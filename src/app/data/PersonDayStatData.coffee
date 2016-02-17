@@ -1,14 +1,14 @@
 module.exports = (ngModule = angular.module 'data/PersonDayStatData', [
 ]).name
 
-assert = require('../dscommon/util').assert
-error = require('../dscommon/util').error
+assert = require('../../dscommon/util').assert
+error = require('../../dscommon/util').error
 
-DSDocument = require '../dscommon/DSDocument'
-DSDataServiceBase = require '../dscommon/DSDataServiceBase'
-DSData = require '../dscommon/DSData'
-DSDigest = require '../dscommon/DSDigest'
-DSSet = require '../dscommon/DSSet'
+DSDocument = require '../../dscommon/DSDocument'
+DSDataServiceBase = require '../../dscommon/DSDataServiceBase'
+DSData = require '../../dscommon/DSData'
+DSDigest = require '../../dscommon/DSDigest'
+DSSet = require '../../dscommon/DSSet'
 
 Person = require '../models/Person'
 Task = require '../models/Task'

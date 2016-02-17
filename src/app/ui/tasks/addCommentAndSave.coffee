@@ -1,11 +1,11 @@
-assert = require('../../dscommon/util').assert
-error = require('../../dscommon/util').error
+assert = require('../../../dscommon/util').assert
+error = require('../../../dscommon/util').error
 
-serviceOwner = require('../../dscommon/util').serviceOwner
+serviceOwner = require('../../../dscommon/util').serviceOwner
 
-DSObject = require '../../dscommon/DSObject'
-DSDocument = require '../../dscommon/DSDocument'
-DSDigest = require '../../dscommon/DSDigest'
+DSObject = require '../../../dscommon/DSObject'
+DSDocument = require '../../../dscommon/DSDocument'
+DSDigest = require '../../../dscommon/DSDigest'
 
 Comments = require '../../models/types/Comments'
 

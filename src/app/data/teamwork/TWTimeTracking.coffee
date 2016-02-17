@@ -1,12 +1,11 @@
 module.exports = (ngModule = angular.module 'data/teamwork/TWTimeTracking', [
   require '../../config'
-  require '../../dscommon/DSDataSource'
-  require '../../dscommon/DSDataSimple'
+  require '../../../dscommon/DSDataSource'
   require '../../db'
 ]).name
 
-assert = require('../../dscommon/util').assert
-error = require('../../dscommon/util').error
+assert = require('../../../dscommon/util').assert
+error = require('../../../dscommon/util').error
 
 time = require '../../ui/time'
 
@@ -14,8 +13,8 @@ Task = require '../../models/Task'
 TaskTimeTracking = require '../../models/TaskTimeTracking'
 PersonTimeTracking = require '../../models/PersonTimeTracking'
 
-DSData = require '../../dscommon/DSData'
-DSDigest = require '../../dscommon/DSDigest'
+DSData = require '../../../dscommon/DSData'
+DSDigest = require '../../../dscommon/DSDigest'
 
 TaskSplit = require '../../models/types/TaskSplit'
 RMSData = require '../../utils/RMSData'
@@ -24,8 +23,8 @@ WORK_ENTRIES_WHOLE_PAGE = 500
 HISTORY_END_SEARCH_STEP = 50 # how many pages are added at once to the end to find out border of a current history
 
 ngModule.factory 'TWTimeTracking', [
-  'DSDataSimple', 'DSDataSource', '$q', 'db', 'config',
-  ((DSDataSimple, DSDataSource, $q, db, config) ->
+  'DSDataSource', '$q', 'db', 'config',
+  ((DSDataSource, $q, db, config) ->
 
     return class TWTimeTracking extends DSData
 
@@ -105,31 +104,30 @@ ngModule.factory 'TWTimeTracking', [
         taskTimeTrackingMap = {}
 
         importResponse = ((timeEntries) =>
-          try
-            for jsonTaskTimeEntry in timeEntries when moment(jsonTaskTimeEntry['date']) >= time.historyLimit
-              continue if !taskId = parseInt(taskIdStr = jsonTaskTimeEntry['todo-item-id']) # it's possible that time entry is not associated with a task
-              timeEntryId = jsonTaskTimeEntry['id']
-              personId = parseInt(personIdStr = jsonTaskTimeEntry['person-id'])
-              minutes = 60 * parseInt(jsonTaskTimeEntry['hours']) + parseInt(jsonTaskTimeEntry['minutes'])
-              date = moment(jsonTaskTimeEntry['date']).startOf('day')
+          for jsonTaskTimeEntry in timeEntries when moment(jsonTaskTimeEntry['date']) >= time.historyLimit
+            continue if !taskId = parseInt(taskIdStr = jsonTaskTimeEntry['todo-item-id']) # it's possible that time entry is not associated with a task
+            timeEntryId = jsonTaskTimeEntry['id']
+            personId = parseInt(personIdStr = jsonTaskTimeEntry['person-id'])
+            minutes = 60 * parseInt(jsonTaskTimeEntry['hours']) + parseInt(jsonTaskTimeEntry['minutes'])
+            date = moment(jsonTaskTimeEntry['date']).startOf('day')
 
-              # PersonTimeTracking
-              personTimeTracking = PersonTimeTracking.pool.find @, "#{personIdStr}-#{taskId}-#{date.valueOf()}", personTimeTrackingMap
-              personTimeTracking.set 'personId', personId
-              personTimeTracking.set 'date', date
-              personTimeTracking.set 'taskId', taskId
-              personTimeTracking.set 'timeMin', personTimeTracking.get('timeMin') + minutes
+            # PersonTimeTracking
+            personTimeTracking = PersonTimeTracking.pool.find @, "#{personIdStr}-#{taskId}-#{date.valueOf()}", personTimeTrackingMap
+            personTimeTracking.set 'personId', personId
+            personTimeTracking.set 'date', date
+            personTimeTracking.set 'taskId', taskId
+            personTimeTracking.set 'timeMin', personTimeTracking.get('timeMin') + minutes
 
-              # TaskTimeTracking
-              if taskTimeTrackingMap.hasOwnProperty(taskIdStr)
-                taskTTracking = taskTimeTrackingMap[taskIdStr]
-              else
-                taskTTracking = TaskTimeTracking.pool.find @, taskIdStr, taskTimeTrackingMap
-                taskTTracking.set 'taskId', taskId
-              taskTTracking.set 'totalMin', taskTTracking.get('totalMin') + minutes
-              taskTTracking.get('timeEntries')[timeEntryId] = true
-              if date < time.today
-                taskTTracking.set 'priorTodayMin', taskTTracking.get('priorTodayMin') + minutes
+            # TaskTimeTracking
+            if taskTimeTrackingMap.hasOwnProperty(taskIdStr)
+              taskTTracking = taskTimeTrackingMap[taskIdStr]
+            else
+              taskTTracking = TaskTimeTracking.pool.find @, taskIdStr, taskTimeTrackingMap
+              taskTTracking.set 'taskId', taskId
+            taskTTracking.set 'totalMin', taskTTracking.get('totalMin') + minutes
+            taskTTracking.get('timeEntries')[timeEntryId] = true
+            if date < time.today
+              taskTTracking.set 'priorTodayMin', taskTTracking.get('priorTodayMin') + minutes
           return timeEntries.length == WORK_ENTRIES_WHOLE_PAGE)
 
         finalizeLoad = (=>

@@ -1,21 +1,20 @@
 module.exports = (ngModule = angular.module 'data/PeopleWithJson', [
-  require '../dscommon/DSDataSimple'
 ]).name
 
-assert = require('../dscommon/util').assert
-error = require('../dscommon/util').error
+assert = require('../../dscommon/util').assert
+error = require('../../dscommon/util').error
 
-DSSet = require '../dscommon/DSSet'
-DSTags = require '../dscommon/DSTags'
-DSData = require '../dscommon/DSData'
-DSDigest = require '../dscommon/DSDigest'
-DSDataServiceBase = require '../dscommon/DSDataServiceBase'
+DSSet = require '../../dscommon/DSSet'
+DSTags = require '../../dscommon/DSTags'
+DSData = require '../../dscommon/DSData'
+DSDigest = require '../../dscommon/DSDigest'
+DSDataServiceBase = require '../../dscommon/DSDataServiceBase'
 
 Person = require '../models/Person'
 
 ngModule.factory 'PeopleWithJson', [
-  'DSDataSimple', 'DSDataSource', 'config', '$rootScope', '$http', '$q',
-  ((DSDataSimple, DSDataSource, config, $rootScope, $http, $q) ->
+  'DSDataSource', 'config', '$rootScope', '$http', '$q',
+  ((DSDataSource, config, $rootScope, $http, $q) ->
 
     return class PeopleWithJson extends DSData
 

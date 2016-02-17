@@ -1,12 +1,12 @@
 module.exports = (ngModule = angular.module 'ui/views/changes/ViewChanges', [
   require '../../../data/dsChanges'
-  require('../../../dscommon/DSView')
+  require('../../../../dscommon/DSView')
 ]).name
 
-assert = require('../../../dscommon/util').assert
+assert = require('../../../../dscommon/util').assert
 
-DSObject = require('../../../dscommon/DSObject')
-DSDigest = require('../../../dscommon/DSDigest')
+DSObject = require('../../../../dscommon/DSObject')
+DSDigest = require('../../../../dscommon/DSDigest')
 
 Task = require('../../../models/Task')
 Person = require('../../../models/Person')

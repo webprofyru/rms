@@ -1,8 +1,8 @@
-assert = require('../dscommon/util').assert
-error = require('../dscommon/util').error
-totalRelease = require('../dscommon/util').totalRelease
+assert = require('../../dscommon/util').assert
+error = require('../../dscommon/util').error
+totalRelease = require('../../dscommon/util').totalRelease
 
-DSObjectBase = require '../dscommon/DSObjectBase' # To ensure that DSObjectBase definition window.totalRelease will be there
+DSObjectBase = require '../../dscommon/DSObjectBase' # To ensure that DSObjectBase definition window.totalRelease will be there
 PersonDayStat = require '../models/PersonDayStat'
 
 module.exports = (ngModule = angular.module 'ui/ui', [

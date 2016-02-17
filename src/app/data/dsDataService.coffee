@@ -7,21 +7,21 @@ module.exports = (ngModule = angular.module 'data/dsDataService', [
   require './teamwork/TWTimeTracking'
   require './PersonDayStatData'
   require './dsChanges'
-  require '../dscommon/DSDataSource'
+  require '../../dscommon/DSDataSource'
   require '../config'
 ]).name
 
-assert = require('../dscommon/util').assert
-serviceOwner = require('../dscommon/util').serviceOwner
-error = require('../dscommon/util').error
+assert = require('../../dscommon/util').assert
+serviceOwner = require('../../dscommon/util').serviceOwner
+error = require('../../dscommon/util').error
 
-base64 = require '../utils/base64'
+base64 = require '../../utils/base64'
 
-DSObject = require '../dscommon/DSObject'
-DSDataServiceBase = require '../dscommon/DSDataServiceBase'
-DSChangesBase = require '../dscommon/DSChangesBase'
-DSDataEditable = require '../dscommon/DSDataEditable'
-DSDataFiltered = require '../dscommon/DSDataFiltered'
+DSObject = require '../../dscommon/DSObject'
+DSDataServiceBase = require '../../dscommon/DSDataServiceBase'
+DSChangesBase = require '../../dscommon/DSChangesBase'
+DSDataEditable = require '../../dscommon/DSDataEditable'
+DSDataFiltered = require '../../dscommon/DSDataFiltered'
 
 Person = require '../models/Person'
 Task = require '../models/Task'

@@ -1,16 +1,16 @@
-assert = require('../dscommon/util').assert
-error = require('../dscommon/util').error
+assert = require('../../dscommon/util').assert
+error = require('../../dscommon/util').error
 
 time = require('../ui/time')
 
-DSDocument = require('../dscommon/DSDocument')
+DSDocument = require('../../dscommon/DSDocument')
 
 Project = require('./Project')
 Person = require('./Person')
 TodoList = require('./TodoList')
 TaskTimeTracking = require('./TaskTimeTracking')
 
-DSTags = require('../dscommon/DSTags')
+DSTags = require('../../dscommon/DSTags')
 
 Comments = require('./types/Comments')
 TaskSplit = require('./types/TaskSplit')

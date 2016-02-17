@@ -1,14 +1,14 @@
 module.exports = (ngModule = angular.module 'ui/views/view2/View2', [
   require '../../../data/dsChanges'
   require '../../../data/dsDataService'
-  require '../../../dscommon/DSView'
+  require '../../../../dscommon/DSView'
   require '../view1/View1'
   require '../../tasks/addCommentAndSave'
 ]).name
 
-assert = require('../../../dscommon/util').assert
+assert = require('../../../../dscommon/util').assert
 
-DSDigest = require '../../../dscommon/DSDigest'
+DSDigest = require '../../../../dscommon/DSDigest'
 
 # Global models
 Task = require('../../../models/Task')
