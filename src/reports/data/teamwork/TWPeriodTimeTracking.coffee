@@ -77,9 +77,6 @@ ngModule.factory 'TWPeriodTimeTracking', [
 
         actualLoad = =>
 
-          console.info 'people.status: ', people.status
-          console.info 'projects.status: ', projects.status
-
           return unless DSObject.integratedStatus(sets) == 'ready'
 
           @__unwatch1()
@@ -99,14 +96,18 @@ ngModule.factory 'TWPeriodTimeTracking', [
             for jsonTaskTimeEntry in timeEntries when (date = moment(jsonTaskTimeEntry['date'])) >= from
 
               timeEntryId = jsonTaskTimeEntry['id']
-              personId = parseInt(personIdStr = jsonTaskTimeEntry['person-id'])
-              projectId = parseInt(personIdStr = jsonTaskTimeEntry['project-id'])
+              personId = parseInt jsonTaskTimeEntry['person-id']
+              projectId = parseInt jsonTaskTimeEntry['project-id']
               minutes = 60 * parseInt(jsonTaskTimeEntry['hours']) + parseInt(jsonTaskTimeEntry['minutes'])
 
               if date >= to
                 return false # we've reached the end of interesting period
 
               # PersonTimeTracking
+
+# TODO: Remove
+#              debugger if personId == 115063
+
               periodTimeTracking = PeriodTimeTracking.pool.find @, "#{personId}-#{projectId}", periodTimeTrackingMap
               if not (person = people.items[personId])
                 person = Person.pool.find @, "missing-#{personId}", missingPeople

@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "jszip": "^2.5.0",
+    "xlsx": "^0.8.0",
     "xmlbuilder": "^4.2.1"
   }
 }

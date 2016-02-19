@@ -1,5 +1,0 @@
-https://github.com/protobi/msexcel-builder
-
-it's recommended in https://github.com/chuanyi/msexcel-builder/issues/49 of
-https://github.com/chuanyi/msexcel-builder
-
