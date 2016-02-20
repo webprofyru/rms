@@ -20,7 +20,7 @@ ngModule.controller 'View2', ['$scope', 'View2', (($scope, View2) ->
   $scope.view = new View2 $scope, 'view2'
   $scope.tasksHeight = ((row)->
     return '' if !row.expand || _.isEmpty row.tasks
-    return "height:#{52 * _.max(row.tasks, 'y').y + 100}px")
+    return "height:#{52 * _.maxBy(row.tasks, 'y').y + 100}px")
   return)]
 
 ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', ((View1, DSView, $rootScope, $log) ->
