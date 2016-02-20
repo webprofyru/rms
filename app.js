@@ -5449,7 +5449,7 @@ ngModule.controller('View1', [
       if (_.isEmpty(row.tasks)) {
         return "height:100px";
       }
-      return "height:" + (65 * _.max(row.tasks, 'y').y + 98) + "px";
+      return "height:" + (65 * _.maxBy(row.tasks, 'y').y + 98) + "px";
     });
   })
 ]);
@@ -6215,7 +6215,7 @@ ngModule.controller('View2', [
       if (!row.expand || _.isEmpty(row.tasks)) {
         return '';
       }
-      return "height:" + (52 * _.max(row.tasks, 'y').y + 100) + "px";
+      return "height:" + (52 * _.maxBy(row.tasks, 'y').y + 100) + "px";
     });
   })
 ]);
