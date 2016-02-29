@@ -37,6 +37,10 @@
             "name": "Group Skinteev"
         },
         {
+            "role": "GroupKorovkin",
+            "name": "Group Korovkin"
+        },
+        {
             "role": "Art-director",
             "name": "Арт-директор",
             "supervisor": true
@@ -368,12 +372,7 @@
             "name": "Валерий Серов",
             "email": "v.serov@webprofy.ru"
         },
-         {
-            "id": 180846,
-            "role": "Programmer, Markuper, GroupYastrebov",
-            "name": "Игорь Качко",
-            "email": "i.kachko@webprofy.ru"
-        },
+        
          {
             "id": 170618,
             "role": "Programmer, Markuper, GroupYastrebov",
@@ -388,7 +387,7 @@
         },
         {
             "id": 178897,
-            "role": "Programmer, Markuper, GroupYastrebov",
+            "role": "Programmer, Markuper, GroupYastrebov, GroupKorovkin",
             "name": "Максим Ситников",
             "email": "m.sitnikov@webprofy.ru"
         },
@@ -397,6 +396,12 @@
             "role": "Programmer, Markuper, GroupYastrebov",
             "name": "Дмитрий Иванов",
             "email": "d.ivanov@webprofy.ru"
+        },
+         {
+            "id": 180846,
+            "role": "Programmer, Markuper, GroupSkinteev",
+            "name": "Игорь Качко",
+            "email": "i.kachko@webprofy.ru"
         },
 		{
             "id": 150752,
