@@ -144,7 +144,7 @@ ngModule.factory('config', [
 ]);
 
 
-},{"../dscommon/DSObject":13,"../dscommon/util":18,"../utils/angular-local-storage.js":25,"./models/Person":5}],2:[function(require,module,exports){
+},{"../dscommon/DSObject":19,"../dscommon/util":24,"../utils/angular-local-storage.js":31,"./models/Person":5}],2:[function(require,module,exports){
 var DSData, DSDataServiceBase, DSDigest, DSSet, DSTags, Person, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -299,7 +299,7 @@ ngModule.factory('PeopleWithJson', [
 ]);
 
 
-},{"../../dscommon/DSData":7,"../../dscommon/DSDataServiceBase":8,"../../dscommon/DSDigest":10,"../../dscommon/DSSet":16,"../../dscommon/DSTags":17,"../../dscommon/util":18,"../models/Person":5}],3:[function(require,module,exports){
+},{"../../dscommon/DSData":13,"../../dscommon/DSDataServiceBase":14,"../../dscommon/DSDigest":16,"../../dscommon/DSSet":22,"../../dscommon/DSTags":23,"../../dscommon/util":24,"../models/Person":5}],3:[function(require,module,exports){
 var DSData, DSDigest, WORK_ENTRIES_WHOLE_PAGE, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -417,7 +417,7 @@ ngModule.factory('DSDataTeamworkPaged', [
 ]);
 
 
-},{"../../../dscommon/DSData":7,"../../../dscommon/DSDigest":10,"../../../dscommon/util":18}],4:[function(require,module,exports){
+},{"../../../dscommon/DSData":13,"../../../dscommon/DSDigest":16,"../../../dscommon/util":24}],4:[function(require,module,exports){
 var Person, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -489,7 +489,7 @@ ngModule.factory('TWPeople', [
 ]);
 
 
-},{"../../../dscommon/DSDataSource":9,"../../../dscommon/util":18,"../../models/Person":5,"./DSDataTeamworkPaged":3}],5:[function(require,module,exports){
+},{"../../../dscommon/DSDataSource":15,"../../../dscommon/util":24,"../../models/Person":5,"./DSDataTeamworkPaged":3}],5:[function(require,module,exports){
 var DSDocument, DSTags, Person, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -557,7 +557,7 @@ module.exports = Person = (function(superClass) {
 })(DSDocument);
 
 
-},{"../../dscommon/DSDocument":11,"../../dscommon/DSTags":17,"../../dscommon/util":18}],6:[function(require,module,exports){
+},{"../../dscommon/DSDocument":17,"../../dscommon/DSTags":23,"../../dscommon/util":24}],6:[function(require,module,exports){
 var DSObject, Project, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -602,7 +602,751 @@ module.exports = Project = (function(superClass) {
 })(DSObject);
 
 
-},{"../../dscommon/DSObject":13,"../../dscommon/util":18}],7:[function(require,module,exports){
+},{"../../dscommon/DSObject":19,"../../dscommon/util":24}],7:[function(require,module,exports){
+var Comments, DSDocument, DSTags, Person, Project, Task, TaskSplit, TaskTimeTracking, TodoList, assert, error, time,
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+assert = require('../../dscommon/util').assert;
+
+error = require('../../dscommon/util').error;
+
+time = require('../ui/time');
+
+DSDocument = require('../../dscommon/DSDocument');
+
+Project = require('./Project');
+
+Person = require('./Person');
+
+TodoList = require('./TodoList');
+
+TaskTimeTracking = require('./TaskTimeTracking');
+
+DSTags = require('../../dscommon/DSTags');
+
+Comments = require('./types/Comments');
+
+TaskSplit = require('./types/TaskSplit');
+
+module.exports = Task = (function(superClass) {
+  extend(Task, superClass);
+
+  function Task() {
+    return Task.__super__.constructor.apply(this, arguments);
+  }
+
+  Task.begin('Task');
+
+  Comments.addPropType(Task);
+
+  TaskSplit.addPropType(Task);
+
+  DSTags.addPropType(Task);
+
+  Task.addPool(true);
+
+  Task.str = (function(v) {
+    if (v === null) {
+      return '';
+    } else {
+      return v.get('title');
+    }
+  });
+
+  Task.propNum('id', 0);
+
+  Task.propStr('title');
+
+  (Task.propDuration('estimate')).str = (function(v) {
+    var hours, minutes, res;
+    hours = Math.floor(v.asHours());
+    minutes = v.minutes();
+    res = hours ? hours + "h" : '';
+    if (minutes) {
+      res += " " + minutes + "m";
+    }
+    if (!res) {
+      res = '0';
+    }
+    return res;
+  });
+
+  (Task.propMoment('duedate')).str = (function(v) {
+    if (v === null) {
+      return '';
+    } else {
+      return v.format('DD.MM.YYYY');
+    }
+  });
+
+  (Task.propMoment('startDate')).str = (function(v) {
+    if (v === null) {
+      return '';
+    } else {
+      return v.format('DD.MM.YYYY');
+    }
+  });
+
+  Task.propDoc('creator', Person);
+
+  Task.propDoc('responsible', Person);
+
+  Task.propDoc('todoList', TodoList);
+
+  Task.propDoc('project', Project);
+
+  Task.propTaskRelativeSplit('split');
+
+  Task.propStr('description');
+
+  Task.propComments('comments');
+
+  Task.propDoc('timeTracking', TaskTimeTracking);
+
+  Task.propStr('firstTimeEntryId');
+
+  Task.propBool('completed');
+
+  Task.propBool('isReady');
+
+  Task.propBool('plan');
+
+  Task.propDSTags('tags');
+
+  Task.prototype.isOverdue = (function() {
+    var duedate;
+    return (duedate = this.get('duedate')) !== null && duedate < time.today;
+  });
+
+  Task.prototype.timeWithinEstimate = (function() {
+    var estimate;
+    if ((estimate = this.get('estimate')) === null) {
+      return 0;
+    }
+    return Math.min(100, Math.round(this.get('timeTracking').get('totalMin') * 100 / estimate.asMinutes()));
+  });
+
+  Task.prototype.timeAboveEstimate = (function() {
+    var estimate, percent;
+    if ((estimate = this.get('estimate')) === null) {
+      return 0;
+    }
+    if ((percent = Math.round(this.get('timeTracking').get('totalMin') * 100 / estimate.asMinutes())) <= 100) {
+      return 0;
+    } else if (percent > 200) {
+      return 100;
+    } else {
+      return percent - 100;
+    }
+  });
+
+  Task.prototype.timeReported = (function() {
+    var estimate, percent;
+    if ((estimate = this.get('estimate')) === null) {
+      return '';
+    }
+    if ((percent = Math.round(this.get('timeTracking').get('totalMin') * 100 / estimate.asMinutes())) > 200) {
+      return percent + " %";
+    } else {
+      return '';
+    }
+  });
+
+  Task.prototype.grade = (function() {
+    var estimate;
+    if ((estimate = this.get('estimate')) === null) {
+      return '';
+    }
+    if (estimate.asMinutes() < 60) {
+      return 'easy';
+    }
+    if (estimate.asMinutes() >= 60 && estimate.asMinutes() < 240) {
+      return 'medium';
+    }
+    if (estimate.asMinutes() >= 240 && estimate.asMinutes() < 480) {
+      return 'hard';
+    }
+    if (estimate.asMinutes() >= 480) {
+      return 'complex';
+    }
+  });
+
+  Task.prototype.setVisible = (function(isVisible) {
+    var ref, ref1;
+    if (isVisible) {
+      if ((this.__visCount = (this.__visCount || 0) + 1) === 1) {
+        if ((ref = this.get('timeTracking')) != null) {
+          ref.setVisible(true);
+        }
+      }
+    } else if (--this.__visCount === 0) {
+      if ((ref1 = this.get('timeTracking')) != null) {
+        ref1.setVisible(false);
+      }
+    }
+  });
+
+  Task.end();
+
+  return Task;
+
+})(DSDocument);
+
+
+},{"../../dscommon/DSDocument":17,"../../dscommon/DSTags":23,"../../dscommon/util":24,"../ui/time":12,"./Person":5,"./Project":6,"./TaskTimeTracking":8,"./TodoList":9,"./types/Comments":10,"./types/TaskSplit":11}],8:[function(require,module,exports){
+var DSObject, TaskTimeTracking,
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+DSObject = require('../../dscommon/DSObject');
+
+module.exports = TaskTimeTracking = (function(superClass) {
+  extend(TaskTimeTracking, superClass);
+
+  function TaskTimeTracking() {
+    return TaskTimeTracking.__super__.constructor.apply(this, arguments);
+  }
+
+  TaskTimeTracking.begin('TaskTimeTracking');
+
+  TaskTimeTracking.addPool(true);
+
+  TaskTimeTracking.propNum('taskId', 0);
+
+  TaskTimeTracking.propBool('isReady');
+
+  TaskTimeTracking.propNum('totalMin', 0);
+
+  TaskTimeTracking.propNum('priorTodayMin', 0);
+
+  TaskTimeTracking.propObj('timeEntries', {});
+
+  TaskTimeTracking.end();
+
+  return TaskTimeTracking;
+
+})(DSObject);
+
+
+},{"../../dscommon/DSObject":19}],9:[function(require,module,exports){
+var DSObject, Project, TodoList, assert, error,
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+assert = require('../../dscommon/util').assert;
+
+error = require('../../dscommon/util').error;
+
+DSObject = require('../../dscommon/DSObject');
+
+Project = require('./Project');
+
+module.exports = TodoList = (function(superClass) {
+  extend(TodoList, superClass);
+
+  function TodoList() {
+    return TodoList.__super__.constructor.apply(this, arguments);
+  }
+
+  TodoList.begin('TodoList');
+
+  TodoList.addPool();
+
+  TodoList.str = (function(v) {
+    if (v === null) {
+      return '';
+    } else {
+      return v.get('name');
+    }
+  });
+
+  TodoList.propNum('id', 0);
+
+  TodoList.propStr('name');
+
+  TodoList.propDoc('project', Project);
+
+  TodoList.end();
+
+  return TodoList;
+
+})(DSObject);
+
+
+},{"../../dscommon/DSObject":19,"../../dscommon/util":24,"./Project":6}],10:[function(require,module,exports){
+var Comments, DSDocument, assert, error;
+
+assert = require('../../../dscommon/util').assert;
+
+error = require('../../../dscommon/util').error;
+
+DSDocument = require('../../../dscommon/DSDocument');
+
+module.exports = Comments = (function() {
+  var class1, zero;
+
+  function Comments() {
+    return class1.apply(this, arguments);
+  }
+
+  Comments.addPropType = (function(clazz) {
+    clazz.propComments = (function(name, valid) {
+      var q;
+      if (assert) {
+        if (!typeof name === 'string') {
+          error.invalidArg('name');
+        }
+        if (valid && typeof valid !== 'function') {
+          error.invalidArg('valid');
+        }
+      }
+      valid = (q = valid) ? (function(value) {
+        if ((value === null || Array.isArray(value)) && q(value)) {
+          return value;
+        } else {
+          return void 0;
+        }
+      }) : (function(value) {
+        if (value === null || value instanceof Comments) {
+          return value;
+        } else {
+          return void 0;
+        }
+      });
+      return clazz.prop({
+        name: name,
+        type: 'comments',
+        valid: valid,
+        read: (function(v) {
+          if (v !== null) {
+            return new Comments(v);
+          } else {
+            return null;
+          }
+        }),
+        str: (function() {
+          return 'split';
+        }),
+        equal: (function(l, r) {
+          var i, j, len, litem, ref;
+          if (l === null || r === null) {
+            return l === r;
+          }
+          if (l.list.length !== r.list.length) {
+            return false;
+          }
+          ref = l.list;
+          for (i = j = 0, len = ref.length; j < len; i = ++j) {
+            litem = ref[i];
+            if (litem !== r.list[i]) {
+              return false;
+            }
+          }
+          return true;
+        }),
+        init: null
+      });
+    });
+  });
+
+  zero = moment.duration(0);
+
+  class1 = (function(persisted) {
+    var j, len, src, v;
+    if (assert) {
+      if (arguments.length === 1 && typeof arguments[0] === 'object' && arguments[0].__proto__ === Comments.prototype) {
+        void 0;
+      } else if (arguments.length === 1 && Array.isArray(persisted)) {
+        for (j = 0, len = persisted.length; j < len; j++) {
+          v = persisted[j];
+          if (!(typeof v === 'string')) {
+            error.invalidArg('persisted');
+          }
+        }
+      }
+    }
+    if (arguments.length === 1 && typeof (src = arguments[0]) === 'object' && src.__proto__ === Comments.prototype) {
+      this.list = src.list.slice();
+    } else {
+      this.list = persisted || [];
+    }
+  });
+
+  Comments.prototype.clone = (function() {
+    return new Comments(this);
+  });
+
+  Comments.prototype.add = (function(comment) {
+    this.list.push(comment);
+  });
+
+  Comments.prototype.unshift = (function(comment) {
+    this.list.unshift(comment);
+  });
+
+  Comments.prototype.shift = (function() {
+    return this.list.shift();
+  });
+
+  Comments.prototype.valueOf = (function() {
+    return this.list;
+  });
+
+  Comments.prototype.clear = (function() {
+    this.list = [];
+  });
+
+  return Comments;
+
+})();
+
+
+},{"../../../dscommon/DSDocument":17,"../../../dscommon/util":24}],11:[function(require,module,exports){
+var DSDocument, TaskSplit, assert, error;
+
+assert = require('../../../dscommon/util').assert;
+
+error = require('../../../dscommon/util').error;
+
+DSDocument = require('../../../dscommon/DSDocument');
+
+module.exports = TaskSplit = (function() {
+  var class1, zero;
+
+  function TaskSplit() {
+    return class1.apply(this, arguments);
+  }
+
+  TaskSplit.addPropType = (function(clazz) {
+    clazz.propTaskRelativeSplit = (function(name, valid) {
+      var q;
+      if (assert) {
+        if (!typeof name === 'string') {
+          error.invalidArg('name');
+        }
+        if (valid && typeof valid !== 'function') {
+          error.invalidArg('valid');
+        }
+      }
+      valid = (q = valid) ? (function(value) {
+        if ((value === null || (typeof value === 'object' && value instanceof TaskSplit)) && q(value)) {
+          return value;
+        } else {
+          return void 0;
+        }
+      }) : (function(value) {
+        if (value === null || value instanceof TaskSplit) {
+          return value;
+        } else {
+          return void 0;
+        }
+      });
+      return clazz.prop({
+        name: name,
+        type: 'taskRelativeSplit',
+        valid: valid,
+        read: (function(v) {
+          if (v !== null) {
+            return new TaskSplit(v);
+          } else {
+            return null;
+          }
+        }),
+        str: (function(v) {
+          if (v) {
+            return 'split';
+          } else {
+            return '';
+          }
+        }),
+        equal: (function(l, r) {
+          var i, j, leftList, len, rightList, v;
+          if (l === null || r === null) {
+            return l === r;
+          }
+          if ((leftList = l != null ? l.list : void 0).length !== (rightList = r != null ? r.list : void 0).length) {
+            return false;
+          }
+          for (i = j = 0, len = leftList.length; j < len; i = j += 2) {
+            v = leftList[i];
+            if (v !== rightList[i] || leftList[i + 1].valueOf() !== rightList[i + 1].valueOf()) {
+              return false;
+            }
+          }
+          return true;
+        }),
+        init: null
+      });
+    });
+  });
+
+  zero = moment.duration(0);
+
+  class1 = (function(persisted) {
+    var d, i, j, k, len, len1, list, src, v;
+    if (assert) {
+      if (arguments.length === 1 && typeof arguments[0] === 'object' && arguments[0].__proto__ === TaskSplit.prototype) {
+        void 0;
+      } else if (arguments.length === 1 && Array.isArray(persisted)) {
+        if (!(persisted.length % 2 === 0)) {
+          error.invalidArg('persisted');
+        }
+        for (j = 0, len = persisted.length; j < len; j++) {
+          v = persisted[j];
+          if (!(typeof v === 'number')) {
+            error.invalidArg('persisted');
+          }
+        }
+      }
+    }
+    if (arguments.length === 1 && typeof (src = arguments[0]) === 'object' && src.__proto__ === TaskSplit.prototype) {
+      this.list = src.list.slice();
+    } else {
+      this.list = list = [];
+      if (Array.isArray(persisted)) {
+        for (i = k = 0, len1 = persisted.length; k < len1; i = k += 2) {
+          d = persisted[i];
+          list.push(moment.duration(d, 'day').valueOf());
+          list.push(moment.duration(persisted[i + 1], 'minute'));
+        }
+      }
+    }
+  });
+
+  TaskSplit.prototype.clone = (function() {
+    return new TaskSplit(this);
+  });
+
+  TaskSplit.prototype.set = (function(duedate, date, estimate) {
+    var d, dateDiff, i, j, len, list, ref;
+    if (assert) {
+      if (!(moment.isMoment(duedate))) {
+        error.invalidArg('duedate');
+      }
+      if (!(moment.isMoment(date))) {
+        error.invalidArg('date');
+      }
+      if (!(estimate === null || moment.isDuration(estimate))) {
+        error.invalidArg('estimate');
+      }
+    }
+    dateDiff = date.diff(duedate);
+    ref = (list = this.list);
+    for (i = j = 0, len = ref.length; j < len; i = j += 2) {
+      d = ref[i];
+      if (d === dateDiff) {
+        if (estimate !== null && estimate.valueOf() !== 0) {
+          if (list[i + 1].valueOf() === estimate.valueOf()) {
+            return;
+          }
+          list[i + 1] = estimate;
+        } else {
+          list.splice(i, 2);
+        }
+        delete this.value;
+        return;
+      } else if (dateDiff < d) {
+        if ((estimate != null ? estimate.valueOf() : void 0) !== 0) {
+          list.splice(i, 0, dateDiff, estimate);
+        }
+        delete this.value;
+        return;
+      }
+    }
+    if ((estimate != null ? estimate.valueOf() : void 0) !== 0) {
+      delete this.value;
+      list.push(dateDiff);
+      list.push(estimate);
+    }
+    return this;
+  });
+
+  TaskSplit.prototype.get = (function(duedate, date) {
+    var d, dateDiff, i, j, len, list, ref;
+    if (assert) {
+      if (!(moment.isMoment(duedate))) {
+        error.invalidArg('duedate');
+      }
+      if (!(moment.isMoment(date))) {
+        error.invalidArg('date');
+      }
+    }
+    dateDiff = date.diff(duedate);
+    ref = (list = this.list);
+    for (i = j = 0, len = ref.length; j < len; i = j += 2) {
+      d = ref[i];
+      if (d === dateDiff) {
+        return list[i + 1];
+      }
+    }
+    return null;
+  });
+
+  TaskSplit.prototype.day = (function(getDuedate, date) {
+    var accessor;
+    if (assert) {
+      if (!typeof getDuedate === 'function') {
+        error.invalidArg('getDuedate');
+      }
+      if (!moment.isMoment(date)) {
+        error.invalidArg('date');
+      }
+    }
+    Object.defineProperty(accessor = {}, 'val', {
+      get: ((function(_this) {
+        return function() {
+          return _this.get(getDuedate(), date);
+        };
+      })(this)),
+      set: ((function(_this) {
+        return function(v) {
+          return _this.set(getDuedate(), date, v);
+        };
+      })(this))
+    });
+    return accessor;
+  });
+
+  TaskSplit.prototype.valueOf = (function() {
+    var e, i, j, len, list, ref, res, s, value;
+    if ((value = this.value)) {
+      return value;
+    }
+    this.value = res = [];
+    ref = (list = this.list);
+    for (i = j = 0, len = ref.length; j < len; i = j += 2) {
+      s = ref[i];
+      e = list[i + 1];
+      res.push(moment.duration(s).asDays());
+      res.push(e.asMinutes());
+    }
+    return res;
+  });
+
+  TaskSplit.prototype.shift = (function(newDuedate, oldDuedate) {
+    var diff, i, j, len, list, ref, t;
+    if (assert) {
+      switch (arguments.length) {
+        case 1:
+          if (typeof newDuedate !== 'number') {
+            error.invalidArg('diff');
+          }
+          break;
+        case 2:
+          if (!moment.isMoment(newDuedate)) {
+            error.invalidArg('newDuedate');
+          }
+          if (!moment.isMoment(oldDuedate)) {
+            error.invalidArg('oldDuedate');
+          }
+          break;
+        default:
+          throw new Error('Invalid arguments');
+      }
+    }
+    delete this.value;
+    diff = typeof newDuedate === 'number' ? newDuedate : newDuedate.diff(oldDuedate);
+    if (diff !== 0) {
+      ref = (list = this.list);
+      for (i = j = 0, len = ref.length; j < len; i = j += 2) {
+        t = ref[i];
+        list[i] -= diff;
+      }
+    }
+  });
+
+  TaskSplit.prototype.firstDate = (function(duedate) {
+    var list;
+    if (assert) {
+      if (!moment.isMoment(duedate)) {
+        error.invalidArg('duedate');
+      }
+    }
+    if ((list = this.list).length > 0) {
+      return moment(duedate).add(list[0]);
+    } else {
+      return null;
+    }
+  });
+
+  TaskSplit.prototype.lastDate = (function(duedate) {
+    var list;
+    if (assert) {
+      if (!moment.isMoment(duedate)) {
+        error.invalidArg('duedate');
+      }
+    }
+    if ((list = this.list).length > 0) {
+      return moment(duedate).add(list[list.length - 2]);
+    } else {
+      return null;
+    }
+  });
+
+  TaskSplit.prototype.clear = (function() {
+    delete this.value;
+    this.list = [];
+  });
+
+  TaskSplit.prototype.fixEstimate = (function(diff) {
+    var i, j, len, list, ref, s;
+    if (diff > 0) {
+      this.list[this.list.length - 1].add(diff);
+    } else if (diff < 0) {
+      ref = list = this.list.slice(1);
+      for (i = j = 0, len = ref.length; j < len; i = j += 2) {
+        s = ref[i];
+        if ((diff += s.valueOf()) > 0) {
+          this.list[i + 1] = moment.duration(diff);
+          this.list = this.list.slice(i);
+          break;
+        }
+      }
+    }
+  });
+
+  Object.defineProperty(TaskSplit.prototype, 'total', {
+    get: (function() {
+      var j, len, list, ref, sum, t;
+      if ((list = this.list).length === 0) {
+        return zero;
+      }
+      if (list.length === 1) {
+        return list[1];
+      }
+      sum = moment.duration(list[1]);
+      ref = list.slice(3);
+      for (j = 0, len = ref.length; j < len; j += 2) {
+        t = ref[j];
+        sum.add(t);
+      }
+      return sum;
+    })
+  });
+
+  return TaskSplit;
+
+})();
+
+
+},{"../../../dscommon/DSDocument":17,"../../../dscommon/util":24}],12:[function(require,module,exports){
+var time, updateToday;
+
+module.exports = time = {
+  today: moment().startOf('day'),
+  historyLimit: moment().startOf('week').subtract(2, 'weeks')
+};
+
+(updateToday = (function() {
+  setTimeout((function() {
+    time.today = moment().startOf('day');
+    updateToday();
+  }), moment().startOf('day').add(1, 'day').add(20, 'seconds').valueOf() - (new Date()).getTime());
+}))();
+
+
+},{}],13:[function(require,module,exports){
 var DSData, DSObject, assert, error, modeReleaseDataOnReload, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -731,7 +1475,7 @@ module.exports = DSData = (function(superClass) {
 })(DSObject);
 
 
-},{"./DSObject":13,"./util":18}],8:[function(require,module,exports){
+},{"./DSObject":19,"./util":24}],14:[function(require,module,exports){
 var DSDataServiceBase, DSObject, DSPool, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -835,7 +1579,7 @@ module.exports = DSDataServiceBase = (function(superClass) {
 })(DSObject);
 
 
-},{"./DSObject":13,"./DSPool":15,"./util":18}],9:[function(require,module,exports){
+},{"./DSObject":19,"./DSPool":21,"./util":24}],15:[function(require,module,exports){
 var DSDigest, DSObject, assert, base64, error, modeReleaseDataOnReload, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -999,7 +1743,7 @@ ngModule.factory('DSDataSource', [
 ]);
 
 
-},{"../utils/base64":26,"./DSDigest":10,"./DSObject":13,"./util":18}],10:[function(require,module,exports){
+},{"../utils/base64":33,"./DSDigest":16,"./DSObject":19,"./util":24}],16:[function(require,module,exports){
 var DSDigest, assert, error;
 
 assert = require('./util').assert;
@@ -1099,7 +1843,7 @@ module.exports = DSDigest = (function() {
 })();
 
 
-},{"./util":18}],11:[function(require,module,exports){
+},{"./util":24}],17:[function(require,module,exports){
 var DSDocument, DSObject, DSObjectBase, DSSet, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -1402,7 +2146,7 @@ module.exports = DSDocument = (function(superClass) {
 })(DSObject);
 
 
-},{"./DSObject":13,"./DSObjectBase":14,"./DSSet":16,"./util":18}],12:[function(require,module,exports){
+},{"./DSObject":19,"./DSObjectBase":20,"./DSSet":22,"./util":24}],18:[function(require,module,exports){
 var DSList, DSObjectBase, assert, error, totalReleaseVerb, traceRefs, util,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -1503,7 +2247,7 @@ module.exports = DSList = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSObjectBase":14,"./util":18}],13:[function(require,module,exports){
+},{"./DSObjectBase":20,"./util":24}],19:[function(require,module,exports){
 var DSList, DSObject, DSObjectBase, DSPool, DSSet, assert, error, serviceOwner, totalRelease,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -1697,7 +2441,7 @@ module.exports = DSObject = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSList":12,"./DSObjectBase":14,"./DSPool":15,"./DSSet":16,"./util":18}],14:[function(require,module,exports){
+},{"./DSList":18,"./DSObjectBase":20,"./DSPool":21,"./DSSet":22,"./util":24}],20:[function(require,module,exports){
 var DSObjectBase, assert, error, serviceOwner, totalRelease, totalReleaseVerb, traceData, traceRefs, util;
 
 util = require('./util');
@@ -2586,7 +3330,7 @@ module.exports = DSObjectBase = (function() {
 })();
 
 
-},{"./util":18}],15:[function(require,module,exports){
+},{"./util":24}],21:[function(require,module,exports){
 var DSDigest, DSObjectBase, DSPool, assert, error, traceWatch,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -2757,7 +3501,7 @@ module.exports = DSPool = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSDigest":10,"./DSObjectBase":14,"./util":18}],16:[function(require,module,exports){
+},{"./DSDigest":16,"./DSObjectBase":20,"./util":24}],22:[function(require,module,exports){
 var DSObjectBase, DSSet, assert, error, modeReleaseDataOnReload, totalReleaseVerb, traceRefs, traceWatch, util,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -3039,7 +3783,7 @@ module.exports = DSSet = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSObjectBase":14,"./util":18}],17:[function(require,module,exports){
+},{"./DSObjectBase":20,"./util":24}],23:[function(require,module,exports){
 var DSObjectBase, DSTags, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -3288,7 +4032,7 @@ module.exports = DSTags = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSObjectBase":14,"./util":18}],18:[function(require,module,exports){
+},{"./DSObjectBase":20,"./util":24}],24:[function(require,module,exports){
 var ServiceOwner, util;
 
 module.exports = util = {
@@ -3400,7 +4144,7 @@ module.exports = util = {
 };
 
 
-},{}],19:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var DSDataServiceBase, PeriodTimeTracking, Person, Project, assert, base64, error, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -3550,7 +4294,7 @@ ngModule.factory('dsDataService', [
 ]);
 
 
-},{"../../app/config":1,"../../app/data/PeopleWithJson":2,"../../app/data/teamwork/TWPeople":4,"../../app/models/Person":5,"../../app/models/Project":6,"../../dscommon/DSDataServiceBase":8,"../../dscommon/DSDataSource":9,"../../dscommon/util":18,"../../utils/base64":26,"../models/PeriodTimeTracking":22,"./teamwork/TWPeriodTimeTracking":20,"./teamwork/TWProjects":21}],20:[function(require,module,exports){
+},{"../../app/config":1,"../../app/data/PeopleWithJson":2,"../../app/data/teamwork/TWPeople":4,"../../app/models/Person":5,"../../app/models/Project":6,"../../dscommon/DSDataServiceBase":14,"../../dscommon/DSDataSource":15,"../../dscommon/util":24,"../../utils/base64":33,"../models/PeriodTimeTracking":28,"./teamwork/TWPeriodTimeTracking":26,"./teamwork/TWProjects":27}],26:[function(require,module,exports){
 var DSData, DSDigest, DSObject, DSSet, HISTORY_END_SEARCH_STEP, PeriodTimeTracking, Person, Project, WORK_ENTRIES_WHOLE_PAGE, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -3677,7 +4421,7 @@ ngModule.factory('TWPeriodTimeTracking', [
             from = _this.get('params').from;
             to = _this.get('params').to;
             importResponse = function(timeEntries) {
-              var date, i, jsonTaskTimeEntry, len, minutes, periodTimeTracking, person, personId, projectId, timeEntryId;
+              var date, i, jsonTaskTimeEntry, len, minutes, periodTimeTracking, person, personId, projectId, taskId, taskName, timeEntryId;
               for (i = 0, len = timeEntries.length; i < len; i++) {
                 jsonTaskTimeEntry = timeEntries[i];
                 if (!((date = moment(jsonTaskTimeEntry['date'])) >= from)) {
@@ -3687,10 +4431,17 @@ ngModule.factory('TWPeriodTimeTracking', [
                 personId = parseInt(jsonTaskTimeEntry['person-id']);
                 projectId = parseInt(jsonTaskTimeEntry['project-id']);
                 minutes = 60 * parseInt(jsonTaskTimeEntry['hours']) + parseInt(jsonTaskTimeEntry['minutes']);
+                if (jsonTaskTimeEntry['todo-item-id'] !== '') {
+                  taskId = parseInt(jsonTaskTimeEntry['todo-item-id']);
+                  taskName = jsonTaskTimeEntry['todo-item-name'];
+                } else {
+                  taskId = null;
+                  taskName = null;
+                }
                 if (date >= to) {
                   return false;
                 }
-                periodTimeTracking = PeriodTimeTracking.pool.find(_this, personId + "-" + projectId, periodTimeTrackingMap);
+                periodTimeTracking = PeriodTimeTracking.pool.find(_this, personId + "-" + projectId + "-" + taskId, periodTimeTrackingMap);
                 if (!(person = people.items[personId])) {
                   person = Person.pool.find(_this, "missing-" + personId, missingPeople);
                   person.set('id', personId);
@@ -3698,7 +4449,10 @@ ngModule.factory('TWPeriodTimeTracking', [
                 }
                 periodTimeTracking.set('person', person);
                 periodTimeTracking.set('project', projects.items[projectId]);
+                periodTimeTracking.set('taskId', taskId);
+                periodTimeTracking.set('taskName', taskName);
                 periodTimeTracking.set('totalMin', periodTimeTracking.get('totalMin') + minutes);
+                periodTimeTracking.set('lastReport', date);
               }
               return timeEntries.length === WORK_ENTRIES_WHOLE_PAGE;
             };
@@ -3766,7 +4520,7 @@ ngModule.factory('TWPeriodTimeTracking', [
                 var entries, ref1;
                 if (resp.status === 200) {
                   _this.set('cancel', null);
-                  if (!(entries = resp.data['time-entries'])) {
+                  if (!(entries = resp.data['time-entries']) || entries.length === 0) {
                     findFirstPage(topPage + Math.floor(((endPage = page) - topPage) / 2));
                   } else {
                     if (moment(entries[0]['date']) >= from) {
@@ -3823,7 +4577,7 @@ ngModule.factory('TWPeriodTimeTracking', [
 ]);
 
 
-},{"../../../app/models/Person":5,"../../../app/models/Project":6,"../../../dscommon/DSData":7,"../../../dscommon/DSDataSource":9,"../../../dscommon/DSDigest":10,"../../../dscommon/DSObject":13,"../../../dscommon/DSSet":16,"../../../dscommon/util":18,"../../models/PeriodTimeTracking":22}],21:[function(require,module,exports){
+},{"../../../app/models/Person":5,"../../../app/models/Project":6,"../../../dscommon/DSData":13,"../../../dscommon/DSDataSource":15,"../../../dscommon/DSDigest":16,"../../../dscommon/DSObject":19,"../../../dscommon/DSSet":22,"../../../dscommon/util":24,"../../models/PeriodTimeTracking":28}],27:[function(require,module,exports){
 var Project, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -3891,8 +4645,8 @@ ngModule.factory('TWProjects', [
 ]);
 
 
-},{"../../../app/data/teamwork/DSDataTeamworkPaged":3,"../../../app/models/Project":6,"../../../dscommon/DSDataSource":9,"../../../dscommon/util":18}],22:[function(require,module,exports){
-var DSObject, PeriodTimeTracking, Person, Project,
+},{"../../../app/data/teamwork/DSDataTeamworkPaged":3,"../../../app/models/Project":6,"../../../dscommon/DSDataSource":15,"../../../dscommon/util":24}],28:[function(require,module,exports){
+var DSObject, PeriodTimeTracking, Person, Project, Task,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -3901,6 +4655,8 @@ DSObject = require('../../dscommon/DSObject');
 Person = require('../../app/models/Person');
 
 Project = require('../../app/models/Project');
+
+Task = require('../../app/models/Task');
 
 module.exports = PeriodTimeTracking = (function(superClass) {
   extend(PeriodTimeTracking, superClass);
@@ -3917,6 +4673,12 @@ module.exports = PeriodTimeTracking = (function(superClass) {
 
   PeriodTimeTracking.propDoc('project', Project);
 
+  PeriodTimeTracking.propNum('taskId');
+
+  PeriodTimeTracking.propStr('taskName');
+
+  PeriodTimeTracking.propMoment('lastReport');
+
   PeriodTimeTracking.propNum('totalMin', 0);
 
   PeriodTimeTracking.end();
@@ -3926,8 +4688,11 @@ module.exports = PeriodTimeTracking = (function(superClass) {
 })(DSObject);
 
 
-},{"../../app/models/Person":5,"../../app/models/Project":6,"../../dscommon/DSObject":13}],23:[function(require,module,exports){
-var FileSaver, PeriodTimeTracking, WorkBook, WorkSheet, ngModule, serviceOwner;
+},{"../../app/models/Person":5,"../../app/models/Project":6,"../../app/models/Task":7,"../../dscommon/DSObject":19}],29:[function(require,module,exports){
+(function (global){
+var ExcelBuilder, FileSaver, PeriodTimeTracking, base62ToBlob, base64, defaultTask, fixStr, ngModule, projectReport, serviceOwner;
+
+ExcelBuilder = (typeof window !== "undefined" ? window['ExcelBuilder'] : typeof global !== "undefined" ? global['ExcelBuilder'] : null);
 
 FileSaver = require('../../static/libs/FileSaver.js/FileSaver');
 
@@ -3935,163 +4700,292 @@ serviceOwner = require('../dscommon/util').serviceOwner;
 
 PeriodTimeTracking = require('./models/PeriodTimeTracking');
 
+base64 = require('../utils/base64');
+
+base62ToBlob = require('../utils/base62ToBlob');
+
 module.exports = (ngModule = angular.module('reports-app', ['ui.bootstrap', require('./showSpinner'), require('./data/dsDataService'), require('./data/teamwork/TWPeriodTimeTracking')])).name;
 
-WorkSheet = (function() {
-  var END_OF_XIX;
+defaultTask = "Без задачи";
 
-  END_OF_XIX = new Date(Date.UTC(1899, 11, 30));
+fixStr = function(str) {
+  if (str === null) {
+    return str;
+  } else {
+    return str.replace(/"/g, '""');
+  }
+};
 
-  function WorkSheet(name1) {
-    this.name = name1;
-    this.range = {
-      s: {
-        c: 10000000,
-        r: 10000000
-      },
-      e: {
-        c: 0,
-        r: 0
+projectReport = function(workbook) {
+  var ProjectReport, alightRight, blue, fontBold, hoursFormat, moneyFormat, moneyFormatBold, rateFormat, styleSheet;
+  styleSheet = workbook.getStyleSheet();
+  fontBold = styleSheet.createFormat({
+    font: {
+      bold: true
+    }
+  });
+  alightRight = styleSheet.createFormat({
+    font: {
+      bold: true
+    },
+    alignment: {
+      horizontal: 'right'
+    }
+  });
+  rateFormat = styleSheet.createFormat({
+    format: '0'
+  });
+  hoursFormat = styleSheet.createFormat({
+    format: '0.00'
+  });
+  moneyFormat = styleSheet.createFormat({
+    format: '0.00'
+  });
+  moneyFormatBold = styleSheet.createFormat({
+    format: '0.00',
+    font: {
+      bold: true
+    }
+  });
+  blue = styleSheet.createFormat({
+    font: {
+      color: '002A00FF'
+    }
+  });
+  return ProjectReport = (function() {
+    function ProjectReport(arg) {
+      var data, j, len, ref, ref1, v;
+      this.topRow = (ref = arg.topRow) != null ? ref : 0, data = arg.data;
+      this.rows = [];
+      this.projectLine(data.project);
+      this.peopleLine(data.people);
+      this.ratesLine();
+      ref1 = data.tasks;
+      for (j = 0, len = ref1.length; j < len; j++) {
+        v = ref1[j];
+        this.taskLine(v.task, v.hours);
       }
+      this.totalHoursLine();
+      this.totalMoneyLine();
+      this.addRow();
+    }
+
+    ProjectReport.prototype.addRow = function() {
+      this.rows.push(this.currRow = []);
     };
-    this.ws = {};
-    return;
-  }
 
-  WorkSheet.prototype.set = function(c, r, v, formatIndex) {
-    var cell, cell_ref, isMoment, range, value;
-    if ((range = this.range).s.r > r) {
-      range.s.r = r;
-    }
-    if (range.s.c > c) {
-      range.s.c = c;
-    }
-    if (range.e.r < r) {
-      range.e.r = r;
-    }
-    if (range.e.c < c) {
-      range.e.c = c;
-    }
-    cell_ref = XLSX.utils.encode_cell({
-      c: c,
-      r: r
-    });
-    if (value === null) {
-      delete this.ws[cell_ref];
-    } else if ((isMoment = moment.isMoment(value)) || (value instanceof Date)) {
-      if (isMoment) {
-        value = value.asDate();
-      }
-      this.ws[cell_ref] = {
-        v: (v.getTime - END_OF_XIX) / (24 * 60 * 60 * 1000),
-        t: 'n',
-        z: XLSX.SSF._table[14]
-      };
-    } else {
-      cell = this.ws[cell_ref] = {
-        v: v,
-        t: typeof v === 'number' ? 'n' : typeof v === 'boolean' ? 'b' : 's'
-      };
-      if (typeof formatIndex === 'number') {
-        cell.z = XLSX.SSF._table[formatIndex];
-      }
-    }
-  };
+    ProjectReport.prototype.skip = function() {
+      this.currRow.push(null);
+    };
 
-  WorkSheet.prototype.build = function() {
-    this.ws['!ref'] = XLSX.utils.encode_range(this.range);
-  };
-
-  return WorkSheet;
-
-})();
-
-WorkBook = (function() {
-  var s2ab;
-
-  function WorkBook() {
-    this.sheets = [];
-    return;
-  }
-
-  WorkBook.prototype.addSheet = function(name) {
-    var newWorkSheet;
-    if (!(typeof name === 'string' && name.length > 0)) {
-      throw new Error('Invalid argument \'name\'');
-    }
-    this.sheets.push((newWorkSheet = new WorkSheet(name)));
-    return newWorkSheet;
-  };
-
-  WorkBook.prototype.build = function() {
-    var sheet;
-    return {
-      SheetNames: (function() {
-        var l, len, ref, results;
-        ref = this.sheets;
-        results = [];
-        for (l = 0, len = ref.length; l < len; l++) {
-          sheet = ref[l];
-          results.push(sheet.name);
+    ProjectReport.prototype.rate = function() {
+      this.currRow.push({
+        value: 0,
+        metadata: {
+          style: rateFormat.id
         }
-        return results;
-      }).call(this),
-      Sheets: (function(_this) {
-        return function() {
-          var l, len, ref, res;
-          res = {};
-          ref = _this.sheets;
-          for (l = 0, len = ref.length; l < len; l++) {
-            sheet = ref[l];
-            sheet.build();
-            res[sheet.name] = sheet.ws;
-          }
-          return res;
-        };
-      })(this)()
+      });
     };
-  };
 
-  s2ab = function(s) {
-    var buf, i, view;
-    buf = new ArrayBuffer(s.length);
-    view = new Uint8Array(buf);
-    i = 0;
-    while (i !== s.length) {
-      view[i] = s.charCodeAt(i) & 0xFF;
-      ++i;
-    }
-    return buf;
-  };
-
-  WorkBook.prototype.saveFromBrowser = function(filename, beforeSave) {
-    var wbout, wopts;
-    if (!(typeof filename === 'string' && filename.length > 0)) {
-      throw new Error('Invalid argument \'filename\'');
-    }
-    if (!(typeof beforeSave === 'undefined' || typeof beforeSave === 'function')) {
-      throw new Error('Invalid argument \'beforeSave\'');
-    }
-    wopts = {
-      bookType: 'xlsx',
-      bookSST: false,
-      type: 'binary'
+    ProjectReport.prototype.hours = function(h) {
+      this.currRow.push({
+        value: h,
+        metadata: {
+          style: hoursFormat.id
+        }
+      });
     };
-    wbout = XLSX.write(this.build(), wopts);
-    if (typeof beforeSave === "function") {
-      beforeSave();
-    }
-    FileSaver.saveAs(new Blob([s2ab(wbout)], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    }), filename);
-  };
 
-  return WorkBook;
+    ProjectReport.prototype.sumHoursVert = function(rows) {
+      var letter;
+      letter = String.fromCharCode(65 + this.currRow.length);
+      this.currRow.push({
+        value: "SUM(" + letter + (this.topRow + 4) + ":" + letter + (this.topRow + this.rows.length - 1) + ")",
+        metadata: {
+          type: 'formula',
+          style: hoursFormat.id
+        }
+      });
+    };
 
-})();
+    ProjectReport.prototype.sumHoursHoriz = function(rows) {
+      var fromLetter, toLetter;
+      fromLetter = String.fromCharCode(65 + this.currRow.length + 1);
+      toLetter = String.fromCharCode(65 + this.currRow.length + this.peopleCount);
+      this.currRow.push({
+        value: "SUM(" + fromLetter + (this.topRow + this.rows.length) + ":" + toLetter + (this.topRow + this.rows.length) + ")",
+        metadata: {
+          type: 'formula',
+          style: hoursFormat.id
+        }
+      });
+    };
+
+    ProjectReport.prototype.sumMoneyHoriz = function(rows) {
+      var fromLetter, toLetter;
+      fromLetter = String.fromCharCode(65 + this.currRow.length + 1);
+      toLetter = String.fromCharCode(65 + this.currRow.length + this.peopleCount);
+      this.currRow.push({
+        value: "SUM(" + fromLetter + (this.topRow + this.rows.length) + ":" + toLetter + (this.topRow + this.rows.length) + ")",
+        metadata: {
+          type: 'formula',
+          style: moneyFormatBold.id
+        }
+      });
+    };
+
+    ProjectReport.prototype.multHoursByRate = function(rows) {
+      var letter;
+      letter = String.fromCharCode(65 + this.currRow.length);
+      this.currRow.push({
+        value: "" + letter + (this.topRow + 3) + "*" + letter + (this.topRow + this.rows.length - 1),
+        metadata: {
+          type: 'formula',
+          style: moneyFormat.id
+        }
+      });
+    };
+
+    ProjectReport.prototype.totalByTaskTitle = function() {
+      this.currRow.push({
+        value: 'Всего часов',
+        metadata: {
+          style: fontBold.id
+        }
+      });
+    };
+
+    ProjectReport.prototype.ratesTitle = function() {
+      this.currRow.push({
+        value: 'Стоимость часа (руб):',
+        metadata: {
+          style: alightRight.id
+        }
+      });
+    };
+
+    ProjectReport.prototype.totalHoursTitle = function() {
+      this.currRow.push({
+        value: 'Итого часов:',
+        metadata: {
+          style: alightRight.id
+        }
+      });
+    };
+
+    ProjectReport.prototype.totalMoneyTitle = function() {
+      this.currRow.push({
+        value: 'Сумма (руб):',
+        metadata: {
+          style: alightRight.id
+        }
+      });
+    };
+
+    ProjectReport.prototype.person = function(person) {
+      this.currRow.push({
+        value: "HYPERLINK(\"http://teamwork.webprofy.ru/people/" + person.id + "\", \"" + (person.missing ? person.id : fixStr(person.name)) + "\")",
+        metadata: {
+          type: 'formula',
+          style: blue.id
+        }
+      });
+    };
+
+    ProjectReport.prototype.project = function(project) {
+      this.currRow.push({
+        value: "HYPERLINK(\"http://teamwork.webprofy.ru/projects/" + project.id + "/tasks\", \"" + (fixStr(project.name)) + "\")",
+        metadata: {
+          type: 'formula',
+          style: blue.id
+        }
+      });
+    };
+
+    ProjectReport.prototype.task = function(task) {
+      this.currRow.push((task.id === null ? defaultTask : "" + task.name));
+    };
+
+    ProjectReport.prototype.taskLink = function(task) {
+      this.currRow.push((task.id === null ? '' : {
+        value: "HYPERLINK(\"http://teamwork.webprofy.ru/tasks/" + task.id + "\", \"<<\")",
+        metadata: {
+          type: 'formula',
+          style: blue.id
+        }
+      }));
+    };
+
+    ProjectReport.prototype.projectLine = function(project) {
+      this.addRow();
+      this.project(project);
+    };
+
+    ProjectReport.prototype.peopleLine = function(people) {
+      var j, len, v;
+      this.addRow();
+      this.skip();
+      this.skip();
+      this.totalByTaskTitle();
+      for (j = 0, len = people.length; j < len; j++) {
+        v = people[j];
+        this.person(v);
+      }
+      this.peopleCount = people.length;
+    };
+
+    ProjectReport.prototype.ratesLine = function() {
+      var i, j, ref;
+      this.addRow();
+      this.skip();
+      this.ratesTitle();
+      this.skip();
+      for (i = j = 0, ref = this.peopleCount; 0 <= ref ? j < ref : j > ref; i = 0 <= ref ? ++j : --j) {
+        this.rate();
+      }
+    };
+
+    ProjectReport.prototype.taskLine = function(task, hours) {
+      var h, j, len;
+      this.addRow();
+      this.taskLink(task);
+      this.task(task);
+      this.sumHoursHoriz();
+      for (j = 0, len = hours.length; j < len; j++) {
+        h = hours[j];
+        this.hours(h);
+      }
+    };
+
+    ProjectReport.prototype.totalHoursLine = function() {
+      var i, j, ref;
+      this.addRow();
+      this.skip();
+      this.totalHoursTitle();
+      this.sumHoursVert();
+      for (i = j = 0, ref = this.peopleCount; 0 <= ref ? j < ref : j > ref; i = 0 <= ref ? ++j : --j) {
+        this.sumHoursVert();
+      }
+    };
+
+    ProjectReport.prototype.totalMoneyLine = function() {
+      var i, j, ref;
+      this.addRow();
+      this.skip();
+      this.totalMoneyTitle();
+      this.sumMoneyHoriz();
+      for (i = j = 0, ref = this.peopleCount; 0 <= ref ? j < ref : j > ref; i = 0 <= ref ? ++j : --j) {
+        this.multHoursByRate();
+      }
+    };
+
+    return ProjectReport;
+
+  })();
+};
 
 ngModule.directive('reports', [
-  'TWPeriodTimeTracking', 'dsDataService', '$rootScope', function(TWPeriodTimeTracking, dsDataService, $rootScope) {
+  'TWPeriodTimeTracking', 'dsDataService', 'config', '$http', '$rootScope', function(TWPeriodTimeTracking, dsDataService, config, $http, $rootScope) {
     return {
       restrict: 'A',
       scope: true,
@@ -4100,7 +4994,8 @@ ngModule.directive('reports', [
         $scope.period = moment().startOf('month').add(-1, 'month').toDate();
         $scope.selectPeriod = false;
         $scope.generateReport = function() {
-          var from, periodTimeTrackingSet, to, unwatch;
+          var ProjectReport, from, periodTimeTrackingSet, to, unwatch, wb;
+          ProjectReport = projectReport(wb = window.ExcelBuilder.createWorkbook());
           $scope.progressMessage = 'Идет загрузка данных...';
           from = moment($scope.period);
           to = moment(from).add(1, 'month');
@@ -4111,92 +5006,125 @@ ngModule.directive('reports', [
             to: to
           });
           unwatch = periodTimeTrackingSet.watchStatus(serviceOwner, function(set, status) {
-            var k, people, peopleMap, person, personId, project, projectId, projects, projectsMap, ref, tt;
+            var base, hours, j, k, len, maxPeopleCount, name, name1, people, peopleMap, personIndex, personName, project, projectName, projectsMap, ref, ref1, report, reportData, reports, taskName, tasks, tasksMap, v;
             if (status !== 'ready') {
               return;
             }
             unwatch();
-            peopleMap = {};
             projectsMap = {};
+            reportData = [];
+            maxPeopleCount = 0;
             ref = periodTimeTrackingSet.items;
             for (k in ref) {
-              tt = ref[k];
-              if (!peopleMap.hasOwnProperty((personId = (person = tt.get('person')).get('id')))) {
-                peopleMap[personId] = person;
-              }
-              if (!projectsMap.hasOwnProperty((projectId = (project = tt.get('project')).get('id')))) {
-                projectsMap[projectId] = project;
-              }
+              v = ref[k];
+              ((base = (projectsMap[name1 = v.project.name] || (projectsMap[name1] = {})))[name = v.taskName] || (base[name] = [])).push(v);
             }
-            people = ((function() {
-              var results;
-              results = [];
-              for (personId in peopleMap) {
-                person = peopleMap[personId];
-                results.push(person);
+            ref1 = (Object.keys(projectsMap)).sort();
+            for (j = 0, len = ref1.length; j < len; j++) {
+              projectName = ref1[j];
+              tasksMap = projectsMap[projectName];
+              peopleMap = {};
+              for (k in tasksMap) {
+                reports = tasksMap[k];
+                peopleMap[reports[0].person.name] = reports[0].person;
               }
-              return results;
-            })()).sort(function(left, right) {
-              var leftMissing, leftName, rightMissing, rightName;
-              if ((leftMissing = left.get('missing')) !== (rightMissing = right.get('missing'))) {
-                return (leftMissing ? 1 : -1);
-              }
-              if (!leftMissing) {
-                if ((leftName = left.get('name')) < (rightName = right.get('name'))) {
+              people = (function() {
+                var l, len1, ref2, results;
+                ref2 = (Object.keys(peopleMap)).sort();
+                results = [];
+                for (l = 0, len1 = ref2.length; l < len1; l++) {
+                  personName = ref2[l];
+                  results.push(peopleMap[personName]);
+                }
+                return results;
+              })();
+              maxPeopleCount = Math.max(maxPeopleCount, people.length);
+              tasks = ((function() {
+                var l, len1, results;
+                results = [];
+                for (taskName in tasksMap) {
+                  reports = tasksMap[taskName];
+                  project = reports[0].project;
+                  hours = (function() {
+                    var l, ref2, results1;
+                    results1 = [];
+                    for (v = l = 0, ref2 = people.length; l < ref2; v = l += 1) {
+                      results1.push(null);
+                    }
+                    return results1;
+                  })();
+                  for (l = 0, len1 = reports.length; l < len1; l++) {
+                    report = reports[l];
+                    personIndex = people.indexOf(report.person);
+                    if (hours[personIndex] === null) {
+                      hours[personIndex] = report.totalMin / 60;
+                    } else {
+                      hours[personIndex] += report.totalMin / 60;
+                    }
+                  }
+                  results.push({
+                    task: {
+                      id: reports[0].taskId,
+                      name: taskName
+                    },
+                    lastReport: reports[reports.length - 1].lastReport,
+                    hours: hours
+                  });
+                }
+                return results;
+              })()).sort(function(left, right) {
+                if (left.task.id === null) {
                   return -1;
-                }
-                if (leftName > rightName) {
+                } else if (right.task.id === null) {
                   return 1;
+                } else {
+                  return left.lastReport.valueOf() - right.lastReport.valueOf();
                 }
-              }
-              return (left.get('id') < right.get('id') ? -1 : 1);
-            });
-            projects = ((function() {
-              var results;
-              results = [];
-              for (projectId in projectsMap) {
-                project = projectsMap[projectId];
-                results.push(project);
-              }
-              return results;
-            })()).sort(function(left, right) {
-              var leftName, rightName;
-              if ((leftName = left.get('name')) < (rightName = right.get('name'))) {
-                return -1;
-              }
-              if (leftName > rightName) {
-                return 1;
-              }
-              return (left.get('id') < right.get('id') ? -1 : 1);
-            });
+              });
+              reportData = reportData.concat((new ProjectReport({
+                topRow: reportData.length,
+                data: {
+                  project: project,
+                  people: people,
+                  tasks: tasks
+                }
+              })).rows);
+            }
             $scope.progressMessage = 'Формируем MS Excel файл ...';
             if (!$rootScope.$$phase) {
               $rootScope.$digest();
             }
             $scope.$evalAsync(function() {
-              var i, j, l, len, len1, len2, m, n, sheet1, wb;
-              wb = new WorkBook();
-              sheet1 = wb.addSheet(moment($scope.period).format('MM.YYYY'));
-              for (i = l = 0, len = people.length; l < len; i = ++l) {
-                person = people[i];
-                sheet1.set(1 + i, 0, (person.get('missing') ? person.get('id') : person.get('name')));
-              }
-              for (i = m = 0, len1 = projects.length; m < len1; i = ++m) {
-                project = projects[i];
-                sheet1.set(0, 1 + i, project.get('name'));
-                for (j = n = 0, len2 = people.length; n < len2; j = ++n) {
-                  person = people[j];
-                  if ((tt = periodTimeTrackingSet.items[(person.get('id')) + "-" + (project.get('id'))])) {
-                    sheet1.set(1 + j, 1 + i, tt.get('totalMin') / 60, 2);
-                  }
+              var blob, columns, file, i, l, ref2, sheet;
+              columns = [
+                {
+                  width: 4
+                }, {
+                  width: 30
+                }, {
+                  width: 20
                 }
+              ];
+              for (i = l = 0, ref2 = maxPeopleCount; l < ref2; i = l += 1) {
+                columns.push({
+                  width: 30
+                });
               }
-              wb.saveFromBrowser("Часы по людям по проектам за " + (moment($scope.period).format('MM.YYYY')) + ".xlsx", function() {
-                $scope.progressMessage = null;
-                if (!$rootScope.$$phase) {
-                  $rootScope.$digest();
-                }
+              sheet = wb.createWorksheet({
+                name: "По людям " + (moment($scope.period).format('MM.YYYY'))
               });
+              sheet.setData(reportData);
+              sheet.setColumns(columns);
+              wb.addWorksheet(sheet);
+              file = window.ExcelBuilder.createFile(wb);
+              blob = base62ToBlob(file, 'application/vnd.ms-excel', 512);
+              FileSaver.saveAs(blob, "Часы по людям по проектам за " + (moment($scope.period).format('MM.YYYY')) + ".xlsx");
+              periodTimeTrackingSet.release(serviceOwner);
+              dsDataService.refresh();
+              $scope.progressMessage = null;
+              if (!$rootScope.$$phase) {
+                $rootScope.$digest();
+              }
             });
           });
         };
@@ -4206,7 +5134,8 @@ ngModule.directive('reports', [
 ]);
 
 
-},{"../../static/libs/FileSaver.js/FileSaver":27,"../dscommon/util":18,"./data/dsDataService":19,"./data/teamwork/TWPeriodTimeTracking":20,"./models/PeriodTimeTracking":22,"./showSpinner":24}],24:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../static/libs/FileSaver.js/FileSaver":34,"../dscommon/util":24,"../utils/base62ToBlob":32,"../utils/base64":33,"./data/dsDataService":25,"./data/teamwork/TWPeriodTimeTracking":26,"./models/PeriodTimeTracking":28,"./showSpinner":30}],30:[function(require,module,exports){
 var ngModule, spinnerOpts;
 
 module.exports = (ngModule = angular.module('showSpinner', [])).name;
@@ -4236,7 +5165,7 @@ ngModule.directive('showSpinner', [
 ]);
 
 
-},{}],25:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 /**
  * An Angular module that gives you access to the browsers local storage
  * @version v0.1.5 - 2014-11-04
@@ -4692,7 +5621,34 @@ angularLocalStorage.provider('localStorageService', function() {
   }];
 });
 })( window, window.angular );
-},{}],26:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
+module.exports = function(b64Data, contentType, sliceSize) {
+  var blob, byteArray, byteArrays, byteCharacters, byteNumbers, i, offset, slice;
+  contentType = contentType || '';
+  sliceSize = sliceSize || 512;
+  byteCharacters = atob(b64Data);
+  byteArrays = [];
+  offset = 0;
+  while (offset < byteCharacters.length) {
+    slice = byteCharacters.slice(offset, offset + sliceSize);
+    byteNumbers = new Array(slice.length);
+    i = 0;
+    while (i < slice.length) {
+      byteNumbers[i] = slice.charCodeAt(i);
+      i++;
+    }
+    byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+    offset += sliceSize;
+  }
+  blob = new Blob(byteArrays, {
+    type: contentType
+  });
+  return blob;
+};
+
+
+},{}],33:[function(require,module,exports){
 var keyStr;
 
 keyStr = "ABCDEFGHIJKLMNOP" + "QRSTUVWXYZabcdef" + "ghijklmnopqrstuv" + "wxyz0123456789+/" + "=";
@@ -4775,7 +5731,7 @@ module.exports = {
 };
 
 
-},{}],27:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 /* FileSaver.js
  * A saveAs() FileSaver implementation.
  * 1.1.20151003
@@ -5047,4 +6003,4 @@ if (typeof module !== "undefined" && module.exports) {
   });
 }
 
-},{}]},{},[23]);
+},{}]},{},[29]);

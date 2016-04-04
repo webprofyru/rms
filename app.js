@@ -2377,7 +2377,7 @@ ngModule.factory('TWTimeTracking', [
                   if (!(entries = resp.data['time-entries'])) {
                     findFirstPage(topPage + Math.floor(((endPage = page) - topPage) / 2));
                   } else {
-                    if (moment(entries[0]['date']) >= time.historyLimit) {
+                    if (moment(entries[0]['date']) >= time.historyLimit || entries.length === 0) {
                       if (topPage === page) {
                         config.set('histStart', page);
                         if (DSDigest.block((function() {

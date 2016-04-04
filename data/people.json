@@ -372,7 +372,6 @@
             "name": "Валерий Серов",
             "email": "v.serov@webprofy.ru"
         },
-        
          {
             "id": 170618,
             "role": "Programmer, Markuper, GroupYastrebov",
@@ -397,7 +396,7 @@
             "name": "Дмитрий Иванов",
             "email": "d.ivanov@webprofy.ru"
         },
-         {
+        {
             "id": 180846,
             "role": "Programmer, Markuper, GroupSkinteev",
             "name": "Игорь Качко",
