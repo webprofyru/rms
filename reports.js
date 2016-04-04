@@ -4471,8 +4471,8 @@ ngModule.factory('TWPeriodTimeTracking', [
                 console.error('error: ', error);
                 _this.set('cancel', null);
               }
-              for (k in taskTimeTrackingMap) {
-                v = taskTimeTrackingMap[k];
+              for (k in periodTimeTrackingMap) {
+                v = periodTimeTrackingMap[k];
                 v.release(_this);
               }
               _this._endLoad(false);
