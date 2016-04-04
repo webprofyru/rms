@@ -2,6 +2,7 @@ DSObject = require('../../dscommon/DSObject')
 
 Person = require '../../app/models/Person'
 Project = require '../../app/models/Project'
+Task = require '../../app/models/Task'
 
 module.exports = class PeriodTimeTracking extends DSObject
   @begin 'PeriodTimeTracking'
@@ -10,6 +11,9 @@ module.exports = class PeriodTimeTracking extends DSObject
 
   @propDoc 'person', Person
   @propDoc 'project', Project
+  @propNum 'taskId'
+  @propStr 'taskName'
+  @propMoment 'lastReport'
 
   @propNum 'totalMin', 0
 

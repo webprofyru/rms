@@ -1,8 +1,14 @@
+ExcelBuilder = require 'ExcelBuilder'
+
 FileSaver = require '../../static/libs/FileSaver.js/FileSaver'
 
 serviceOwner = require('../dscommon/util').serviceOwner
 
 PeriodTimeTracking = require './models/PeriodTimeTracking'
+
+base64 = require '../utils/base64'
+
+base62ToBlob = require '../utils/base62ToBlob'
 
 module.exports = (ngModule = angular.module 'reports-app', [
   'ui.bootstrap'
@@ -11,92 +17,229 @@ module.exports = (ngModule = angular.module 'reports-app', [
   require './data/teamwork/TWPeriodTimeTracking'
 ]).name
 
-class WorkSheet
+defaultTask = "Без задачи"
 
-  END_OF_XIX = new Date Date.UTC 1899, 11, 30
+fixStr = (str) ->
 
-  constructor: (@name) ->
-    @range = {s: {c:10000000, r:10000000}, e: {c:0, r:0 }}
-    @ws = {}
-    return
+  if str == null
 
-  set: (c, r, v, formatIndex) ->
-    range.s.r = r if (range = @range).s.r > r
-    range.s.c = c if range.s.c > c
-    range.e.r = r if range.e.r < r
-    range.e.c = c if range.e.c < c
-    cell_ref = XLSX.utils.encode_cell c: c, r: r
-    if value == null
-      delete @ws[cell_ref]
-    else if (isMoment = moment.isMoment value) || (value instanceof Date)
-      value = value.asDate() if isMoment
-      @ws[cell_ref] =
-        v: (v.getTime - END_OF_XIX) / (24 * 60 * 60 * 1000)
-        t: 'n'
-        z: XLSX.SSF._table[14]
-    else
-      cell = @ws[cell_ref] =
-        v: v
-        t: if typeof v == 'number' then 'n' else if typeof v == 'boolean' then 'b' else 's'
-      cell.z = XLSX.SSF._table[formatIndex] if typeof formatIndex == 'number' # see 'table_fmt =' in xlsx.js
+    str
 
-    return
+  else
 
-  build: ->
-    @ws['!ref'] = XLSX.utils.encode_range @range
-    return
+    str.replace(/"/g, '""')
+    #.replace(/\\/g, "\\\\").replace(/[\n\t\r]/g,"")
 
-class WorkBook
+projectReport = (workbook) ->
 
-  constructor: ->
-    @sheets = []
-    return
+  styleSheet = workbook.getStyleSheet()
 
-  addSheet: (name) ->
+  fontBold = styleSheet.createFormat font: {bold: true}
 
-    throw new Error 'Invalid argument \'name\'' unless typeof name == 'string' && name.length > 0
+  alightRight = styleSheet.createFormat font: {bold: true}, alignment: {horizontal: 'right'}
 
-    @sheets.push (newWorkSheet = new WorkSheet name)
-    newWorkSheet
+  rateFormat = styleSheet.createFormat format: '0'
 
-  build: ->
-    SheetNames: (sheet.name for sheet in @sheets)
-    Sheets: do =>
-      res = {}
-      for sheet in @sheets
-        sheet.build()
-        res[sheet.name] = sheet.ws
-      res
+  hoursFormat = styleSheet.createFormat format: '0.00'
 
-  s2ab = (s) ->
-    buf = new ArrayBuffer(s.length)
-    view = new Uint8Array(buf)
-    i = 0
-    while i != s.length
-      view[i] = s.charCodeAt(i) & 0xFF
-      ++i
-    buf
+  moneyFormat = styleSheet.createFormat format: '0.00'
 
-  saveFromBrowser: (filename, beforeSave) ->
+  moneyFormatBold = styleSheet.createFormat format: '0.00', font: {bold: true}
 
-    throw new Error 'Invalid argument \'filename\'' unless typeof filename == 'string' && filename.length > 0
-    throw new Error 'Invalid argument \'beforeSave\'' unless typeof beforeSave == 'undefined' || typeof beforeSave == 'function'
+  blue = styleSheet.createFormat font: {color: '002A00FF'}
 
-    wopts =
-      bookType: 'xlsx'
-      bookSST: false
-      type: 'binary'
-    wbout = XLSX.write(@build(), wopts)
+  class ProjectReport
 
-    beforeSave?()
+    constructor: ({@topRow = 0, data}) ->
 
-    FileSaver.saveAs new Blob([s2ab(wbout)], type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'), filename
+      @rows = []
 
-    return
+      @projectLine data.project
+      @peopleLine data.people
+      @ratesLine()
+      @taskLine v.task, v.hours for v in data.tasks
+      @totalHoursLine()
+      @totalMoneyLine()
+      @addRow()
+
+    addRow: ->
+
+      @rows.push @currRow = []
+
+      return # addRow: ->
+
+    skip: -> @currRow.push null; return
+
+    rate: -> @currRow.push value: 0, metadata: {style: rateFormat.id}; return
+
+    hours: (h) -> @currRow.push value: h, metadata: {style: hoursFormat.id}; return
+
+    sumHoursVert: (rows) ->
+
+      letter = String.fromCharCode(65 + @currRow.length)
+
+      @currRow.push
+
+        value: "SUM(#{letter}#{@topRow + 4}:#{letter}#{@topRow + @rows.length - 1})"
+
+        metadata: {type: 'formula', style: hoursFormat.id}
+
+      return
+
+    sumHoursHoriz: (rows) ->
+
+      fromLetter = String.fromCharCode(65 + @currRow.length + 1)
+
+      toLetter = String.fromCharCode(65 + @currRow.length + @peopleCount)
+
+      @currRow.push
+
+        value: "SUM(#{fromLetter}#{@topRow + @rows.length}:#{toLetter}#{@topRow + @rows.length})"
+
+        metadata: {type: 'formula', style: hoursFormat.id}
+
+      return
+
+    sumMoneyHoriz: (rows) ->
+
+      fromLetter = String.fromCharCode(65 + @currRow.length + 1)
+
+      toLetter = String.fromCharCode(65 + @currRow.length + @peopleCount)
+
+      @currRow.push
+
+        value: "SUM(#{fromLetter}#{@topRow + @rows.length}:#{toLetter}#{@topRow + @rows.length})"
+
+        metadata: {type: 'formula', style: moneyFormatBold.id}
+
+      return
+
+    multHoursByRate: (rows) ->
+
+      letter = String.fromCharCode(65 + @currRow.length)
+
+      @currRow.push
+
+        value: "#{letter}#{@topRow + 3}*#{letter}#{@topRow + @rows.length - 1}"
+
+        metadata: {type: 'formula', style: moneyFormat.id}
+
+      return
+
+    totalByTaskTitle: -> @currRow.push value: 'Всего часов', metadata: {style: fontBold.id}; return
+
+    ratesTitle: -> @currRow.push value: 'Стоимость часа (руб):', metadata: {style: alightRight.id}; return
+
+    totalHoursTitle: -> @currRow.push value: 'Итого часов:', metadata: {style: alightRight.id}; return
+
+    totalMoneyTitle: -> @currRow.push value: 'Сумма (руб):', metadata: {style: alightRight.id}; return
+
+    person: (person) ->
+
+      @currRow.push
+
+        value: "HYPERLINK(\"http://teamwork.webprofy.ru/people/#{person.id}\", \"#{if person.missing then person.id else fixStr person.name}\")"
+
+        metadata: {type: 'formula', style: blue.id}
+
+      return
+
+    project: (project) ->
+
+      @currRow.push
+
+        value: "HYPERLINK(\"http://teamwork.webprofy.ru/projects/#{project.id}/tasks\", \"#{fixStr project.name}\")"
+
+        metadata: {type: 'formula', style: blue.id}
+
+      return
+
+    task: (task) ->
+
+      @currRow.push (
+
+        if task.id == null
+
+          defaultTask
+
+        else
+
+          "#{task.name}")
+
+
+          #value: "HYPERLINK(\"http://teamwork.webprofy.ru/tasks/#{task.id}\", \"#{fixStr task.name}\")"
+          #value: "HYPERLINK(\"http://teamwork.webprofy.ru/tasks/#{task.id}\", \"#{task.id}\")"
+          #value: "HYPERLINK(\"http://teamwork.webprofy.ru/tasks/#{task.id}\", \"#{fixStr ('' + task.id)}\")"
+
+          #metadata: {type: 'formula', style: blue.id})
+
+      return
+
+    taskLink: (task) ->
+
+      @currRow.push (
+
+        if task.id == null
+
+          ''
+
+        else
+
+          value: "HYPERLINK(\"http://teamwork.webprofy.ru/tasks/#{task.id}\", \"<<\")"
+
+          metadata: {type: 'formula', style: blue.id})
+
+      return
+
+
+    projectLine: (project) -> @addRow(); @project project; return
+
+    peopleLine: (people) ->
+
+      @addRow(); @skip(); @skip(); @totalByTaskTitle()
+
+      @person v for v in people
+
+      @peopleCount = people.length
+
+      return
+
+    ratesLine: ->
+
+      @addRow(); @skip(); @ratesTitle(); @skip()
+
+      @rate() for i in [0...@peopleCount]
+
+      return
+
+    taskLine: (task, hours) ->
+
+      @addRow(); @taskLink task; @task task; @sumHoursHoriz()
+      #@addRow(); @skip(); @task task; @sumHoursHoriz()
+
+      @hours h for h in hours
+
+      return
+
+    totalHoursLine: ->
+
+      @addRow(); @skip(); @totalHoursTitle(); @sumHoursVert()
+
+      @sumHoursVert() for i in [0...@peopleCount]
+
+      return
+
+    totalMoneyLine: ->
+
+      @addRow(); @skip(); @totalMoneyTitle(); @sumMoneyHoriz()
+
+      @multHoursByRate() for i in [0...@peopleCount]
+
+      return
 
 ngModule.directive 'reports', [
-  'TWPeriodTimeTracking', 'dsDataService', '$rootScope',
-  (TWPeriodTimeTracking, dsDataService, $rootScope) ->
+  'TWPeriodTimeTracking', 'dsDataService', 'config', '$http', '$rootScope',
+  (TWPeriodTimeTracking, dsDataService, config, $http, $rootScope) ->
     restrict: 'A'
     scope: true
     link: ($scope, element, attrs) ->
@@ -111,25 +254,54 @@ ngModule.directive 'reports', [
 
       $scope.generateReport = ->
 
-#        wb = new WorkBook
+        ProjectReport = projectReport wb = window.ExcelBuilder.createWorkbook()
+
+#        pr1 = new ProjectReport data:
+#          project: {id: 1, name: 'Проект 1'}
+#          people: [
+#            {id: 1, name: 'Петров'}
+#            {id: 2, name: 'Сидоров'}
+#          ]
+#          tasks: [
+#            {task: {id: 1, name: 'Задача 1'}, hours: [10.25, null]}
+#            {task: {id: 2, name: 'Задача 2'}, hours: [null, 10.25]}
+#            {task: {id: 3, name: 'Задача 3'}, hours: [6.7, 12]}
+#          ]
 #
-#        sheet1 = wb.addSheet 'Страница 1'
+#        pr2 = new ProjectReport topRow: pr1.rows.length, data:
+#          project: {id: 1, name: 'Проект 2'}
+#          people: [
+#            {id: 1, name: 'Петров'}
+#            {id: 2, name: 'Сидоров'}
+#            {id: 3, name: 'Кто-то ещё'}
+#          ]
+#          tasks: [
+#            {task: {id: 1, name: 'Задача 1'}, hours: [10.25, null, 7]}
+#            {task: {id: 2, name: 'Задача 2'}, hours: [null, 10.25]}
+#            {task: {id: 3, name: 'Задача 3'}, hours: [6.7, 12]}
+#          ]
 #
-#        sheet1.set 0, 1, 'Пользователь 1'
-#        sheet1.set 0, 2, 'Пользователь 2'
-#
-#        sheet1.set 1, 0, 'Проект 1'
-#        sheet1.set 2, 0, 'Проект 2'
-#        sheet1.set 3, 0, 'Проект 3'
-#
-#        sheet1.set 1, 1, 12.2
-#        sheet1.set 2, 2, 20
-#
-#        console.info 'wb: ',  wb.build()
-#
-#        wb.saveFromBrowser()
-#
-#        return
+#        data = Array::concat.apply [], [pr1.rows, pr2.rows]
+
+        #        # TODO: Collect all rows from all reports into one table
+        #        # TODO: Find out max people list size
+        #
+        #        maxPeopleCount = 5
+        #        columns = [{width: 4}, {width: 30}, {width: 20}]
+        #        columns.push {width: 30} for i in [0...maxPeopleCount]
+        #
+        #        sheet = wb.createWorksheet name: 'Проверка'
+        #        sheet.setData data
+        #        sheet.setColumns columns
+        #        wb.addWorksheet sheet
+        #
+        #        file = window.ExcelBuilder.createFile wb
+        #
+        #        blob = base62ToBlob file, 'application/vnd.ms-excel', 512
+        #
+        #        FileSaver.saveAs blob, "TestFile.xlsx"
+
+        # return
 
         $scope.progressMessage = 'Идет загрузка данных...'
         from = moment $scope.period
@@ -142,66 +314,110 @@ ngModule.directive 'reports', [
 
           unwatch()
 
-          peopleMap = {}
           projectsMap = {}
 
-          for k, tt of periodTimeTrackingSet.items
-            if not peopleMap.hasOwnProperty (personId = (person = tt.get('person')).get('id'))
-              peopleMap[personId] = person
-            if not projectsMap.hasOwnProperty (projectId = (project = tt.get('project')).get('id'))
-              projectsMap[projectId] = project
+          reportData = []
 
-          people = (person for personId, person of peopleMap).sort (left, right) ->
-            if (leftMissing = left.get('missing')) != (rightMissing = right.get('missing'))
-              return (if leftMissing then 1 else -1)
-            if !leftMissing
-              return -1 if (leftName = left.get('name')) < (rightName = right.get('name'))
-              return 1 if leftName > rightName
-            return (if left.get('id') < right.get('id') then -1 else 1)
+          maxPeopleCount = 0
 
-          projects = (project for projectId, project of projectsMap).sort (left, right) ->
-            return -1 if (leftName = left.get('name')) < (rightName = right.get('name'))
-            return 1 if leftName > rightName
-            return (if left.get('id') < right.get('id') then -1 else 1)
+          # group by project.id (level 1) and by task.id (level 2)
+          ((projectsMap[v.project.name] ||= {})[v.taskName] ||= []).push v for k, v of periodTimeTrackingSet.items
+
+          # process projects in alphabet order of their names
+          for projectName in (Object.keys projectsMap).sort()
+
+            tasksMap = projectsMap[projectName]
+
+            peopleMap = {}
+
+            peopleMap[reports[0].person.name] = reports[0].person for k, reports of tasksMap
+
+            # sorted list of people workd on the specific project in the period
+            people = (peopleMap[personName] for personName in (Object.keys peopleMap).sort())
+
+            maxPeopleCount = Math.max maxPeopleCount, people.length
+
+            tasks = (for taskName, reports of tasksMap
+
+              project = reports[0].project
+
+              hours = (null for v in [0...people.length] by 1)
+
+              for report in reports
+
+                personIndex = people.indexOf report.person
+
+                if hours[personIndex] == null
+
+                  hours[personIndex] = report.totalMin / 60
+
+                else
+
+                  hours[personIndex] += report.totalMin / 60
+
+              task: {id: reports[0].taskId, name: taskName}
+
+              lastReport: reports[reports.length - 1].lastReport
+
+              hours: hours) # tasks = (for taskName, reports of tasksMap
+
+            # sort tasks by last report time
+            .sort((left, right) ->
+
+              if left.task.id == null then -1 # task with taksId should come first
+
+              else if right.task.id == null then 1
+
+              else left.lastReport.valueOf() - right.lastReport.valueOf())
+
+#            console.info 'report data: ',
+#
+#              project: project
+#
+#              people: people
+#
+#              tasks: tasks
+
+            reportData = reportData.concat (
+
+              new ProjectReport topRow: reportData.length, data:
+
+                project: project
+
+                people: people
+
+                tasks: tasks).rows
 
           $scope.progressMessage = 'Формируем MS Excel файл ...'
           $rootScope.$digest() unless $rootScope.$$phase
 
           $scope.$evalAsync ->
 
-            wb = new WorkBook()
-            sheet1 = wb.addSheet moment($scope.period).format('MM.YYYY')
+            columns = [{width: 4}, {width: 30}, {width: 20}]
+            columns.push {width: 30} for i in [0...maxPeopleCount] by 1
 
-            # TODO: Add fonts & columns width
+            # reportData.length = 1000
 
-            for person, i in people
-              sheet1.set 1 + i, 0, (if person.get('missing') then person.get('id') else person.get('name'))
+            # console.info 'reportData: ', reportData
 
-            for project, i in projects
-              sheet1.set 0, 1 + i, project.get('name')
-              for person, j in people
-                if (tt = periodTimeTrackingSet.items["#{person.get('id')}-#{project.get('id')}"])
-                  sheet1.set 1 + j, 1 + i, tt.get('totalMin') / 60, 2
+            sheet = wb.createWorksheet name: "По людям #{moment($scope.period).format('MM.YYYY')}"
+            sheet.setData reportData
+            sheet.setColumns columns
+            wb.addWorksheet sheet
 
-            wb.saveFromBrowser "Часы по людям по проектам за #{moment($scope.period).format('MM.YYYY')}.xlsx", ->
+            file = window.ExcelBuilder.createFile wb
 
-              $scope.progressMessage = null
-              $rootScope.$digest() unless $rootScope.$$phase
+            blob = base62ToBlob file, 'application/vnd.ms-excel', 512
 
-              return # wb.saveFile
+            FileSaver.saveAs blob, "Часы по людям по проектам за #{moment($scope.period).format('MM.YYYY')}.xlsx"
 
-            return # $scope.$evalAsync
+            periodTimeTrackingSet.release serviceOwner
+            dsDataService.refresh() # to remove any cached data
 
-#            workbook.generate (err, zip) ->
-#              blob = zip.generate type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-#
-#              periodTimeTrackingSet.release serviceOwner
-#              dsDataService.refresh() # to remove any cached data
-#
-#              $scope.progressMessage = null
-#              $rootScope.$digest() unless $rootScope.$$phase
-#
-#              fileSaver = FileSaver.saveAs blob, "Часы по людям по проектам за #{moment($scope.period).format('MM.YYYY')}.xlsx", false
+            $scope.progressMessage = null
+            $rootScope.$digest() unless $rootScope.$$phase
+
+            return # wb.saveFile
 
           return # watchStatus
 

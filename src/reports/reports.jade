@@ -20,14 +20,27 @@ block css
 
 block scripts
 
+  // TODO: Add min support
+  script(src = './excel-builder-packed#{min}.js')
+
+  //script(src = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require#{min}.js')
+  //// Required by excel-builder
+  //- var underscoreMin = dev ? '' : '-min'
+  //script(src = 'https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore#{underscoreMin}.js')
+  //script(src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip#{min}.js')
+  //script(src = 'libs/excel-builder/excel-builder.compiled#{min}.js')
+
   script(src = 'libs/spinjs/spin#{min}.js')
+  script(src = 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment#{min}.js')
   script(src = 'libs/mobile-angular-ui/js/mobile-angular-ui#{min}.js')
   script(src = 'https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.1.2/ui-bootstrap-tpls#{min}.js')
+
+  // lodash is required by JSApp code
   script(src = 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.3.0/lodash#{min}.js')
-  script(src = 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment#{min}.js')
-  script(src = 'https://cdnjs.cloudflare.com/ajax/libs/ramda/0.19.1/ramda#{min}.js')
-  script(src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip#{min}.js')
-  script(src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx#{min}.js')
+
+
+  //script(src = 'https://cdnjs.cloudflare.com/ajax/libs/ramda/0.19.1/ramda#{min}.js')
+  //script(src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx#{min}.js')
 
   // Zork: Does not have a global object - so should be included thru 'require'  Could be good for AMD
   //script(src = 'https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2014-11-29/FileSaver#{min}.js')

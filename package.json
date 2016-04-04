@@ -20,13 +20,28 @@
   },
   "homepage": "https://github.com/webprofyru/rms#readme",
   "devDependencies": {
+    "browserify-shim": "^3.8.12",
     "coffee-script": "^1.10.0",
     "ds-gulp-builder": "^0.1.1",
-    "gulp": "^3.9.0"
+    "gulp": "^3.9.0",
+    "gulp-include": "^2.1.0",
+    "requirejs": "^2.2.0",
+    "underscore": "^1.8.3"
   },
   "dependencies": {
+    "commonjs": "0.0.1",
+    "excel-builder-commonjs": "^1.0.0",
     "jszip": "^2.5.0",
+    "requirejs": "^2.2.0",
     "xlsx": "^0.8.0",
     "xmlbuilder": "^4.2.1"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "ExcelBuilder": "global:ExcelBuilder"
   }
 }

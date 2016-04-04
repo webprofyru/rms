@@ -13,13 +13,19 @@
 , с использование ds-gulp-builder (https://www.npmjs.com/package/ds-gulp-builder,  https://github.com/delightsoft/DSGulpBuilder)
 
     {task, async, sync, go, gutil, errorHandler} = require('ds-gulp-builder')(gulp = require('gulp'))
+    # {task, async, sync, go, gutil, errorHandler} = require('C:\\GIT\\DSGulpBuilder')(gulp = require('gulp'))
 
 Для gulp-задач, которых нет в ds-gulp-builder подключаем необходимые npm-пакеты
 
     path = require 'path'
     jade = require 'gulp-jade'
+    include = require 'gulp-include'
     changed = require 'gulp-changed'
     (notify = require 'gulp-notify').logger (->)
+
+    rename = require 'gulp-rename'
+    uglify = require 'gulp-uglify'
+    changed = require 'gulp-changed'
 
 В clearFolders пишем все задачи очистки папок.  Папку ./build чистим сохраняя директорию .git, чтоб не терять
 настройки публикации в ветку gh-pages (https://github.com/webprofyru/rms/tree/gh-pages).
@@ -111,7 +117,7 @@ JS
         .pipe changed path.dirname dest, hasChanged: changed.compareSha1Digest
         .pipe gulp.dest dest
 
-      GLOBAL.gulp.watch src, [taskName]
+      gulp.watch src, [taskName]
 
 Reports
 ------------------------------
@@ -126,6 +132,36 @@ HTML
 
     tasks.push task('reports-html').jade('./src/reports').dest('./build')
 
+Reports / ExcelBuilder
+------------------------------
+При подключении ExcelBuilder возникла проблема, что одновременное использование CommonJS и Browserify - проблема.
+Насколько я понял, CommonJS переопределяем глобальный метод require, что ломает логику сборки кода подготовленного
+browserify.  Вроде как, такую проблему решает компонента browserify-shim - но я ей пользоваться так и не научился (
+Оказалось, мне понятнее это сделать через создание собственного скрипта, который перекрывает доступ к объекту window
+для библиотек используемых ExcelBuilder.
+
+    do (taskName = 'excel-builder-js', src = './src/excel-builder-packed.js', dest = './build') ->
+
+      tasks.push taskName
+
+      gulp.task taskName, (cb) ->
+
+        gulp.src src
+
+Для сборки requirejs, underscore и ExcelBuilder, используем gulp-include
+
+        .pipe include()
+        .on 'error', errorHandler taskName
+
+        .pipe changed dest, hasChanged: changed.compareSha1Digest
+        .pipe gulp.dest dest
+
+        .pipe rename extname: '.min.js'
+        .pipe uglify()
+        .pipe gulp.dest dest
+
+      gulp.watch src, [taskName]
+
 browserSync
 ------------------------------
 
@@ -136,5 +172,4 @@ browserSync
 И всё запускаем :)
 ------------------------------
 
-    if gutil.env.dev then go sync [tasks, browserSync]
-    else go sync [clearFolders, tasks, browserSync]
+    go sync [clearFolders, tasks, browserSync]

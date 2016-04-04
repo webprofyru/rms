@@ -100,22 +100,28 @@ ngModule.factory 'TWPeriodTimeTracking', [
               projectId = parseInt jsonTaskTimeEntry['project-id']
               minutes = 60 * parseInt(jsonTaskTimeEntry['hours']) + parseInt(jsonTaskTimeEntry['minutes'])
 
+              # Attn: Some reports are not assigned to specific task.
+              if jsonTaskTimeEntry['todo-item-id'] != ''
+                taskId = parseInt jsonTaskTimeEntry['todo-item-id']
+                taskName = jsonTaskTimeEntry['todo-item-name']
+              else
+                taskId = null
+                taskName = null
+
               if date >= to
                 return false # we've reached the end of interesting period
 
-              # PersonTimeTracking
-
-# TODO: Remove
-#              debugger if personId == 115063
-
-              periodTimeTracking = PeriodTimeTracking.pool.find @, "#{personId}-#{projectId}", periodTimeTrackingMap
+              periodTimeTracking = PeriodTimeTracking.pool.find @, "#{personId}-#{projectId}-#{taskId}", periodTimeTrackingMap
               if not (person = people.items[personId])
                 person = Person.pool.find @, "missing-#{personId}", missingPeople
                 person.set 'id', personId
                 person.set 'missing', true
               periodTimeTracking.set 'person', person
               periodTimeTracking.set 'project', projects.items[projectId]
+              periodTimeTracking.set 'taskId', taskId
+              periodTimeTracking.set 'taskName', taskName
               periodTimeTracking.set 'totalMin', periodTimeTracking.get('totalMin') + minutes
+              periodTimeTracking.set 'lastReport', date
 
             return timeEntries.length == WORK_ENTRIES_WHOLE_PAGE
 
@@ -171,7 +177,7 @@ ngModule.factory 'TWPeriodTimeTracking', [
             .then(((resp) => # ok
                 if (resp.status == 200) # 0 means that request was canceled
                   @set 'cancel', null
-                  if !(entries = resp.data['time-entries'])
+                  if !(entries = resp.data['time-entries']) || entries.length == 0
                     findFirstPage topPage + Math.floor(((endPage = page) - topPage) / 2)
                   else
                     if moment(entries[0]['date']) >= from
