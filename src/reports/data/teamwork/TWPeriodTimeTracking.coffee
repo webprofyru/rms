@@ -136,7 +136,7 @@ ngModule.factory 'TWPeriodTimeTracking', [
             if !isCancelled
               console.error 'error: ', error
               @set 'cancel', null
-            v.release @ for k, v of taskTimeTrackingMap
+            v.release @ for k, v of periodTimeTrackingMap
             @_endLoad false
             return)
 
