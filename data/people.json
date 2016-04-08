@@ -128,7 +128,7 @@
         },
         {
             "id": 48687,
-            "role": "Programmer, Markuper, Teamlead",
+            "role": "Programmer, Markuper, Teamlead, GroupKorovkin",
             "name": "Денис Коровкин",
             "email": "d.korovkin@webprofy.ru"
         },
@@ -146,7 +146,7 @@
         },
         {
             "id": 146695,
-            "role": "Programmer, Markuper, GroupYastrebov",
+            "role": "Programmer, Markuper, GroupSkinteev",
             "name": "Иван Аникин",
             "email": "i.anikin@webprofy.ru"
         },
@@ -224,7 +224,7 @@
         },
         {
           "id": 115566,
-          "role": "Markuper",
+          "role": "Markuper, GroupKorovkin",
           "name": "Александр Верхотуров",
           "email": "a.verkhoturov@webprofy.ru"
         },
@@ -275,6 +275,18 @@
             "role": "Manager",
             "name": "Мария Семенченок",
             "email": "m.semenchenok@webprofy.ru"
+        },        
+        {
+            "id": 161546,
+            "role": "Manager",
+            "name": "Максим Баталеев",
+            "email": "m.bataleev@webprofy.ru"
+        },
+        {
+            "id": 102943,
+            "role": "Programmer, Markuper, GroupYastrebov",
+            "name": "Григорий Красильников",
+            "email": "g.krasilnikov@webprofy.ru"
         },
         {
             "id": 174645,
