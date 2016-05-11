@@ -93,12 +93,14 @@ ngModule.directive 'rmsTask', ['$rootScope', '$timeout', (($rootScope, $timeout)
           $rootScope.$digest()
         return)
 
+      listenerFunc = undefined
+
       $scope.$watch "#{attrs.rmsTask}.$u", ((val) ->
         if val
           # The jQuery event object does not have a dataTransfer property
           el = element[0]
           el.draggable = true
-          el.addEventListener 'dragstart', ((e)-> # Note: If we use jQuery.on for this event, we don't have e.dataTransfer option
+          el.addEventListener 'dragstart', listenerFunc = ((e)-> # Note: If we use jQuery.on for this event, we don't have e.dataTransfer option
             $rootScope.modal =
               type: 'drag-start'
               task: $scope.$eval attrs.rmsTask
@@ -115,7 +117,7 @@ ngModule.directive 'rmsTask', ['$rootScope', '$timeout', (($rootScope, $timeout)
         else
           el = element[0]
           el.draggable = false
-          el.removeEventListener 'dragstart'
+          el.removeEventListener 'dragstart', listenerFunc
           element.off 'dragend'
         return)
 
