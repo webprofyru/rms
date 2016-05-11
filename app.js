@@ -243,7 +243,7 @@ ngModule.factory('PeopleWithJson', [
               if (resp.status === 200) {
                 _this.set('cancel', null);
                 DSDigest.block((function() {
-                  var i, j, k, len, len1, map, peopleRoles, person, personInfo, personKey, ref, ref1, selectedRole;
+                  var dstags, i, j, k, len, len1, map, peopleRoles, person, personInfo, personKey, ref, ref1, selectedRole;
                   peopleRoles = $rootScope.peopleRoles = resp.data.roles;
                   if ((selectedRole = config.get('selectedRole'))) {
                     for (j = 0, len = peopleRoles.length; j < len; j++) {
@@ -257,7 +257,8 @@ ngModule.factory('PeopleWithJson', [
                   for (k = 0, len1 = ref.length; k < len1; k++) {
                     personInfo = ref[k];
                     if (teamworkPeople.items.hasOwnProperty(personKey = "" + personInfo.id)) {
-                      teamworkPeople.items[personKey].set('roles', new DSTags(personInfo.role));
+                      teamworkPeople.items[personKey].set('roles', dstags = new DSTags(_this, '' + ++DSTags.nextTags, personInfo.role));
+                      dstags.release(_this);
                     }
                   }
                   map = {};
@@ -677,10 +678,14 @@ ngModule.factory('TasksWithTimeTracking', [
         tasks = this.get('tasksSet');
         this.__unwatchA = srcTasks.watch(this, {
           add: (function(task) {
+            var ttt;
             if (task.get('timeTracking') === null) {
-              task.set('timeTracking', TaskTimeTracking.pool.find(this, task.$ds_key));
+              if ((ttt = TaskTimeTracking.pool.find(this, task.$ds_key))) {
+                task.set('timeTracking', ttt);
+                ttt.release(this);
+              }
             }
-            tasks.add(this, task);
+            tasks.add(this, task.addRef(this));
           }),
           remove: (function(task) {
             tasks.remove(task);
@@ -1503,6 +1508,7 @@ ngModule.factory('DSDataTeamworkPaged', [
         addPaging = function(page, url) {
           return "" + url + (url.indexOf('?') === -1 ? '?' : '&') + "page=" + page + "&pageSize=" + WORK_ENTRIES_WHOLE_PAGE;
         };
+        this.startLoad();
         (pageLoad = (function(_this) {
           return function(page) {
             var method;
@@ -1580,8 +1586,11 @@ ngModule.factory('TWPeople', [
         this.set('request', "people.json");
         this.__unwatch2 = DSDataSource.setLoadAndRefresh.call(this, dsDataService);
         this.init = null;
-        this.peopleMap = {};
       });
+
+      TWPeople.prototype.startLoad = function() {
+        return this.peopleMap = {};
+      };
 
       TWPeople.prototype.importResponse = function(json) {
         var cnt, i, jsonPerson, len, person, ref;
@@ -1604,6 +1613,7 @@ ngModule.factory('TWPeople', [
 
       TWPeople.prototype.finalizeLoad = function() {
         this.get('peopleSet').merge(this, this.peopleMap);
+        delete this.peopleMap;
       };
 
       TWPeople.end();
@@ -1652,8 +1662,11 @@ ngModule.factory('TWTags', [
         this.set('request', "tags.json");
         this.__unwatch2 = DSDataSource.setLoadAndRefresh.call(this, dsDataService);
         this.init = null;
-        this.tagsMap = {};
       });
+
+      TWTags.prototype.startLoad = function() {
+        this.tagsMap = {};
+      };
 
       TWTags.prototype.importResponse = function(json) {
         var cnt, i, jsonTag, len, person, ref;
@@ -1672,6 +1685,7 @@ ngModule.factory('TWTags', [
 
       TWTags.prototype.finalizeLoad = function() {
         this.get('tagsSet').merge(this, this.tagsMap);
+        delete this.tagsMap;
       };
 
       TWTags.end();
@@ -1882,9 +1896,8 @@ ngModule.factory('TWTasks', [
         this.__unwatch1 = Task.pool.watch(this, ((function(_this) {
           return function(item) {
             if (filter(item)) {
-              item.addRef(_this);
               if (!tasksSet.items.hasOwnProperty(item.$ds_key)) {
-                tasksSet.add(_this, item);
+                tasksSet.add(_this, item.addRef(_this));
               }
             } else {
               if (tasksSet.items.hasOwnProperty(item.$ds_key)) {
@@ -1920,7 +1933,7 @@ ngModule.factory('TWTasks', [
       });
 
       importTask = (function(task, jsonTask) {
-        var data, date, desc, duedateStr, estimate, i, k, len, person, plan, project, ref, resp, split, tag, tagDoc, tags, timeIsLogged, todoList, v;
+        var data, date, desc, dstags, duedateStr, estimate, i, k, len, person, plan, project, ref, resp, split, tag, tagDoc, tags, timeIsLogged, todoList, v;
         person = Person.pool.find(this, "" + jsonTask['creator-id'], this.peopleMap);
         project = Project.pool.find(this, "" + jsonTask['project-id'], this.projectMap);
         todoList = TodoList.pool.find(this, "" + jsonTask['todo-list-id'], this.todoListMap);
@@ -1966,13 +1979,15 @@ ngModule.factory('TWTasks', [
               tagDoc.set('id', tag.id);
               tagDoc.set('name', tag.name);
               tagDoc.set('color', tag.color);
+              (tags || (tags = {}))[tag.name] = tagDoc;
             }
           }
           task.set('plan', plan);
           if (tags === null) {
             task.set('tags', null);
           } else {
-            task.set('tags', new DSTags(tags));
+            task.set('tags', dstags = new DSTags(this, '' + ++DSTags.nextTags, tags));
+            dstags.release(this);
             for (k in tags) {
               v = tags[k];
               v.release(this);
@@ -2374,10 +2389,10 @@ ngModule.factory('TWTimeTracking', [
                 var entries, ref2;
                 if (resp.status === 200) {
                   _this.set('cancel', null);
-                  if (!(entries = resp.data['time-entries'])) {
+                  if (!(entries = resp.data['time-entries']) || entries.length === 0) {
                     findFirstPage(topPage + Math.floor(((endPage = page) - topPage) / 2));
                   } else {
-                    if (moment(entries[0]['date']) >= time.historyLimit || entries.length === 0) {
+                    if (moment(entries[0]['date']) >= time.historyLimit) {
                       if (topPage === page) {
                         config.set('histStart', page);
                         if (DSDigest.block((function() {
@@ -2753,7 +2768,7 @@ module.exports = Project = (function(superClass) {
 
 
 },{"../../dscommon/DSObject":59,"../../dscommon/util":65}],18:[function(require,module,exports){
-var DSDocument, Task, assert, error,
+var DSDocument, Tag, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -2763,26 +2778,26 @@ error = require('../../dscommon/util').error;
 
 DSDocument = require('../../dscommon/DSDocument');
 
-module.exports = Task = (function(superClass) {
-  extend(Task, superClass);
+module.exports = Tag = (function(superClass) {
+  extend(Tag, superClass);
 
-  function Task() {
-    return Task.__super__.constructor.apply(this, arguments);
+  function Tag() {
+    return Tag.__super__.constructor.apply(this, arguments);
   }
 
-  Task.begin('Tag');
+  Tag.begin('Tag');
 
-  Task.addPool();
+  Tag.addPool();
 
-  Task.propNum('id', 0);
+  Tag.propNum('id', 0);
 
-  Task.propStr('name');
+  Tag.propStr('name');
 
-  Task.propStr('color');
+  Tag.propStr('color');
 
-  Task.end();
+  Tag.end();
 
-  return Task;
+  return Tag;
 
 })(DSDocument);
 
@@ -4608,7 +4623,7 @@ ngModule.factory('addCommentAndSave', [
       return AddCommentAndSave;
 
     })(DSObject);
-    instance = new AddCommentAndSave(serviceOwner, 'addCommentAndSave');
+    instance = serviceOwner.add(new AddCommentAndSave(serviceOwner, 'addCommentAndSave'));
     return (function(document, showDialog, changes) {
       return instance.show(document, showDialog, changes);
     });
@@ -6994,13 +7009,13 @@ module.exports = DSChangesBase = (function(superClass) {
               return change;
             } else if ((read = prop.read)) {
               return {
-                v: propChange.v === null ? null : read(propChange.v),
-                s: propChange.s === null ? null : read(propChange.s)
+                v: propChange.v === null ? null : read.call(this, propChange.v),
+                s: propChange.s === null ? null : read.call(this, propChange.s)
               };
             } else {
               throw new Error("Unsupported type " + type);
             }
-          })();
+          }).call(this);
         }
       }
     }
@@ -7272,6 +7287,14 @@ module.exports = (function(itemType) {
           return function() {
             var filterItem, filterItemIfChanged, findEdtItem, getEdtItem, renderItem;
             _this._startLoad();
+            if (typeof _this._unwatch1 === "function") {
+              _this._unwatch1();
+            }
+            _this._unwatch1 = null;
+            if (typeof _this._unwatch2 === "function") {
+              _this._unwatch2();
+            }
+            _this._unwatch2 = null;
             getEdtItem = (function(srcItem) {
               if (assert) {
                 if (!editablePool.items.hasOwnProperty(srcItem.$ds_key)) {
@@ -7501,6 +7524,10 @@ module.exports = (function(itemType) {
           return function() {
             var item, itemKey, renderItem;
             _this._startLoad();
+            if (typeof _this._unwatch1 === "function") {
+              _this._unwatch1();
+            }
+            _this._unwatch1 = null;
             for (itemKey in originalItems) {
               item = originalItems[itemKey];
               if (filter(item)) {
@@ -7962,24 +7989,18 @@ DSObject = require('./DSObject');
 DSSet = require('./DSSet');
 
 module.exports = DSDocument = (function(superClass) {
-  var class1;
-
   extend(DSDocument, superClass);
-
-  function DSDocument() {
-    return class1.apply(this, arguments);
-  }
 
   DSDocument.begin('DSDocument');
 
-  class1 = (function(referry, key) {
-    DSObject.call(this, referry, key);
+  function DSDocument(referry, key) {
+    DSDocument.__super__.constructor.call(this, referry, key);
     if (assert) {
       if (this.__proto__.constructor === DSDocument) {
         throw new Error('Cannot instantiate DSDocument directly');
       }
     }
-  });
+  }
 
   DSDocument.propPool = (function(name, itemType) {
     throw new Error("This property type is not supported in DSDocument");
@@ -8043,7 +8064,7 @@ module.exports = DSDocument = (function(superClass) {
       }));
 
       Editable.prototype.init = (function(serverDoc, changesSet, changes) {
-        var changePair, propName, ref, s, v;
+        var changePair, i, index, item, len, list, propName, ref, refs;
         if (assert) {
           if (!(serverDoc !== null && serverDoc.__proto__.constructor === originalDocClass)) {
             error.invalidArg('serverDoc');
@@ -8057,15 +8078,38 @@ module.exports = DSDocument = (function(superClass) {
         }
         (this.$ds_doc = serverDoc).addRef(this);
         this.$ds_chg = changesSet;
-        if (changes) {
-          ref = (this.__change = changes);
-          for (propName in ref) {
-            changePair = ref[propName];
-            if ((v = changePair.v) instanceof DSObject) {
-              v.addRef(this);
+        if ((this.__change = this.changes)) {
+          if (traceRefs) {
+            list = [];
+            ref = (this.__change = changes);
+            for (propName in ref) {
+              changePair = ref[propName];
+              if (changePair.v instanceof DSObject) {
+                list.push(changePair.v);
+              }
+              if (changePair.s instanceof DSObject) {
+                list.push(changePair.s);
+              }
             }
-            if ((s = changePair.s) instanceof DSObject) {
-              s.addRef(this);
+            for (i = 0, len = list.length; i < len; i++) {
+              item = list[i];
+              refs = item.$ds_referries;
+              if (refs.length === 0) {
+                console.error((DSObjectBase.desc(item)) + ": Empty $ds_referries");
+              } else if ((index = refs.lastIndexOf(owner)) < 0) {
+                console.error((DSObjectBase.desc(this)) + ": Referry not found: " + (DSObjectBase.desc(owner)));
+                if (totalReleaseVerb) {
+                  debugger;
+                }
+              } else {
+                if (totalReleaseVerb) {
+                  console.info((++util.serviceOwner.msgCount) + ": transfer: " + (DSObjectBase.desc(item)) + ", refs: " + this.$ds_ref + ", from: " + (DSObjectBase.desc(owner)) + ", to: " + (DSObjectBase.desc(this)));
+                  if (util.serviceOwner.msgCount === window.totalBreak) {
+                    debugger;
+                  }
+                }
+                refs[index] = this;
+              }
             }
           }
           this.addRef(this);
@@ -8993,7 +9037,7 @@ module.exports = DSObjectBase = (function() {
     for (propName in map) {
       value = map[propName];
       if (props.hasOwnProperty(propName) && (propDesc = props[propName]).hasOwnProperty('read')) {
-        this[propName] = propDesc.read(value);
+        this[propName] = propDesc.read.call(this, value);
       } else {
         console.error("Unexpected property " + propName);
       }
@@ -9706,12 +9750,6 @@ module.exports = DSPool = (function(superClass) {
 
   DSPool.begin('DSPool');
 
-  DSPool.ds_dstr.push((function() {
-    if (!_.isEmpty(this.items)) {
-      console.error("Pool " + (DSObjectBase.desc(this)) + " is not empty. Items: ", this.items);
-    }
-  }));
-
   class1 = (function(referry, key, type, watchOn) {
     var items;
     DSObjectBase.call(this, referry, key);
@@ -10145,19 +10183,15 @@ error = require('./util').error;
 DSObjectBase = require('./DSObjectBase');
 
 module.exports = DSTags = (function(superClass) {
-  var class1;
-
   extend(DSTags, superClass);
 
-  function DSTags() {
-    return class1.apply(this, arguments);
-  }
+  DSTags.nextTags = 0;
 
   DSTags.begin('DSTags');
 
   DSTags.addPropType = (function(clazz) {
     clazz.propDSTags = (function(name, valid) {
-      var q;
+      var localName, q;
       if (assert) {
         if (!typeof name === 'string') {
           error.invalidArg('name');
@@ -10179,13 +10213,19 @@ module.exports = DSTags = (function(superClass) {
           return void 0;
         }
       });
+      localName = "_" + name;
+      this.ds_dstr.push((function() {
+        if (this[localName]) {
+          this[localName].release(this);
+        }
+      }));
       return clazz.prop({
         name: name,
         type: 'DSTags',
         valid: valid,
         read: (function(v) {
           if (v !== null) {
-            return new DSTags(v);
+            return new DSTags(this, '' + ++DSTags.nextTags, v);
           } else {
             return null;
           }
@@ -10193,37 +10233,56 @@ module.exports = DSTags = (function(superClass) {
         str: (function(v) {
           return v.value;
         }),
-        init: null
+        init: null,
+        set: (function(value) {
+          var evt, i, lst, oldVal, v;
+          if (typeof (value = valid(v = value)) === 'undefined') {
+            error.invalidValue(this, name, v);
+          }
+          if ((oldVal = this[localName]) !== value) {
+            this[localName] = value;
+            if (value) {
+              value.addRef(this);
+            }
+            if ((evt = this.$ds_evt)) {
+              for (i = evt.length - 1; i >= 0; i += -1) {
+                lst = evt[i];
+                lst.__onChange.call(lst, this, name, value, oldVal);
+              }
+            }
+            if (oldVal) {
+              oldVal.release(this);
+            }
+          }
+        })
       });
     });
   });
 
   DSTags.ds_dstr.push((function() {
-    var k, v;
-    if ((function() {
-      var ref, results;
-      ref = this.map;
-      results = [];
-      for (k in ref) {
-        v = ref[k];
-        results.push(v instanceof DSObjectBase);
+    var k, ref, v;
+    ref = this.map;
+    for (k in ref) {
+      v = ref[k];
+      if (v instanceof DSObjectBase) {
+        v.release(this);
       }
-      return results;
-    }).call(this)) {
-      v.release(this);
     }
   }));
 
-  class1 = (function(enums) {
-    var i, k, key, len, map, ref, ref1, src, v, value;
+  function DSTags(referry, key, enums) {
+    var i, k, len, map, ref, ref1, src, v, value;
+    DSTags.__super__.constructor.call(this, referry, key);
     if (assert) {
-      if (arguments.length === 1 && typeof (src = arguments[0]) === 'object') {
+      if (arguments.length === 3 && typeof (src = arguments[2]) === 'object') {
         void 0;
-      } else if (!(typeof enums === 'string')) {
-        error.invalidArg('enums');
+      } else {
+        if (typeof enums !== 'string') {
+          error.invalidArg('enums');
+        }
       }
     }
-    if (arguments.length === 1 && typeof (src = arguments[0]) === 'object') {
+    if (arguments.length === 3 && typeof (src = arguments[2]) === 'object') {
       if (src.__proto__ === DSTags.prototype) {
         this.map = _.clone(src.map);
         this.value = src.value;
@@ -10263,7 +10322,8 @@ module.exports = DSTags = (function(superClass) {
         return results;
       })())).join(', ');
     }
-  });
+    return;
+  }
 
   DSTags.prototype.toString = (function() {
     return this.value;
@@ -10271,10 +10331,6 @@ module.exports = DSTags = (function(superClass) {
 
   DSTags.prototype.valueOf = (function() {
     return this.value;
-  });
-
-  DSTags.prototype.clone = (function() {
-    return new DSTags(this);
   });
 
   DSTags.prototype.set = (function(enumValue, value) {
@@ -10288,7 +10344,7 @@ module.exports = DSTags = (function(superClass) {
       }
     }
     if (!!value) {
-      alreadyIn = !(map = this.map).hasOwnProperty(enumValue);
+      alreadyIn = (map = this.map).hasOwnProperty(enumValue);
       if (value instanceof DSObjectBase) {
         value.addRef(this);
       }
