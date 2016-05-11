@@ -4650,6 +4650,7 @@ ngModule.directive('rmsTask', [
       restrict: 'A',
       require: 'ngModel',
       link: (function($scope, element, attrs, model) {
+        var listenerFunc;
         element.on('click', (function(e) {
           var modal;
           e.stopPropagation();
@@ -4694,12 +4695,13 @@ ngModule.directive('rmsTask', [
             $rootScope.$digest();
           }
         }));
+        listenerFunc = void 0;
         $scope.$watch(attrs.rmsTask + ".$u", (function(val) {
           var el;
           if (val) {
             el = element[0];
             el.draggable = true;
-            el.addEventListener('dragstart', (function(e) {
+            el.addEventListener('dragstart', listenerFunc = (function(e) {
               $rootScope.modal = {
                 type: 'drag-start',
                 task: $scope.$eval(attrs.rmsTask),
@@ -4719,7 +4721,7 @@ ngModule.directive('rmsTask', [
           } else {
             el = element[0];
             el.draggable = false;
-            el.removeEventListener('dragstart');
+            el.removeEventListener('dragstart', listenerFunc);
             element.off('dragend');
           }
         }));
