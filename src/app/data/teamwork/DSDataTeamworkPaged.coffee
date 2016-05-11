@@ -49,7 +49,9 @@ ngModule.factory 'DSDataTeamworkPaged', ['DSDataSource', '$rootScope', '$q', ((D
 
       addPaging = (page, url) ->
         "#{url}#{if url.indexOf('?') == -1 then '?' else '&'}page=#{page}&pageSize=#{WORK_ENTRIES_WHOLE_PAGE}"
-      
+
+      @startLoad()
+
       (pageLoad = (page) =>
         (switch (method = @get 'method')
           when 'httpGet' then @get('source').httpGet addPaging(page, @get('request')), cancel

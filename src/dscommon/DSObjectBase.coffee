@@ -107,7 +107,7 @@ module.exports = class DSObjectBase
     props = @.__proto__.__props
     for propName, value of map
       if props.hasOwnProperty(propName) && (propDesc = props[propName]).hasOwnProperty('read')
-        @[propName] = propDesc.read value
+        @[propName] = propDesc.read.call @, value
       else console.error "Unexpected property #{propName}"
     return)
 

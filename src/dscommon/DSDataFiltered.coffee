@@ -54,6 +54,8 @@ module.exports = ((itemType) ->
 
           @_startLoad() # result is not checked intentionally, so we could set 'load' state while source object is in 'load' state
 
+          @_unwatch1?(); @_unwatch1 = null
+
           for itemKey, item of originalItems
             if filter(item)
               item.addRef @; itemsSet.add @, item

@@ -182,6 +182,6 @@ ngModule.factory 'addCommentAndSave', [
 
       @end()
 
-    instance = new AddCommentAndSave serviceOwner, 'addCommentAndSave';
+    instance = serviceOwner.add new AddCommentAndSave serviceOwner, 'addCommentAndSave'
 
     return ((document, showDialog, changes) -> instance.show(document, showDialog, changes)))]

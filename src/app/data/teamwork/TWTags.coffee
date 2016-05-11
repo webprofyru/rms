@@ -28,8 +28,11 @@ ngModule.factory 'TWTags', ['DSDataTeamworkPaged', 'DSDataSource', '$rootScope',
       @set 'request', "tags.json"
       @__unwatch2 = DSDataSource.setLoadAndRefresh.call @, dsDataService
       @init = null
-      @tagsMap = {}
       return)
+
+    startLoad: ->
+      @tagsMap = {}
+      return
 
     importResponse: (json) ->
 
@@ -50,6 +53,8 @@ ngModule.factory 'TWTags', ['DSDataTeamworkPaged', 'DSDataSource', '$rootScope',
     finalizeLoad: ->
 
       @get('tagsSet').merge @, @tagsMap
+
+      delete @tagsMap
 
       return
 

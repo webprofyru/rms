@@ -26,8 +26,11 @@ ngModule.factory 'TWPeople', ['DSDataTeamworkPaged', 'DSDataSource', '$rootScope
       @set 'request', "people.json"
       @__unwatch2 = DSDataSource.setLoadAndRefresh.call @, dsDataService
       @init = null
-      @peopleMap = {}
       return)
+
+    startLoad: ->
+
+      @peopleMap = {}
 
     importResponse: (json) ->
 
@@ -51,6 +54,7 @@ ngModule.factory 'TWPeople', ['DSDataTeamworkPaged', 'DSDataSource', '$rootScope
 
     finalizeLoad: ->
       @get('peopleSet').merge @, @peopleMap
+      delete @peopleMap
       return
 
     @end())]

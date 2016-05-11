@@ -3,7 +3,7 @@ error = require('../../dscommon/util').error
 
 DSDocument = require('../../dscommon/DSDocument')
 
-module.exports = class Task extends DSDocument
+module.exports = class Tag extends DSDocument
   @begin 'Tag'
 
   @addPool()

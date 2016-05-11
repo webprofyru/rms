@@ -65,6 +65,9 @@ module.exports = ((itemType) ->
 
           @_startLoad() # result is not checked intentionally, so we could set 'load' state while source object is in 'load' state
 
+          @_unwatch1?(); @_unwatch1 = null
+          @_unwatch2?(); @_unwatch2 = null
+
           getEdtItem = ((srcItem) =>
             if assert
               throw new Error 'Missing editable item' if !editablePool.items.hasOwnProperty(srcItem.$ds_key)

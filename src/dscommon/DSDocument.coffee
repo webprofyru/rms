@@ -8,12 +8,11 @@ DSSet = require './DSSet'
 module.exports = class DSDocument extends DSObject
   @begin 'DSDocument'
 
-  constructor: ((referry, key) ->
-    DSObject.call @, referry, key
+  constructor: (referry, key) ->
+    super referry, key
     if assert
       if @__proto__.constructor == DSDocument
         throw new Error 'Cannot instantiate DSDocument directly'
-    return)
 
   @propPool = ((name, itemType) ->
     throw new Error "This property type is not supported in DSDocument"
@@ -60,10 +59,27 @@ module.exports = class DSDocument extends DSObject
           error.invalidArg 'changes' if !(arguments.length == 2 || typeof changes == 'object')
         (@$ds_doc = serverDoc).addRef @
         @$ds_chg = changesSet
-        if changes
-          for propName, changePair of (@__change = changes)
-            v.addRef @ if (v = changePair.v) instanceof DSObject
-            s.addRef @ if (s = changePair.s) instanceof DSObject
+        if (@__change = @changes)
+          if traceRefs
+            list = []
+            for propName, changePair of (@__change = changes)
+              list.push changePair.v if changePair.v instanceof DSObject
+              list.push changePair.s if changePair.s instanceof DSObject
+            for item in list
+              refs = item.$ds_referries
+              if refs.length == 0
+                console.error "#{DSObjectBase.desc item}: Empty $ds_referries"
+              else if (index = refs.lastIndexOf(owner)) < 0
+                console.error "#{DSObjectBase.desc @}: Referry not found: #{DSObjectBase.desc owner}"
+                debugger if totalReleaseVerb
+              else
+                if totalReleaseVerb
+                  console.info "#{++util.serviceOwner.msgCount}: transfer: #{DSObjectBase.desc item}, refs: #{@$ds_ref}, from: #{DSObjectBase.desc owner}, to: #{DSObjectBase.desc @}"
+                  debugger if util.serviceOwner.msgCount == window.totalBreak
+                refs[index] = @
+#          for propName, changePair of (@__change = changes)
+#            v.addRef @ if (v = changePair.v) instanceof DSObject
+#            s.addRef @ if (s = changePair.s) instanceof DSObject
           @addRef @; changesSet.add @, @
         if !serverDoc.hasOwnProperty '$ds_evt' then serverDoc.$ds_evt = [@]
         else

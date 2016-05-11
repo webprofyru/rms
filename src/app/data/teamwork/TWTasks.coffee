@@ -136,8 +136,7 @@ ngModule.factory 'TWTasks', ['DSDataSource', 'config', '$q', ((DSDataSource, con
       tasksSet = @get('tasksSet')
       @__unwatch1 = Task.pool.watch @, ((item) =>
         if filter(item)
-          item.addRef @
-          tasksSet.add @, item if !tasksSet.items.hasOwnProperty item.$ds_key
+                    tasksSet.add @, item.addRef @ if !tasksSet.items.hasOwnProperty item.$ds_key
         else
           tasksSet.remove item if tasksSet.items.hasOwnProperty item.$ds_key
         return)
@@ -200,11 +199,13 @@ ngModule.factory 'TWTasks', ['DSDataSource', 'config', '$q', ((DSDataSource, con
             tagDoc.set 'id', tag.id
             tagDoc.set 'name', tag.name
             tagDoc.set 'color', tag.color
+            (tags ||= {})[tag.name] = tagDoc
         task.set 'plan', plan
         if tags == null
           task.set 'tags', null
         else
-          task.set 'tags', new DSTags(tags)
+          task.set 'tags', dstags = new DSTags @, '' + ++DSTags.nextTags, tags
+          dstags.release @
           v.release @ for k, v of tags
 
       todoList.set 'id', parseInt jsonTask['todo-list-id']

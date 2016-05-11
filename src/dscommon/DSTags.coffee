@@ -5,6 +5,8 @@ DSObjectBase = require('./DSObjectBase')
 
 module.exports = class DSTags extends DSObjectBase
 
+  @nextTags = 0
+
   @begin 'DSTags'
 
   @addPropType = ((clazz) ->
@@ -14,47 +16,64 @@ module.exports = class DSTags extends DSObjectBase
         error.invalidArg 'valid' if valid && typeof valid != 'function'
       valid = if q = valid then ((value) -> return if (value == null || (typeof value == 'object' && value instanceof DSTags)) && q(value) then value else undefined)
       else ((value) -> return if value == null || value instanceof DSTags then value else undefined)
+
+      localName = "_#{name}"
+
+      @ds_dstr.push (->
+        @[localName].release @ if @[localName]
+        return)
+
       return clazz.prop {
         name
         type: 'DSTags'
         valid
-        read: ((v) -> if v != null then new DSTags(v) else null)
+        read: ((v) -> if v != null then new DSTags(@, '' + ++DSTags.nextTags, v) else null)
         str: ((v) -> v.value)
-        init: null})
+        init: null
+        set: ((value) ->
+          error.invalidValue @, name, v if typeof (value = valid(v = value)) == 'undefined'
+          if (oldVal = @[localName]) != value
+            @[localName] = value
+            value.addRef @ if value
+            if (evt = @$ds_evt)
+              lst.__onChange.call lst, @, name, value, oldVal for lst in evt by -1
+            oldVal.release @ if oldVal
+          return)})
     return)
 
   @ds_dstr.push (->
-    v.release @ if v instanceof DSObjectBase for k, v of @map
+    v.release @ for k, v of @map when v instanceof DSObjectBase
     return)
 
-  constructor: ((enums) ->
+  constructor: (referry, key, enums) ->
+    super referry, key
     if assert
-      if arguments.length == 1 && typeof (src = arguments[0]) == 'object'
+      if arguments.length == 3 && typeof (src = arguments[2]) == 'object'
         undefined
-      else if !(typeof enums == 'string')
-        error.invalidArg 'enums'
-    if arguments.length == 1 && typeof (src = arguments[0]) == 'object'
+      else
+        error.invalidArg 'enums' unless typeof enums == 'string'
+    if arguments.length == 3 && typeof (src = arguments[2]) == 'object'
       if src.__proto__ == DSTags::
         @map = _.clone src.map
         @value = src.value
       else
         @map = map = _.clone enums
         @value = (_.sortBy (k for k of map)).join ', '
-      for key, value of @map
-        value.addRef @ if value instanceof DSObjectBase
+      value.addRef @ for key, value of @map when value instanceof DSObjectBase
     else
       @map = map = {}
       if typeof enums == 'string'
         for v in enums.split ','
           map[v.trim()] = true
       @value = (_.sortBy (k for k of map)).join ', '
-    return)
+    return
 
   toString: (-> return @value)
 
   valueOf: (-> return @value)
 
-  clone: (-> return new DSTags(@))
+  # TODO: Implement right once DSTags will be editable
+  #clone: ((referry) -> return new DSTags(@))
 
   # if !!value == true then value will be kept in the tags collection.  Value could be even DSObject - it's will be processed with correct ref coutning
   set: ((enumValue, value) ->
@@ -62,7 +81,7 @@ module.exports = class DSTags extends DSObjectBase
       error.invalidArg 'enumValue' unless typeof enumValue == 'string'
       error.invalidArg 'value' unless typeof value != 'undefined'
     if !!value
-      alreadyIn = !(map = @map).hasOwnProperty(enumValue)
+      alreadyIn = (map = @map).hasOwnProperty(enumValue)
       value.addRef @ if value instanceof DSObjectBase
       oldValue.release @ if (oldValue = map[enumValue]) instanceof DSObjectBase
       map[enumValue] = value

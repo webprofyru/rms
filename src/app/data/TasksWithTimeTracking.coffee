@@ -54,8 +54,10 @@ ngModule.factory 'TasksWithTimeTracking', [
         @__unwatchA = srcTasks.watch @,
           add: ((task) ->
             if task.get('timeTracking') == null
-              task.set 'timeTracking', TaskTimeTracking.pool.find @, task.$ds_key
-            tasks.add @, task
+              if (ttt = TaskTimeTracking.pool.find @, task.$ds_key)
+                task.set 'timeTracking', ttt
+                ttt.release @
+            tasks.add @, task.addRef @
             return)
           remove: ((task) ->
             tasks.remove task

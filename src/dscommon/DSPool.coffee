@@ -9,10 +9,10 @@ module.exports = class DSPool extends DSObjectBase
 
   @begin 'DSPool'
 
-  @ds_dstr.push (->
-    if !_.isEmpty(@items)
-      console.error "Pool #{DSObjectBase.desc @} is not empty. Items: ", @items
-    return)
+#  @ds_dstr.push (->
+#    if !_.isEmpty(@items)
+#      console.error "Pool #{DSObjectBase.desc @} is not empty. Items: ", @items
+#    return)
 
   constructor: ((referry, key, type, watchOn) ->
     DSObjectBase.call @, referry, key

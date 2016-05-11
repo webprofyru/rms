@@ -96,8 +96,8 @@ module.exports = class DSChangesBase extends DSData
               if propChange.s then loadOneDoc(propChange, load, type, change, 's')
               change
             else if (read = prop.read)
-              v: if propChange.v == null then null else read(propChange.v)
-              s: if propChange.s == null then null else read(propChange.s)
+              v: if propChange.v == null then null else read.call @, propChange.v
+              s: if propChange.s == null then null else read.call @, propChange.s
             else throw new Error "Unsupported type #{type}"
     return res)
 

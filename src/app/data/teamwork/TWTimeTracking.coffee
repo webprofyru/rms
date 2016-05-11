@@ -194,10 +194,10 @@ ngModule.factory 'TWTimeTracking', [
             .then(((resp) => # ok
               if (resp.status == 200) # 0 means that request was canceled
                 @set 'cancel', null
-                if !(entries = resp.data['time-entries'])
+                if !(entries = resp.data['time-entries']) || entries.length == 0
                   findFirstPage topPage + Math.floor(((endPage = page) - topPage) / 2)
                 else
-                  if moment(entries[0]['date']) >= time.historyLimit || entries.length == 0
+                  if moment(entries[0]['date']) >= time.historyLimit
                     if topPage == page # found
                       config.set 'histStart', page
                       if (DSDigest.block (-> importResponse(entries)))
