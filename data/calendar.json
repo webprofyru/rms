@@ -1,0 +1,38 @@
+{
+    "calendars": [
+        {
+            "email": "i.saburov@webprofy.ru",
+            "events": [
+              {
+                "name": "Сабуров Илья - планерка Вебпрофи",
+                "description": "test content",
+                "date": "2016-05-16",
+                "length": "3:00:00"
+              },
+              {
+                "name": "Производственный статус WebProfy.ru",
+                "description": "test content 2",
+                "date": "2016-05-16",
+                "length": "3:00:00"
+              }
+            ]
+        },
+        {
+            "email": "n.skinteev@webprofy.ru",
+            "events": [
+              {
+                "name": "Fesco ЛК SCRUM",
+                "description": "test content",
+                "date": "2016-05-16",
+                "length": "1:00:00"
+              },
+              {
+                "name": "Scrum of scrum",
+                "description": "test content 2",
+                "date": "2016-05-16",
+                "length": "1:00:00"
+              }
+            ]
+        }
+    ]
+}
