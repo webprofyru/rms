@@ -67,7 +67,7 @@ ngModule.directive 'rmsTask', ['$rootScope', '$timeout', (($rootScope, $timeout)
         else if modal.task != model.$viewValue
           $rootScope.modal = {type: null}
           $rootScope.$digest()
-          $rootScope.$evalAsyns (->
+          $rootScope.$evalAsync (->
             $rootScope.modal =
               type: 'task-edit'
               task: model.$viewValue

@@ -29,6 +29,10 @@ ngModule.factory 'TWProjects', ['DSDataTeamworkPaged', 'DSDataSource', '$rootSco
       @projectsMap = {}
       return)
 
+    startLoad: ->
+      @projectsMap = {}
+      return
+
     importResponse: (json) ->
 
       cnt = 0
