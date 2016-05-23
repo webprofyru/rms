@@ -22,7 +22,7 @@ DSTags = require '../../../dscommon/DSTags'
 TaskSplit = require '../../models/types/TaskSplit'
 RMSData = require '../../utils/RMSData'
 
-ngModule.factory 'TWTasks', ['DSDataSource', 'config', '$q', ((DSDataSource, config, $q) ->
+ngModule.factory 'TWTasks', ['DSDataSource', 'dsChanges', 'config', '$q', ((DSDataSource, dsChanges, config, $q) ->
 
   return class TWTasks extends DSData
 
@@ -259,6 +259,7 @@ ngModule.factory 'TWTasks', ['DSDataSource', 'config', '$q', ((DSDataSource, con
               pageLoad.call @, page + 1
             else
               DSDigest.block (=>
+                clearChangesForClosedTasks.call @
                 @get('tasksSet').merge @, taskMap
                 releaseMaps.call @
                 return)
@@ -267,6 +268,12 @@ ngModule.factory 'TWTasks', ['DSDataSource', 'config', '$q', ((DSDataSource, con
           else onError(resp, resp.status == 0)
           return), onError)
         return)).call @, 1
+
+      clearChangesForClosedTasks = ->
+        for taskKey, task of dsChanges.tasks
+          unless taskMap.hasOwnProperty(taskKey)
+            task._clearChanges()
+        return # clearChangesForClosedTasks =
 
       return)
 

@@ -106,6 +106,17 @@ module.exports = class DSDocument extends DSObject
           lst.__onChange.call lst, @, propName, value, oldVal for lst in @$ds_evt by -1
         return)
 
+      _clearChanges: -> # removes all changes made to the task, and cleaning up a hisotry of those changes
+        if (change = @__change)
+          for propName, prop of change # fix history
+            @$ds_chg.$ds_hist.setSameAsServer @, propName
+            lst.__onChange.call lst, @, propName, prop.s, prop.v for lst in @$ds_evt by -1
+            s.release @ if (s = prop.s) instanceof DSObjectBase
+            v.release @ if (v = prop.v) instanceof DSObjectBase
+          delete @.__change
+          @$ds_chg.remove @
+        return # _clearChanges:
+
       props = Editable::__props = originalDocClass::__props # same props as on server version of document class
       @::get = ((propName) ->
         if assert

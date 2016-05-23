@@ -50,7 +50,6 @@ ngModule.factory 'DSDataTeamworkPaged', ['DSDataSource', '$rootScope', '$q', ((D
       addPaging = (page, url) ->
         "#{url}#{if url.indexOf('?') == -1 then '?' else '&'}page=#{page}&pageSize=#{WORK_ENTRIES_WHOLE_PAGE}"
 
-      console.info '@:', @$ds_docType
       @startLoad()
 
       (pageLoad = (page) =>
