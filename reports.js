@@ -378,7 +378,6 @@ ngModule.factory('DSDataTeamworkPaged', [
         addPaging = function(page, url) {
           return "" + url + (url.indexOf('?') === -1 ? '?' : '&') + "page=" + page + "&pageSize=" + WORK_ENTRIES_WHOLE_PAGE;
         };
-        console.info('@:', this.$ds_docType);
         this.startLoad();
         (pageLoad = (function(_this) {
           return function(page) {
@@ -2041,6 +2040,29 @@ module.exports = DSDocument = (function(superClass) {
           }
         }
       });
+
+      Editable.prototype._clearChanges = function() {
+        var change, i, lst, prop, propName, ref, s, v;
+        if ((change = this.__change)) {
+          for (propName in change) {
+            prop = change[propName];
+            this.$ds_chg.$ds_hist.setSameAsServer(this, propName);
+            ref = this.$ds_evt;
+            for (i = ref.length - 1; i >= 0; i += -1) {
+              lst = ref[i];
+              lst.__onChange.call(lst, this, propName, prop.s, prop.v);
+            }
+            if ((s = prop.s) instanceof DSObjectBase) {
+              s.release(this);
+            }
+            if ((v = prop.v) instanceof DSObjectBase) {
+              v.release(this);
+            }
+          }
+          delete this.__change;
+          this.$ds_chg.remove(this);
+        }
+      };
 
       props = Editable.prototype.__props = originalDocClass.prototype.__props;
 

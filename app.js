@@ -1508,7 +1508,6 @@ ngModule.factory('DSDataTeamworkPaged', [
         addPaging = function(page, url) {
           return "" + url + (url.indexOf('?') === -1 ? '?' : '&') + "page=" + page + "&pageSize=" + WORK_ENTRIES_WHOLE_PAGE;
         };
-        console.info('@:', this.$ds_docType);
         this.startLoad();
         (pageLoad = (function(_this) {
           return function(page) {
@@ -1736,7 +1735,7 @@ TaskSplit = require('../../models/types/TaskSplit');
 RMSData = require('../../utils/RMSData');
 
 ngModule.factory('TWTasks', [
-  'DSDataSource', 'config', '$q', (function(DSDataSource, config, $q) {
+  'DSDataSource', 'dsChanges', 'config', '$q', (function(DSDataSource, dsChanges, config, $q) {
     var TWTasks;
     return TWTasks = (function(superClass) {
       var class1, importTask, isTaskInDatesRange, loadCompletedTaskForPersonTimeTracking, releaseMaps;
@@ -2002,7 +2001,7 @@ ngModule.factory('TWTasks', [
       });
 
       TWTasks.prototype.load = (function() {
-        var cancel, importResponse, onError, pageLoad, taskMap;
+        var cancel, clearChangesForClosedTasks, importResponse, onError, pageLoad, taskMap;
         if (assert) {
           if (!this.get('source')) {
             throw new Error('load(): Source is not specified');
@@ -2059,6 +2058,7 @@ ngModule.factory('TWTasks', [
                   pageLoad.call(_this, page + 1);
                 } else {
                   DSDigest.block((function() {
+                    clearChangesForClosedTasks.call(_this);
                     _this.get('tasksSet').merge(_this, taskMap);
                     releaseMaps.call(_this);
                   }));
@@ -2071,6 +2071,16 @@ ngModule.factory('TWTasks', [
             };
           })(this)), onError);
         })).call(this, 1);
+        clearChangesForClosedTasks = function() {
+          var ref, task, taskKey;
+          ref = dsChanges.tasks;
+          for (taskKey in ref) {
+            task = ref[taskKey];
+            if (!taskMap.hasOwnProperty(taskKey)) {
+              task._clearChanges();
+            }
+          }
+        };
       });
 
       loadCompletedTaskForPersonTimeTracking = (function() {
@@ -8167,6 +8177,29 @@ module.exports = DSDocument = (function(superClass) {
           }
         }
       });
+
+      Editable.prototype._clearChanges = function() {
+        var change, i, lst, prop, propName, ref, s, v;
+        if ((change = this.__change)) {
+          for (propName in change) {
+            prop = change[propName];
+            this.$ds_chg.$ds_hist.setSameAsServer(this, propName);
+            ref = this.$ds_evt;
+            for (i = ref.length - 1; i >= 0; i += -1) {
+              lst = ref[i];
+              lst.__onChange.call(lst, this, propName, prop.s, prop.v);
+            }
+            if ((s = prop.s) instanceof DSObjectBase) {
+              s.release(this);
+            }
+            if ((v = prop.v) instanceof DSObjectBase) {
+              v.release(this);
+            }
+          }
+          delete this.__change;
+          this.$ds_chg.remove(this);
+        }
+      };
 
       props = Editable.prototype.__props = originalDocClass.prototype.__props;
 
