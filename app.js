@@ -1508,6 +1508,7 @@ ngModule.factory('DSDataTeamworkPaged', [
         addPaging = function(page, url) {
           return "" + url + (url.indexOf('?') === -1 ? '?' : '&') + "page=" + page + "&pageSize=" + WORK_ENTRIES_WHOLE_PAGE;
         };
+        console.info('@:', this.$ds_docType);
         this.startLoad();
         (pageLoad = (function(_this) {
           return function(page) {
@@ -4666,7 +4667,7 @@ ngModule.directive('rmsTask', [
               type: null
             };
             $rootScope.$digest();
-            $rootScope.$evalAsyns((function() {
+            $rootScope.$evalAsync((function() {
               $rootScope.modal = {
                 type: 'task-edit',
                 task: model.$viewValue,

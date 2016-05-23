@@ -378,6 +378,7 @@ ngModule.factory('DSDataTeamworkPaged', [
         addPaging = function(page, url) {
           return "" + url + (url.indexOf('?') === -1 ? '?' : '&') + "page=" + page + "&pageSize=" + WORK_ENTRIES_WHOLE_PAGE;
         };
+        console.info('@:', this.$ds_docType);
         this.startLoad();
         (pageLoad = (function(_this) {
           return function(page) {
@@ -4651,6 +4652,10 @@ ngModule.factory('TWProjects', [
         this.init = null;
         this.projectsMap = {};
       });
+
+      TWProjects.prototype.startLoad = function() {
+        this.projectsMap = {};
+      };
 
       TWProjects.prototype.importResponse = function(json) {
         var cnt, i, jsonProject, len, project, ref;
