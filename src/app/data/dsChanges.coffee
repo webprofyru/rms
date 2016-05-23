@@ -81,6 +81,9 @@ ngModule.factory 'dsChanges', [
                     else (task = Task.pool.find(@, taskKey)).readMap(changes.tasks[taskKey]) # restore server task from local storage
                     (taskEditable = tasksSetPool.find(@, taskKey, set)).init(task, tasksSet, taskChange)
                     taskEditable.$u = $u
+                    unless taskEditable.hasOwnProperty '__change' # all changes met server version
+                      delete set[taskEditable.$ds_key]
+                      taskEditable.release @
                     task.release @
                   tasksSet.merge @, set
                   Task.pool.enableWatch true

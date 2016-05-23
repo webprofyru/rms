@@ -1,5 +1,6 @@
 assert = require('./util').assert
 error = require('./util').error
+traceRefs = require('./util').traceRefs
 
 DSObjectBase = require './DSObjectBase'
 DSObject = require './DSObject'
@@ -59,28 +60,37 @@ module.exports = class DSDocument extends DSObject
           error.invalidArg 'changes' if !(arguments.length == 2 || typeof changes == 'object')
         (@$ds_doc = serverDoc).addRef @
         @$ds_chg = changesSet
-        if (@__change = @changes)
-          if traceRefs
-            list = []
-            for propName, changePair of (@__change = changes)
-              list.push changePair.v if changePair.v instanceof DSObject
-              list.push changePair.s if changePair.s instanceof DSObject
-            for item in list
-              refs = item.$ds_referries
-              if refs.length == 0
-                console.error "#{DSObjectBase.desc item}: Empty $ds_referries"
-              else if (index = refs.lastIndexOf(owner)) < 0
-                console.error "#{DSObjectBase.desc @}: Referry not found: #{DSObjectBase.desc owner}"
-                debugger if totalReleaseVerb
-              else
-                if totalReleaseVerb
-                  console.info "#{++util.serviceOwner.msgCount}: transfer: #{DSObjectBase.desc item}, refs: #{@$ds_ref}, from: #{DSObjectBase.desc owner}, to: #{DSObjectBase.desc @}"
-                  debugger if util.serviceOwner.msgCount == window.totalBreak
-                refs[index] = @
-#          for propName, changePair of (@__change = changes)
-#            v.addRef @ if (v = changePair.v) instanceof DSObject
-#            s.addRef @ if (s = changePair.s) instanceof DSObject
-          @addRef @; changesSet.add @, @
+        if (@__change = changes)
+          notEmpty = false
+          for propName, prop of changes
+            if @__props[propName].equal serverDoc.get(propName), prop.v
+              delete changes[propName]
+            else
+              notEmpty = true
+          unless notEmpty
+            delete @__change
+          else
+            if traceRefs
+              list = []
+              for propName, changePair of changes
+                list.push changePair.v if changePair.v instanceof DSObject
+                list.push changePair.s if changePair.s instanceof DSObject
+              for item in list
+                refs = item.$ds_referries
+                if refs.length == 0
+                  console.error "#{DSObjectBase.desc item}: Empty $ds_referries"
+                else if (index = refs.lastIndexOf(owner)) < 0
+                  console.error "#{DSObjectBase.desc @}: Referry not found: #{DSObjectBase.desc owner}"
+                  debugger if totalReleaseVerb
+                else
+                  if totalReleaseVerb
+                    console.info "#{++util.serviceOwner.msgCount}: transfer: #{DSObjectBase.desc item}, refs: #{@$ds_ref}, from: #{DSObjectBase.desc owner}, to: #{DSObjectBase.desc @}"
+                    debugger if util.serviceOwner.msgCount == window.totalBreak
+                  refs[index] = @
+  #          for propName, changePair of (@__change = changes)
+  #            v.addRef @ if (v = changePair.v) instanceof DSObject
+  #            s.addRef @ if (s = changePair.s) instanceof DSObject
+            @addRef @; changesSet.add @, @
         if !serverDoc.hasOwnProperty '$ds_evt' then serverDoc.$ds_evt = [@]
         else
           if assert
