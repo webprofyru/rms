@@ -1850,13 +1850,15 @@ module.exports = DSDigest = (function() {
 
 
 },{"./util":24}],17:[function(require,module,exports){
-var DSDocument, DSObject, DSObjectBase, DSSet, assert, error,
+var DSDocument, DSObject, DSObjectBase, DSSet, assert, error, traceRefs,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
 assert = require('./util').assert;
 
 error = require('./util').error;
+
+traceRefs = require('./util').traceRefs;
 
 DSObjectBase = require('./DSObjectBase');
 
@@ -1940,7 +1942,7 @@ module.exports = DSDocument = (function(superClass) {
       }));
 
       Editable.prototype.init = (function(serverDoc, changesSet, changes) {
-        var changePair, i, index, item, len, list, propName, ref, refs;
+        var changePair, i, index, item, len, list, notEmpty, prop, propName, refs;
         if (assert) {
           if (!(serverDoc !== null && serverDoc.__proto__.constructor === originalDocClass)) {
             error.invalidArg('serverDoc');
@@ -1954,42 +1956,54 @@ module.exports = DSDocument = (function(superClass) {
         }
         (this.$ds_doc = serverDoc).addRef(this);
         this.$ds_chg = changesSet;
-        if ((this.__change = this.changes)) {
-          if (traceRefs) {
-            list = [];
-            ref = (this.__change = changes);
-            for (propName in ref) {
-              changePair = ref[propName];
-              if (changePair.v instanceof DSObject) {
-                list.push(changePair.v);
-              }
-              if (changePair.s instanceof DSObject) {
-                list.push(changePair.s);
-              }
-            }
-            for (i = 0, len = list.length; i < len; i++) {
-              item = list[i];
-              refs = item.$ds_referries;
-              if (refs.length === 0) {
-                console.error((DSObjectBase.desc(item)) + ": Empty $ds_referries");
-              } else if ((index = refs.lastIndexOf(owner)) < 0) {
-                console.error((DSObjectBase.desc(this)) + ": Referry not found: " + (DSObjectBase.desc(owner)));
-                if (totalReleaseVerb) {
-                  debugger;
-                }
-              } else {
-                if (totalReleaseVerb) {
-                  console.info((++util.serviceOwner.msgCount) + ": transfer: " + (DSObjectBase.desc(item)) + ", refs: " + this.$ds_ref + ", from: " + (DSObjectBase.desc(owner)) + ", to: " + (DSObjectBase.desc(this)));
-                  if (util.serviceOwner.msgCount === window.totalBreak) {
-                    debugger;
-                  }
-                }
-                refs[index] = this;
-              }
+        if ((this.__change = changes)) {
+          notEmpty = false;
+          for (propName in changes) {
+            prop = changes[propName];
+            if (this.__props[propName].equal(serverDoc.get(propName), prop.v)) {
+              delete changes[propName];
+            } else {
+              notEmpty = true;
             }
           }
-          this.addRef(this);
-          changesSet.add(this, this);
+          if (!notEmpty) {
+            delete this.__change;
+          } else {
+            if (traceRefs) {
+              list = [];
+              for (propName in changes) {
+                changePair = changes[propName];
+                if (changePair.v instanceof DSObject) {
+                  list.push(changePair.v);
+                }
+                if (changePair.s instanceof DSObject) {
+                  list.push(changePair.s);
+                }
+              }
+              for (i = 0, len = list.length; i < len; i++) {
+                item = list[i];
+                refs = item.$ds_referries;
+                if (refs.length === 0) {
+                  console.error((DSObjectBase.desc(item)) + ": Empty $ds_referries");
+                } else if ((index = refs.lastIndexOf(owner)) < 0) {
+                  console.error((DSObjectBase.desc(this)) + ": Referry not found: " + (DSObjectBase.desc(owner)));
+                  if (totalReleaseVerb) {
+                    debugger;
+                  }
+                } else {
+                  if (totalReleaseVerb) {
+                    console.info((++util.serviceOwner.msgCount) + ": transfer: " + (DSObjectBase.desc(item)) + ", refs: " + this.$ds_ref + ", from: " + (DSObjectBase.desc(owner)) + ", to: " + (DSObjectBase.desc(this)));
+                    if (util.serviceOwner.msgCount === window.totalBreak) {
+                      debugger;
+                    }
+                  }
+                  refs[index] = this;
+                }
+              }
+            }
+            this.addRef(this);
+            changesSet.add(this, this);
+          }
         }
         if (!serverDoc.hasOwnProperty('$ds_evt')) {
           serverDoc.$ds_evt = [this];
