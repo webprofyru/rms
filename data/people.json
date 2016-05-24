@@ -264,13 +264,13 @@
         },
         {
             "id": 153216,
-            "role": "Manager",
+            "role": "Manager, RMStrainee",
             "name": "Мария Семенченок",
             "email": "m.semenchenok@webprofy.ru"
         },        
         {
             "id": 161546,
-            "role": "Manager",
+            "role": "Manager, RMStrainee",
             "name": "Максим Баталеев",
             "email": "m.bataleev@webprofy.ru"
         },
