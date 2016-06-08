@@ -108,7 +108,7 @@
         },    	
         {
             "id": 112015,
-            "role": "Programmer,Teamlead",
+            "role": "Programmer, Teamlead",
             "name": "Alexey Zorkaltsev",
             "email": "alexey@zorkaltsev.com"
         },
@@ -180,7 +180,7 @@
         },
         {
             "id": 97175,
-            "role": "Programmer, Markuper, GroupSkinteev, Teamlead",
+            "role": "Programmer, Markuper, GroupSkinteev, Teamlead, RMStrainee",
             "name": "Николай Скинтеев",
             "email": "n.skinteev@webprofy.ru"
         },
@@ -198,7 +198,7 @@
         },
         {
             "id": 92517,
-            "role": "Programmer, Markuper, GroupYastrebov, Teamlead",
+            "role": "Programmer, Markuper, GroupYastrebov, Teamlead, RMStrainee",
             "name": "Сергей Ястребов",
             "email": "s.yastrebov@webprofy.ru"
         },
