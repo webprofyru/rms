@@ -13,7 +13,6 @@
 , с использование ds-gulp-builder (https://www.npmjs.com/package/ds-gulp-builder,  https://github.com/delightsoft/DSGulpBuilder)
 
     {task, async, sync, go, gutil, errorHandler} = require('ds-gulp-builder')(gulp = require('gulp'))
-    # {task, async, sync, go, gutil, errorHandler} = require('C:\\GIT\\DSGulpBuilder')(gulp = require('gulp'))
 
 Для gulp-задач, которых нет в ds-gulp-builder подключаем необходимые npm-пакеты
 
@@ -22,10 +21,8 @@
     include = require 'gulp-include'
     changed = require 'gulp-changed'
     (notify = require 'gulp-notify').logger (->)
-
     rename = require 'gulp-rename'
     uglify = require 'gulp-uglify'
-    changed = require 'gulp-changed'
 
 В clearFolders пишем все задачи очистки папок.  Папку ./build чистим сохраняя директорию .git, чтоб не терять
 настройки публикации в ветку gh-pages (https://github.com/webprofyru/rms/tree/gh-pages).

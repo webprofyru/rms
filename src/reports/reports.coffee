@@ -1,5 +1,3 @@
-ExcelBuilder = require 'ExcelBuilder'
-
 FileSaver = require '../../static/libs/FileSaver.js/FileSaver'
 
 serviceOwner = require('../dscommon/util').serviceOwner
