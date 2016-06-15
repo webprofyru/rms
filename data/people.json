@@ -100,6 +100,12 @@
         }
     ],
     "people": [
+    	{
+            "id": 48688,
+            "role": "Manager",
+            "name": "Галина Игнатьева",
+            "email": "i.galina@kokoc.com"
+        }, 
         {
             "id": 171133,
             "role": "Tester, Content-manager",
