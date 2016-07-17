@@ -35,12 +35,14 @@
         {
             "role": "GroupSkinteev",
             "name": "Group Skinteev",
-            "showInDailyPlan": true
+            "showInDailyPlan": true,
+            "tagId" : 35390
         },
         {
             "role": "GroupKorovkin",
             "name": "Group Korovkin",
-            "showInDailyPlan": true
+            "showInDailyPlan": true,
+            "tagID": 35484
         },        
         {
             "role": "RMStrainee",
