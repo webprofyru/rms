@@ -42,7 +42,7 @@
             "role": "GroupKorovkin",
             "name": "Group Korovkin",
             "showInDailyPlan": true,
-            "tagID": 35484
+            "tagId": 35484
         },        
         {
             "role": "RMStrainee",
