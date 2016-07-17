@@ -34,11 +34,13 @@
         },
         {
             "role": "GroupSkinteev",
-            "name": "Group Skinteev"
+            "name": "Group Skinteev",
+            "showInDailyPlan": true
         },
         {
             "role": "GroupKorovkin",
-            "name": "Group Korovkin"
+            "name": "Group Korovkin",
+            "showInDailyPlan": true
         },        
         {
             "role": "RMStrainee",
