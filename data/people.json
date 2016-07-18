@@ -29,16 +29,16 @@
             "groupRole": true
         },
         {
-            "role": "GroupYastrebov",
-            "name": "Group Yastrebov"
-        },
-        {
             "role": "GroupSkinteev",
-            "name": "Group Skinteev"
+            "name": "Group Skinteev",
+            "showInDailyPlan": true,
+            "tagId" : 35390
         },
         {
             "role": "GroupKorovkin",
-            "name": "Group Korovkin"
+            "name": "Group Korovkin",
+            "showInDailyPlan": true,
+            "tagId": 35484
         },        
         {
             "role": "RMStrainee",
@@ -100,12 +100,6 @@
         }
     ],
     "people": [
-    	{
-            "id": 48688,
-            "role": "Manager",
-            "name": "Галина Игнатьева",
-            "email": "i.galina@kokoc.com"
-        }, 
         {
             "id": 171133,
             "role": "Tester, Content-manager",
@@ -204,7 +198,7 @@
         },
         {
             "id": 92517,
-            "role": "Programmer, Markuper, GroupYastrebov, Teamlead, RMStrainee",
+            "role": "Programmer, Markuper, GroupKorovkin, Teamlead, RMStrainee",
             "name": "Сергей Ястребов",
             "email": "s.yastrebov@webprofy.ru"
         },
@@ -240,7 +234,7 @@
         },
         {
             "id": 121030,
-            "role": "Programmer, Markuper, GroupYastrebov",
+            "role": "Programmer, Markuper, GroupKorovkin",
             "name": "Валерий Серов",
             "email": "v.serov@webprofy.ru"
         },
@@ -282,37 +276,31 @@
         },
         {
             "id": 102943,
-            "role": "Programmer, Markuper, GroupYastrebov",
+            "role": "Programmer, Markuper, GroupSkinteev",
             "name": "Григорий Красильников",
             "email": "g.krasilnikov@webprofy.ru"
         },
-         {
-            "id": 198626,
-            "role": "Programmer, Markuper, GroupYastrebov",
-            "name": "Александр Богдановский",
-            "email": "a.bogdanovskiy@webprofy.ru"
-        },
         {
             "id": 201789,
-            "role": "Programmer, Markuper, GroupYastrebov",
+            "role": "Programmer, Markuper, GroupKorovkin",
             "name": "Валерий Марченко",
             "email": "v.marchenko@webprofy.ru"
         },
         {
             "id": 221647,
-            "role": "Programmer, Markuper, GroupYastrebov",
+            "role": "Programmer, Markuper, GroupKorovkin",
             "name": "Александр Руденко",
             "email": "a.rudenko@webprofy.ru"
         },
         {
             "id": 231625,
-            "role": "Programmer, Markuper, GroupYastrebov",
+            "role": "Programmer, Markuper, GroupKorovkin",
             "name": "Наталья Баганова",
             "email": "n.baganova@webprofy.ru"
         },
         {
             "id": 180846,
-            "role": "Programmer, Markuper, GroupKorovkin, GroupSkinteev",
+            "role": "Programmer, Markuper, GroupSkinteev",
             "name": "Игорь Качко",
             "email": "i.kachko@webprofy.ru"
         },
