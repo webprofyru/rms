@@ -216,7 +216,7 @@
         },
         {
           "id": 115566,
-          "role": "Markuper, GroupKorovkin",
+          "role": "Markuper",
           "name": "Александр Верхотуров",
           "email": "a.verkhoturov@webprofy.ru"
         },
@@ -281,12 +281,6 @@
             "email": "g.krasilnikov@webprofy.ru"
         },
         {
-            "id": 201789,
-            "role": "Programmer, Markuper, GroupKorovkin",
-            "name": "Валерий Марченко",
-            "email": "v.marchenko@webprofy.ru"
-        },
-        {
             "id": 221647,
             "role": "Programmer, Markuper, GroupKorovkin",
             "name": "Александр Руденко",
@@ -306,7 +300,7 @@
         },
         {
             "id": 96180,
-            "role": "Programmer, Markuper, GroupSkinteev",
+            "role": "Programmer, Markuper, GroupKorovkin",
             "name": "Андрей Васильев",
             "email": "myst061@gmail.com"
         },
