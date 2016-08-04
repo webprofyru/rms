@@ -304,5 +304,11 @@
             "name": "Алла Молчанова",
             "email": "a.molchanova@webprofy.ru"
         }
-    ]
+    ],
+    "dailyPlan": {
+    	"reloadTimeMin" : "5",
+	"hsize": "300",
+	"vsize": "400",
+	"finalWords": " ,отчет"
+    }
 }
