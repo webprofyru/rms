@@ -368,23 +368,32 @@ ul {
   padding: 20px;
   background: #EDE9E9; }
   /* line 10, C:/SVN/_WebProfyManagement/src/sass/partials/_modal-login.sass */
-  #modal-login input {
-    margin-bottom: 10px;
-    padding: 3px 6px;
-    -webkit-border-radius: 3px;
-            border-radius: 3px;
-    border: none; }
-  /* line 16, C:/SVN/_WebProfyManagement/src/sass/partials/_modal-login.sass */
+  #modal-login label {
+    font-size: 12px; }
+  /* line 12, C:/SVN/_WebProfyManagement/src/sass/partials/_modal-login.sass */
+  #modal-login .field {
+    margin-bottom: 10px; }
+    /* line 14, C:/SVN/_WebProfyManagement/src/sass/partials/_modal-login.sass */
+    #modal-login .field input {
+      padding: 3px 6px;
+      -webkit-border-radius: 3px;
+              border-radius: 3px;
+      border: none; }
+    /* line 18, C:/SVN/_WebProfyManagement/src/sass/partials/_modal-login.sass */
+    #modal-login .field .error {
+      color: red;
+      font-size: 12px; }
+  /* line 22, C:/SVN/_WebProfyManagement/src/sass/partials/_modal-login.sass */
   #modal-login .btn-group .btn {
     float: left;
     font-size: 13px;
     padding: 2px 5px;
     margin-right: 10px;
     cursor: pointer; }
-    /* line 22, C:/SVN/_WebProfyManagement/src/sass/partials/_modal-login.sass */
+    /* line 28, C:/SVN/_WebProfyManagement/src/sass/partials/_modal-login.sass */
     #modal-login .btn-group .btn:hover {
       background: #C6C6C6; }
-    /* line 24, C:/SVN/_WebProfyManagement/src/sass/partials/_modal-login.sass */
+    /* line 30, C:/SVN/_WebProfyManagement/src/sass/partials/_modal-login.sass */
     #modal-login .btn-group .btn.right {
       float: right; }
 

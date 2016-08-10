@@ -80,6 +80,8 @@ ngModule.factory('config', [
 
       Config.propNum('selectedLoad');
 
+      Config.propNum('refreshPeriod');
+
       Config.propNum('histStart', -1);
 
       Config.onAnyPropChange((function(item, propName, newVal, oldVal) {
@@ -1607,7 +1609,7 @@ DSObject = require('./DSObject');
 DSDigest = require('./DSDigest');
 
 ngModule.factory('DSDataSource', [
-  '$q', '$http', (function($q, $http) {
+  'config', '$rootScope', '$q', '$http', (function(config, $rootScope, $q, $http) {
     var DSDataSource;
     return DSDataSource = (function(superClass) {
       var class1;
@@ -1643,6 +1645,15 @@ ngModule.factory('DSDataSource', [
       class1 = (function(referry, key) {
         DSObject.call(this, referry, key);
         this.cancelDefers = [];
+        this._lastRefresh = null;
+        this._refreshTimer = null;
+        $rootScope.$watch((function() {
+          return config.refreshPeriod;
+        }), (function(_this) {
+          return function(val) {
+            _this._setNextRefresh();
+          };
+        })(this));
       });
 
       DSDataSource.prototype.setConnection = (function(url, token) {
@@ -1673,7 +1684,24 @@ ngModule.factory('DSDataSource', [
         }
       });
 
+      DSDataSource.prototype._setNextRefresh = function() {
+        var currTime, nextUpdate, timeout;
+        if (this._refreshTimer !== null) {
+          clearTimeout(this._refreshTimer);
+        }
+        if (config.refreshPeriod !== null) {
+          timeout = this._lastRefresh === null ? 0 : (nextUpdate = this._lastRefresh.add(config.refreshPeriod, 'minutes'), currTime = moment(), nextUpdate >= currTime ? nextUpdate - currTime : 0);
+          this._refreshTimer = setTimeout(((function(_this) {
+            return function() {
+              _this.refresh();
+            };
+          })(this)), timeout);
+        }
+      };
+
       DSDataSource.prototype.refresh = (function() {
+        this._lastRefresh = moment();
+        this._setNextRefresh();
         if (this.get('status') === 'ready') {
           this.set('status', 'update');
           this.set('status', 'ready');
@@ -4765,10 +4793,7 @@ module.exports = PeriodTimeTracking = (function(superClass) {
 
 
 },{"../../app/models/Person":5,"../../app/models/Project":6,"../../app/models/Task":7,"../../dscommon/DSObject":19}],29:[function(require,module,exports){
-(function (global){
-var ExcelBuilder, FileSaver, PeriodTimeTracking, base62ToBlob, base64, defaultTask, fixStr, ngModule, projectReport, serviceOwner;
-
-ExcelBuilder = (typeof window !== "undefined" ? window['ExcelBuilder'] : typeof global !== "undefined" ? global['ExcelBuilder'] : null);
+var FileSaver, PeriodTimeTracking, base62ToBlob, base64, defaultTask, fixStr, ngModule, projectReport, serviceOwner;
 
 FileSaver = require('../../static/libs/FileSaver.js/FileSaver');
 
@@ -5210,7 +5235,6 @@ ngModule.directive('reports', [
 ]);
 
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../static/libs/FileSaver.js/FileSaver":34,"../dscommon/util":24,"../utils/base62ToBlob":32,"../utils/base64":33,"./data/dsDataService":25,"./data/teamwork/TWPeriodTimeTracking":26,"./models/PeriodTimeTracking":28,"./showSpinner":30}],30:[function(require,module,exports){
 var ngModule, spinnerOpts;
 

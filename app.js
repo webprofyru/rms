@@ -1,5 +1,3 @@
-/* new */
-
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require('./ng-app');
 
@@ -87,6 +85,8 @@ ngModule.factory('config', [
       Config.propNum('selectedCompany');
 
       Config.propNum('selectedLoad');
+
+      Config.propNum('refreshPeriod');
 
       Config.propNum('histStart', -1);
 
@@ -3800,6 +3800,7 @@ ngModule.directive('rmsAccount', [
         }));
         $scope.url = config.teamwork;
         $scope.token = config.token;
+        $scope.refreshPeriod = config.refreshPeriod;
         $scope.save = (function() {
           var token, url;
           url = $scope.url.trim();
@@ -3811,6 +3812,7 @@ ngModule.directive('rmsAccount', [
           }
           config.teamwork = url;
           config.token = token;
+          config.refreshPeriod = $scope.refreshPeriod;
           close();
         });
         $scope.close = close = (function() {
@@ -7750,7 +7752,7 @@ DSObject = require('./DSObject');
 DSDigest = require('./DSDigest');
 
 ngModule.factory('DSDataSource', [
-  '$q', '$http', (function($q, $http) {
+  'config', '$rootScope', '$q', '$http', (function(config, $rootScope, $q, $http) {
     var DSDataSource;
     return DSDataSource = (function(superClass) {
       var class1;
@@ -7786,6 +7788,15 @@ ngModule.factory('DSDataSource', [
       class1 = (function(referry, key) {
         DSObject.call(this, referry, key);
         this.cancelDefers = [];
+        this._lastRefresh = null;
+        this._refreshTimer = null;
+        $rootScope.$watch((function() {
+          return config.refreshPeriod;
+        }), (function(_this) {
+          return function(val) {
+            _this._setNextRefresh();
+          };
+        })(this));
       });
 
       DSDataSource.prototype.setConnection = (function(url, token) {
@@ -7816,7 +7827,24 @@ ngModule.factory('DSDataSource', [
         }
       });
 
+      DSDataSource.prototype._setNextRefresh = function() {
+        var currTime, nextUpdate, timeout;
+        if (this._refreshTimer !== null) {
+          clearTimeout(this._refreshTimer);
+        }
+        if (config.refreshPeriod !== null) {
+          timeout = this._lastRefresh === null ? 0 : (nextUpdate = this._lastRefresh.add(config.refreshPeriod, 'minutes'), currTime = moment(), nextUpdate >= currTime ? nextUpdate - currTime : 0);
+          this._refreshTimer = setTimeout(((function(_this) {
+            return function() {
+              _this.refresh();
+            };
+          })(this)), timeout);
+        }
+      };
+
       DSDataSource.prototype.refresh = (function() {
+        this._lastRefresh = moment();
+        this._setNextRefresh();
         if (this.get('status') === 'ready') {
           this.set('status', 'update');
           this.set('status', 'ready');
