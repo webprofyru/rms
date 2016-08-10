@@ -16,6 +16,7 @@ ngModule.directive 'rmsAccount', ['config', '$rootScope', ((config, $rootScope) 
       $scope.$evalAsync (-> $($('input', element)[1]).select(); return)
       $scope.url = config.teamwork
       $scope.token = config.token
+      $scope.refreshPeriod = config.refreshPeriod
       $scope.save = (->
         url = $scope.url.trim()
         token = $scope.token.trim()
@@ -24,6 +25,7 @@ ngModule.directive 'rmsAccount', ['config', '$rootScope', ((config, $rootScope) 
             url += '/'
         config.teamwork = url
         config.token = token
+        config.refreshPeriod = $scope.refreshPeriod
         close()
         return)
       $scope.close = close = (->

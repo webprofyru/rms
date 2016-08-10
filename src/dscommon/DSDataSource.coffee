@@ -12,7 +12,7 @@ base64 = require '../utils/base64'
 DSObject = require './DSObject'
 DSDigest = require './DSDigest'
 
-ngModule.factory 'DSDataSource', ['$q', '$http', (($q, $http) ->
+ngModule.factory 'DSDataSource', ['config', '$rootScope', '$q', '$http', ((config, $rootScope, $q, $http) ->
 
   return class DSDataSource extends DSObject
     @begin 'DSDataSource'
@@ -30,6 +30,11 @@ ngModule.factory 'DSDataSource', ['$q', '$http', (($q, $http) ->
     constructor: ((referry, key) ->
       DSObject.call @, referry, key
       @cancelDefers = []
+      @_lastRefresh = null
+      @_refreshTimer = null
+      $rootScope.$watch (-> config.refreshPeriod), (val) =>
+        @_setNextRefresh()
+        return
       return)
 
     setConnection: ((url, token) ->
@@ -51,7 +56,27 @@ ngModule.factory 'DSDataSource', ['$q', '$http', (($q, $http) ->
         @set 'status', 'nodata'
       return)
 
+    _setNextRefresh: ->
+      clearTimeout @_refreshTimer if @_refreshTimer != null
+      if config.refreshPeriod != null
+        timeout =
+          if @_lastRefresh == null
+            0
+          else
+            nextUpdate = @_lastRefresh.add config.refreshPeriod, 'minutes'
+            currTime = moment()
+            if nextUpdate >= currTime
+              nextUpdate - currTime
+            else
+              0
+        @_refreshTimer = setTimeout (=>
+          @refresh()
+          return), timeout
+      return
+
     refresh: (->
+      @_lastRefresh = moment()
+      @_setNextRefresh()
       if @get('status') == 'ready'
         @set 'status', 'update'
         @set 'status', 'ready'

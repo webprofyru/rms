@@ -28,12 +28,14 @@
 настройки публикации в ветку gh-pages (https://github.com/webprofyru/rms/tree/gh-pages).
 
     clearFolders = [
-      task('clear-build').clearFolder('./build').keep('.git')]
+
+!!! Не удаляю и не копируют фолдер data - так как обновление этих данных идет прямо на github
+
+      task('clear-build').clearFolder('./build').keep(['.git', 'data'])]
 
 Собираем все задачи в спискок задач
 
     tasks = []
-
     
 Файлы для правильной работы GitHub Pages (gh-pages)
 ------------------------------
@@ -66,7 +68,8 @@ Libs
 
 Data
 
-    tasks.push task('app-data').copy('./data').dest('./build/data')
+!!! Не удаляю и не копируют фолдер data - так как обновление этих данных идет прямо на github
+    # tasks.push task('app-data').copy('./data').dest('./build/data')
 
 Тесты
 ------------------------------

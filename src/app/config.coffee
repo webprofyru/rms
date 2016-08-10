@@ -48,6 +48,8 @@ ngModule.factory 'config',
       @propNum 'selectedCompany'
       @propNum 'selectedLoad'
 
+      @propNum 'refreshPeriod'
+
       @propNum 'histStart', -1 # first page of time-entries history within time.historyLimit range
 
       @onAnyPropChange ((item, propName, newVal, oldVal) -> # save to local storage
