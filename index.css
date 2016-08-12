@@ -815,8 +815,8 @@ ul {
     -webkit-border-radius: 5px;
             border-radius: 5px;
     font-size: 12px;
-    position: absolute;
-    bottom: 0; }
+    position: fixed;
+    top: -100px; }
   /* line 98, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
   #screen1 .task-body {
     background: #BCD2E9; }

@@ -3556,6 +3556,8 @@ ngModule.run([
   'config', '$rootScope', 'db', (function(config, $rootScope, db) {
     $rootScope.Math = Math;
     $rootScope.taskModal = {};
+    $rootScope.startDateVal = null;
+    $rootScope.view3ActiveTab = null;
   })
 ]);
 
@@ -4656,19 +4658,19 @@ var ngModule;
 module.exports = (ngModule = angular.module('ui/tasks/rmsTask', [])).name;
 
 ngModule.run([
-  '$rootScope', (function($rootScope) {
+  '$rootScope', function($rootScope) {
     $rootScope.modal = {
       type: null
     };
-  })
+  }
 ]);
 
 ngModule.directive('rmsTask', [
-  '$rootScope', '$timeout', (function($rootScope, $timeout) {
+  '$rootScope', '$timeout', function($rootScope, $timeout) {
     return {
       restrict: 'A',
       require: 'ngModel',
-      link: (function($scope, element, attrs, model) {
+      link: function($scope, element, attrs, model) {
         var listenerFunc;
         element.on('click', (function(e) {
           var modal;
@@ -4715,54 +4717,59 @@ ngModule.directive('rmsTask', [
           }
         }));
         listenerFunc = void 0;
-        $scope.$watch(attrs.rmsTask + ".$u", (function(val) {
+        $scope.$watch(attrs.rmsTask + ".$u", function(val) {
           var el;
           if (val) {
             el = element[0];
             el.draggable = true;
-            el.addEventListener('dragstart', listenerFunc = (function(e) {
+            el.addEventListener('dragstart', listenerFunc = function(ev) {
+              var task;
               $rootScope.modal = {
                 type: 'drag-start',
-                task: $scope.$eval(attrs.rmsTask),
+                task: task = $scope.$eval(attrs.rmsTask),
                 scope: $scope
               };
-              element.addClass('drag-start');
               $rootScope.$digest();
-              e.dataTransfer.setDragImage($('#task-drag-ghost')[0], 20, 20);
-            }));
-            element.on('dragend', (function(e) {
+              element.addClass('drag-start');
+              ev.dataTransfer.effectAllowed = 'move';
+              ev.dataTransfer.setData('task', task);
+              ev.dataTransfer.setDragImage($('#task-drag-ghost')[0], 20, 20);
+              return true;
+            });
+            el.addEventListener('dragend', function(ev) {
               $rootScope.modal = {
                 type: null
               };
               element.removeClass('drag-start');
               $rootScope.$digest();
-            }));
+              return true;
+            });
           } else {
             el = element[0];
             el.draggable = false;
             el.removeEventListener('dragstart', listenerFunc);
             element.off('dragend');
           }
-        }));
-      })
+        });
+      }
     };
-  })
+  }
 ]);
 
 ngModule.directive('setTaskVisible', [
-  (function() {
+  function() {
     return {
       restrict: 'A',
-      link: (function($scope, element, attrs) {
+      link: function($scope, element, attrs) {
         var path;
         path = attrs.setTaskVisible;
         $scope.$eval(path + ".setVisible(true)");
-        $scope.$on('$destroy', (function() {
+        $scope.$on('$destroy', function() {
           $scope.$eval(path + ".setVisible(false)");
-        }));
-      })
+        });
+      }
     };
-  })
+  }
 ]);
 
 
@@ -5446,7 +5453,7 @@ module.exports = Change = (function(superClass) {
 
 
 },{"../../../../../dscommon/DSDocument":56,"../../../../../dscommon/DSObject":59,"../../../../../dscommon/util":65}],38:[function(require,module,exports){
-var DSDigest, Day, Person, PersonDayStat, PersonTimeTracking, Row, Tag, Task, TaskView, assert, ngModule,
+var DSDigest, Day, Person, PersonDayStat, PersonTimeTracking, Row, Tag, Task, TaskView, assert, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -5472,13 +5479,15 @@ Row = require('./models/Row');
 
 TaskView = require('./models/TaskView');
 
+serviceOwner = require('../../../../dscommon/util').serviceOwner;
+
 ngModule.controller('View1', [
-  '$scope', 'View1', '$rootScope', (function($scope, View1, $rootScope) {
+  '$scope', 'View1', '$rootScope', function($scope, View1, $rootScope) {
     $rootScope.view1 = $scope.view = new View1($scope, 'view1');
     $scope.$on('$destroy', (function() {
       delete $rootScope.view1;
     }));
-    $scope.expandedHeight = (function(row) {
+    $scope.expandedHeight = function(row) {
       if (!row.expand) {
         return '';
       }
@@ -5486,8 +5495,8 @@ ngModule.controller('View1', [
         return "height:100px";
       }
       return "height:" + (65 * _.maxBy(row.tasks, 'y').y + 98) + "px";
-    });
-  })
+    };
+  }
 ]);
 
 ngModule.factory('View1', [
@@ -6037,78 +6046,98 @@ ngModule.factory('View1', [
   })
 ]);
 
+ngModule.factory('getDropTasksGroup', [
+  'dsDataService', '$rootScope', function(dsDataService, $rootScope) {
+    var allTasks;
+    allTasks = serviceOwner.add(dsDataService.findDataSet(serviceOwner, {
+      type: Task,
+      mode: 'edited',
+      filter: 'all'
+    }));
+    return function() {
+      var duedate, k, project, ref, ref1, responsible, results, t;
+      duedate = $rootScope.modal.task.get('duedate').valueOf();
+      responsible = $rootScope.modal.task.get('responsible');
+      project = $rootScope.modal.task.get('project');
+      ref = allTasks.items;
+      results = [];
+      for (k in ref) {
+        t = ref[k];
+        if (!t.plan && !t.split && t.get('responsible') === responsible && ((ref1 = t.get('duedate')) != null ? ref1.valueOf() : void 0) === duedate && t.get('project') === project) {
+          results.push(t);
+        }
+      }
+      return results;
+    };
+  }
+]);
+
 ngModule.directive('rmsView1DropTask', [
-  'View1', '$rootScope', 'dsChanges', 'addCommentAndSave', (function(View1, $rootScope, dsChanges, addCommentAndSave) {
+  'View1', '$rootScope', 'dsChanges', 'addCommentAndSave', 'getDropTasksGroup', function(View1, $rootScope, dsChanges, addCommentAndSave, getDropTasksGroup) {
     return {
       restrict: 'A',
       scope: true,
-      link: (function($scope, element, attrs) {
-        element.on('dragover', (function(e) {
-          return false;
-        }));
-        element.on('drop', (function(e) {
-          var col, day, modal, scope, taskView, tasks;
-          day = _.findIndex($('.drop-zone', element), (function(value) {
+      link: function($scope, element, attrs) {
+        var el;
+        el = element[0];
+        el.addEventListener('dragover', function(ev) {
+          ev.preventDefault();
+          return true;
+        });
+        return el.addEventListener('drop', function(ev) {
+          var day, modal, tasks;
+          day = _.findIndex($('.drop-zone', element), function(value) {
             var $v;
             $v = $(value);
-            return $v.offset().left + $v.width() >= e.originalEvent.clientX;
-          }));
-          if (!(e.ctrlKey && (scope = (modal = $rootScope.modal).scope).view instanceof View1 && !modal.task.split)) {
+            return $v.offset().left + $v.width() >= ev.clientX;
+          });
+          if (!(ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate !== null)) {
             tasks = [$rootScope.modal.task];
           } else {
-            col = scope.taskView.x;
-            tasks = (function() {
-              var j, len1, ref, results;
-              ref = scope.row.get('tasks');
-              results = [];
-              for (j = 0, len1 = ref.length; j < len1; j++) {
-                taskView = ref[j];
-                if (!taskView.split && taskView.x === col && !taskView.task.plan && taskView.task.get('project') === modal.task.get('project')) {
-                  results.push(taskView.get('task'));
-                }
-              }
-              return results;
-            })();
+            tasks = getDropTasksGroup();
           }
           if (day < 0) {
-            addCommentAndSave(tasks, e.shiftKey, {
+            addCommentAndSave(tasks, ev.shiftKey, {
               responsible: $scope.row.get('person'),
               plan: false
             });
           } else {
-            addCommentAndSave(tasks, e.shiftKey, {
+            addCommentAndSave(tasks, ev.shiftKey, {
               responsible: $scope.row.get('person'),
               duedate: $scope.view.get('days')[day].get('date'),
               plan: false
             });
           }
           $rootScope.$digest();
+          ev.stopPropagation();
           return false;
-        }));
-      })
+        });
+      }
     };
-  })
+  }
 ]);
 
 ngModule.directive('rmsView1MouseOverWeekChange', [
-  'View1', '$rootScope', 'dsChanges', 'addCommentAndSave', (function(View1, $rootScope, dsChanges, addCommentAndSave) {
+  'View1', '$rootScope', 'dsChanges', 'addCommentAndSave', function(View1, $rootScope, dsChanges, addCommentAndSave) {
     return {
       restrict: 'A',
-      link: (function($scope, element, attrs) {
-        var direction, lastTimeStamp;
+      link: function($scope, element, attrs) {
+        var direction, el, lastTimeStamp;
         direction = $scope.$eval(attrs.rmsView1MouseOverWeekChange);
         lastTimeStamp = 0;
-        return element.on('dragover', (function(e) {
-          if (e.timeStamp > lastTimeStamp) {
-            lastTimeStamp = e.timeStamp + 5000;
+        el = element[0];
+        el.addEventListener('dragover', function(ev) {
+          if (ev.timeStamp > lastTimeStamp) {
+            lastTimeStamp = ev.timeStamp + 3000;
             $rootScope.view1.periodChange(direction);
             $rootScope.$digest();
           }
-          return false;
-        }));
-      })
+          ev.preventDefault();
+          return true;
+        });
+      }
     };
-  })
+  }
 ]);
 
 
@@ -6351,26 +6380,36 @@ ngModule.factory('View2', [
 ]);
 
 ngModule.directive('rmsView2DayDropTask', [
-  'dsChanges', '$rootScope', 'addCommentAndSave', (function(dsChanges, $rootScope, addCommentAndSave) {
+  'dsChanges', '$rootScope', 'addCommentAndSave', 'getDropTasksGroup', function(dsChanges, $rootScope, addCommentAndSave, getDropTasksGroup) {
     return {
       restrict: 'A',
       scope: true,
-      link: (function($scope, element, attrs) {
-        element.on('dragover', (function(e) {
-          return false;
-        }));
-        element.on('drop', (function(e) {
-          addCommentAndSave($rootScope.modal.task, e.shiftKey, {
+      link: function($scope, element, attrs) {
+        var el;
+        el = element[0];
+        el.addEventListener('dragover', function(ev) {
+          ev.preventDefault();
+          return true;
+        });
+        el.addEventListener('drop', function(ev) {
+          var modal, tasks;
+          if (!(ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate !== null)) {
+            tasks = [$rootScope.modal.task];
+          } else {
+            tasks = getDropTasksGroup();
+          }
+          addCommentAndSave(tasks, ev.shiftKey, {
             responsible: null,
             duedate: $scope.day.get('date'),
             plan: false
           });
           $rootScope.$digest();
+          ev.stopPropagation();
           return false;
-        }));
-      })
+        });
+      }
     };
-  })
+  }
 ]);
 
 
@@ -6402,7 +6441,7 @@ ngModule.controller('View3', [
 ]);
 
 ngModule.factory('View3', [
-  'DSView', 'config', '$log', (function(DSView, config, $log) {
+  'DSView', 'config', '$rootScope', '$log', (function(DSView, config, $rootScope, $log) {
     var View3;
     return View3 = (function(superClass) {
       var class1;
@@ -6435,6 +6474,8 @@ ngModule.factory('View3', [
           return function(args) {
             var active, mode, nextWeekEndDate, nextWeekStartDate, startDateVal;
             mode = args[0], startDateVal = args[1], active = args[2];
+            $rootScope.startDateVal = startDateVal;
+            $rootScope.view3ActiveTab = active;
             switch (active) {
               case 0:
                 _this.dataUpdate({
@@ -6558,25 +6599,42 @@ ngModule.factory('View3', [
 ]);
 
 ngModule.directive('rmsView3DropTask', [
-  '$rootScope', 'addCommentAndSave', (function($rootScope, addCommentAndSave) {
+  '$rootScope', 'addCommentAndSave', 'getDropTasksGroup', function($rootScope, addCommentAndSave, getDropTasksGroup) {
     return {
       restrict: 'A',
       scope: true,
-      link: (function($scope, element, attrs) {
-        element.on('dragover', (function(e) {
-          return false;
-        }));
-        element.on('drop', (function(e) {
-          addCommentAndSave($rootScope.modal.task, e.shiftKey, {
-            duedate: null,
+      link: function($scope, element, attrs) {
+        var activeTab, el;
+        el = element[0];
+        activeTab = attrs.rmsView3DropTask.length > 0 ? (function(tab) {
+          return function() {
+            return tab;
+          };
+        })(parseInt(attrs.rmsView3DropTask)) : (function() {
+          return $rootScope.view3ActiveTab;
+        });
+        el.addEventListener('dragover', function(ev) {
+          ev.preventDefault();
+          return activeTab() === 2;
+        });
+        el.addEventListener('drop', function(ev) {
+          var modal, tasks;
+          if (!(ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate !== null)) {
+            tasks = [$rootScope.modal.task];
+          } else {
+            tasks = getDropTasksGroup();
+          }
+          addCommentAndSave(tasks, ev.shiftKey, {
+            duedate: activeTab() === 0 ? null : moment($rootScope.startDateVal).add(1, 'week'),
             plan: false
           });
           $rootScope.$digest();
+          ev.stopPropagation();
           return false;
-        }));
-      })
+        });
+      }
     };
-  })
+  }
 ]);
 
 
