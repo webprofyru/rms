@@ -21,7 +21,7 @@ ngModule.controller 'View3', ['$scope', 'View3', (($scope, View3) ->
   $scope.view = new View3 $scope, 'view3'
   return)]
 
-ngModule.factory 'View3', ['DSView', 'config', '$log', ((DSView, config, $log) ->
+ngModule.factory 'View3', ['DSView', 'config', '$rootScope', '$log', ((DSView, config, $rootScope, $log) ->
 
   return class View3 extends DSView
     @begin 'View3'
@@ -43,6 +43,8 @@ ngModule.factory 'View3', ['DSView', 'config', '$log', ((DSView, config, $log) -
       @__unwatchA = $scope.$watch (-> [$scope.mode, $scope.$parent.view.startDate?.valueOf(), $scope.sidebarTabs.active]),
         ((args) =>
           [mode, startDateVal, active] = args
+          $rootScope.startDateVal = startDateVal
+          $rootScope.view3ActiveTab = active
           switch active
             when 0 # no duedate
               @dataUpdate {filter: 'noduedate', mode}
@@ -50,7 +52,7 @@ ngModule.factory 'View3', ['DSView', 'config', '$log', ((DSView, config, $log) -
               if typeof startDateVal != 'number'
                 $scope.sidebarTabs.active = 0
               else
-                nextWeekStartDate = moment(startDateVal).add(1, 'week')
+                nextWeekStartDate = moment(startDateVal).add 1, 'week'
                 nextWeekEndDate = moment(nextWeekStartDate).endOf 'week'
                 @dataUpdate {filter: 'all', mode, startDate: nextWeekStartDate, endDate: nextWeekEndDate}
             when 2 # all tasks by project
@@ -105,21 +107,37 @@ ngModule.factory 'View3', ['DSView', 'config', '$log', ((DSView, config, $log) -
     @end())]
 
 ngModule.directive 'rmsView3DropTask', [
-  '$rootScope', 'addCommentAndSave',
-  (($rootScope, addCommentAndSave) ->
+  '$rootScope', 'addCommentAndSave', 'getDropTasksGroup',
+  ($rootScope, addCommentAndSave, getDropTasksGroup) ->
     restrict: 'A'
     scope: true
-    link: (($scope, element, attrs) ->
-      element.on 'dragover', ((e)->
-        return false)
-      element.on 'drop', ((e)->
-        addCommentAndSave $rootScope.modal.task, e.shiftKey, # Zork: I turned this over - now you have to keep shift, if you need to make a comment
-          duedate: null
+    link: ($scope, element, attrs) ->
+
+      el = element[0]
+
+      activeTab = if attrs.rmsView3DropTask.length > 0 then (do (tab = parseInt(attrs.rmsView3DropTask)) -> -> tab) else (-> $rootScope.view3ActiveTab)
+
+      el.addEventListener 'dragover', (ev) ->
+        ev.preventDefault()
+        activeTab() == 2 # (ev) ->
+
+      el.addEventListener 'drop', (ev) ->
+
+        unless ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate != null
+          tasks = [$rootScope.modal.task]
+        else # group movement, if task has no split and 'ctrl' key is pressed while operation
+          tasks = getDropTasksGroup()
+
+        addCommentAndSave tasks, ev.shiftKey, # You have to keep shift, if you need to make a comment
+          duedate: if activeTab() == 0 then null else moment($rootScope.startDateVal).add(1, 'week')
           plan: false
+
         $rootScope.$digest()
-        return false)
-      return)
-  )]
+        ev.stopPropagation()
+        return false # (ev) ->
+
+      return # link:
+    ] # ($rootScope, addCommentAndSave) ->
 
 
 

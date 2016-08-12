@@ -5,16 +5,14 @@ module.exports = (ngModule = angular.module 'app', [
   require './ui/ui'
   require './data/dsDataService'
   require './svc/emails/emails'
-#  require './svc/people/people'
-#  require './svc/config/config'
-#  require './svc/data/data'
   require './db'
 ]).name
 
 ngModule.run ['config', '$rootScope', 'db', ((config, $rootScope, db)->
   $rootScope.Math = Math
   $rootScope.taskModal = {}
-#  db.logQuota()
+  $rootScope.startDateVal = null
+  $rootScope.view3ActiveTab = null
   return)]
 
 ngModule.config [

@@ -78,19 +78,32 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', ((View1, DSV
     @end())]
 
 ngModule.directive 'rmsView2DayDropTask', [
-  'dsChanges', '$rootScope', 'addCommentAndSave',
-  ((dsChanges, $rootScope, addCommentAndSave) ->
+  'dsChanges', '$rootScope', 'addCommentAndSave', 'getDropTasksGroup',
+  (dsChanges, $rootScope, addCommentAndSave, getDropTasksGroup) -> # () ->
     restrict: 'A'
     scope: true
-    link: (($scope, element, attrs) ->
-      element.on 'dragover', ((e)->
-        return false)
-      element.on 'drop', ((e)->
-        addCommentAndSave $rootScope.modal.task, e.shiftKey, # Zork: I turned this over - now you have to keep shift, if you need to make a comment
+    link: ($scope, element, attrs) ->
+
+      el = element[0]
+
+      el.addEventListener 'dragover', (ev) ->
+        ev.preventDefault()
+        true # (ev) ->
+
+      el.addEventListener 'drop', (ev) ->
+
+        unless ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate != null
+          tasks = [$rootScope.modal.task]
+        else # group movement, if task has no split and 'ctrl' key is pressed while operation
+          tasks = getDropTasksGroup()
+
+        addCommentAndSave tasks, ev.shiftKey, # You have to keep shift, if you need to make a comment
           responsible: null
           duedate: $scope.day.get 'date'
           plan: false
+
         $rootScope.$digest()
-        return false)
-      return)
-  )]
+        ev.stopPropagation()
+        false # (ev) ->
+
+      return] # link:

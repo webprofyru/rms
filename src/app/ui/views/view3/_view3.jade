@@ -1,9 +1,9 @@
 div(ng-controller='View3', style='width:{{layout.area3.width}}px;height:{{layout.area3.height}}px')#sidebar
     .sub-header(ng-class='{narrow: layout.area3.width < 420}')
         ul.tabs(ng-show='layout.area3.width >= 250')
-            li(ng-click='sidebarTabs.clickSideBarTab(0)', ng-class='{active: sidebarTabs.active == 0}') {{layout.area3.width < 440 ? 'NO DUE DATE' : 'WITHOUT DUE DATE'}}
-            li(ng-click='sidebarTabs.clickSideBarTab(1)', ng-class='{active: sidebarTabs.active == 1}') NEXT WEEK
-            li(ng-click='sidebarTabs.clickSideBarTab(2)', ng-class='{active: sidebarTabs.active == 2}') {{layout.area3.width < 440 ? 'ALL TASKS' : 'ALL TASKS BY PROJECT'}}
+            li(rms-view3-drop-task='0' ng-click='sidebarTabs.clickSideBarTab(0)' ng-class='{active: sidebarTabs.active == 0}') {{layout.area3.width < 440 ? 'NO DUE DATE' : 'WITHOUT DUE DATE'}}
+            li(rms-view3-drop-task='1' ng-click='sidebarTabs.clickSideBarTab(1)' ng-class='{active: sidebarTabs.active == 1}') NEXT WEEK
+            li(ng-click='sidebarTabs.clickSideBarTab(2)' ng-class='{active: sidebarTabs.active == 2}') {{layout.area3.width < 440 ? 'ALL TASKS' : 'ALL TASKS BY PROJECT'}}
     .content-block
         .load-spinner(ng-if="view.dataStatus =='load'")
             .spinner

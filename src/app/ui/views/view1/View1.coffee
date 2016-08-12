@@ -22,14 +22,18 @@ Day = require('./models/Day')
 Row = require('./models/Row')
 TaskView = require('./models/TaskView')
 
-ngModule.controller 'View1', ['$scope', 'View1', '$rootScope', (($scope, View1, $rootScope) ->
-  $rootScope.view1 = $scope.view = new View1 $scope, 'view1'
-  $scope.$on '$destroy', (-> delete $rootScope.view1; return)
-  $scope.expandedHeight = ((row)->
-      return '' if !row.expand
-      return "height:100px" if _.isEmpty row.tasks
-      return "height:#{65 * _.maxBy(row.tasks, 'y').y + 98}px")
-  return)]
+serviceOwner = require('../../../../dscommon/util').serviceOwner
+
+ngModule.controller 'View1', [
+  '$scope', 'View1', '$rootScope',
+  ($scope, View1, $rootScope) ->
+    $rootScope.view1 = $scope.view = new View1 $scope, 'view1'
+    $scope.$on '$destroy', (-> delete $rootScope.view1; return)
+    $scope.expandedHeight = (row)->
+        return '' if !row.expand
+        return "height:100px" if _.isEmpty row.tasks
+        return "height:#{65 * _.maxBy(row.tasks, 'y').y + 98}px"
+    return] # ($scope, View1, $rootScope) ->
 
 ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, config, $rootScope, $log) ->
 
@@ -348,51 +352,73 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
 
     @end())]
 
+ngModule.factory 'getDropTasksGroup', [
+  'dsDataService', '$rootScope',
+  (dsDataService, $rootScope) ->
+    allTasks = serviceOwner.add dsDataService.findDataSet serviceOwner, {type: Task, mode: 'edited', filter: 'all'}
+    -> # (dsDataService, $rootScope) ->
+      duedate = $rootScope.modal.task.get('duedate').valueOf()
+      responsible = $rootScope.modal.task.get('responsible')
+      project = $rootScope.modal.task.get('project')
+      (t for k, t of allTasks.items when !t.plan && !t.split && t.get('responsible') == responsible && t.get('duedate')?.valueOf() == duedate && t.get('project') == project)]
+
 ngModule.directive 'rmsView1DropTask', [
-  'View1', '$rootScope', 'dsChanges', 'addCommentAndSave',
-  ((View1, $rootScope, dsChanges, addCommentAndSave) ->
+  'View1', '$rootScope', 'dsChanges', 'addCommentAndSave', 'getDropTasksGroup',
+  (View1, $rootScope, dsChanges, addCommentAndSave, getDropTasksGroup) -> # () ->
     restrict: 'A'
     scope: true
-    link: (($scope, element, attrs) ->
-      element.on 'dragover', ((e)->
-        return false)
-      element.on 'drop', ((e)->
-        day = _.findIndex $('.drop-zone', element), ((value)->
-          $v = $(value)
-          return $v.offset().left + $v.width() >= e.originalEvent.clientX)
+    link: ($scope, element, attrs) ->
 
-        if !(e.ctrlKey && (scope = (modal = $rootScope.modal).scope).view instanceof View1 && !modal.task.split)
+      el = element[0]
+
+      el.addEventListener 'dragover', (ev) ->
+        ev.preventDefault()
+        true # (ev) ->
+
+      el.addEventListener 'drop', (ev) ->
+
+        day = _.findIndex $('.drop-zone', element), (value) ->
+          $v = $(value)
+          $v.offset().left + $v.width() >= ev.clientX # (value) ->
+
+        unless ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate != null
           tasks = [$rootScope.modal.task]
         else # group movement, if task has no split and 'ctrl' key is pressed while operation
-          col = scope.taskView.x
-          tasks = (taskView.get('task') for taskView in scope.row.get('tasks') when !taskView.split && taskView.x == col && !taskView.task.plan && taskView.task.get('project') == modal.task.get('project'))
+          tasks = getDropTasksGroup()
 
-        if(day < 0)
-          addCommentAndSave tasks, e.shiftKey, # Zork: I turned this over - now you have to keep shift, if you need to make a comment
+        if day < 0
+          addCommentAndSave tasks, ev.shiftKey, # You have to keep shift, if you need to make a comment
             responsible: $scope.row.get('person')
             plan: false
         else
-          addCommentAndSave tasks, e.shiftKey, # Zork: I turned this over - now you have to keep shift, if you need to make a comment
+          addCommentAndSave tasks, ev.shiftKey, # You have to keep shift, if you need to make a comment
             responsible: $scope.row.get('person')
             duedate: $scope.view.get('days')[day].get('date')
             plan: false
 
         $rootScope.$digest()
-        return false)
-      return))]
+        ev.stopPropagation()
+        false] # (ev) ->
 
 ngModule.directive 'rmsView1MouseOverWeekChange', [
   'View1', '$rootScope', 'dsChanges', 'addCommentAndSave',
-  ((View1, $rootScope, dsChanges, addCommentAndSave) ->
+  (View1, $rootScope, dsChanges, addCommentAndSave) -> # () ->
     restrict: 'A'
-    link: (($scope, element, attrs) ->
+    link: ($scope, element, attrs) ->
       direction = $scope.$eval attrs.rmsView1MouseOverWeekChange
       lastTimeStamp = 0
-      element.on 'dragover', ((e)->
-        if e.timeStamp > lastTimeStamp
-          lastTimeStamp = e.timeStamp + 5000
+
+      el = element[0]
+
+      el.addEventListener 'dragover', (ev) ->
+
+        if ev.timeStamp > lastTimeStamp
+          lastTimeStamp = ev.timeStamp + 3000
           $rootScope.view1.periodChange direction
           $rootScope.$digest()
-        return false)
-      ))]
+
+        ev.preventDefault()
+        true # (ev) ->
+
+      return] # link:
 

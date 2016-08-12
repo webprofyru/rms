@@ -1,8 +1,8 @@
 module.exports = (ngModule = angular.module 'ui/tasks/rmsTask', []).name
 
-ngModule.run ['$rootScope', (($rootScope) ->
+ngModule.run ['$rootScope', ($rootScope) ->
   $rootScope.modal = {type: null}
-  return)]
+  return]
 
 # Zork: This functionality slows down digest cycle, since <element>.width() and .positions() takes to long.  Would be nice to figure out another way of adding 'up' class to duedate
 
@@ -28,7 +28,9 @@ ngModule.run ['$rootScope', (($rootScope) ->
 #        return)
 #      return))]
 
-ngModule.directive 'rmsTask', ['$rootScope', '$timeout', (($rootScope, $timeout) ->
+ngModule.directive 'rmsTask', [
+  '$rootScope', '$timeout',
+  ($rootScope, $timeout) ->
     restrict: 'A'
     require: 'ngModel'
 #    controller: ['$scope', (($scope) ->
@@ -55,7 +57,7 @@ ngModule.directive 'rmsTask', ['$rootScope', '$timeout', (($rootScope, $timeout)
 #        fix()
 #        return)
 #      return)]
-    link: (($scope, element, attrs, model) ->
+    link: ($scope, element, attrs, model) ->
       element.on 'click', ((e)->
         e.stopPropagation()
         if (modal = $rootScope.modal).type != 'task-edit'
@@ -95,42 +97,42 @@ ngModule.directive 'rmsTask', ['$rootScope', '$timeout', (($rootScope, $timeout)
 
       listenerFunc = undefined
 
-      $scope.$watch "#{attrs.rmsTask}.$u", ((val) ->
+      $scope.$watch "#{attrs.rmsTask}.$u", (val) ->
         if val
           # The jQuery event object does not have a dataTransfer property
           el = element[0]
           el.draggable = true
-          el.addEventListener 'dragstart', listenerFunc = ((e)-> # Note: If we use jQuery.on for this event, we don't have e.dataTransfer option
+          el.addEventListener 'dragstart', listenerFunc = (ev)-> # Note: If we use jQuery.on for this event, we don't have e.dataTransfer option
             $rootScope.modal =
               type: 'drag-start'
-              task: $scope.$eval attrs.rmsTask
+              task: task = $scope.$eval attrs.rmsTask
               scope: $scope
-            element.addClass 'drag-start'
             $rootScope.$digest()
-            e.dataTransfer.setDragImage($('#task-drag-ghost')[0], 20, 20)
-            return)
-          element.on 'dragend', ((e)->
+            element.addClass 'drag-start'
+            ev.dataTransfer.effectAllowed = 'move'
+            ev.dataTransfer.setData 'task', task
+            ev.dataTransfer.setDragImage $('#task-drag-ghost')[0], 20, 20
+            true # (e)->
+
+          el.addEventListener 'dragend', (ev)->
             $rootScope.modal = {type: null}
             element.removeClass 'drag-start'
             $rootScope.$digest()
-            return)
+            true # (e)->
         else
           el = element[0]
           el.draggable = false
           el.removeEventListener 'dragstart', listenerFunc
           element.off 'dragend'
-        return)
+        return # (val) ->
+      return # link
+    ] # ($rootScope, $timeout) ->
 
-      return)
-    )]
-
-ngModule.directive 'setTaskVisible', [(() ->
-    restrict: 'A'
-    link: (($scope, element, attrs) ->
-      path = attrs.setTaskVisible
-      $scope.$eval "#{path}.setVisible(true)"
-      $scope.$on '$destroy', (->
-        $scope.$eval "#{path}.setVisible(false)"
-        return)
-      return)
-    )]
+ngModule.directive 'setTaskVisible', [() ->
+  restrict: 'A'
+  link: ($scope, element, attrs) ->
+    path = attrs.setTaskVisible
+    $scope.$eval "#{path}.setVisible(true)"
+    $scope.$on '$destroy', -> $scope.$eval "#{path}.setVisible(false)"; return
+    return # link:
+  ] # ()->
