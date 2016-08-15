@@ -166,7 +166,7 @@ ngModule.factory 'TWTimeTracking', [
             .then(((resp) => # ok
               if (resp.status == 200) # 0 means that request was canceled
                 @set 'cancel', null
-                if !(entries = resp.data['time-entries']) # empty page
+                if !(entries = resp.data['time-entries']) || entries.length == 0 # empty page
                   finalizeLoad()
                 else if moment(entries[entries.length - 1]['date']) < time.historyLimit # whole page is no interesting already
                   config.set 'histStart', page + 1

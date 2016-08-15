@@ -173,7 +173,7 @@ ngModule.factory 'dsDataService', [
                 else
                   if (data = @get('tasksPool').find(@, params)).init
                     data.init(
-                      originalSet = @findDataSet @, {type: Task, filter: 'all', mode: 'original'}
+                      originalSet = @findDataSet @, {type: Task, mode: 'original', filter: 'all'}
                       TWTasks.filter(params))
                     originalSet.release @
                   (set = data.get('itemsSet')).addRef owner; data.release @

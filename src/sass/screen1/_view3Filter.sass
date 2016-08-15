@@ -1,0 +1,57 @@
+#sidebar
+
+  .search-block
+    margin-bottom: 12px
+    padding: 4px 4px 2px 6px
+    background: $color-header-light
+    border: none
+    border-top-left-radius: 5px
+    border-bottom-left-radius: 5px
+    td
+      padding: 0
+    & > table
+      width: 100%
+      & > tbody > tr
+        & > td.filters
+          width: 100%
+        & > td.mode
+          vertical-align: top
+          text-align: right
+          width: 40px
+          display: inline-block
+          padding-top: 2px
+          padding-left: 4px
+          margin-right: 4px
+          & > .action-buttons
+            padding: 0 !important
+            & > li
+              padding-top: 8px !important
+              padding-bottom: 0px !important
+              height: 26px
+
+  table.filters > tbody
+    & > tr
+      &:not(last-child)
+        & > td
+          padding-bottom: 2px
+      & > td.label
+        width: 56px
+        padding-right: 4px
+        text-align: right
+      & > td.input
+        width: 100%
+        border-radius: 3px
+        .clear
+          height: 26px
+          width: 20px
+        img.clear
+          height: 6px
+          width: 6px
+          margin-top: 6px
+          margin-left: 6px
+          padding: 2px
+          border-radius: 3px
+          border: 1px solid grey
+        input
+          padding: 3px 0
+          width: 100%

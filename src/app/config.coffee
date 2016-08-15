@@ -50,6 +50,11 @@ ngModule.factory 'config',
 
       @propNum 'refreshPeriod'
 
+      @propNum 'view3GroupByPerson', 0
+      @propStr 'view3FilterByPerson', ''
+      @propStr 'view3FilterByProject', ''
+      @propStr 'view3FilterByTask', ''
+
       @propNum 'histStart', -1 # first page of time-entries history within time.historyLimit range
 
       @onAnyPropChange ((item, propName, newVal, oldVal) -> # save to local storage
@@ -88,8 +93,8 @@ ngModule.factory 'config',
     if keepConnection
       for name, desc of Config::__props # load from local storage
         if keepOtherOptions || name == 'teamwork' || name == 'token'
-          if !desc.readonly && typeof (v = localStorageService.get name) != 'undefined'
-            config.set name, v if v
+          if !desc.readonly && typeof (v = localStorageService.get name) != undefined
+            config.set name, v
 
     return config)]
 
