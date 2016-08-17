@@ -30,7 +30,7 @@ ngModule.factory 'View3', [
     class View3 extends DSView # () ->
       @begin 'View3'
 
-      @propData 'tasks', Task, {}
+      @propData 'tasks', Task, {watch: ['responsible', 'duedate', 'priority']}
 
       @propPool 'poolProjects', ProjectView
       @propList 'projects', ProjectView

@@ -28,8 +28,8 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', ((View1, DSV
   return class View2 extends DSView
     @begin 'View2'
 
-    @propData 'tasksOverdue', Task, {filter: 'overdue', watch: ['duedate', 'plan', 'estimate']}
-    @propData 'tasksNotAssigned', Task, {filter: 'notassigned', watch: ['duedate', 'split', 'plan', 'estimate']}
+    @propData 'tasksOverdue', Task, {filter: 'overdue', watch: ['duedate', 'plan', 'estimate', 'priority']}
+    @propData 'tasksNotAssigned', Task, {filter: 'notassigned', watch: ['duedate', 'split', 'plan', 'estimate', 'priority']}
 
     @propList 'tasksOverdue', Task
 

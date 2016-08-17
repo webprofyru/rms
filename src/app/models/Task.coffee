@@ -58,6 +58,9 @@ module.exports = class Task extends DSDocument
   @propBool 'plan'
   @propDSTags 'tags'
 
+  @propNum 'priority', 1000
+  @propStr 'color', null
+
   #  @propCalc 'isOverdue', (-> (duedate = @get('duedate')) != null && duedate < time.today)
   isOverdue: (-> (duedate = @get('duedate')) != null && duedate < time.today)
 

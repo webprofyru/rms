@@ -35,24 +35,29 @@ div(ng-controller='View3' style='width:{{layout.area3.width}}px;height:{{layout.
             img(src='./images/icons/users.svg' title='Group by persons')
       .scroll-viewport
         .scroll-body
-          li(ng-repeat='project in view.projects' ng-click='toggleProjectExpanded(project); $event.stopPropagation()')
-            table.project: tr
-              td
-                i(ng-if='!isProjectExpanded(project)').fa.fa-caret-down
-                i(ng-if='isProjectExpanded(project)').fa.fa-caret-up
-              td
-                h3 {{project.project.name}}
-            .task-list(ng-repeat='todoList in project.todoLists' ng-if='isProjectExpanded(project)')
-              div(ng-click='todoList.isExpand = !todoList.isExpand; $event.stopPropagation()').task-list-title
-                table.todo-list: tr
+            mixin projects(projects)
+              li(ng-repeat='project in #{projects}' ng-click='toggleProjectExpanded(project); $event.stopPropagation()')
+                table.project: tr
                   td
-                    i(ng-if='!todoList.isExpand').fa.fa-caret-down
-                    i(ng-if='todoList.isExpand').fa.fa-caret-up
+                    i(ng-class='isProjectExpanded(project) ? "fa-caret-up" : "fa-caret-down"').fa
                   td
-                    h4 {{todoList.todoList.name}} (Tasks: {{todoList.tasksCount}}. Estimate: {{filter.taskPeriod(todoList, 'totalEstimate')}} )
-              table(ng-if='todoList.isExpand').task-list-items
-                tr(ng-repeat='task in todoList.tasks')
-                  td.col1
-                    div(rms-task='task', ng-model='task').view3-task {{task.title}}
-                  td.col2
-                    strong {{filter.taskPeriod(task, 'estimate')}}
+                    h3 {{project.project.name}}
+                .task-list(ng-repeat='todoList in project.todoLists' ng-if='isProjectExpanded(project)')
+                  div(ng-click='todoList.isExpand = !todoList.isExpand; $event.stopPropagation()').task-list-title
+                    table.todo-list: tr
+                      td
+                        i(ng-class='todoList.isExpand ? "fa-caret-up" : "fa-caret-down"').fa
+                      td
+                        h4 {{todoList.todoList.name}} (Tasks: {{todoList.tasksCount}}. Estimate: {{filter.taskPeriod(todoList, 'totalEstimate')}} )
+                  table(ng-if='todoList.isExpand').task-list-items
+                    tr(ng-repeat='task in todoList.tasks')
+                      td.col1
+                        div(rms-task='task', ng-model='task').view3-task {{task.title}}
+                      td.col2
+                        strong {{filter.taskPeriod(task, 'estimate')}}
+
+            div(ng-if='config.view3GroupByPerson == 0')
+              +projects('view.projects')
+
+            //div(ng-if='config.view3GroupByPerson == 1')
+            //  +projects()

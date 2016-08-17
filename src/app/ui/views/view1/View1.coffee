@@ -41,7 +41,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
     @begin 'View1'
 
     @propData 'people', Person, {watch: ['roles', 'companyId']}
-    @propData 'tasks', Task, {filter: 'assigned', watch: ['responsible', 'duedate', 'split', 'plan', 'estimate']}
+    @propData 'tasks', Task, {filter: 'assigned', watch: ['responsible', 'duedate', 'split', 'estimate', 'priority']}
     @propData 'personDayStat', PersonDayStat, {}
     @propData 'personTimeTracking', PersonTimeTracking, {watch: []}
 
@@ -267,11 +267,16 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
         return)
       return)
 
-    # 1. planned tasks comes first
+    # 1. more prior tasks comes first
     # 2. longer tasks comes first
+    # 3. older tasks (smaller id) comes firts
     @tasksSortRule = tasksSortRule = ((leftTask, rightTask) ->
-      if (leftPlan = leftTask.get('plan')) != rightTask.get('plan')
-        return if leftPlan then -1 else 1
+#      if (leftPlan = leftTask.get('plan')) != rightTask.get('plan')
+#        return if leftPlan then -1 else 1
+      console.info "leftTask.get('priority'):", leftTask.get('priority')
+
+      if (leftPrior = leftTask.get('priority')) != (rightPrior = rightTask.get('priority'))
+        return if leftPrior < rightPrior then -1 else 1
 
       if (leftEstimate = leftTask.get('estimate')?.valueOf()) != (rightEstimate = rightTask.get('estimate')?.valueOf())
         return 1 if typeof leftEstimate == 'undefined'
@@ -281,7 +286,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
       return rightTask.get('id') - leftTask.get('id'))
 
     # 1. planned tasks comes first
-    # 2. longer tasks comes first
+    # 2. closed tasks, if any, comes after
     @taskViewsSortRule = taskViewsSortRule = ((leftView, rightView) ->
       leftTask = leftView.get('task')
       rightTask = rightView.get('task')
