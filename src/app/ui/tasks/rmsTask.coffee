@@ -97,11 +97,16 @@ ngModule.directive 'rmsTask', [
 
       listenerFunc = undefined
 
+      $scope.$watch "#{attrs.rmsTask}.color", (val) ->
+        element.css 'background-color', if val then val else ''
+        return
+
       $scope.$watch "#{attrs.rmsTask}.$u", (val) ->
         if val
           # The jQuery event object does not have a dataTransfer property
           el = element[0]
           el.draggable = true
+
           el.addEventListener 'dragstart', listenerFunc = (ev)-> # Note: If we use jQuery.on for this event, we don't have e.dataTransfer option
             $rootScope.modal =
               type: 'drag-start'
