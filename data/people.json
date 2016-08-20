@@ -310,6 +310,7 @@
 	"hsize": "300",
 	"vsize": "400",
 	"finalWords": " ,отчет",
-	"dailyPlanTag": "37127"
+	"dailyPlanTag": "37127",
+	"alarmEmails": "i.saburov@webprofy.ru, g.krasilnikov@webprofy.ru"
     }
 }
