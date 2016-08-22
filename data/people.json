@@ -119,12 +119,6 @@
             "email": "a.shevtsov@webprofy.ru"
         },
         {
-            "id": 88203,
-            "role": "Tester",
-            "name": "Алия Галимова",
-            "email": "a.galimova@webprofy.ru"
-        },
-        {
             "id": 54199,
             "role": "Copywriter",
             "name": "Антон Скобин",
@@ -215,12 +209,6 @@
           "email": "a.verkhoturov@webprofy.ru"
         },
         {
-          "id": 119518,
-          "role": "Tester",
-          "name": "Татьяна Урзова",
-          "email": "utatyana2002@mail.ru"
-        },
-        {
           "id": 122253,
           "role": "Markuper, Content-manager",
           "name": "Мария Артемова",
@@ -228,7 +216,7 @@
         },
         {
             "id": 121030,
-            "role": "Programmer, Markuper, GroupKorovkin, GroupSkinteev",
+            "role": "Programmer, Markuper, GroupKorovkin",
             "name": "Валерий Серов",
             "email": "v.serov@webprofy.ru"
         },
@@ -309,8 +297,6 @@
     	"reloadTimeMin" : "5",
 	"hsize": "300",
 	"vsize": "400",
-	"finalWords": " ,отчет",
-	"dailyPlanTag": "37127",
-	"alarmEmails": "i.saburov@webprofy.ru, g.krasilnikov@webprofy.ru"
+	"finalWords": " ,отчет"
     }
 }
