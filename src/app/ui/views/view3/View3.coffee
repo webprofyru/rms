@@ -32,7 +32,7 @@ ngModule.factory 'View3', [
     class View3 extends DSView # () ->
       @begin 'View3'
 
-      @propData 'tasks', Task, {watch: ['responsible', 'duedate', 'priority']}
+      @propData 'tasks', Task, {watch: ['duedate', 'priority']}
 
       @propPool 'poolPeople', PersonView
       @propList 'people', PersonView
@@ -79,7 +79,7 @@ ngModule.factory 'View3', [
                 @dataUpdate {filter: 'all', mode}
             return), true
 
-        @__unwatchC = $scope.$watch (-> [config.view3GroupByPerson, config.view3FilterByPerson, config.view3FilterByProject, config.view3FilterByTask]), (=>
+        @__unwatchC = $scope.$watch (-> [config.view3GroupByPerson, config.view3HidePeopleWOTasks, config.view3FilterByPerson, config.view3FilterByProject, config.view3FilterByTask]), (=>
           clearTimeout @__timer1
           @__timer1 = setTimeout (=> @__dirty++; $scope.$digest(); return), 300
           return), true
@@ -167,7 +167,9 @@ ngModule.factory 'View3', [
               if (leftLC = left.get('project').get('name').toLowerCase()) < (rightLC = right.get('project').get('name').toLowerCase()) then -1 else if leftLC > rightLC then 1 else 0)
 
           @get('peopleList').merge @, []
-          (@__unwatchD(); @__unwatchD = null) if @__unwatchD
+          if @__unwatchD
+            (@__unwatchD(); @__unwatchD = null)
+            @__src.tasks.watch.length = @__src.tasks.watch.length - 1 # remove 'responsible'
 
         else
 
@@ -176,6 +178,7 @@ ngModule.factory 'View3', [
               if val != newVal
                 @__dirty++
               return), true
+            @__src.tasks.watch.push 'responsible'
 
           poolPeople = @get 'poolPeople'
 
@@ -189,12 +192,13 @@ ngModule.factory 'View3', [
 
           rows = @scope.view1.rows
           rows = rows.concat 'null' if tasksByPeople.hasOwnProperty('null')
+          resultRows = []
+          for r in rows when !filterByPerson || filterPerson r, filterByPerson
 
-          @get('peopleList').merge @, (for r in rows when !filterByPerson || filterPerson r, filterByPerson
-            personView = poolPeople.find @, if r != 'null' then r.$ds_key else 'null'
-            personView.set 'row', r unless r == 'null'
+            if tasksByPeople.hasOwnProperty(personViewKey = (if r != 'null' then r.$ds_key else 'null')) # non empty
 
-            if tasksByPeople.hasOwnProperty(personView.$ds_key) # non empty
+              resultRows.push (personView = poolPeople.find @, personViewKey)
+              personView.set 'row', r unless r == 'null'
 
               tasksByTodoList = _.groupBy tasksByPeople[personView.$ds_key], ((task) -> task.get('todoList').$ds_key)
               tasksByProject = _.groupBy tasksByTodoList, ((todoList) -> todoList[0].get('project').$ds_key)
@@ -219,11 +223,13 @@ ngModule.factory 'View3', [
                   if (leftLC = left.get('project').get('name').toLowerCase()) < (rightLC = right.get('project').get('name').toLowerCase()) then -1
                   else if leftLC > rightLC then 1 else 0)
 
-            else # empty
+            else unless config.get 'view3HidePeopleWOTasks'
+
+              resultRows.push personView = poolPeople.find @, personViewKey
+              personView.set 'row', r unless r == 'null'
               personView.get('projectsList').merge @, []
 
-            personView) # for
-
+          @get('peopleList').merge @, resultRows
           @get('projectsList').merge @, []
 
         return # render:

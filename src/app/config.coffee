@@ -51,6 +51,7 @@ ngModule.factory 'config',
       @propNum 'refreshPeriod'
 
       @propNum 'view3GroupByPerson', 0
+      @propNum 'view3HidePeopleWOTasks', 0
       @propStr 'view3FilterByPerson', ''
       @propStr 'view3FilterByProject', ''
       @propStr 'view3FilterByTask', ''

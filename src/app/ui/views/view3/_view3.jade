@@ -31,8 +31,11 @@ div(ng-controller='View3' style='width:{{layout.area3.width}}px;height:{{layout.
                 td(width='100%'): input(id='filter-task' ng-model='config.view3FilterByTask')
                 td: .clear: img.clear(ng-click='config.view3FilterByTask = ""' src='./images/icons/close.svg' title='Clear field')
         td.mode
-          .action-buttons: li(ng-class='{active: config.view3GroupByPerson}' ng-click='config.view3GroupByPerson = config.view3GroupByPerson == 1 ? 0 : 1'): ul
-            img(src='./images/icons/users.svg' title='Group by persons')
+          .action-buttons
+            li.groupByPerson(ng-class='{active: config.view3GroupByPerson}' ng-click='config.view3GroupByPerson = config.view3GroupByPerson == 1 ? 0 : 1'): ul
+              img(src='./images/icons/users.svg' title='Group by persons')
+            li.hideEmptyPeople(ng-if='config.view3GroupByPerson' ng-class='{active: config.view3HidePeopleWOTasks}' ng-click='config.view3HidePeopleWOTasks = config.view3HidePeopleWOTasks == 1 ? 0 : 1'): ul
+              img(src='./images/icons/profile.svg' title='Hide people with empty tasks list')
       .scroll-viewport(style='height:{{layout.area3.height - (config.view3GroupByPerson == 0 ? 120 : 148)}}px')
         .scroll-body
 

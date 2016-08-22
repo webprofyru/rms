@@ -25,9 +25,13 @@
           & > .action-buttons
             padding: 0 !important
             & > li
-              padding-top: 8px !important
-              padding-bottom: 0px !important
-              height: 26px
+              height: 26px;
+              &.groupByPerson
+                padding-top: 8px !important
+                padding-bottom: 0px !important
+              &.hideEmptyPeople
+                margin-top: 3px;
+                padding: 10px 8px 0px 9px !important;
 
   table.filters > tbody
     & > tr
