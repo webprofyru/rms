@@ -1,6 +1,6 @@
 include ../../tasks/_task.jade
 
-div(ng-controller='View2', ui-layout-container='', style='width:{{layout.area1.width}}px;height:{{layout.area2.height}}px')#bottom-block
+div(ng-controller='View2' rms-view2-day-drop-task='' ui-layout-container='', style='width:{{layout.area1.width}}px;height:{{layout.area2.height}}px')#bottom-block
   .bottom-block-header
     .col-title
       h3
@@ -21,8 +21,8 @@ div(ng-controller='View2', ui-layout-container='', style='width:{{layout.area1.w
   .col-not-assigned-tasks.no-scroll
     .header
       h4 NOT ASSIGNED TASKS
-    .scroll-viewport(style='height:{{layout.area2.height - 24}}px').compensate-pre
-      .scroll-body(rms-view2-day-drop-task='')
+    .scroll-viewport(style='height:{{layout.area2.height - 20}}px').compensate-pre
+      .scroll-body
         .vertical-lines
           - var n = 2
           while n <= 9

@@ -2,7 +2,13 @@
   @include absolute-pos($header-height, 0, null, null)
   background: $color-bg
   border-left: 1px solid darken($color-header-dark, 5%)
-
+  .none
+    padding-top: 6px
+    padding-left: 24px
+    font-style: italic
+  .notAssigned
+    padding-left: 6px;
+    padding-bottom: 6px;
   .sub-header
     .tabs
       list-style: none
@@ -33,6 +39,9 @@
         &.active
           width: auto
 
+  table.person
+    .avatar
+      margin-left: 6px
   table.project
     td
       line-height: 24px
@@ -49,12 +58,14 @@
       margin: 0
       @include break
     .tasks-block
+      +person()
       padding-left: 24px
       li
-        padding-bottom: 15px
+        &:not(:last-child)
+          padding-bottom: 15px
         table
           td
-            vertical-align: top
+            vertical-align: middle
             text-align: left
             h3
               padding-left: 5px
@@ -63,6 +74,8 @@
     //h3
     //  display: inline-block
     //  padding-left: 5px
+    .person-projects
+      margin-left: 16px
     .task-list
       padding-left: 20px
       padding-bottom: 10px

@@ -90,10 +90,10 @@ ngModule.directive 'rmsView2DayDropTask', [
         day = _.findIndex $('.vertical-lines > .col', element), (zone) ->
           $v = $(zone)
           $v.offset().left + $v.width() >= ev.clientX # (zone) ->
-        if 0 <= --day <= 6 then day else -1
+        if -1 <= --day <= 6 then day else -2
 
       el.addEventListener 'dragover', (ev) ->
-        return false if getDay(ev) == -1
+        return false if getDay(ev) == -2
         ev.preventDefault()
         true # (ev) ->
 
@@ -108,8 +108,7 @@ ngModule.directive 'rmsView2DayDropTask', [
 
         addCommentAndSave tasks, ev.shiftKey, # You have to keep shift, if you need to make a comment
           responsible: null
-          #duedate: $scope.day.get 'date'
-          duedate: $scope.view1.get('days')[day].get('date')
+          duedate: if day == -1 then null else $scope.view1.get('days')[day].get('date')
           plan: false
 
         $rootScope.$digest()

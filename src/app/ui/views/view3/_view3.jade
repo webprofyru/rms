@@ -9,7 +9,7 @@ div(ng-controller='View3' style='width:{{layout.area3.width}}px;height:{{layout.
       .spinner
         .dot1
         .dot2
-    ul.tasks-block.no-scroll(rms-view3-drop-task='' style='height:{{layout.area3.height - 55}}px')
+    ul.tasks-block.no-scroll(rms-view3-drop-task='' style='height:{{layout.area3.height - 46}}px')
       .search-block: table(border='0px'): tr
         td.filters: table.filters
           tr(ng-show='config.view3GroupByPerson == 1')
@@ -33,8 +33,9 @@ div(ng-controller='View3' style='width:{{layout.area3.width}}px;height:{{layout.
         td.mode
           .action-buttons: li(ng-class='{active: config.view3GroupByPerson}' ng-click='config.view3GroupByPerson = config.view3GroupByPerson == 1 ? 0 : 1'): ul
             img(src='./images/icons/users.svg' title='Group by persons')
-      .scroll-viewport
+      .scroll-viewport(style='height:{{layout.area3.height - (config.view3GroupByPerson == 0 ? 120 : 148)}}px')
         .scroll-body
+
             mixin projects(projects)
               li(ng-repeat='project in #{projects}' ng-click='toggleProjectExpanded(project); $event.stopPropagation()')
                 table.project: tr
@@ -57,7 +58,24 @@ div(ng-controller='View3' style='width:{{layout.area3.width}}px;height:{{layout.
                         strong {{filter.taskPeriod(task, 'estimate')}}
 
             div(ng-if='config.view3GroupByPerson == 0')
-              +projects('view.projects')
+              ul
+                +projects('view.projects')
 
-            //div(ng-if='config.view3GroupByPerson == 1')
-            //  +projects()
+            div(ng-if='config.view3GroupByPerson == 1')
+              li(ng-repeat='person in view.people' ng-click='togglePersonExpanded(person); $event.stopPropagation()')
+                table.person
+                  tr(ng-if='person.row != null')
+                    td
+                      i(ng-class='isPersonExpended(person) ? "fa-caret-up" : "fa-caret-down"').fa
+                    td.avatar
+                      img.avatar(ng-src='{{person.row.person.avatar}}', alt='')
+                    td.name {{person.row.person.name}}
+                  tr(ng-if='person.row == null')
+                    td
+                      i(ng-class='isPersonExpended(person) ? "fa-caret-up" : "fa-caret-down"').fa
+                    td: h4.notAssigned NOT ASSIGNED TASKS
+                div(ng-if='isPersonExpended(person)')
+                  ul.none.person-projects(ng-if='person.projects.length == 0')
+                    | none
+                  ul.person-projects(ng-if='person.projects.length > 0')
+                    +projects('person.projects')

@@ -3,12 +3,15 @@ validate = require('../../../../../dscommon/util').validate
 
 Person = require('../../../../models/Person')
 Project = require('../../../../models/Project')
+ProjectView = require('./ProjectView')
 TodoListView = require('./TodoListView')
 
-module.exports = class ProjectView extends DSObject
-  @begin 'ProjectView'
+Row = require('../../view1/models/Row')
 
-  @propDoc  'person', Person
+module.exports = class PersonView extends DSObject
+  @begin 'PersonView'
+
+  @propDoc  'row', Row
   @propPool 'poolProjects', ProjectView
   @propList 'projects', TodoListView
 

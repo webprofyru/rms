@@ -273,7 +273,6 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
     @tasksSortRule = tasksSortRule = ((leftTask, rightTask) ->
 #      if (leftPlan = leftTask.get('plan')) != rightTask.get('plan')
 #        return if leftPlan then -1 else 1
-      console.info "leftTask.get('priority'):", leftTask.get('priority')
 
       if (leftPrior = leftTask.get('priority')) != (rightPrior = rightTask.get('priority'))
         return if leftPrior < rightPrior then -1 else 1
