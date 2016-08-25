@@ -1,0 +1,6 @@
+[
+  {"name": "План", "border": "solid 2px #000000"},
+  {"name": "NEXT", "color": "rgb(244, 189, 56)"},
+  {"name": "MUST", "color": "rgb(155, 124, 219)"},
+  {"name": "NICE TO HAVE", "color": "rgb(177, 218, 52)"}
+]

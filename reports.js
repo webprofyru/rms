@@ -80,7 +80,19 @@ ngModule.factory('config', [
 
       Config.propNum('selectedLoad');
 
+      Config.propNum('activeSidebarTab', 0);
+
       Config.propNum('refreshPeriod');
+
+      Config.propNum('view3GroupByPerson', 0);
+
+      Config.propNum('view3HidePeopleWOTasks', 0);
+
+      Config.propStr('view3FilterByPerson', '');
+
+      Config.propStr('view3FilterByProject', '');
+
+      Config.propStr('view3FilterByTask', '');
 
       Config.propNum('histStart', -1);
 
@@ -133,10 +145,8 @@ ngModule.factory('config', [
       for (name in ref) {
         desc = ref[name];
         if (keepOtherOptions || name === 'teamwork' || name === 'token') {
-          if (!desc.readonly && typeof (v = localStorageService.get(name)) !== 'undefined') {
-            if (v) {
-              config.set(name, v);
-            }
+          if (!desc.readonly && (v = localStorageService.get(name)) !== null) {
+            config.set(name, v);
           }
         }
       }
@@ -146,7 +156,7 @@ ngModule.factory('config', [
 ]);
 
 
-},{"../dscommon/DSObject":19,"../dscommon/util":24,"../utils/angular-local-storage.js":31,"./models/Person":5}],2:[function(require,module,exports){
+},{"../dscommon/DSObject":20,"../dscommon/util":25,"../utils/angular-local-storage.js":32,"./models/Person":5}],2:[function(require,module,exports){
 var DSData, DSDataServiceBase, DSDigest, DSSet, DSTags, Person, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -253,7 +263,7 @@ ngModule.factory('PeopleWithJson', [
                   for (k = 0, len1 = ref.length; k < len1; k++) {
                     personInfo = ref[k];
                     if (teamworkPeople.items.hasOwnProperty(personKey = "" + personInfo.id)) {
-                      teamworkPeople.items[personKey].set('roles', dstags = new DSTags(_this, '' + ++DSTags.nextTags, personInfo.role));
+                      teamworkPeople.items[personKey].set('roles', dstags = new DSTags(_this, personInfo.role));
                       dstags.release(_this);
                     }
                   }
@@ -302,7 +312,7 @@ ngModule.factory('PeopleWithJson', [
 ]);
 
 
-},{"../../dscommon/DSData":13,"../../dscommon/DSDataServiceBase":14,"../../dscommon/DSDigest":16,"../../dscommon/DSSet":22,"../../dscommon/DSTags":23,"../../dscommon/util":24,"../models/Person":5}],3:[function(require,module,exports){
+},{"../../dscommon/DSData":14,"../../dscommon/DSDataServiceBase":15,"../../dscommon/DSDigest":17,"../../dscommon/DSSet":23,"../../dscommon/DSTags":24,"../../dscommon/util":25,"../models/Person":5}],3:[function(require,module,exports){
 var DSData, DSDigest, WORK_ENTRIES_WHOLE_PAGE, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -421,7 +431,7 @@ ngModule.factory('DSDataTeamworkPaged', [
 ]);
 
 
-},{"../../../dscommon/DSData":13,"../../../dscommon/DSDigest":16,"../../../dscommon/util":24}],4:[function(require,module,exports){
+},{"../../../dscommon/DSData":14,"../../../dscommon/DSDigest":17,"../../../dscommon/util":25}],4:[function(require,module,exports){
 var Person, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -497,7 +507,7 @@ ngModule.factory('TWPeople', [
 ]);
 
 
-},{"../../../dscommon/DSDataSource":15,"../../../dscommon/util":24,"../../models/Person":5,"./DSDataTeamworkPaged":3}],5:[function(require,module,exports){
+},{"../../../dscommon/DSDataSource":16,"../../../dscommon/util":25,"../../models/Person":5,"./DSDataTeamworkPaged":3}],5:[function(require,module,exports){
 var DSDocument, DSTags, Person, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -565,7 +575,7 @@ module.exports = Person = (function(superClass) {
 })(DSDocument);
 
 
-},{"../../dscommon/DSDocument":17,"../../dscommon/DSTags":23,"../../dscommon/util":24}],6:[function(require,module,exports){
+},{"../../dscommon/DSDocument":18,"../../dscommon/DSTags":24,"../../dscommon/util":25}],6:[function(require,module,exports){
 var DSObject, Project, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -610,8 +620,43 @@ module.exports = Project = (function(superClass) {
 })(DSObject);
 
 
-},{"../../dscommon/DSObject":19,"../../dscommon/util":24}],7:[function(require,module,exports){
-var Comments, DSDocument, DSTags, Person, Project, Task, TaskSplit, TaskTimeTracking, TodoList, assert, error, time,
+},{"../../dscommon/DSObject":20,"../../dscommon/util":25}],7:[function(require,module,exports){
+var DSDocument, Tag, assert, error,
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+assert = require('../../dscommon/util').assert;
+
+error = require('../../dscommon/util').error;
+
+DSDocument = require('../../dscommon/DSDocument');
+
+module.exports = Tag = (function(superClass) {
+  extend(Tag, superClass);
+
+  function Tag() {
+    return Tag.__super__.constructor.apply(this, arguments);
+  }
+
+  Tag.begin('Tag');
+
+  Tag.addPool();
+
+  Tag.propNum('id', 0);
+
+  Tag.propStr('name');
+
+  Tag.propStr('color');
+
+  Tag.end();
+
+  return Tag;
+
+})(DSDocument);
+
+
+},{"../../dscommon/DSDocument":18,"../../dscommon/util":25}],8:[function(require,module,exports){
+var Comments, DSDocument, DSTags, Person, Project, Tag, Task, TaskSplit, TaskTimeTracking, TodoList, assert, error, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -631,6 +676,8 @@ TodoList = require('./TodoList');
 
 TaskTimeTracking = require('./TaskTimeTracking');
 
+Tag = require('./Tag');
+
 DSTags = require('../../dscommon/DSTags');
 
 Comments = require('./types/Comments');
@@ -638,6 +685,8 @@ Comments = require('./types/Comments');
 TaskSplit = require('./types/TaskSplit');
 
 module.exports = Task = (function(superClass) {
+  var defaultTag, originalEditableInit, processTagsEditable, processTagsOriginal;
+
   extend(Task, superClass);
 
   function Task() {
@@ -652,7 +701,68 @@ module.exports = Task = (function(superClass) {
 
   DSTags.addPropType(Task);
 
+  Task.defaultTag = defaultTag = {
+    name: '[default]',
+    priority: 100
+  };
+
   Task.addPool(true);
+
+  processTagsEditable = {
+    __onChange: function(task, propName, val, oldVal) {
+      var newTags, planTag, tags;
+      switch (propName) {
+        case 'plan':
+          tags = task.get('tags');
+          if (tags) {
+            tags = tags.clone(this);
+            if (val) {
+              tags.set(Task.planTag, (planTag = Tag.pool.find(this, Task.planTag)));
+              planTag.release(this);
+              task.set('tags', tags);
+            } else {
+              tags.set(Task.planTag, false);
+              task.set('tags', tags.empty() ? null : tags);
+            }
+            tags.release(this);
+          } else {
+            (newTags = {})[Task.planTag] = planTag = Tag.pool.find(this, Task.planTag);
+            tags = new DSTags(this, newTags);
+            planTag.release(this);
+            task.set('tags', tags);
+            tags.release(this);
+          }
+          Task.TWTask.calcTaskPriority(task);
+          break;
+        case 'tags':
+          Task.TWTask.calcTaskPriority(task);
+      }
+    }
+  };
+
+  processTagsOriginal = {
+    __onChange: function(task, propName, val, oldVal) {
+      if (propName === 'tags') {
+        Task.TWTask.calcTaskPriority(task);
+      }
+    }
+  };
+
+  Task.ds_ctor.push(function() {
+    if (this.__proto__.constructor.ds_editable) {
+      if (this.hasOwnProperty('$ds_evt')) {
+        this.$ds_evt.push(processTagsEditable);
+      } else {
+        this.$ds_evt = [processTagsEditable];
+      }
+    } else {
+      if (this.hasOwnProperty('$ds_evt')) {
+        this.$ds_evt.push(processTagsOriginal);
+      } else {
+        this.$ds_evt = [processTagsOriginal];
+      }
+    }
+  });
 
   Task.str = (function(v) {
     if (v === null) {
@@ -721,6 +831,12 @@ module.exports = Task = (function(superClass) {
   Task.propBool('plan');
 
   Task.propDSTags('tags');
+
+  Task.propNum('priority', 100, null, true);
+
+  Task.propObj('style', (function() {
+    return defaultTag;
+  }), null, true);
 
   Task.prototype.isOverdue = (function() {
     var duedate;
@@ -797,12 +913,19 @@ module.exports = Task = (function(superClass) {
 
   Task.end();
 
+  originalEditableInit = Task.Editable.prototype.init;
+
+  Task.Editable.prototype.init = function() {
+    originalEditableInit.apply(this, arguments);
+    Task.TWTask.calcTaskPriority(this);
+  };
+
   return Task;
 
 })(DSDocument);
 
 
-},{"../../dscommon/DSDocument":17,"../../dscommon/DSTags":23,"../../dscommon/util":24,"../ui/time":12,"./Person":5,"./Project":6,"./TaskTimeTracking":8,"./TodoList":9,"./types/Comments":10,"./types/TaskSplit":11}],8:[function(require,module,exports){
+},{"../../dscommon/DSDocument":18,"../../dscommon/DSTags":24,"../../dscommon/util":25,"../ui/time":13,"./Person":5,"./Project":6,"./Tag":7,"./TaskTimeTracking":9,"./TodoList":10,"./types/Comments":11,"./types/TaskSplit":12}],9:[function(require,module,exports){
 var DSObject, TaskTimeTracking,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -837,7 +960,7 @@ module.exports = TaskTimeTracking = (function(superClass) {
 })(DSObject);
 
 
-},{"../../dscommon/DSObject":19}],9:[function(require,module,exports){
+},{"../../dscommon/DSObject":20}],10:[function(require,module,exports){
 var DSObject, Project, TodoList, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -882,7 +1005,7 @@ module.exports = TodoList = (function(superClass) {
 })(DSObject);
 
 
-},{"../../dscommon/DSObject":19,"../../dscommon/util":24,"./Project":6}],10:[function(require,module,exports){
+},{"../../dscommon/DSObject":20,"../../dscommon/util":25,"./Project":6}],11:[function(require,module,exports){
 var Comments, DSDocument, assert, error;
 
 assert = require('../../../dscommon/util').assert;
@@ -1010,7 +1133,7 @@ module.exports = Comments = (function() {
 })();
 
 
-},{"../../../dscommon/DSDocument":17,"../../../dscommon/util":24}],11:[function(require,module,exports){
+},{"../../../dscommon/DSDocument":18,"../../../dscommon/util":25}],12:[function(require,module,exports){
 var DSDocument, TaskSplit, assert, error;
 
 assert = require('../../../dscommon/util').assert;
@@ -1338,7 +1461,7 @@ module.exports = TaskSplit = (function() {
 })();
 
 
-},{"../../../dscommon/DSDocument":17,"../../../dscommon/util":24}],12:[function(require,module,exports){
+},{"../../../dscommon/DSDocument":18,"../../../dscommon/util":25}],13:[function(require,module,exports){
 var time, updateToday;
 
 module.exports = time = {
@@ -1354,7 +1477,7 @@ module.exports = time = {
 }))();
 
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 var DSData, DSObject, assert, error, modeReleaseDataOnReload, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -1483,7 +1606,7 @@ module.exports = DSData = (function(superClass) {
 })(DSObject);
 
 
-},{"./DSObject":19,"./util":24}],14:[function(require,module,exports){
+},{"./DSObject":20,"./util":25}],15:[function(require,module,exports){
 var DSDataServiceBase, DSObject, DSPool, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -1587,7 +1710,7 @@ module.exports = DSDataServiceBase = (function(superClass) {
 })(DSObject);
 
 
-},{"./DSObject":19,"./DSPool":21,"./util":24}],15:[function(require,module,exports){
+},{"./DSObject":20,"./DSPool":22,"./util":25}],16:[function(require,module,exports){
 var DSDigest, DSObject, assert, base64, error, modeReleaseDataOnReload, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -1777,7 +1900,7 @@ ngModule.factory('DSDataSource', [
 ]);
 
 
-},{"../utils/base64":33,"./DSDigest":16,"./DSObject":19,"./util":24}],16:[function(require,module,exports){
+},{"../utils/base64":34,"./DSDigest":17,"./DSObject":20,"./util":25}],17:[function(require,module,exports){
 var DSDigest, assert, error;
 
 assert = require('./util').assert;
@@ -1877,7 +2000,7 @@ module.exports = DSDigest = (function() {
 })();
 
 
-},{"./util":24}],17:[function(require,module,exports){
+},{"./util":25}],18:[function(require,module,exports){
 var DSDocument, DSObject, DSObjectBase, DSSet, assert, error, traceRefs,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -1927,7 +2050,7 @@ module.exports = DSDocument = (function(superClass) {
     DSObject.end.call(this);
     originalDocClass = this;
     this.Editable = Editable = (function(superClass1) {
-      var k, prop, props, ref;
+      var init, k, prop, props, ref, ref1, v;
 
       extend(Editable, superClass1);
 
@@ -1941,10 +2064,20 @@ module.exports = DSDocument = (function(superClass) {
 
       Editable.ds_editable = true;
 
-      Editable.prototype.__init = null;
+      init = null;
+
+      ref = Editable.__super__.__init;
+      for (k in ref) {
+        v = ref[k];
+        if (originalDocClass.prototype.__props[k.substr(1)].calc) {
+          (init || (init = {}))[k] = v;
+        }
+      }
+
+      Editable.prototype.__init = init;
 
       Editable.ds_dstr.push((function() {
-        var change, propMap, propName, s, v;
+        var change, propMap, propName, s;
         if (assert) {
           if (!_.find(this.$ds_doc.$ds_evt, ((function(_this) {
             return function(lst) {
@@ -2051,7 +2184,7 @@ module.exports = DSDocument = (function(superClass) {
       });
 
       Editable.prototype.__onChange = (function(item, propName, value, oldVal) {
-        var change, empty, i, j, len, lst, prop, ref, s, val;
+        var change, empty, i, j, len, lst, prop, ref1, s, val;
         if ((change = this.__change) && change.hasOwnProperty(propName) && item.__props[propName].equal((val = (prop = change[propName]).v), value)) {
           this.$ds_chg.$ds_hist.setSameAsServer(this, propName);
           if ((s = prop.s) instanceof DSObjectBase) {
@@ -2075,24 +2208,26 @@ module.exports = DSDocument = (function(superClass) {
             this.$ds_chg.remove(this);
           }
         } else if (this.$ds_evt) {
-          ref = this.$ds_evt;
-          for (j = ref.length - 1; j >= 0; j += -1) {
-            lst = ref[j];
+          ref1 = this.$ds_evt;
+          for (j = ref1.length - 1; j >= 0; j += -1) {
+            lst = ref1[j];
             lst.__onChange.call(lst, this, propName, value, oldVal);
           }
         }
       });
 
       Editable.prototype._clearChanges = function() {
-        var change, i, lst, prop, propName, ref, s, v;
+        var change, i, lst, prop, propName, ref1, s;
         if ((change = this.__change)) {
           for (propName in change) {
             prop = change[propName];
             this.$ds_chg.$ds_hist.setSameAsServer(this, propName);
-            ref = this.$ds_evt;
-            for (i = ref.length - 1; i >= 0; i += -1) {
-              lst = ref[i];
-              lst.__onChange.call(lst, this, propName, prop.s, prop.v);
+            if (this.$ds_evt) {
+              ref1 = this.$ds_evt;
+              for (i = ref1.length - 1; i >= 0; i += -1) {
+                lst = ref1[i];
+                lst.__onChange.call(lst, this, propName, prop.s, prop.v);
+              }
             }
             if ((s = prop.s) instanceof DSObjectBase) {
               s.release(this);
@@ -2126,10 +2261,10 @@ module.exports = DSDocument = (function(superClass) {
         return this[propName] = value;
       });
 
-      ref = originalDocClass.prototype.__props;
-      for (k in ref) {
-        prop = ref[k];
-        if (!prop.noneditable) {
+      ref1 = originalDocClass.prototype.__props;
+      for (k in ref1) {
+        prop = ref1[k];
+        if (!prop.calc) {
           (function(propName, valid, equal) {
             var getValue;
             return Object.defineProperty(Editable.prototype, propName, {
@@ -2142,7 +2277,7 @@ module.exports = DSDocument = (function(superClass) {
                 return this.$ds_doc[propName];
               }),
               set: (function(value) {
-                var change, changePair, empty, i, j, lst, oldVal, ref1, ref2, s, serverValue, v;
+                var change, changePair, empty, i, j, lst, oldVal, ref2, ref3, s, serverValue;
                 if (assert) {
                   if (typeof (value = valid(v = value)) === 'undefined') {
                     error.invalidValue(this, propName, v);
@@ -2182,9 +2317,9 @@ module.exports = DSDocument = (function(superClass) {
                     }
                     if (empty) {
                       if (this.$ds_evt) {
-                        ref1 = this.$ds_evt;
-                        for (i = ref1.length - 1; i >= 0; i += -1) {
-                          lst = ref1[i];
+                        ref2 = this.$ds_evt;
+                        for (i = ref2.length - 1; i >= 0; i += -1) {
+                          lst = ref2[i];
                           lst.__onChange.call(lst, this, propName, value, oldVal);
                         }
                       }
@@ -2209,9 +2344,9 @@ module.exports = DSDocument = (function(superClass) {
                     this.$ds_chg.$ds_hist.add(this, propName, value, void 0);
                   }
                   if (this.$ds_evt) {
-                    ref2 = this.$ds_evt;
-                    for (j = ref2.length - 1; j >= 0; j += -1) {
-                      lst = ref2[j];
+                    ref3 = this.$ds_evt;
+                    for (j = ref3.length - 1; j >= 0; j += -1) {
+                      lst = ref3[j];
                       lst.__onChange.call(lst, this, propName, value, oldVal);
                     }
                   }
@@ -2234,7 +2369,7 @@ module.exports = DSDocument = (function(superClass) {
 })(DSObject);
 
 
-},{"./DSObject":19,"./DSObjectBase":20,"./DSSet":22,"./util":24}],18:[function(require,module,exports){
+},{"./DSObject":20,"./DSObjectBase":21,"./DSSet":23,"./util":25}],19:[function(require,module,exports){
 var DSList, DSObjectBase, assert, error, totalReleaseVerb, traceRefs, util,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -2335,7 +2470,7 @@ module.exports = DSList = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSObjectBase":20,"./util":24}],19:[function(require,module,exports){
+},{"./DSObjectBase":21,"./util":25}],20:[function(require,module,exports){
 var DSList, DSObject, DSObjectBase, DSPool, DSSet, assert, error, serviceOwner, totalRelease,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -2529,7 +2664,7 @@ module.exports = DSObject = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSList":18,"./DSObjectBase":20,"./DSPool":21,"./DSSet":22,"./util":24}],20:[function(require,module,exports){
+},{"./DSList":19,"./DSObjectBase":21,"./DSPool":22,"./DSSet":23,"./util":25}],21:[function(require,module,exports){
 var DSObjectBase, assert, error, serviceOwner, totalRelease, totalReleaseVerb, traceData, traceRefs, util;
 
 util = require('./util');
@@ -2557,7 +2692,7 @@ module.exports = DSObjectBase = (function() {
 
   DSObjectBase.isAssignableFrom = (function(clazz) {
     var up;
-    if (!(typeof clazz === 'function')) {
+    if (typeof clazz !== 'function') {
       error.invalidArg('clazz');
     }
     if ((up = clazz) === this) {
@@ -2782,10 +2917,10 @@ module.exports = DSObjectBase = (function() {
   DSObjectBase.prop = (function(opts) {
     var equal, func, init, localName, name, propDecl, props, superInit, superProps, valid;
     if (assert) {
-      if (!(typeof opts === 'object')) {
+      if (typeof opts !== 'object') {
         error.invalidArg('opts');
       }
-      if (!(opts.hasOwnProperty('name'))) {
+      if (!opts.hasOwnProperty('name')) {
         throw new Error('Missing opts.name');
       }
       if (!(typeof opts.name === 'string' && opts.name.length > 0)) {
@@ -2800,13 +2935,16 @@ module.exports = DSObjectBase = (function() {
       if (!(!opts.hasOwnProperty('readonly') || typeof opts.readonly === 'boolean')) {
         throw new Error('Invalid value of opts.readonly');
       }
+      if (!(typeof opts.calc === 'undefined' || typeof opts.calc === 'boolean')) {
+        throw new Error('Invalid value of opts.calc');
+      }
       if (!(!opts.hasOwnProperty('func') || typeof opts.func === 'function')) {
         throw new Error('Invalid value of opts.func');
       }
       if (!(!opts.hasOwnProperty('value') || typeof opts.value !== 'function')) {
         throw new Error('Invalid value of opts.value');
       }
-      if (opts.hasOwnProperty('init') && !opts.readonly && !opts.hasOwnProperty('valid')) {
+      if (opts.hasOwnProperty('init') && !(opts.readonly || opts.calc) && !opts.hasOwnProperty('valid')) {
         throw new Error('Missing opts.valid');
       }
       if (opts.hasOwnProperty('valid') && (opts.readonly || !opts.hasOwnProperty('init'))) {
@@ -2835,6 +2973,9 @@ module.exports = DSObjectBase = (function() {
       }
       if (!(!opts.hasOwnProperty('set') || typeof opts.set === 'function')) {
         throw new Error('Invalid value of opts.set');
+      }
+      if (opts.hasOwnProperty('readonly') && !opts.readonly && opts.hasOwnProperty('calc') && opts.calc) {
+        throw new Error('Ambiguous opts.readonly and opts.calc');
       }
     }
     if (!this.prototype.hasOwnProperty('__init')) {
@@ -2884,11 +3025,30 @@ module.exports = DSObjectBase = (function() {
           return v.toString();
         }
       }),
-      readonly: opts.readonly || false
+      readonly: opts.readonly || false,
+      calc: opts.calc || false
     };
     if (opts.hasOwnProperty('init')) {
       valid = propDecl.valid = opts.valid;
       propDecl.init = this.prototype.__init[localName = "_" + (name = opts.name)] = opts.init;
+      if (opts.calc) {
+        opts.readonly === true;
+        this.prototype["__setCalc" + (name.substr(0, 1).toUpperCase() + name.substr(1))] = (function(value) {
+          var evt, i, lst, oldVal, v;
+          if (typeof (value = valid(v = value)) === 'undefined') {
+            error.invalidValue(this, name, v);
+          }
+          if (!equal((oldVal = this[localName]), value)) {
+            this[localName] = value;
+            if ((evt = this.$ds_evt)) {
+              for (i = evt.length - 1; i >= 0; i += -1) {
+                lst = evt[i];
+                lst.__onChange.call(lst, this, name, value, oldVal);
+              }
+            }
+          }
+        });
+      }
       Object.defineProperty(this.prototype, name, {
         get: opts.get || (function() {
           return this[localName];
@@ -2934,20 +3094,23 @@ module.exports = DSObjectBase = (function() {
     return propDecl;
   });
 
-  DSObjectBase.propSimple = (function(type, name, init, valid) {
+  DSObjectBase.propSimple = (function(type, name, init, valid, calc) {
     var q;
     if (assert) {
       if (!(type === 'number' || type === 'boolean' || type === 'string' || type === 'object')) {
         error.invalidArg('type');
       }
-      if (!typeof name === 'string') {
+      if (typeof name !== 'string') {
         error.invalidArg('name');
       }
-      if (valid && typeof valid !== 'function') {
+      if (!(typeof init === 'undefined' || init === null || typeof init === 'function' || typeof init === type)) {
+        error.invalidArg('init');
+      }
+      if (!(!valid || typeof valid === 'function')) {
         error.invalidArg('valid');
       }
-      if (typeof init !== 'undefined' && init !== null && typeof init !== type) {
-        error.invalidArg('init');
+      if (!(typeof calc === 'undefined' || typeof calc === 'boolean')) {
+        error.invalidArg('calc');
       }
     }
     valid = (q = valid) ? (function(value) {
@@ -2966,7 +3129,7 @@ module.exports = DSObjectBase = (function() {
     return this.prop({
       name: name,
       type: type,
-      init: typeof init === 'undefined' ? null : type !== 'object' ? init : (function() {
+      init: typeof init === 'undefined' || init === null ? null : typeof init === 'function' || type !== 'object' ? init : (function() {
         return _.clone(init);
       }),
       valid: valid,
@@ -2985,27 +3148,28 @@ module.exports = DSObjectBase = (function() {
         } else {
           return v.toString();
         }
-      })
+      }),
+      calc: calc
     });
   });
 
-  DSObjectBase.propNum = (function(name, init, validation) {
-    this.propSimple('number', name, init, validation);
+  DSObjectBase.propNum = (function(name, init, validation, calc) {
+    this.propSimple('number', name, init, validation, calc);
   });
 
-  DSObjectBase.propBool = (function(name, init, validation) {
-    return this.propSimple('boolean', name, init, validation);
+  DSObjectBase.propBool = (function(name, init, validation, calc) {
+    return this.propSimple('boolean', name, init, validation, calc);
   });
 
-  DSObjectBase.propStr = (function(name, init, validation) {
-    return this.propSimple('string', name, init, validation);
+  DSObjectBase.propStr = (function(name, init, validation, calc) {
+    return this.propSimple('string', name, init, validation, calc);
   });
 
-  DSObjectBase.propObj = (function(name, init, validation) {
-    return this.propSimple('object', name, init, validation);
+  DSObjectBase.propObj = (function(name, init, validation, calc) {
+    return this.propSimple('object', name, init, validation, calc);
   });
 
-  DSObjectBase.propDoc = (function(name, type, valid) {
+  DSObjectBase.propDoc = (function(name, type, valid, calc) {
     var localName, q;
     if (assert) {
       if (!typeof name === 'string') {
@@ -3019,6 +3183,9 @@ module.exports = DSObjectBase = (function() {
       }
       if (!type instanceof DSObjectBase) {
         error.notDSObjectClass(type);
+      }
+      if (typeof calc !== 'undefined' && typeof calc !== 'boolean') {
+        error.invalidArg('calc');
       }
     }
     valid = (q = valid) ? (function(value) {
@@ -3065,6 +3232,7 @@ module.exports = DSObjectBase = (function() {
           return v.$ds_key;
         }
       }),
+      calc: calc,
       set: (function(value) {
         var evt, i, lst, oldVal, v;
         if (typeof (value = valid(v = value)) === 'undefined') {
@@ -3380,7 +3548,7 @@ module.exports = DSObjectBase = (function() {
         if (!((typeof owner === 'object' && owner !== window) || typeof owner === 'function')) {
           error.invalidArg('referry');
         }
-        if (!(typeof listener === 'function')) {
+        if (typeof listener !== 'function') {
           error.invalidArg('listener');
         }
       }
@@ -3418,7 +3586,7 @@ module.exports = DSObjectBase = (function() {
 })();
 
 
-},{"./util":24}],21:[function(require,module,exports){
+},{"./util":25}],22:[function(require,module,exports){
 var DSDigest, DSObjectBase, DSPool, assert, error, traceWatch,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -3583,7 +3751,7 @@ module.exports = DSPool = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSDigest":16,"./DSObjectBase":20,"./util":24}],22:[function(require,module,exports){
+},{"./DSDigest":17,"./DSObjectBase":21,"./util":25}],23:[function(require,module,exports){
 var DSObjectBase, DSSet, assert, error, modeReleaseDataOnReload, totalReleaseVerb, traceRefs, traceWatch, util,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -3865,7 +4033,7 @@ module.exports = DSSet = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSObjectBase":20,"./util":24}],23:[function(require,module,exports){
+},{"./DSObjectBase":21,"./util":25}],24:[function(require,module,exports){
 var DSObjectBase, DSTags, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -3919,7 +4087,7 @@ module.exports = DSTags = (function(superClass) {
         valid: valid,
         read: (function(v) {
           if (v !== null) {
-            return new DSTags(this, '' + ++DSTags.nextTags, v);
+            return new DSTags(this, v);
           } else {
             return null;
           }
@@ -3964,11 +4132,11 @@ module.exports = DSTags = (function(superClass) {
     }
   }));
 
-  function DSTags(referry, key, enums) {
-    var i, k, len, map, ref, ref1, src, v, value;
-    DSTags.__super__.constructor.call(this, referry, key);
+  function DSTags(referry, enums) {
+    var i, k, key, len, map, ref, ref1, src, v, value;
+    DSTags.__super__.constructor.call(this, referry, "" + (++DSTags.nextTags));
     if (assert) {
-      if (arguments.length === 3 && typeof (src = arguments[2]) === 'object') {
+      if (arguments.length === 2 && typeof (src = arguments[1]) === 'object') {
         void 0;
       } else {
         if (typeof enums !== 'string') {
@@ -3976,7 +4144,7 @@ module.exports = DSTags = (function(superClass) {
         }
       }
     }
-    if (arguments.length === 3 && typeof (src = arguments[2]) === 'object') {
+    if (arguments.length === 2 && typeof (src = arguments[1]) === 'object') {
       if (src.__proto__ === DSTags.prototype) {
         this.map = _.clone(src.map);
         this.value = src.value;
@@ -4016,16 +4184,19 @@ module.exports = DSTags = (function(superClass) {
         return results;
       })())).join(', ');
     }
-    return;
   }
 
-  DSTags.prototype.toString = (function() {
-    return this.value;
-  });
+  DSTags.prototype.clone = function(owner) {
+    return new DSTags(owner, this);
+  };
 
-  DSTags.prototype.valueOf = (function() {
+  DSTags.prototype.toString = function() {
     return this.value;
-  });
+  };
+
+  DSTags.prototype.valueOf = function() {
+    return this.value;
+  };
 
   DSTags.prototype.set = (function(enumValue, value) {
     var alreadyIn, k, map, oldValue;
@@ -4096,6 +4267,14 @@ module.exports = DSTags = (function(superClass) {
     return false;
   });
 
+  DSTags.prototype.empty = function() {
+    var k;
+    for (k in this.map) {
+      return false;
+    }
+    return true;
+  };
+
   DSTags.prototype.diff = (function(src) {
     var k, map, srcMap;
     if (assert) {
@@ -4132,7 +4311,7 @@ module.exports = DSTags = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSObjectBase":20,"./util":24}],24:[function(require,module,exports){
+},{"./DSObjectBase":21,"./util":25}],25:[function(require,module,exports){
 var ServiceOwner, util;
 
 module.exports = util = {
@@ -4244,7 +4423,7 @@ module.exports = util = {
 };
 
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 var DSDataServiceBase, PeriodTimeTracking, Person, Project, assert, base64, error, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -4394,7 +4573,7 @@ ngModule.factory('dsDataService', [
 ]);
 
 
-},{"../../app/config":1,"../../app/data/PeopleWithJson":2,"../../app/data/teamwork/TWPeople":4,"../../app/models/Person":5,"../../app/models/Project":6,"../../dscommon/DSDataServiceBase":14,"../../dscommon/DSDataSource":15,"../../dscommon/util":24,"../../utils/base64":33,"../models/PeriodTimeTracking":28,"./teamwork/TWPeriodTimeTracking":26,"./teamwork/TWProjects":27}],26:[function(require,module,exports){
+},{"../../app/config":1,"../../app/data/PeopleWithJson":2,"../../app/data/teamwork/TWPeople":4,"../../app/models/Person":5,"../../app/models/Project":6,"../../dscommon/DSDataServiceBase":15,"../../dscommon/DSDataSource":16,"../../dscommon/util":25,"../../utils/base64":34,"../models/PeriodTimeTracking":29,"./teamwork/TWPeriodTimeTracking":27,"./teamwork/TWProjects":28}],27:[function(require,module,exports){
 var DSData, DSDigest, DSObject, DSSet, HISTORY_END_SEARCH_STEP, PeriodTimeTracking, Person, Project, WORK_ENTRIES_WHOLE_PAGE, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -4677,7 +4856,7 @@ ngModule.factory('TWPeriodTimeTracking', [
 ]);
 
 
-},{"../../../app/models/Person":5,"../../../app/models/Project":6,"../../../dscommon/DSData":13,"../../../dscommon/DSDataSource":15,"../../../dscommon/DSDigest":16,"../../../dscommon/DSObject":19,"../../../dscommon/DSSet":22,"../../../dscommon/util":24,"../../models/PeriodTimeTracking":28}],27:[function(require,module,exports){
+},{"../../../app/models/Person":5,"../../../app/models/Project":6,"../../../dscommon/DSData":14,"../../../dscommon/DSDataSource":16,"../../../dscommon/DSDigest":17,"../../../dscommon/DSObject":20,"../../../dscommon/DSSet":23,"../../../dscommon/util":25,"../../models/PeriodTimeTracking":29}],28:[function(require,module,exports){
 var Project, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -4749,7 +4928,7 @@ ngModule.factory('TWProjects', [
 ]);
 
 
-},{"../../../app/data/teamwork/DSDataTeamworkPaged":3,"../../../app/models/Project":6,"../../../dscommon/DSDataSource":15,"../../../dscommon/util":24}],28:[function(require,module,exports){
+},{"../../../app/data/teamwork/DSDataTeamworkPaged":3,"../../../app/models/Project":6,"../../../dscommon/DSDataSource":16,"../../../dscommon/util":25}],29:[function(require,module,exports){
 var DSObject, PeriodTimeTracking, Person, Project, Task,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -4792,7 +4971,7 @@ module.exports = PeriodTimeTracking = (function(superClass) {
 })(DSObject);
 
 
-},{"../../app/models/Person":5,"../../app/models/Project":6,"../../app/models/Task":7,"../../dscommon/DSObject":19}],29:[function(require,module,exports){
+},{"../../app/models/Person":5,"../../app/models/Project":6,"../../app/models/Task":8,"../../dscommon/DSObject":20}],30:[function(require,module,exports){
 var FileSaver, PeriodTimeTracking, base62ToBlob, base64, defaultTask, fixStr, ngModule, projectReport, serviceOwner;
 
 FileSaver = require('../../static/libs/FileSaver.js/FileSaver');
@@ -5235,7 +5414,7 @@ ngModule.directive('reports', [
 ]);
 
 
-},{"../../static/libs/FileSaver.js/FileSaver":34,"../dscommon/util":24,"../utils/base62ToBlob":32,"../utils/base64":33,"./data/dsDataService":25,"./data/teamwork/TWPeriodTimeTracking":26,"./models/PeriodTimeTracking":28,"./showSpinner":30}],30:[function(require,module,exports){
+},{"../../static/libs/FileSaver.js/FileSaver":35,"../dscommon/util":25,"../utils/base62ToBlob":33,"../utils/base64":34,"./data/dsDataService":26,"./data/teamwork/TWPeriodTimeTracking":27,"./models/PeriodTimeTracking":29,"./showSpinner":31}],31:[function(require,module,exports){
 var ngModule, spinnerOpts;
 
 module.exports = (ngModule = angular.module('showSpinner', [])).name;
@@ -5265,7 +5444,7 @@ ngModule.directive('showSpinner', [
 ]);
 
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 /**
  * An Angular module that gives you access to the browsers local storage
  * @version v0.1.5 - 2014-11-04
@@ -5721,7 +5900,7 @@ angularLocalStorage.provider('localStorageService', function() {
   }];
 });
 })( window, window.angular );
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 module.exports = function(b64Data, contentType, sliceSize) {
   var blob, byteArray, byteArrays, byteCharacters, byteNumbers, i, offset, slice;
   contentType = contentType || '';
@@ -5748,7 +5927,7 @@ module.exports = function(b64Data, contentType, sliceSize) {
 };
 
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 var keyStr;
 
 keyStr = "ABCDEFGHIJKLMNOP" + "QRSTUVWXYZabcdef" + "ghijklmnopqrstuv" + "wxyz0123456789+/" + "=";
@@ -5831,7 +6010,7 @@ module.exports = {
 };
 
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 /* FileSaver.js
  * A saveAs() FileSaver implementation.
  * 1.1.20151003
@@ -6103,4 +6282,4 @@ if (typeof module !== "undefined" && module.exports) {
   });
 }
 
-},{}]},{},[29]);
+},{}]},{},[30]);

@@ -727,11 +727,6 @@ ul {
               border-radius: 5px;
       line-height: 15px;
       position: relative; }
-      /* line 8, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
-      #screen1 .task .task-body.plan, #screen1 #task-drag-ghost .task-body.plan {
-        border-style: solid;
-        border-width: 2px;
-        border-color: #000000; }
       /* line 19, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
       #screen1 .task .task-body.split > .duration, #screen1 #task-drag-ghost .task-body.split > .duration {
         display: none; }
@@ -1149,26 +1144,26 @@ ul {
               padding-top: 0.3rem;
               opacity: 0.5;
               cursor: pointer; }
-          /* line 72, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+          /* line 2, C:/SVN/_WebProfyManagement/src/sass/screen1/_person.sass */
           #screen1 #top-block .people .person-row .person-info table .avatar {
             width: 2rem;
             margin-right: 0.3rem; }
-          /* line 75, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+          /* line 5, C:/SVN/_WebProfyManagement/src/sass/screen1/_person.sass */
           #screen1 #top-block .people .person-row .person-info table .name {
             text-align: left;
             font-size: 12px; }
-          /* line 78, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+          /* line 73, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
           #screen1 #top-block .people .person-row .person-info table .expand {
             text-align: right;
             font-size: 14px;
             cursor: pointer; }
-            /* line 82, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+            /* line 77, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
             #screen1 #top-block .people .person-row .person-info table .expand i {
               background: whitesmoke;
               padding: 3px 5px;
               -webkit-border-radius: 5px;
                       border-radius: 5px; }
-      /* line 86, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+      /* line 81, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .estimate {
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
@@ -1176,7 +1171,7 @@ ul {
         float: left;
         font-size: 12px;
         text-align: center; }
-      /* line 91, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+      /* line 86, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .total .task-count {
         display: block;
         position: absolute;
@@ -1185,7 +1180,7 @@ ul {
         font-size: 11px;
         line-height: 1;
         opacity: 0.5; }
-      /* line 99, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+      /* line 94, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .total .person-day-time {
         position: absolute;
         width: 100%;
@@ -1193,21 +1188,21 @@ ul {
         display: block;
         padding-left: 5px;
         font-size: 10px; }
-      /* line 106, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+      /* line 101, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .total .loaded {
         position: absolute;
         width: 0%;
         height: 100%; }
-        /* line 110, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+        /* line 105, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
         #screen1 #top-block .people .person-row .total .loaded.green {
           background-color: #69D869; }
-        /* line 113, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+        /* line 108, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
         #screen1 #top-block .people .person-row .total .loaded.red {
           background-color: #EF6363; }
-        /* line 116, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+        /* line 111, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
         #screen1 #top-block .people .person-row .total .loaded.light-yellow {
           background-color: #eee3a1; }
-      /* line 118, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+      /* line 113, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .tasks {
         display: block;
         position: absolute;
@@ -1281,7 +1276,16 @@ ul {
     right: 0;
     background: #F0F0F0;
     border-left: 1px solid #b9b9b9; }
-    /* line 7, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    /* line 5, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    #screen1 #sidebar .none {
+      padding-top: 6px;
+      padding-left: 24px;
+      font-style: italic; }
+    /* line 9, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    #screen1 #sidebar .notAssigned {
+      padding-left: 6px;
+      padding-bottom: 6px; }
+    /* line 13, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
     #screen1 #sidebar .sub-header .tabs {
       list-style: none;
       padding-left: 0;
@@ -1289,7 +1293,7 @@ ul {
       line-height: 30px;
       margin: 0 10px;
       font-size: 12px; }
-      /* line 14, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+      /* line 20, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
       #screen1 #sidebar .sub-header .tabs > li {
         height: 30px;
         float: left;
@@ -1304,78 +1308,92 @@ ul {
         color: #B0B0B0;
         overflow: hidden;
         text-overflow: ellipsis; }
-        /* line 26, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 32, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .sub-header .tabs > li.active {
           background: #F0F0F0;
           color: #000000; }
-    /* line 30, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    /* line 36, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
     #screen1 #sidebar .sub-header.narrow .tabs > li {
       width: auto;
       font-size: 8px; }
-      /* line 33, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+      /* line 39, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
       #screen1 #sidebar .sub-header.narrow .tabs > li.active {
         width: auto; }
-    /* line 37, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    /* line 43, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    #screen1 #sidebar table.person .avatar {
+      margin-left: 6px; }
+    /* line 46, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
     #screen1 #sidebar table.project td {
       line-height: 24px; }
-    /* line 40, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    /* line 49, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
     #screen1 #sidebar table.todo-list td {
       line-height: 24px; }
-    /* line 43, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    /* line 52, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
     #screen1 #sidebar .content-block {
       position: relative;
       font-size: 12px;
       overflow: hidden;
-      padding-top: 15px; }
-      /* line 48, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+      padding-top: 6px; }
+      /* line 57, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
       #screen1 #sidebar .content-block h3, #screen1 #sidebar .content-block h4 {
         margin: 0;
         clear: both; }
-      /* line 51, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+      /* line 60, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
       #screen1 #sidebar .content-block .tasks-block {
         padding-left: 24px; }
-        /* line 53, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
-        #screen1 #sidebar .content-block .tasks-block li {
+        /* line 2, C:/SVN/_WebProfyManagement/src/sass/screen1/_person.sass */
+        #screen1 #sidebar .content-block .tasks-block .avatar {
+          width: 2rem;
+          margin-right: 0.3rem; }
+        /* line 5, C:/SVN/_WebProfyManagement/src/sass/screen1/_person.sass */
+        #screen1 #sidebar .content-block .tasks-block .name {
+          text-align: left;
+          font-size: 12px; }
+        /* line 64, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        #screen1 #sidebar .content-block .tasks-block li:not(:last-child) {
           padding-bottom: 15px; }
-          /* line 56, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
-          #screen1 #sidebar .content-block .tasks-block li table td {
-            vertical-align: top;
-            text-align: left; }
-            /* line 59, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
-            #screen1 #sidebar .content-block .tasks-block li table td h3 {
-              padding-left: 5px; }
-      /* line 66, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 67, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        #screen1 #sidebar .content-block .tasks-block li table td {
+          vertical-align: middle;
+          text-align: left; }
+          /* line 70, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+          #screen1 #sidebar .content-block .tasks-block li table td h3 {
+            padding-left: 5px; }
+      /* line 77, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+      #screen1 #sidebar .content-block .person-projects {
+        margin-left: 16px; }
+      /* line 79, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
       #screen1 #sidebar .content-block .task-list {
         padding-left: 20px;
         padding-bottom: 10px; }
-        /* line 69, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 82, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .task-list .task-list-title {
           cursor: pointer; }
-          /* line 71, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+          /* line 84, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
           #screen1 #sidebar .content-block .task-list .task-list-title i {
             display: inline-block; }
-          /* line 73, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+          /* line 86, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
           #screen1 #sidebar .content-block .task-list .task-list-title h4 {
             display: inline-block;
             padding-left: 5px; }
-      /* line 76, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+      /* line 89, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
       #screen1 #sidebar .content-block .task-list-items {
         padding-left: 20px;
         margin-left: 1rem;
         width: 100%;
         table-layout: fixed; }
-        /* line 77, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 90, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .task-list-items.plan {
           border-style: solid;
           border-width: 2px;
           border-color: #000000; }
-        /* line 85, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 98, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .task-list-items .col {
           line-height: 13px; }
-        /* line 87, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 100, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .task-list-items .col1 {
           width: 50%; }
-          /* line 89, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+          /* line 102, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
           #screen1 #sidebar .content-block .task-list-items .col1 div {
             overflow: hidden;
             height: 20px;
@@ -1389,7 +1407,7 @@ ul {
                     border-radius: 5px;
             border: 1px solid #96b8dc;
             padding: 2px 6px; }
-        /* line 101, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 114, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .task-list-items .col2 {
           width: 2rem;
           text-align: center;
@@ -1759,3 +1777,80 @@ ul {
       /* line 33, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-add-comment.sass */
       #screen1 #modal-add-comment .actions button.cancel {
         float: right; }
+
+/* line 3, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+#sidebar .search-block {
+  margin-bottom: 12px;
+  padding: 4px 4px 2px 6px;
+  background: #D8D8D8;
+  border: none;
+  -webkit-border-top-left-radius: 5px;
+          border-top-left-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+          border-bottom-left-radius: 5px; }
+  /* line 10, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+  #sidebar .search-block td {
+    padding: 0; }
+  /* line 12, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+  #sidebar .search-block > table {
+    width: 100%; }
+    /* line 15, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+    #sidebar .search-block > table > tbody > tr > td.filters {
+      width: 100%; }
+    /* line 17, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+    #sidebar .search-block > table > tbody > tr > td.mode {
+      vertical-align: top;
+      text-align: right;
+      width: 40px;
+      display: inline-block;
+      padding-top: 2px;
+      padding-left: 4px;
+      margin-right: 4px; }
+      /* line 25, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+      #sidebar .search-block > table > tbody > tr > td.mode > .action-buttons {
+        padding: 0 !important; }
+        /* line 27, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+        #sidebar .search-block > table > tbody > tr > td.mode > .action-buttons > li {
+          height: 26px; }
+          /* line 29, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+          #sidebar .search-block > table > tbody > tr > td.mode > .action-buttons > li.groupByPerson {
+            padding-top: 8px !important;
+            padding-bottom: 0px !important; }
+          /* line 32, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+          #sidebar .search-block > table > tbody > tr > td.mode > .action-buttons > li.hideEmptyPeople {
+            margin-top: 3px;
+            padding: 10px 8px 0px 9px !important; }
+
+/* line 39, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+#sidebar table.filters > tbody > tr:not(last-child) > td {
+  padding-bottom: 2px; }
+
+/* line 41, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+#sidebar table.filters > tbody > tr > td.label {
+  width: 56px;
+  padding-right: 4px;
+  text-align: right; }
+
+/* line 45, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+#sidebar table.filters > tbody > tr > td.input {
+  width: 100%;
+  -webkit-border-radius: 3px;
+          border-radius: 3px; }
+  /* line 48, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+  #sidebar table.filters > tbody > tr > td.input .clear {
+    height: 26px;
+    width: 20px; }
+  /* line 51, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+  #sidebar table.filters > tbody > tr > td.input img.clear {
+    height: 6px;
+    width: 6px;
+    margin-top: 6px;
+    margin-left: 6px;
+    padding: 2px;
+    -webkit-border-radius: 3px;
+            border-radius: 3px;
+    border: 1px solid grey; }
+  /* line 59, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+  #sidebar table.filters > tbody > tr > td.input input {
+    padding: 3px 0;
+    width: 100%; }
