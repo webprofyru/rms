@@ -10,7 +10,7 @@ error = require('./util').error
 module.exports = class DSObjectBase
 
   @isAssignableFrom = ((clazz) ->
-    error.invalidArg 'clazz' if !(typeof clazz == 'function')
+    error.invalidArg 'clazz' unless typeof clazz == 'function'
     return true if (up = clazz) == @
     loop
       return false if !up.hasOwnProperty '__super__'
@@ -32,7 +32,7 @@ module.exports = class DSObjectBase
   constructor: ((referry, key) ->
     if assert
       throw new Error 'Cannot instantiate DSObjectBаse directly' if @__proto__.constructor == DSObjectBase
-      error.invalidArg 'referry' if !((typeof referry == 'object' && referry != window) || typeof referry == 'function')
+      error.invalidArg 'referry' unless (typeof referry == 'object' && referry != window) || typeof referry == 'function'
       error.invalidArg 'key' if typeof key != 'string'
     @$ds_key = key
     @$ds_ref = 1
@@ -51,7 +51,7 @@ module.exports = class DSObjectBase
 
   addRef: ((referry) ->
     if assert
-      error.invalidArg 'referry' if !((typeof referry == 'object' && referry != window) || typeof referry == 'function')
+      error.invalidArg 'referry' unless (typeof referry == 'object' && referry != window) || typeof referry == 'function'
     if @$ds_ref == 0
       debugger if totalReleaseVerb
       throw new Error 'addRef() on already fully released object'
@@ -65,7 +65,7 @@ module.exports = class DSObjectBase
 
   release: ((referry) ->
     if assert
-      error.invalidArg 'referry' if !((typeof referry == 'object' && referry != window) || typeof referry == 'function')
+      error.invalidArg 'referry' unless (typeof referry == 'object' && referry != window) || typeof referry == 'function'
     if totalReleaseVerb
       console.info "#{++util.serviceOwner.msgCount}: release: #{DSObjectBase.desc @}, refs: #{@$ds_ref - 1}, ref: #{DSObjectBase.desc referry}"
       debugger if util.serviceOwner.msgCount == window.totalBreak
@@ -137,24 +137,26 @@ module.exports = class DSObjectBase
 
   @prop: ((opts) ->
     if assert
-      error.invalidArg 'opts' if !(typeof opts == 'object')
-      throw new Error 'Missing opts.name' if !(opts.hasOwnProperty('name'))
-      throw new Error 'Invalid value of opts.name' if !(typeof opts.name == 'string' && opts.name.length > 0)
+      error.invalidArg 'opts' unless typeof opts == 'object'
+      throw new Error 'Missing opts.name' unless opts.hasOwnProperty('name')
+      throw new Error 'Invalid value of opts.name' unless typeof opts.name == 'string' && opts.name.length > 0
       throw new Error 'Missing opts.type' if !opts.hasOwnProperty('type')
-      throw new Error 'Invalid value of opts.type' if !((typeof opts.type == 'string' && opts.type.length > 0) || typeof opts.type == 'function')
-      throw new Error 'Invalid value of opts.readonly' if !(!opts.hasOwnProperty('readonly') || typeof opts.readonly == 'boolean')
-      throw new Error 'Invalid value of opts.func' if !(!opts.hasOwnProperty('func') || typeof opts.func == 'function')
-      throw new Error 'Invalid value of opts.value' if !(!opts.hasOwnProperty('value') || typeof opts.value != 'function')
-      throw new Error 'Missing opts.valid' if opts.hasOwnProperty('init') && !opts.readonly && !opts.hasOwnProperty('valid')
+      throw new Error 'Invalid value of opts.type' unless (typeof opts.type == 'string' && opts.type.length > 0) || typeof opts.type == 'function'
+      throw new Error 'Invalid value of opts.readonly' unless !opts.hasOwnProperty('readonly') || typeof opts.readonly == 'boolean'
+      throw new Error 'Invalid value of opts.calc' unless typeof opts.calc == 'undefined' || typeof opts.calc == 'boolean'
+      throw new Error 'Invalid value of opts.func' unless !opts.hasOwnProperty('func') || typeof opts.func == 'function'
+      throw new Error 'Invalid value of opts.value' unless !opts.hasOwnProperty('value') || typeof opts.value != 'function'
+      throw new Error 'Missing opts.valid' if opts.hasOwnProperty('init') && !(opts.readonly || opts.calc) && !opts.hasOwnProperty('valid')
       throw new Error 'Unexpected opts.valid' if opts.hasOwnProperty('valid') && (opts.readonly || !opts.hasOwnProperty('init'))
       throw new Error "Invalid init value: #{opts.init}" if opts.hasOwnProperty('valid') && opts.valid(if typeof (init = opts.init) == 'function' then init() else init) == undefined
-      throw new Error 'Invalid value of opts.valid' if !(!opts.hasOwnProperty('valid') || typeof opts.valid == 'function')
-      throw new Error 'Invalid value of opts.write' if !(!opts.hasOwnProperty('write') || typeof opts.write == 'function')
-      throw new Error 'Invalid value of opts.read' if !(!opts.hasOwnProperty('read') || typeof opts.read == 'function')
-      throw new Error 'Invalid value of opts.equal' if !(!opts.hasOwnProperty('equal') || typeof opts.equal == 'function')
-      throw new Error 'Invalid value of opts.str' if !(!opts.hasOwnProperty('str') || typeof opts.str == 'function')
-      throw new Error 'Invalid value of opts.get' if !(!opts.hasOwnProperty('get') || typeof opts.get == 'function')
-      throw new Error 'Invalid value of opts.set' if !(!opts.hasOwnProperty('set') || typeof opts.set == 'function')
+      throw new Error 'Invalid value of opts.valid' unless !opts.hasOwnProperty('valid') || typeof opts.valid == 'function'
+      throw new Error 'Invalid value of opts.write' unless !opts.hasOwnProperty('write') || typeof opts.write == 'function'
+      throw new Error 'Invalid value of opts.read' unless !opts.hasOwnProperty('read') || typeof opts.read == 'function'
+      throw new Error 'Invalid value of opts.equal' unless !opts.hasOwnProperty('equal') || typeof opts.equal == 'function'
+      throw new Error 'Invalid value of opts.str' unless !opts.hasOwnProperty('str') || typeof opts.str == 'function'
+      throw new Error 'Invalid value of opts.get' unless !opts.hasOwnProperty('get') || typeof opts.get == 'function'
+      throw new Error 'Invalid value of opts.set' unless !opts.hasOwnProperty('set') || typeof opts.set == 'function'
+      throw new Error 'Ambiguous opts.readonly and opts.calc' if opts.hasOwnProperty('readonly') && !opts.readonly && opts.hasOwnProperty('calc') && opts.calc
 
     if !@::hasOwnProperty '__init' # create class local __init on first prop
       @::__init = if superInit = @__super__.__init then _.clone superInit else {}
@@ -178,11 +180,22 @@ module.exports = class DSObjectBase
       read: opts.read || ((v) -> v)
       equal: equal = (opts.equal || ((l, r) -> l?.valueOf() == r?.valueOf()))
       str: opts.str || ((v) -> if v == null then '' else v.toString())
-      readonly: opts.readonly || false}
+      readonly: opts.readonly || false
+      calc: opts.calc || false}
 
     if opts.hasOwnProperty 'init'
       valid = propDecl.valid = opts.valid
       propDecl.init = @::__init[localName = "_#{name = opts.name}"] = opts.init
+      if opts.calc
+        opts.readonly == true
+        @::["__setCalc#{name.substr(0, 1).toUpperCase() + name.substr(1)}"] =
+          ((value) ->
+            error.invalidValue @, name, v if typeof (value = valid(v = value)) == 'undefined'
+            if !equal((oldVal = @[localName]), value)
+              @[localName] = value
+              if (evt = @$ds_evt)
+                lst.__onChange.call lst, @, name, value, oldVal for lst in evt by -1
+            return)
       Object.defineProperty @::, name,
         get: opts.get || (->
           return @[localName])
@@ -210,16 +223,13 @@ module.exports = class DSObjectBase
 
     return propDecl)
 
-  @propSimple: ((type, name, init, valid) ->
+  @propSimple: ((type, name, init, valid, calc) ->
     if assert
-      if !(type == 'number' || type == 'boolean' || type == 'string' || type == 'object')
-        error.invalidArg 'type'
-      if !typeof name == 'string'
-        error.invalidArg 'name'
-      if valid && typeof valid != 'function'
-        error.invalidArg 'valid'
-      if typeof init != 'undefined' && init != null && typeof init != type
-        error.invalidArg 'init'
+      error.invalidArg 'type' unless type == 'number' || type == 'boolean' || type == 'string' || type == 'object'
+      error.invalidArg 'name' unless typeof name == 'string'
+      error.invalidArg 'init' unless typeof init == 'undefined' || init == null || typeof init == 'function' || typeof init == type
+      error.invalidArg 'valid' unless !valid || typeof valid == 'function'
+      error.invalidArg 'calc' unless typeof calc == 'undefined' || typeof calc == 'boolean'
 
     valid = if q = valid then ((value) -> return if (value == null || typeof value == type) && (value = q(value)) != undefined then value else undefined)
     else ((value) -> return if value == null || typeof value == type then value else undefined)
@@ -227,33 +237,35 @@ module.exports = class DSObjectBase
     return @prop {
       name
       type
-      init: if typeof init == 'undefined' then null else if type != 'object' then init else (-> return _.clone init)
+      init: if typeof init == 'undefined' || init == null then null else if typeof init == 'function' || type != 'object' then init else (-> return _.clone init)
       valid
       write: ((v) -> v)
       read: ((v) -> v)
       equal: ((l, r) -> l == r)
       str: ((v) -> if v == null then '' else v.toString())
+      calc
     })
 
-  @propNum: ((name, init, validation) ->
-    @propSimple 'number', name, init, validation
+  @propNum: ((name, init, validation, calc) ->
+    @propSimple 'number', name, init, validation, calc
     return)
 
-  @propBool: ((name, init, validation) ->
-    return @propSimple 'boolean', name, init, validation)
+  @propBool: ((name, init, validation, calc) ->
+    return @propSimple 'boolean', name, init, validation, calc)
 
-  @propStr: ((name, init, validation) ->
-    return @propSimple 'string', name, init, validation)
+  @propStr: ((name, init, validation, calc) ->
+    return @propSimple 'string', name, init, validation, calc)
 
-  @propObj: ((name, init, validation) ->
-    return @propSimple 'object', name, init, validation)
+  @propObj: ((name, init, validation, calc) ->
+    return @propSimple 'object', name, init, validation, calc)
 
-  @propDoc: ((name, type, valid) ->
+  @propDoc: ((name, type, valid, calc) ->
     if assert
       error.invalidArg 'name' if !typeof name == 'string'
       error.invalidArg 'valid' if valid && typeof valid != 'function'
       error.invalidArg 'type' if typeof type != 'function'
       error.notDSObjectClass type if !type instanceof DSObjectBase
+      error.invalidArg 'calc' if typeof calc != 'undefined' && typeof calc != 'boolean'
 
     valid = if q = valid then ((value) -> return if (value == null || value instanceof type) && (value = q(value)) != undefined then value else undefined)
     else ((value) -> return if value == null || value instanceof type then value else undefined)
@@ -277,6 +289,7 @@ module.exports = class DSObjectBase
       read: ((v) -> return null)
       equal: ((l, r) -> l == r)
       str: if typeof type.str == 'function' then type.str else ((v) -> if v == null then '' else v.$ds_key)
+      calc
       set: ((value) ->
         error.invalidValue @, name, v if typeof (value = valid(v = value)) == 'undefined'
         if (oldVal = @[localName]) != value
@@ -371,7 +384,7 @@ module.exports = class DSObjectBase
 
   @integratedStatus: ((sources) ->
     if assert
-      error.invalidArg 'sources' if !(_.isArray(sources) && _.some(sources, ((v) -> v.__proto__.constructor.ds_dataSource)))
+      error.invalidArg 'sources' unless _.isArray(sources) && _.some(sources, ((v) -> v.__proto__.constructor.ds_dataSource))
     res = -1
     for v in sources
       if v then if res < (t = statusByPrior.indexOf(v.get('status'))) then res = t
@@ -384,7 +397,7 @@ module.exports = class DSObjectBase
   @addDataSource = ((onStatusChange) ->
     if assert
       throw new Error 'This class already has data source mixin in it' if @ds_dataSource
-      error.invalidArg 'onStatusChange' if !(arguments.length == 0 || typeof onStatusChange == 'function')
+      error.invalidArg 'onStatusChange' unless arguments.length == 0 || typeof onStatusChange == 'function'
     @ds_dataSource = true
 
     if traceData
@@ -421,8 +434,8 @@ module.exports = class DSObjectBase
 
     @::watchStatus = ((owner, listener) ->
       if assert
-        error.invalidArg 'referry' if !((typeof owner == 'object' && owner != window) || typeof owner == 'function')
-        error.invalidArg 'listener' if !(typeof listener == 'function')
+        error.invalidArg 'referry' unless (typeof owner == 'object' && owner != window) || typeof owner == 'function'
+        error.invalidArg 'listener' unless typeof listener == 'function'
       (watchStatus = @$ds_statusWatchers).push(w = {lst: listener})
       @addRef owner
       w.unwatch = unwatch = do (used = false) => (=> # to make possible to unwatch during listener call

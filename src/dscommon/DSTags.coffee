@@ -27,7 +27,7 @@ module.exports = class DSTags extends DSObjectBase
         name
         type: 'DSTags'
         valid
-        read: ((v) -> if v != null then new DSTags(@, '' + ++DSTags.nextTags, v) else null)
+        read: ((v) -> if v != null then new DSTags(@, v) else null)
         str: ((v) -> v.value)
         init: null
         set: ((value) ->
@@ -45,14 +45,14 @@ module.exports = class DSTags extends DSObjectBase
     v.release @ for k, v of @map when v instanceof DSObjectBase
     return)
 
-  constructor: (referry, key, enums) ->
-    super referry, key
+  constructor: (referry, enums) ->
+    super referry, "#{++DSTags.nextTags}"
     if assert
-      if arguments.length == 3 && typeof (src = arguments[2]) == 'object'
+      if arguments.length == 2 && typeof (src = arguments[1]) == 'object'
         undefined
       else
         error.invalidArg 'enums' unless typeof enums == 'string'
-    if arguments.length == 3 && typeof (src = arguments[2]) == 'object'
+    if arguments.length == 2 && typeof (src = arguments[1]) == 'object'
       if src.__proto__ == DSTags::
         @map = _.clone src.map
         @value = src.value
@@ -66,11 +66,12 @@ module.exports = class DSTags extends DSObjectBase
         for v in enums.split ','
           map[v.trim()] = true
       @value = (_.sortBy (k for k of map)).join ', '
-    return
 
-  toString: (-> return @value)
+  clone: (owner) -> new DSTags owner, @
 
-  valueOf: (-> return @value)
+  toString: -> @value
+
+  valueOf: -> @value
 
   # TODO: Implement right once DSTags will be editable
   #clone: ((referry) -> return new DSTags(@))
@@ -102,6 +103,11 @@ module.exports = class DSTags extends DSObjectBase
     for k of map
       return true if @map.hasOwnProperty k
     return false)
+
+  empty: ->
+    for k of @map
+      return false
+    true
 
   diff: ((src) ->
     if assert

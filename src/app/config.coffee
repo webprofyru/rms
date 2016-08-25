@@ -48,6 +48,8 @@ ngModule.factory 'config',
       @propNum 'selectedCompany'
       @propNum 'selectedLoad'
 
+      @propNum 'activeSidebarTab', 0
+
       @propNum 'refreshPeriod'
 
       @propNum 'view3GroupByPerson', 0
@@ -94,7 +96,7 @@ ngModule.factory 'config',
     if keepConnection
       for name, desc of Config::__props # load from local storage
         if keepOtherOptions || name == 'teamwork' || name == 'token'
-          if !desc.readonly && typeof (v = localStorageService.get name) != undefined
+          if !desc.readonly && (v = localStorageService.get name) != null
             config.set name, v
 
     return config)]

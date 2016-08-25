@@ -4,6 +4,7 @@ module.exports = (ngModule = angular.module 'ui/views/view1/View1', [
   require '../../../data/dsDataService'
   require '../../../../dscommon/DSView'
   require '../../tasks/addCommentAndSave'
+  require '../../../data/teamwork/TWTasks'
 ]).name
 
 assert = require('../../../../dscommon/util').assert
@@ -35,7 +36,7 @@ ngModule.controller 'View1', [
         return "height:#{65 * _.maxBy(row.tasks, 'y').y + 98}px"
     return] # ($scope, View1, $rootScope) ->
 
-ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, config, $rootScope, $log) ->
+ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', 'TWTasks', ((DSView, config, $rootScope, $log, TWTasks) ->
 
   return class View1 extends DSView
     @begin 'View1'
@@ -267,24 +268,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
         return)
       return)
 
-    # 1. more prior tasks comes first
-    # 2. longer tasks comes first
-    # 3. older tasks (smaller id) comes firts
-    @tasksSortRule = tasksSortRule = ((leftTask, rightTask) ->
-#      if (leftPlan = leftTask.get('plan')) != rightTask.get('plan')
-#        return if leftPlan then -1 else 1
-
-      if (leftPrior = leftTask.get('priority')) != (rightPrior = rightTask.get('priority'))
-        return if leftPrior < rightPrior then -1 else 1
-
-      if (leftEstimate = leftTask.get('estimate')?.valueOf()) != (rightEstimate = rightTask.get('estimate')?.valueOf())
-        return 1 if typeof leftEstimate == 'undefined'
-        return -1 if typeof rightEstimate == 'undefined'
-        return rightEstimate - leftEstimate
-
-      return rightTask.get('id') - leftTask.get('id'))
-
-    # 1. planned tasks comes first
+    # 1. open tasks comes first
     # 2. closed tasks, if any, comes after
     @taskViewsSortRule = taskViewsSortRule = ((leftView, rightView) ->
       leftTask = leftView.get('task')
@@ -294,7 +278,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', ((DSView, c
       return 1 if leftTask == null
       return -1 if rightTask == null
 
-      return tasksSortRule leftTask, rightTask)
+      return TWTasks.tasksSortRule leftTask, rightTask)
 
     positionTaskView = ((pos, taskView, taskStartDate, day, getTime) ->
       taskView.set 'x', day

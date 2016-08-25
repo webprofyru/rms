@@ -97,9 +97,11 @@ ngModule.directive 'rmsTask', [
 
       listenerFunc = undefined
 
-      $scope.$watch "#{attrs.rmsTask}.color", (val) ->
-        element.css 'background-color', if val then val else ''
-        return
+      if attrs.rmsTask != 'taskView.time.task' # Note: Completed tasks shown w/o style
+        $scope.$watch "#{attrs.rmsTask}.style", (style) ->
+          element.css 'background-color', if style.color then style.color else ''
+          element.css 'border', if style.border then style.border else ''
+          return
 
       $scope.$watch "#{attrs.rmsTask}.$u", (val) ->
         if val

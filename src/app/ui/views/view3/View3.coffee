@@ -3,6 +3,7 @@ module.exports = (ngModule = angular.module 'ui/views/view3/View3', [
   require '../../../data/dsDataService'
   require('../../../../dscommon/DSView')
   require '../../tasks/addCommentAndSave'
+  require '../../../data/teamwork/TWTasks'
 ]).name
 
 assert = require('../../../../dscommon/util').assert
@@ -26,8 +27,8 @@ ngModule.controller 'View3', [
     return]
 
 ngModule.factory 'View3', [
-  'DSView', 'config', '$rootScope', '$log',
-  (DSView, config, $rootScope, $log) ->
+  'DSView', 'config', '$rootScope', '$log', 'TWTasks',
+  (DSView, config, $rootScope, $log, TWTasks) ->
 
     class View3 extends DSView # () ->
       @begin 'View3'
@@ -56,7 +57,7 @@ ngModule.factory 'View3', [
         @expandedProj = {}
         @expandedRows = {}
 
-        @__unwatchA = $scope.$watch (-> [$scope.mode, $scope.sidebarTabs.active]),
+        @__unwatchA = $scope.$watch (-> [$scope.mode, config.activeSidebarTab]),
           ((args) =>
             [mode, active] = args
             $rootScope.view3ActiveTab = active
@@ -68,7 +69,7 @@ ngModule.factory 'View3', [
                 @__unwatchB = $scope.$watch (-> $scope.$parent.view.startDate?.valueOf()), (startDateVal) =>
                   $rootScope.startDateVal = startDateVal
                   if typeof startDateVal != 'number'
-                    $scope.sidebarTabs.active = 0
+                    config.activeSidebarTab = 0
                   else
                     nextWeekStartDate = moment(startDateVal).add 1, 'week'
                     nextWeekEndDate = moment(nextWeekStartDate).endOf 'week'
@@ -89,7 +90,7 @@ ngModule.factory 'View3', [
         $scope.toggleProjectExpanded = (project) =>
           if assert
             error.invalidArg 'project' if !(project instanceof ProjectView)
-          viewExpandedProj = if !(expandedProj = @expandedProj).hasOwnProperty (active = $scope.sidebarTabs.active)
+          viewExpandedProj = if !(expandedProj = @expandedProj).hasOwnProperty (active = config.activeSidebarTab)
               expandedProj[active] = viewExpandedProject = {}
             else expandedProj[active]
           if viewExpandedProj.hasOwnProperty(projectKey = project.$ds_key)
@@ -99,7 +100,7 @@ ngModule.factory 'View3', [
         $scope.isProjectExpanded = (project) =>
           if assert
             error.invalidArg 'project' if !(project instanceof ProjectView)
-          if (expandedProj = @expandedProj).hasOwnProperty (active = $scope.sidebarTabs.active)
+          if (expandedProj = @expandedProj).hasOwnProperty (active = config.activeSidebarTab)
             if (viewExpandedProj = expandedProj[active]).hasOwnProperty(projectKey = project.$ds_key)
               return viewExpandedProj[projectKey]
           active != 2 # 2 - all by project
@@ -107,7 +108,7 @@ ngModule.factory 'View3', [
         $scope.togglePersonExpanded = (personView) =>
           if assert
             error.invalidArg 'personView' if !(personView instanceof PersonView)
-          viewExpandedRows = if !(expandedRows = @expandedRows).hasOwnProperty (active = $scope.sidebarTabs.active)
+          viewExpandedRows = if !(expandedRows = @expandedRows).hasOwnProperty (active = config.activeSidebarTab)
             expandedRows[active] = viewExpandedRowsect = {}
           else expandedRows[active]
           if viewExpandedRows.hasOwnProperty(personKey = personView.$ds_key)
@@ -117,7 +118,7 @@ ngModule.factory 'View3', [
         $scope.isPersonExpended = (personView) =>
           if assert
             error.invalidArg 'personView' if !(personView instanceof PersonView)
-          if (expandedRows = @expandedRows).hasOwnProperty (active = $scope.sidebarTabs.active)
+          if (expandedRows = @expandedRows).hasOwnProperty (active = clickSideBarTab)
             if (viewExpandedRows = expandedRows[active]).hasOwnProperty(personKey = personView.$ds_key)
               return viewExpandedRows[personKey]
           true
@@ -139,7 +140,7 @@ ngModule.factory 'View3', [
         tasks = @get('data').get('tasks')
         if (filterByTask = config.view3FilterByTask)?.length > 0
           filterByTask = filterByTask.trim().toLowerCase()
-          tasks = _.filter tasks, ((task) -> task.get('title').indexOf(filterByTask) >= 0)
+          tasks = _.filter tasks, ((task) -> task.get('title').toLowerCase().indexOf(filterByTask) >= 0)
 
         if config.view3GroupByPerson == 0
 
@@ -161,7 +162,7 @@ ngModule.factory 'View3', [
               todoListView.set 'todoList', TodoList.pool.items[todoListKey]
               todoListView.set 'tasksCount', _.size todoListGroup
               todoListView.set 'totalEstimate', _.reduce todoListGroup, ((sum, task) -> if (estimate = task.get('estimate')) then sum.add estimate else sum), moment.duration(0)
-              todoListView.get('tasksList').merge @, _.map todoListGroup, ((task) => task.addRef @)
+              todoListView.get('tasksList').merge @, (_.map todoListGroup, ((task) => task.addRef @)).sort TWTasks.tasksSortRule
               return todoListView)
             return projectView)).sort ((left, right) ->
               if (leftLC = left.get('project').get('name').toLowerCase()) < (rightLC = right.get('project').get('name').toLowerCase()) then -1 else if leftLC > rightLC then 1 else 0)
@@ -197,15 +198,17 @@ ngModule.factory 'View3', [
 
             if tasksByPeople.hasOwnProperty(personViewKey = (if r != 'null' then r.$ds_key else 'null')) # non empty
 
-              resultRows.push (personView = poolPeople.find @, personViewKey)
-              personView.set 'row', r unless r == 'null'
-
-              tasksByTodoList = _.groupBy tasksByPeople[personView.$ds_key], ((task) -> task.get('todoList').$ds_key)
+              tasksByTodoList = _.groupBy tasksByPeople[personViewKey], ((task) -> task.get('todoList').$ds_key)
               tasksByProject = _.groupBy tasksByTodoList, ((todoList) -> todoList[0].get('project').$ds_key)
 
               if filterByProject
                 for k, v of tasksByProject when not (Project.pool.items[k].get('name').toLowerCase().indexOf(filterByProject) >= 0)
                   delete tasksByProject[k]
+
+              continue if Object.keys(tasksByProject).length == 0
+
+              resultRows.push (personView = poolPeople.find @, personViewKey)
+              personView.set 'row', r unless r == 'null'
 
               poolProjects = personView.get 'poolProjects'
               personView.get('projectsList').merge @, (_.map tasksByProject, ((projectGroup, projectKey) =>

@@ -9,6 +9,7 @@ Project = require('./Project')
 Person = require('./Person')
 TodoList = require('./TodoList')
 TaskTimeTracking = require('./TaskTimeTracking')
+Tag = require './Tag'
 
 DSTags = require('../../dscommon/DSTags')
 
@@ -22,7 +23,49 @@ module.exports = class Task extends DSDocument
   TaskSplit.addPropType @
   DSTags.addPropType @
 
+  @defaultTag = defaultTag = {name: '[default]', priority: 100}
+
   @addPool true
+
+  processTagsEditable =
+    __onChange: (task, propName, val, oldVal) ->
+      switch propName
+        when 'plan' # sync tags with prop 'plan' value
+          tags = task.get('tags')
+          if tags
+            tags = tags.clone @
+            if val
+              tags.set Task.planTag, (planTag = Tag.pool.find @, Task.planTag)
+              planTag.release @
+              task.set 'tags', tags
+            else
+              tags.set Task.planTag, false
+              task.set 'tags', if tags.empty() then null else tags
+            tags.release @
+          else
+            (newTags = {})[Task.planTag] = planTag = Tag.pool.find @, Task.planTag
+            tags = new DSTags @, newTags
+            planTag.release @
+            task.set 'tags', tags
+            tags.release @
+          Task.TWTask.calcTaskPriority task
+        when 'tags'
+          # Note: Task.TWTask will be defined in TWTask code
+          Task.TWTask.calcTaskPriority task
+      return
+
+  processTagsOriginal =
+    __onChange: (task, propName, val, oldVal) =>
+      if propName == 'tags'
+        Task.TWTask.calcTaskPriority task
+      return
+
+  @ds_ctor.push ->
+    if @__proto__.constructor.ds_editable # work only for editable version
+      if @hasOwnProperty '$ds_evt' then @$ds_evt.push processTagsEditable else @$ds_evt = [processTagsEditable]
+    else
+      if @hasOwnProperty '$ds_evt' then @$ds_evt.push processTagsOriginal else @$ds_evt = [processTagsOriginal]
+    return
 
   @str = ((v) -> if v == null then '' else v.get('title'))
 
@@ -55,11 +98,12 @@ module.exports = class Task extends DSDocument
   @propBool 'completed'
   @propBool 'isReady'
 
-  @propBool 'plan'
+  @propBool 'plan' # TODO: Remove - replace by tags
   @propDSTags 'tags'
 
-  @propNum 'priority', 1000
-  @propStr 'color', null
+  # calculated props
+  @propNum 'priority', 100, null, true
+  @propObj 'style', (-> defaultTag), null, true
 
   #  @propCalc 'isOverdue', (-> (duedate = @get('duedate')) != null && duedate < time.today)
   isOverdue: (-> (duedate = @get('duedate')) != null && duedate < time.today)
@@ -92,4 +136,12 @@ module.exports = class Task extends DSDocument
     return)
 
   @end()
+
+  originalEditableInit = @Editable::init
+
+  @Editable::init = ->
+    originalEditableInit.apply @, arguments
+    Task.TWTask.calcTaskPriority @
+    return
+
 

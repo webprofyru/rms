@@ -158,21 +158,24 @@ ngModule.factory 'dsChanges', [
               taskUpd['estimated-minutes'] = if propChange.v then Math.floor propChange.v.asMinutes() else '0'
             when 'responsible'
               taskUpd['responsible-party-id'] = if (newReponsible = propChange.v) then [propChange.v.get('id')] else []
+            when 'tags'
+              taskUpd['tags'] = if (tags = task.get('tags')?.map) then (tag for tag of tags).join() else ''
             when 'plan'
               comments = if (comments = task.get('comments')) == null then new Comments else comments.clone()
               comments.unshift(
                 if propChange.v then "Поставлено в план на #{task.get('duedate').format 'DD.MM.YYYY'}"
                 else "Снято с плана.  Причина:")
               task.set 'comments', comments
-              taskUpd['tags'] = v =
-                if (tags = task.get('tags')?.map)
-                  if propChange.v
-                    newTags = (tag for tag of tags)
-                    newTags.unshift(config.planTag) # add tag
-                  else
-                    newTags = (tag for tag of tags when tag != config.planTag) # remove tag
-                  newTags.join()
-                else if propChange.v then config.planTag else ''
+# Replaced by saving tags directly
+#              taskUpd['tags'] = v =
+#                if (tags = task.get('tags')?.map)
+#                  if propChange.v
+#                    newTags = (tag for tag of tags)
+#                    newTags.unshift(config.planTag) # add tag
+#                  else
+#                    newTags = (tag for tag of tags when tag != config.planTag) # remove tag
+#                  newTags.join()
+#                else if propChange.v then config.planTag else ''
             else
               console.error "change.save(): Property #{propName} not expected to be changed"
 

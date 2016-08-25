@@ -40,7 +40,11 @@ module.exports = class DSDocument extends DSObject
       delete @::$ds_docType # takes docType from parent - no '.Editable' in the class name
 
       @ds_editable = true
-      @::__init = null # Editable object has not own props - it saves changes to @__changes and takes values of other props from serverDoc
+
+      init = null
+      for k, v of @__super__.__init when originalDocClass::__props[k.substr 1].calc
+        (init || (init = {}))[k] = v
+      @::__init = init # Editable object has not own props - it saves changes to @__changes and takes values of other props from serverDoc
 
       @ds_dstr.push (->
         if assert
@@ -120,7 +124,8 @@ module.exports = class DSDocument extends DSObject
         if (change = @__change)
           for propName, prop of change # fix history
             @$ds_chg.$ds_hist.setSameAsServer @, propName
-            lst.__onChange.call lst, @, propName, prop.s, prop.v for lst in @$ds_evt by -1
+            if @$ds_evt
+              lst.__onChange.call lst, @, propName, prop.s, prop.v for lst in @$ds_evt by -1
             s.release @ if (s = prop.s) instanceof DSObjectBase
             v.release @ if (v = prop.v) instanceof DSObjectBase
           delete @.__change
@@ -137,7 +142,7 @@ module.exports = class DSDocument extends DSObject
           error.invalidProp @, propName if !props.hasOwnProperty propName
         return @[propName] = value)
 
-      for k, prop of originalDocClass::__props when !prop.noneditable
+      for k, prop of originalDocClass::__props when !prop.calc
         do (propName = prop.name, valid = prop.valid, equal = prop.equal) =>
           Object.defineProperty @::, propName,
             get: getValue = (->

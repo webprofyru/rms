@@ -4,6 +4,7 @@ module.exports = (ngModule = angular.module 'ui/views/view2/View2', [
   require '../../../../dscommon/DSView'
   require '../view1/View1'
   require '../../tasks/addCommentAndSave'
+  require '../../../data/teamwork/TWTasks'
 ]).name
 
 assert = require('../../../../dscommon/util').assert
@@ -23,7 +24,7 @@ ngModule.controller 'View2', ['$scope', 'View2', (($scope, View2) ->
     return "height:#{52 * _.maxBy(row.tasks, 'y').y + 100}px")
   return)]
 
-ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', ((View1, DSView, $rootScope, $log) ->
+ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', 'TWTasks', ((View1, DSView, $rootScope, $log, TWTasks) ->
 
   return class View2 extends DSView
     @begin 'View2'
@@ -51,6 +52,11 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', ((View1, DSV
 
       return)
 
+    taskViewsSortRule = (leftView, rightView) ->
+      leftTask = leftView.get('task')
+      rightTask = rightView.get('task')
+      TWTasks.tasksSortRule leftTask, rightTask
+
     render: (->
       startDate = @__scope.$parent.view.startDate
 
@@ -58,7 +64,7 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', ((View1, DSV
         @get('tasksOverdueList').merge @, []
       else
         tasksOverdue = _.map @get('data').get('tasksOverdue'), ((task) => task.addRef @; return task)
-        tasksOverdue.sort View1.tasksSortRule
+        tasksOverdue.sort TWTasks.tasksSortRule
         @get('tasksOverdueList').merge @, tasksOverdue
 
       if !((status = @get('data').get('tasksNotAssignedStatus')) == 'ready' || status == 'update')
@@ -66,10 +72,10 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', ((View1, DSV
         @set 'tasksNotAssignedHeight', 0
       else
         poolTasksNotassignedViews = @get('poolTasksNotassignedViews')
-        tasksNotAssigned = @get('tasksNotAssignedList').merge @, _.map @get('data').get('tasksNotAssigned'), ((task) =>
+        tasksNotAssigned = @get('tasksNotAssignedList').merge @, (_.map @get('data').get('tasksNotAssigned'), (task) =>
           taskView = poolTasksNotassignedViews.find @, task.$ds_key
           taskView.set 'task', task
-          return taskView)
+          return taskView).sort taskViewsSortRule
 
         @set 'tasksNotAssignedHeight', View1.layoutTaskView startDate, tasksNotAssigned
 

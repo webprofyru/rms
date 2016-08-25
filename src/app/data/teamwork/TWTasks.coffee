@@ -28,6 +28,9 @@ ngModule.factory 'TWTasks', [
 
     class TWTasks extends DSData
 
+      Task.TWTask = @
+      Task.planTag = config.planTag
+
       @begin 'TWTasks'
 
       @addPool()
@@ -50,7 +53,10 @@ ngModule.factory 'TWTasks', [
 
       clazz = @
 
-      @calcTaskPriority = (->)
+      @calcTaskPriority = initCalcTaskPriority = ((task) ->
+        task.__setCalcPriority Task.defaultTag.priority
+        task.__setCalcStyle Task.defaultTag
+        return)
 
       clear: ->
         DSData::clear.call @
@@ -74,6 +80,8 @@ ngModule.factory 'TWTasks', [
         completedTasksPool = @get('completedTasksPool')
         taskSet = @get('tasksSet')
 
+        self = @
+
         PersonTimeTracking::setVisible = ((isVisible) ->
           if isVisible
             if (@__visCount = (@__visCount || 0) + 1) == 1
@@ -86,13 +94,13 @@ ngModule.factory 'TWTasks', [
                   if task.get('timeTracking') == null # it definitly a new Task
                     task.set 'id', taskId
                     task.set 'timeTracking', TaskTimeTracking.pool.find @, task.$ds_key
-                    loadCompletedTaskForPersonTimeTracking.call @
+                    loadCompletedTaskForPersonTimeTracking.call self
                   task.release @
               task.setVisible true
           else if --@__visCount == 0
             delete visiblePersonTTracking[@$ds_key]
             @get('task').setVisible false
-          return).bind @
+          return)
         return)
 
       isTaskInDatesRange = ((params, task) ->
@@ -202,20 +210,17 @@ ngModule.factory 'TWTasks', [
           tags = null
           plan = false
           for tag in jsonTask['tags']
-            if tag.name == config.planTag # Note: It's hardcoded tag name
-              plan = true
-            else
-              tagDoc = (tags ?= {})[tag.name] = Tag.pool.find @, tag.name
-              tagDoc.set 'id', tag.id
-              tagDoc.set 'name', tag.name
-              tagDoc.set 'color', tag.color
-              (tags ||= {})[tag.name] = tagDoc
+            plan = true if tag.name == config.planTag # Note: It's hardcoded tag name
+            tagDoc = (tags ?= {})[tag.name] = Tag.pool.find @, tag.name
+            tagDoc.set 'id', tag.id
+            tagDoc.set 'name', tag.name
+            tagDoc.set 'color', tag.color
+            (tags ||= {})[tag.name] = tagDoc
           task.set 'plan', plan
           if tags == null
             task.set 'tags', null
           else
-            task.set 'tags', dstags = new DSTags @, '' + ++DSTags.nextTags, tags
-            dstags.release @
+            (task.set 'tags', new DSTags @, tags).release @
             v.release @ for k, v of tags
 
           clazz.calcTaskPriority task # calc priority based on task tags
@@ -230,7 +235,7 @@ ngModule.factory 'TWTasks', [
       clazz = @
 
       loadTagsJson = ->
-        clazz.calcTaskPriority = (->)
+        clazz.calcTaskPriority = initCalcTaskPriority
         onError2 = (error, isCancelled) =>
           if !isCancelled
             console.error 'error: ', error
@@ -241,26 +246,38 @@ ngModule.factory 'TWTasks', [
           ((resp) => # ok
             if (resp.status == 200) # 0 means that request was canceled
               @set 'cancel2', null
-              console.info 'resp:', resp
               tags = resp.data
               # check data format
               unless Array.isArray(tags)
                 console.error 'invalid tags.json'
                 return
-              for t in tags
-                unless typeof t.tag == 'string' && typeof t.color == 'string'
-                  console.error 'invalid tags.json'
-                  return
+              err = false
+              for t, i in tags
+                unless typeof t.name == 'string' && t.name.length >= 0
+                  err = true; console.error "invalid tags.json: invalid 'name'", t
+                if t.hasOwnProperty('priority')
+                  unless typeof t.priority == 'number'
+                    err = true; console.error "invalid tags.json: invalid 'priority'", t
+                else
+                  t.priority = i
+                unless !t.hasOwnProperty('color') || typeof t.color == 'string' && t.color.length >= 0
+                  err = true; console.error "invalid tags.json: invalid 'color'", t
+                unless !t.hasOwnProperty('border') || typeof t.border == 'string' && t.border.length >= 0
+                  err = true; console.error "invalid tags.json: invalid 'border'", t
+              return if err
               # define globally available method of task prioritization
               clazz.calcTaskPriority = calcTaskPriority = (task) ->
                 if (taskTags = task.get('tags'))
-                  for tag, i in tags when taskTags.get(tag.tag)
-                    task.set 'priority', i
-                    task.set 'color',  tag.color
+                  for tag, i in tags when taskTags.get(tag.name)
+                    task.__setCalcPriority tag.priority
+                    task.__setCalcStyle tag
                     return
+                task.__setCalcPriority Task.defaultTag.priority
+                task.__setCalcStyle Task.defaultTag
                 return
               # apply to already existing tasks
-              calcTaskPriority(t) for k, t of Task.pool.items
+              calcTaskPriority(t) for k, t of Task.pool.items # original Task docs
+              calcTaskPriority(t) for k, t of dsChanges.get('tasksSet').$ds_pool.items # edited Task docs
             else onError2(resp, resp.status == 0)
             return), onError2)
         return
@@ -363,5 +380,20 @@ ngModule.factory 'TWTasks', [
           return), onError)
 
         return)
+
+      # 1. more prior tasks comes first
+      # 2. longer tasks comes first
+      # 3. older tasks (smaller id) comes firts
+      @tasksSortRule = ((leftTask, rightTask) ->
+
+        if (leftPrior = leftTask.get('priority')) != (rightPrior = rightTask.get('priority'))
+          return leftPrior - rightPrior
+
+        if (leftEstimate = leftTask.get('estimate')?.valueOf()) != (rightEstimate = rightTask.get('estimate')?.valueOf())
+          return 1 if leftEstimate == undefined
+          return -1 if rightEstimate == undefined
+          return rightEstimate - leftEstimate
+
+        return leftTask.get('id') - rightTask.get('id'))
 
       @end()]

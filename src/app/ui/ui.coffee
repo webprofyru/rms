@@ -74,12 +74,6 @@ uiCtrl = [
       $scope.mode = mode
       return)
 
-    $scope.sidebarTabs =
-      active: 0
-      clickSideBarTab: ((i) ->
-        @active = i
-        return)
-
     $scope.taskSummaryColor = ((dayStat)->
       if assert
         error.invalidArg 'dayStat' if !(dayStat instanceof PersonDayStat.DayStat)
