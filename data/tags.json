@@ -1,5 +1,5 @@
 [
-  {"name": "План", "border": "solid 2px #000000", "priority": 0}
+  {"name": "План", "border": "solid 2px #000000", "priority": 0},
   {"name": "NEXT", "color": "rgb(244, 189, 56)", "priority": 1},
   {"name": "MUST", "color": "rgb(155, 124, 219)", "priority": 2},
   {"name": "NICE TO HAVE", "color": "rgb(177, 218, 52)", "priority": 3}
