@@ -1,6 +1,11 @@
 [
-  {"name": "План", "border": "solid 2px #000000", "priority": 0},
-  {"name": "NEXT", "color": "rgb(244, 189, 56)", "priority": 1},
-  {"name": "MUST", "color": "rgb(155, 124, 219)", "priority": 2},
-  {"name": "NICE TO HAVE", "color": "rgb(177, 218, 52)", "priority": 3}
+  {"name": "Нежданчик", "color": "rgb(244, 189, 56)", "priority": 10},
+  {"name": "Менеджер ай яй", "color": "#FF0000", "priority": 20},
+  {"name": "ВЕЧЕ", "color": "#B896EE", "priority": 30},
+  {"name": "План", "border": "solid 2px #000000", "priority": 100},
+  {"name": "NEXT", "color": "#FEFE22", "priority": 110},
+  {"name": "MUST", "color": "#FEFE22", "priority": 120},
+  {"name": "DP", "color": "#00BFFF", "priority": 150},
+  {"name": "Товарищ проверь за собой", "color": "#FF0000", "priority": 200},
+  {"name": "NICE TO HAVE", "color": "#ceff1d", "priority": 300}
 ]
