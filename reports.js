@@ -703,7 +703,7 @@ module.exports = Task = (function(superClass) {
 
   Task.defaultTag = defaultTag = {
     name: '[default]',
-    priority: 100
+    priority: 1000
   };
 
   Task.addPool(true);
@@ -717,25 +717,29 @@ module.exports = Task = (function(superClass) {
           if (tags) {
             tags = tags.clone(this);
             if (val) {
-              tags.set(Task.planTag, (planTag = Tag.pool.find(this, Task.planTag)));
-              planTag.release(this);
-              task.set('tags', tags);
+              if (!tags.get(Task.planTag)) {
+                tags.set(Task.planTag, (planTag = Tag.pool.find(this, Task.planTag)));
+                planTag.release(this);
+                task.set('tags', tags);
+              }
             } else {
-              tags.set(Task.planTag, false);
-              task.set('tags', tags.empty() ? null : tags);
+              if (tags.get(Task.planTag)) {
+                tags.set(Task.planTag, false);
+                task.set('tags', tags.empty() ? null : tags);
+              }
             }
             tags.release(this);
-          } else {
+          } else if (val) {
             (newTags = {})[Task.planTag] = planTag = Tag.pool.find(this, Task.planTag);
             tags = new DSTags(this, newTags);
-            planTag.release(this);
             task.set('tags', tags);
             tags.release(this);
           }
-          Task.TWTask.calcTaskPriority(task);
           break;
         case 'tags':
           Task.TWTask.calcTaskPriority(task);
+          console.info('set plan');
+          task.set('plan', !!(val && val.get(Task.planTag)));
       }
     }
   };
@@ -832,7 +836,7 @@ module.exports = Task = (function(superClass) {
 
   Task.propDSTags('tags');
 
-  Task.propNum('priority', 100, null, true);
+  Task.propNum('priority', 1000, null, true);
 
   Task.propObj('style', (function() {
     return defaultTag;
@@ -2134,10 +2138,10 @@ module.exports = DSDocument = (function(superClass) {
               list = [];
               for (propName in changes) {
                 changePair = changes[propName];
-                if (changePair.v instanceof DSObject) {
+                if (changePair.v instanceof DSObjectBase) {
                   list.push(changePair.v);
                 }
-                if (changePair.s instanceof DSObject) {
+                if (changePair.s instanceof DSObjectBase) {
                   list.push(changePair.s);
                 }
               }
@@ -2184,9 +2188,8 @@ module.exports = DSDocument = (function(superClass) {
       });
 
       Editable.prototype.__onChange = (function(item, propName, value, oldVal) {
-        var change, empty, i, j, len, lst, prop, ref1, s, val;
+        var change, empty, i, len, prop, s, val;
         if ((change = this.__change) && change.hasOwnProperty(propName) && item.__props[propName].equal((val = (prop = change[propName]).v), value)) {
-          this.$ds_chg.$ds_hist.setSameAsServer(this, propName);
           if ((s = prop.s) instanceof DSObjectBase) {
             s.release(this);
           }
@@ -2207,12 +2210,6 @@ module.exports = DSDocument = (function(superClass) {
             delete this.__change;
             this.$ds_chg.remove(this);
           }
-        } else if (this.$ds_evt) {
-          ref1 = this.$ds_evt;
-          for (j = ref1.length - 1; j >= 0; j += -1) {
-            lst = ref1[j];
-            lst.__onChange.call(lst, this, propName, value, oldVal);
-          }
         }
       });
 
@@ -2221,12 +2218,11 @@ module.exports = DSDocument = (function(superClass) {
         if ((change = this.__change)) {
           for (propName in change) {
             prop = change[propName];
-            this.$ds_chg.$ds_hist.setSameAsServer(this, propName);
             if (this.$ds_evt) {
               ref1 = this.$ds_evt;
               for (i = ref1.length - 1; i >= 0; i += -1) {
                 lst = ref1[i];
-                lst.__onChange.call(lst, this, propName, prop.s, prop.v);
+                lst.__onChange.call(lst, this, propName, this.$ds_doc[propName], prop.v);
               }
             }
             if ((s = prop.s) instanceof DSObjectBase) {
@@ -2278,18 +2274,21 @@ module.exports = DSDocument = (function(superClass) {
               }),
               set: (function(value) {
                 var change, changePair, empty, i, j, lst, oldVal, ref2, ref3, s, serverValue;
+                if (propName === 'tags') {
+                  console.info('tags:', value != null ? value.value : void 0);
+                }
                 if (assert) {
                   if (typeof (value = valid(v = value)) === 'undefined') {
                     error.invalidValue(this, propName, v);
                   }
                 }
                 if (!equal((oldVal = getValue.call(this)), value)) {
-                  if (value instanceof DSObject) {
+                  if (value instanceof DSObjectBase) {
                     value.addRef(this);
                   }
                   if (!(change = this.__change)) {
                     change = this.__change = {};
-                    if (oldVal instanceof DSObject) {
+                    if (oldVal instanceof DSObjectBase) {
                       oldVal.addRef(this);
                     }
                     change[propName] = {
@@ -2301,10 +2300,10 @@ module.exports = DSDocument = (function(superClass) {
                     this.$ds_chg.$ds_hist.add(this, propName, value, void 0);
                   } else if (equal((serverValue = this.$ds_doc[propName]), value)) {
                     this.$ds_chg.$ds_hist.add(this, propName, void 0, (changePair = change[propName]).v);
-                    if ((v = changePair.v) instanceof DSObject) {
+                    if ((v = changePair.v) instanceof DSObjectBase) {
                       v.release(this);
                     }
-                    if ((s = changePair.s) instanceof DSObject) {
+                    if ((s = changePair.s) instanceof DSObjectBase) {
                       s.release(this);
                     }
                     delete change[propName];
@@ -2329,12 +2328,12 @@ module.exports = DSDocument = (function(superClass) {
                     }
                   } else if ((changePair = change[propName])) {
                     this.$ds_chg.$ds_hist.add(this, propName, value, changePair.v);
-                    if ((v = changePair.v) instanceof DSObject) {
+                    if ((v = changePair.v) instanceof DSObjectBase) {
                       v.release(this);
                     }
                     changePair.v = value;
                   } else {
-                    if (serverValue instanceof DSObject) {
+                    if (serverValue instanceof DSObjectBase) {
                       serverValue.addRef(this);
                     }
                     change[propName] = {
