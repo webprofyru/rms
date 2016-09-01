@@ -297,6 +297,7 @@
     	"reloadTimeMin" : "5",
 	"hsize": "300",
 	"vsize": "400",
-	"finalWords": " ,отчет"
+	"finalWords": " ,отчет",
+	"dailyPlanTag": "37127"
     }
 }
