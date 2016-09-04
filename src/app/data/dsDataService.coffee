@@ -47,7 +47,7 @@ ngModule.factory 'dsDataService', [
       @propPool 'tasksPool', DSDataFiltered(Task)
       @propPool 'personTimeTrackingPool', DSDataFiltered(PersonTimeTracking)
 
-      @propBool 'showTimeSpent', false
+      @propBool 'showTimeSpent', init: false
 
       @propDoc 'changes', DSChangesBase
 
@@ -208,7 +208,7 @@ ngModule.factory 'dsDataService', [
             when 'Task'
               if mode != 'changes'
                 if assert
-                  if !(typeof srcParams.filter == 'string' && 0 <= ['all', 'assigned', 'notassigned', 'overdue', 'noduedate'].indexOf(srcParams.filter))
+                  if !(typeof srcParams.filter == 'string' && 0 <= ['all', 'assigned', 'notassigned', 'overdue', 'noduedate', 'clipboard'].indexOf(srcParams.filter))
                     throw new Error "Unexpected filter: #{srcParams.filter}"
                 requestParams.filter = srcParams.filter
                 if srcParams.filter == 'all' || srcParams.filter == 'assigned' || srcParams.filter == 'notassigned'

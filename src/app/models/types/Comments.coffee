@@ -16,7 +16,10 @@ module.exports = class Comments
         type: 'comments'
         valid
         read: ((v) -> if v != null then new Comments(v) else null)
-        str: (-> 'split')
+        str: (v) ->
+          if v.list.length == 0 then ''
+          else if (s = v.list[0]).length <= 20 then s
+          else "#{s.substr 0, 20}..."
         equal: ((l, r) ->
           return l == r if l == null || r == null
           return false if l.list.length != r.list.length

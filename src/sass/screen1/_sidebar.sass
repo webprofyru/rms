@@ -10,19 +10,20 @@
     padding-left: 6px;
     padding-bottom: 6px;
   .sub-header
-    .tabs
-      list-style: none
+    table.tabs
       padding-left: 0
       padding-top: 10px
       line-height: $header-height - 10
       margin: 0 10px
       font-size: 12px
-      &>li
+      border-spacing: 3px 0
+      border-collapse: separate
+      & > tbody > tr > td
         height: 30px
-        float: left
+        //float: left
         border-top-left-radius: 4px
         border-top-right-radius: 4px
-        margin-right: 3px
+        //margin-right: 3px
         padding: 0 14px
         cursor: pointer
         background: #828282
@@ -33,11 +34,8 @@
           background: $color-bg
           color: #000000
     &.narrow
-      .tabs > li
-        width: auto
+      table.tabs > tbody > tr > td
         font-size: 8px
-        &.active
-          width: auto
 
   table.person
     .avatar
@@ -115,3 +113,10 @@
         width: 2rem
         text-align: center
         line-height: 19px
+      .col3
+        opacity: 0.4
+        width: 0.7rem
+        line-height: 19px
+        text-align: center
+        & > img
+          width: 0.5rem

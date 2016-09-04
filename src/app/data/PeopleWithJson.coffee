@@ -23,7 +23,7 @@ ngModule.factory 'PeopleWithJson', [
       @addPool()
 
       @propDoc 'teamworkPeople', DSSet
-      @propObj 'cancel', null
+      @propObj 'cancel', init: null
 
       @propSet 'people', Person
 
@@ -66,7 +66,7 @@ ngModule.factory 'PeopleWithJson', [
                       $rootScope.selectedRole = i
                   for personInfo in resp.data.people
                     if teamworkPeople.items.hasOwnProperty(personKey = "#{personInfo.id}")
-                      teamworkPeople.items[personKey].set 'roles', dstags = new DSTags @, '' + ++DSTags.nextTags, personInfo.role
+                      teamworkPeople.items[personKey].set 'roles', dstags = new DSTags @, personInfo.role
                       dstags.release @
                   map = {} # copy whole list of people
                   for personKey, person of teamworkPeople.items

@@ -15,6 +15,6 @@ module.exports = class PeriodTimeTracking extends DSObject
   @propStr 'taskName'
   @propMoment 'lastReport'
 
-  @propNum 'totalMin', 0
+  @propNum 'totalMin', init: 0
 
   @end()

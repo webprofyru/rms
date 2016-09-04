@@ -5,14 +5,14 @@ module.exports = class TaskTimeTracking extends DSObject
 
   @addPool true
 
-  @propNum 'taskId', 0
+  @propNum 'taskId', init: 0
 
   @propBool 'isReady'
 
-  @propNum 'totalMin', 0
-  @propNum 'priorTodayMin', 0
+  @propNum 'totalMin', init: 0
+  @propNum 'priorTodayMin', init: 0
 
-  @propObj 'timeEntries', {}
+  @propObj 'timeEntries', init: {}
 
   # setVisible(isVisible) is implemented in the TWTimeTracking
 

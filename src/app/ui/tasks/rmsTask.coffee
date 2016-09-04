@@ -40,7 +40,6 @@ ngModule.directive 'rmsTask', [
 #          if !@unwatch
 #            @unwatch = $scope.$watch (-> return (duration.position().left + duration.width()) >= duedate.position().left),
 #              ((overlap) ->
-#                console.info 'overlap'
 #                $scope.overlap = overlap
 #                duedate.toggleClass 'up', overlap
 #                return)
@@ -58,6 +57,7 @@ ngModule.directive 'rmsTask', [
 #        return)
 #      return)]
     link: ($scope, element, attrs, model) ->
+
       element.on 'click', ((e)->
         e.stopPropagation()
         if (modal = $rootScope.modal).type != 'task-edit'

@@ -7,13 +7,13 @@ module.exports = class PersonTimeTracking extends DSObject
 
   @addPool true
 
-  @propNum 'personId', 0
+  @propNum 'personId', init: 0
   @propMoment 'date'
 
-  @propNum 'taskId', 0
+  @propNum 'taskId', init: 0
   @propDoc 'task', Task
 
-  @propNum 'timeMin', 0
+  @propNum 'timeMin', init: 0
 
   # setVisible(isVisible) is implemented in the TWTask
 

@@ -1,5 +1,6 @@
 assert = require('./util').assert
 error = require('./util').error
+historyMode = require('../app/features').history
 
 DSObjectBase = require './DSObjectBase'
 DSObject = require './DSObject'

@@ -6,6 +6,7 @@ module.exports = (ngModule = angular.module 'app', [
 
   require './ui/ui'
   require './data/dsDataService'
+  require './data/persistClipboard'
   require './svc/emails/emails'
   require './db'
 
@@ -18,6 +19,7 @@ ngModule.run ['config', '$rootScope', 'db', ((config, $rootScope, db)->
   $rootScope.taskModal = {}
   $rootScope.startDateVal = null
   $rootScope.view3ActiveTab = null
+  $rootScope.features = require './features'
   return)]
 
 ngModule.config [

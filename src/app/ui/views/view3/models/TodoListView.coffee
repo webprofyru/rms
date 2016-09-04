@@ -9,9 +9,9 @@ module.exports = class TodoListView extends DSObject
 
   @propDoc  'todoList', TodoList
   @propList 'tasks', Task
-  @propNum  'tasksCount', 0
+  @propNum  'tasksCount', init: 0
   @propDuration 'totalEstimate'
-  @propBool 'isExpand', true
+  @propBool 'isExpand', init: true
 
   @end()
 

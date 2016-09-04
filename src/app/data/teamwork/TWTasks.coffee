@@ -23,8 +23,8 @@ TaskSplit = require '../../models/types/TaskSplit'
 RMSData = require '../../utils/RMSData'
 
 ngModule.factory 'TWTasks', [
-  'DSDataSource', 'dsChanges', 'config', '$http', '$q',
-  (DSDataSource, dsChanges, config, $http, $q) ->
+  'DSDataSource', 'dsChanges', 'config', '$injector', '$http', '$q',
+  (DSDataSource, dsChanges, config, $injector, $http, $q) ->
 
     class TWTasks extends DSData
 
@@ -42,8 +42,8 @@ ngModule.factory 'TWTasks', [
 
       @propPool 'completedTasksPool', Task
 
-      @propObj 'cancel', null
-      @propObj 'cancel2', null
+      @propObj 'cancel', init: null
+      @propObj 'cancel2', init: null
 
       @ds_dstr.push (->
         cancel.resolve() if cancel = @get('cancel')
@@ -63,7 +63,7 @@ ngModule.factory 'TWTasks', [
         cancel.resolve() if cancel = @get('cancel')
         return # clear
 
-      @propObj 'visiblePersonTTracking', {}
+      @propObj 'visiblePersonTTracking', init: {}
 
       constructor: (->
 
@@ -127,6 +127,8 @@ ngModule.factory 'TWTasks', [
             ((task) -> (date = task.get('duedate')) != null && date < time.today)
           when 'noduedate'
             ((task) -> task.get('duedate') == null)
+          when 'clipboard'
+            ((task) -> task.get('clipboard'))
           else
             throw new Error "Not supported filter: #{params.filter}"
         )
@@ -289,6 +291,9 @@ ngModule.factory 'TWTasks', [
 
         return if !@_startLoad()
 
+        clipboardTasks = null
+        $injector.invoke ['clipboardTasks', (_clipboardTasks) -> clipboardTasks = _clipboardTasks; return]
+
         taskMap = {}
 
         importResponse = ((json) =>
@@ -297,9 +302,10 @@ ngModule.factory 'TWTasks', [
 
           try
             for jsonTask in (todoItems = json['todo-items'])
-              task = Task.pool.find @, "#{jsonTask['id']}", taskMap
+              task = Task.pool.find @, taskId = "#{jsonTask['id']}", taskMap
               task.set 'id', parseInt jsonTask['id']
               importTask.call @, task, jsonTask
+              task.clipboard = true if clipboardTasks.hasOwnProperty(taskId)
 
           finally
             Task.pool.enableWatch true

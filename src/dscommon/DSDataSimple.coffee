@@ -13,7 +13,7 @@ ngModule.factory 'DSDataSimple', ['DSDataSource', '$rootScope', '$q', ((DSDataSo
     @begin 'DSDataSimple'
 
     @propDoc 'source', DSDataSource
-    @propObj 'cancel', null
+    @propObj 'cancel', init: null
     @propEnum 'method', ['httpGet', 'httpPost', 'httpPut']
 
     @propStr 'request'

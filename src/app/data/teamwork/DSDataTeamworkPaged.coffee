@@ -17,7 +17,7 @@ ngModule.factory 'DSDataTeamworkPaged', ['DSDataSource', '$rootScope', '$q', ((D
     @begin 'DSDataTeamworkPaged'
 
     @propDoc 'source', DSDataSource
-    @propObj 'cancel', null
+    @propObj 'cancel', init: null
     @propEnum 'method', ['httpGet', 'httpPost', 'httpPut']
 
     @propStr 'request'

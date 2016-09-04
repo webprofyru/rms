@@ -31,7 +31,7 @@ ngModule.factory 'addCommentAndSave', [
       @propDoc 'document', DSDocument
       @propList 'documents', DSDocument
       @propObj 'changes'
-      @propStr 'reason', ''
+      @propStr 'reason', init: ''
       @propBool 'plansChange'
 
       show: ((document, showDialog, changes) ->
@@ -41,6 +41,8 @@ ngModule.factory 'addCommentAndSave', [
           error.invalidArg 'changes' if !(changes != null && typeof changes == 'object')
 
         @__deferred =  $q.defer()
+
+        changes.clipboard = false unless changes.hasOwnProperty('clipboard')
 
         # set plansChange to true, only if new plan value is false and there is at least one document with plan equal to true
         if changes.hasOwnProperty('plan') && !changes.plan

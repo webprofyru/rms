@@ -16,7 +16,7 @@ module.exports = class Row extends DSObject
   @propDoc 'person', Person
   @propDoc 'personDayStat', PersonDayStat
   @propList 'tasks', TaskView
-  @propBool 'expand', false
+  @propBool 'expand', init: false
 
   @end()
 

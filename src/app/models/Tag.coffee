@@ -8,7 +8,7 @@ module.exports = class Tag extends DSDocument
 
   @addPool()
 
-  @propNum 'id', 0
+  @propNum 'id', init: 0
   @propStr 'name'
   @propStr 'color'
 

@@ -80,7 +80,7 @@ ngModule.factory 'ViewChanges', ['DSView', 'dsChanges', '$log', ((DSView, dsChan
             hist.endBlock()
           refreshView()
           return)
-        for propName, propChange of task.__change when propName != '__error' && propName != '__refreshView' && propName != 'comments'
+        for propName, propChange of task.__change when propName != '__error' && propName != '__refreshView' && propName != 'clipboard'
           prop = props[propName]
           changes.push(change = poolChanges.find @, "#{task.$ds_key}.#{propName}")
           change.set 'isDark', isDark

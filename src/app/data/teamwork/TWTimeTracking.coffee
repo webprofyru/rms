@@ -46,7 +46,7 @@ ngModule.factory 'TWTimeTracking', [
         @__unwatchB?()
         return)
 
-      @propObj 'visibleTTracking', {}
+      @propObj 'visibleTTracking', init: {}
 
       constructor: (->
         DSData.apply @, arguments

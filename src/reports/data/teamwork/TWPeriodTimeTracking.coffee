@@ -34,7 +34,7 @@ ngModule.factory 'TWPeriodTimeTracking', [
 
       @propSet 'timeTracking', PeriodTimeTracking
 
-      @propObj 'cancel', null
+      @propObj 'cancel', init: null
 
       @ds_dstr.push ->
         @__unwatchA()

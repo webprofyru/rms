@@ -1,5 +1,6 @@
 assert = require('../../dscommon/util').assert
 error = require('../../dscommon/util').error
+clipboardMode = require('../features').clipboard
 
 time = require('../ui/time')
 
@@ -23,7 +24,7 @@ module.exports = class Task extends DSDocument
   TaskSplit.addPropType @
   DSTags.addPropType @
 
-  @defaultTag = defaultTag = {name: '[default]', priority: 100}
+  @defaultTag = defaultTag = {name: '[default]', priority: 1000}
 
   @addPool true
 
@@ -31,27 +32,28 @@ module.exports = class Task extends DSDocument
     __onChange: (task, propName, val, oldVal) ->
       switch propName
         when 'plan' # sync tags with prop 'plan' value
-          tags = task.get('tags')
+          tags = task.get 'tags'
           if tags
             tags = tags.clone @
             if val
-              tags.set Task.planTag, (planTag = Tag.pool.find @, Task.planTag)
-              planTag.release @
-              task.set 'tags', tags
+              unless tags.get Task.planTag
+                tags.set Task.planTag, (planTag = Tag.pool.find @, Task.planTag)
+                planTag.release @
+                task.set 'tags', tags
             else
-              tags.set Task.planTag, false
-              task.set 'tags', if tags.empty() then null else tags
+              if tags.get Task.planTag
+                tags.set Task.planTag, false
+                task.set 'tags', if tags.empty() then null else tags
             tags.release @
-          else
+          else if val
             (newTags = {})[Task.planTag] = planTag = Tag.pool.find @, Task.planTag
             tags = new DSTags @, newTags
-            planTag.release @
             task.set 'tags', tags
             tags.release @
-          Task.TWTask.calcTaskPriority task
         when 'tags'
           # Note: Task.TWTask will be defined in TWTask code
           Task.TWTask.calcTaskPriority task
+          task.set 'plan', !!(val && val.get(Task.planTag))
       return
 
   processTagsOriginal =
@@ -69,7 +71,7 @@ module.exports = class Task extends DSDocument
 
   @str = ((v) -> if v == null then '' else v.get('title'))
 
-  @propNum 'id', 0
+  @propNum 'id', init: 0
   @propStr 'title'
   (@propDuration 'estimate').str = ((v) ->
     hours = Math.floor v.asHours()
@@ -92,18 +94,21 @@ module.exports = class Task extends DSDocument
   @propComments 'comments'
 
   # Note: null - time tracking is not expected, (timeTracking.isReady == false) - time data is not loaded yet
-  @propDoc 'timeTracking', TaskTimeTracking
-  @propStr 'firstTimeEntryId'
+  @propDoc 'timeTracking', TaskTimeTracking, write: null
+  @propStr 'firstTimeEntryId', write: null
 
   @propBool 'completed'
-  @propBool 'isReady'
+  @propBool 'isReady', write: null
 
   @propBool 'plan' # TODO: Remove - replace by tags
   @propDSTags 'tags'
 
   # calculated props
-  @propNum 'priority', 100, null, true
-  @propObj 'style', (-> defaultTag), null, true
+  @propNum 'priority', init: 1000, calc: true
+  @propObj 'style', init: (-> defaultTag), calc: true
+
+  if clipboardMode == 0
+    @propBool 'clipboard', init: false, common: true
 
   #  @propCalc 'isOverdue', (-> (duedate = @get('duedate')) != null && duedate < time.today)
   isOverdue: (-> (duedate = @get('duedate')) != null && duedate < time.today)

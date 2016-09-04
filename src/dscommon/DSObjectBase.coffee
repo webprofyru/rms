@@ -99,7 +99,7 @@ module.exports = class DSObjectBase
 
   writeMap: (->
     res = {}
-    for propName, prop of @.__proto__.__props when prop.hasOwnProperty('write')
+    for propName, prop of @.__proto__.__props when prop.write
         res[propName] = prop.write @["_#{propName}"]
     return res)
 
@@ -144,19 +144,22 @@ module.exports = class DSObjectBase
       throw new Error 'Invalid value of opts.type' unless (typeof opts.type == 'string' && opts.type.length > 0) || typeof opts.type == 'function'
       throw new Error 'Invalid value of opts.readonly' unless !opts.hasOwnProperty('readonly') || typeof opts.readonly == 'boolean'
       throw new Error 'Invalid value of opts.calc' unless typeof opts.calc == 'undefined' || typeof opts.calc == 'boolean'
+      throw new Error 'Invalid value of opts.common' unless typeof opts.common == 'undefined' || typeof opts.common == 'boolean'
       throw new Error 'Invalid value of opts.func' unless !opts.hasOwnProperty('func') || typeof opts.func == 'function'
       throw new Error 'Invalid value of opts.value' unless !opts.hasOwnProperty('value') || typeof opts.value != 'function'
       throw new Error 'Missing opts.valid' if opts.hasOwnProperty('init') && !(opts.readonly || opts.calc) && !opts.hasOwnProperty('valid')
       throw new Error 'Unexpected opts.valid' if opts.hasOwnProperty('valid') && (opts.readonly || !opts.hasOwnProperty('init'))
       throw new Error "Invalid init value: #{opts.init}" if opts.hasOwnProperty('valid') && opts.valid(if typeof (init = opts.init) == 'function' then init() else init) == undefined
       throw new Error 'Invalid value of opts.valid' unless !opts.hasOwnProperty('valid') || typeof opts.valid == 'function'
-      throw new Error 'Invalid value of opts.write' unless !opts.hasOwnProperty('write') || typeof opts.write == 'function'
+      throw new Error 'Invalid value of opts.write' unless !opts.hasOwnProperty('write') || !opts.write || typeof opts.write == 'function'
       throw new Error 'Invalid value of opts.read' unless !opts.hasOwnProperty('read') || typeof opts.read == 'function'
       throw new Error 'Invalid value of opts.equal' unless !opts.hasOwnProperty('equal') || typeof opts.equal == 'function'
       throw new Error 'Invalid value of opts.str' unless !opts.hasOwnProperty('str') || typeof opts.str == 'function'
       throw new Error 'Invalid value of opts.get' unless !opts.hasOwnProperty('get') || typeof opts.get == 'function'
       throw new Error 'Invalid value of opts.set' unless !opts.hasOwnProperty('set') || typeof opts.set == 'function'
       throw new Error 'Ambiguous opts.readonly and opts.calc' if opts.hasOwnProperty('readonly') && !opts.readonly && opts.hasOwnProperty('calc') && opts.calc
+      throw new Error 'Ambiguous opts.readonly and opts.common' if opts.hasOwnProperty('readonly') && !opts.readonly && opts.hasOwnProperty('common') && opts.common
+      throw new Error 'Ambiguous opts.calc and opts.common' if opts.hasOwnProperty('calc') && opts.calc && opts.hasOwnProperty('common') && opts.common
 
     if !@::hasOwnProperty '__init' # create class local __init on first prop
       @::__init = if superInit = @__super__.__init then _.clone superInit else {}
@@ -176,12 +179,13 @@ module.exports = class DSObjectBase
     propDecl = @::__props[opts.name] = { # add prop description to __props
       name: opts.name
       type: opts.type
-      write: opts.write || ((v) -> if v == null then null else v.valueOf())
+      write: opts.write || (if (opts.hasOwnProperty('write') && !opts.write) || opts.calc || opts.common then null else ((v) -> if v == null then null else v.valueOf()))
       read: opts.read || ((v) -> v)
       equal: equal = (opts.equal || ((l, r) -> l?.valueOf() == r?.valueOf()))
       str: opts.str || ((v) -> if v == null then '' else v.toString())
       readonly: opts.readonly || false
-      calc: opts.calc || false}
+      calc: opts.calc || false
+      common: opts.common || false}
 
     if opts.hasOwnProperty 'init'
       valid = propDecl.valid = opts.valid
@@ -223,49 +227,44 @@ module.exports = class DSObjectBase
 
     return propDecl)
 
-  @propSimple: ((type, name, init, valid, calc) ->
+  @propSimple: ((type, name, opts) ->
     if assert
       error.invalidArg 'type' unless type == 'number' || type == 'boolean' || type == 'string' || type == 'object'
       error.invalidArg 'name' unless typeof name == 'string'
-      error.invalidArg 'init' unless typeof init == 'undefined' || init == null || typeof init == 'function' || typeof init == type
-      error.invalidArg 'valid' unless !valid || typeof valid == 'function'
-      error.invalidArg 'calc' unless typeof calc == 'undefined' || typeof calc == 'boolean'
 
     valid = if q = valid then ((value) -> return if (value == null || typeof value == type) && (value = q(value)) != undefined then value else undefined)
     else ((value) -> return if value == null || typeof value == type then value else undefined)
 
-    return @prop {
+    return @prop _.assign {
       name
       type
       init: if typeof init == 'undefined' || init == null then null else if typeof init == 'function' || type != 'object' then init else (-> return _.clone init)
       valid
-      write: ((v) -> v)
+      write: if opts && (opts.calc || opts.common) then null else ((v) -> v)
       read: ((v) -> v)
       equal: ((l, r) -> l == r)
       str: ((v) -> if v == null then '' else v.toString())
-      calc
-    })
+    }, opts)
 
-  @propNum: ((name, init, validation, calc) ->
-    @propSimple 'number', name, init, validation, calc
+  @propNum: ((name, opts) ->
+    @propSimple 'number', name, opts
     return)
 
-  @propBool: ((name, init, validation, calc) ->
-    return @propSimple 'boolean', name, init, validation, calc)
+  @propBool: ((name, opts) ->
+    return @propSimple 'boolean', name, opts)
 
-  @propStr: ((name, init, validation, calc) ->
-    return @propSimple 'string', name, init, validation, calc)
+  @propStr: ((name, opts) ->
+    return @propSimple 'string', name, opts)
 
-  @propObj: ((name, init, validation, calc) ->
-    return @propSimple 'object', name, init, validation, calc)
+  @propObj: ((name, opts) ->
+    return @propSimple 'object', name, opts)
 
-  @propDoc: ((name, type, valid, calc) ->
+  @propDoc: ((name, type, opts) ->
     if assert
       error.invalidArg 'name' if !typeof name == 'string'
       error.invalidArg 'valid' if valid && typeof valid != 'function'
       error.invalidArg 'type' if typeof type != 'function'
       error.notDSObjectClass type if !type instanceof DSObjectBase
-      error.invalidArg 'calc' if typeof calc != 'undefined' && typeof calc != 'boolean'
 
     valid = if q = valid then ((value) -> return if (value == null || value instanceof type) && (value = q(value)) != undefined then value else undefined)
     else ((value) -> return if value == null || value instanceof type then value else undefined)
@@ -278,18 +277,17 @@ module.exports = class DSObjectBase
       # delete @[localName] Note: This line is commented out, cause it caused problems on $digest in View2
       return)
 
-    return @prop {
+    return @prop _.assign {
       name
       type
       init: null
       valid
 #        (if q = valid then ((value) -> return if (value == null || value instanceof type) && (value = q(value)) != undefined then value else undefined)
 #        else ((value) -> return if value == null || value instanceof type then value else undefined))
-      write: ((v) -> if v != null then v.$ds_key else null)
+      write: if opts && (opts.calc || opts.common) then null else ((v) -> if v != null then v.$ds_key else null)
       read: ((v) -> return null)
       equal: ((l, r) -> l == r)
       str: if typeof type.str == 'function' then type.str else ((v) -> if v == null then '' else v.$ds_key)
-      calc
       set: ((value) ->
         error.invalidValue @, name, v if typeof (value = valid(v = value)) == 'undefined'
         if (oldVal = @[localName]) != value
@@ -298,25 +296,25 @@ module.exports = class DSObjectBase
           if (evt = @$ds_evt)
             lst.__onChange.call lst, @, name, value, oldVal for lst in evt by -1
           oldVal.release @ if oldVal
-        return)})
+        return)}, opts)
 
-  @propCalc = ((name, func) ->
+  @propCalc = ((name, func, opts) ->
     if assert
       if !typeof name == 'string'
         error.invalidArg 'name'
       if !func || typeof func != 'function'
         error.invalidArg 'func'
-    return @prop {name, type: 'calc', func})
+    return @prop _.assign {name, type: 'calc', func}, opts)
 
-  @propConst = ((name, value) ->
+  @propConst = ((name, value, opts) ->
     if assert
       if !typeof name == 'string'
         error.invalidArg 'name'
       if typeof value == 'undefined'
         error.invalidArg 'value'
-    return @prop {name, type: 'const', value})
+    return @prop _.assign {name, type: 'const', value}, opts)
 
-  @propEnum = ((name, values) ->
+  @propEnum = ((name, values, opts) ->
     if assert
       error.invalidArg 'name' if !typeof name == 'string'
       error.invalidArg 'values' if !_.isArray(values) || values.length == 0
@@ -324,7 +322,7 @@ module.exports = class DSObjectBase
     valid = if q = valid then ((value) -> return if (value == null || values.indexOf(value) >= 0) && q(value) then value else undefined)
     else ((value) -> return if value == null || values.indexOf(value) >= 0 then value else undefined)
     localName = "_#{name}"
-    return @prop {
+    return @prop _.assign {
       name
       type: 'enum'
       init: values[0]
@@ -335,9 +333,9 @@ module.exports = class DSObjectBase
           @[localName] = value
           if @$ds_evt
             lst.__onChange.call lst, @, name, value, oldVal for lst in @$ds_evt by -1
-        return)})
+        return)}, opts)
 
-  @propMoment: ((name, valid) ->
+  @propMoment: ((name, valid, opts) ->
     if assert
       error.invalidArg 'name'if !typeof name == 'string'
       error.invalidArg 'valid' if valid && typeof valid != 'function'
@@ -345,14 +343,14 @@ module.exports = class DSObjectBase
     valid = if q = valid then ((value) -> return if (value == null || (typeof value == 'object' && moment.isMoment(value))) && q(value) then value else undefined)
     else ((value) -> return if value == null || moment.isMoment(value) then value else undefined)
 
-    return @prop {
+    return @prop _.assign {
       name
       type: 'moment'
       valid
       read: ((v) -> if v != null then moment(v) else null)
-      init: null})
+      init: null}, opts)
 
-  @propDuration: ((name, valid) ->
+  @propDuration: ((name, valid, opts) ->
     if assert
       error.invalidArg 'name'if !typeof name == 'string'
       error.invalidArg 'valid' if valid && typeof valid != 'function'
@@ -360,12 +358,12 @@ module.exports = class DSObjectBase
     valid = if q = valid then ((value) -> return if (value == null || (typeof value == 'object' && moment.isDuration(value))) && q(value) then value else undefined)
     else ((value) -> return if value == null || moment.isDuration(value) then value else undefined)
 
-    return @prop {
+    return @prop _.assign {
       name
       type: 'duration'
       valid
       read: ((v) -> if v != null then moment.duration(v) else null)
-      init: null})
+      init: null}, opts)
 
   @onAnyPropChange: ((listener) ->
     if assert

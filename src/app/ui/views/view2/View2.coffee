@@ -36,7 +36,7 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', 'TWTasks', (
 
     @propPool 'poolTasksNotassignedViews', TaskView
     @propList 'tasksNotAssigned', TaskView
-    @propNum  'tasksNotAssignedHeight', 0
+    @propNum  'tasksNotAssignedHeight', init: 0
 
     @ds_dstr.push (->
       @__unwatchA()

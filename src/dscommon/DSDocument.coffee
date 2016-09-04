@@ -1,5 +1,6 @@
 assert = require('./util').assert
 error = require('./util').error
+historyMode = require('../app/features').history
 traceRefs = require('./util').traceRefs
 
 DSObjectBase = require './DSObjectBase'
@@ -77,8 +78,8 @@ module.exports = class DSDocument extends DSObject
             if traceRefs
               list = []
               for propName, changePair of changes
-                list.push changePair.v if changePair.v instanceof DSObject
-                list.push changePair.s if changePair.s instanceof DSObject
+                list.push changePair.v if changePair.v instanceof DSObjectBase
+                list.push changePair.s if changePair.s instanceof DSObjectBase
               for item in list
                 refs = item.$ds_referries
                 if refs.length == 0
@@ -91,9 +92,6 @@ module.exports = class DSDocument extends DSObject
                     console.info "#{++util.serviceOwner.msgCount}: transfer: #{DSObjectBase.desc item}, refs: #{@$ds_ref}, from: #{DSObjectBase.desc owner}, to: #{DSObjectBase.desc @}"
                     debugger if util.serviceOwner.msgCount == window.totalBreak
                   refs[index] = @
-  #          for propName, changePair of (@__change = changes)
-  #            v.addRef @ if (v = changePair.v) instanceof DSObject
-  #            s.addRef @ if (s = changePair.s) instanceof DSObject
             @addRef @; changesSet.add @, @
         if !serverDoc.hasOwnProperty '$ds_evt' then serverDoc.$ds_evt = [@]
         else
@@ -104,8 +102,12 @@ module.exports = class DSDocument extends DSObject
         return)
 
       __onChange: ((item, propName, value, oldVal) -> # react on server obj property change
-        if (change = @__change) && change.hasOwnProperty(propName) && item.__props[propName].equal((val = (prop = change[propName]).v), value) # server val is the same as last edition of the propName
-          @$ds_chg.$ds_hist.setSameAsServer @, propName
+        if (prop = item.__props[propName]).common
+         if @$ds_evt
+            lst.__onChange.call lst, @, propName, value, oldVal for lst in @$ds_evt by -1
+        else if (change = @__change) && change.hasOwnProperty(propName) && prop.equal((val = (prop = change[propName]).v), value) # server val is the same as last edition of the propName
+          if historyMode == 0
+            @$ds_chg.$ds_hist.setSameAsServer @, propName
           s.release @ if (s = prop.s) instanceof DSObjectBase
           val.release @ if val instanceof DSObjectBase
           delete change[propName]
@@ -116,16 +118,15 @@ module.exports = class DSDocument extends DSObject
           if empty
             delete @.__change
             @$ds_chg.remove @
-        else if @$ds_evt
-          lst.__onChange.call lst, @, propName, value, oldVal for lst in @$ds_evt by -1
         return)
 
       _clearChanges: -> # removes all changes made to the task, and cleaning up a hisotry of those changes
         if (change = @__change)
           for propName, prop of change # fix history
-            @$ds_chg.$ds_hist.setSameAsServer @, propName
+            if historyMode == 0
+              @$ds_chg.$ds_hist.setSameAsServer @, propName
             if @$ds_evt
-              lst.__onChange.call lst, @, propName, prop.s, prop.v for lst in @$ds_evt by -1
+              lst.__onChange.call lst, @, propName, @$ds_doc[propName], prop.v for lst in @$ds_evt by -1
             s.release @ if (s = prop.s) instanceof DSObjectBase
             v.release @ if (v = prop.v) instanceof DSObjectBase
           delete @.__change
@@ -144,45 +145,55 @@ module.exports = class DSDocument extends DSObject
 
       for k, prop of originalDocClass::__props when !prop.calc
         do (propName = prop.name, valid = prop.valid, equal = prop.equal) =>
-          Object.defineProperty @::, propName,
-            get: getValue = (->
-              change = @__change
-              return change[propName].v if change && change.hasOwnProperty(propName)
-              return @$ds_doc[propName])
-            set: ((value) ->
-              if assert
-                error.invalidValue @, propName, v if typeof (value = valid(v = value)) == 'undefined'
-              if !equal((oldVal = getValue.call(@)), value)
-                value.addRef @ if value instanceof DSObject
-                if !(change = @__change) # it's first change for this document
-                  change = @__change = {}
-                  oldVal.addRef @ if oldVal instanceof DSObject
-                  change[propName] = {v: value, s: oldVal}
-                  @addRef @; @$ds_chg.add @, @
-                  @$ds_chg.$ds_hist.add @, propName, value, undefined
-                else if equal((serverValue = @$ds_doc[propName]), value) # new value is equal to server value of this property
-                  @$ds_chg.$ds_hist.add @, propName, undefined, (changePair = change[propName]).v
-                  v.release @ if (v = changePair.v) instanceof DSObject
-                  s.release @ if (s = changePair.s) instanceof DSObject
-                  delete change[propName]
-                  empty = true; (empty = false; break) for k of change when k != '__error' && k != '__refreshView'
-                  if empty
-                    if @$ds_evt # send change event before remove. This makes possible corrent exclude items from DSSet on change event
-                      lst.__onChange.call lst, @, propName, value, oldVal for lst in @$ds_evt by -1
-                    delete @.__change
-                    @$ds_chg.remove @
-                    return
-                else if (changePair = change[propName]) # this propery was already change, so we preserv inital serverValue
-                  @$ds_chg.$ds_hist.add @, propName, value, changePair.v
-                  v.release @ if (v = changePair.v) instanceof DSObject
-                  changePair.v = value
-                else # it's first change of this property, but not first change for this whole document
-                  serverValue.addRef @ if serverValue instanceof DSObject
-                  change[propName] = {v: value, s: serverValue}
-                  @$ds_chg.$ds_hist.add @, propName, value, undefined
-                if @$ds_evt
-                  lst.__onChange.call lst, @, propName, value, oldVal for lst in @$ds_evt by -1
-              return)
+
+          if prop.common
+            Object.defineProperty @::, propName,
+              get: -> @$ds_doc[propName]
+              set: (value) ->
+                if (oldVal = @$ds_doc[propName]) != value
+                  @$ds_doc[propName] = value
+                  @$ds_chg.$ds_hist.add @, propName, value, oldVal
+                return
+          else
+            Object.defineProperty @::, propName,
+              get: getValue = ->
+                change = @__change
+                return change[propName].v if change && change.hasOwnProperty(propName)
+                @$ds_doc[propName]
+              set: (value) ->
+                if assert
+                  error.invalidValue @, propName, v if typeof (value = valid(v = value)) == 'undefined'
+                if !equal((oldVal = getValue.call(@)), value)
+                  value.addRef @ if value instanceof DSObjectBase
+                  if !(change = @__change) # it's first change for this document
+                    change = @__change = {}
+                    oldVal.addRef @ if oldVal instanceof DSObjectBase
+                    change[propName] = {v: value, s: oldVal}
+                    @addRef @; @$ds_chg.add @, @
+                    @$ds_chg.$ds_hist.add @, propName, value, undefined
+                  else if equal((serverValue = @$ds_doc[propName]), value) # new value is equal to server value of this property
+                    @$ds_chg.$ds_hist.add @, propName, undefined, (changePair = change[propName]).v
+                    v.release @ if (v = changePair.v) instanceof DSObjectBase
+                    s.release @ if (s = changePair.s) instanceof DSObjectBase
+                    delete change[propName]
+                    empty = true; (empty = false; break) for k of change when k != '__error' && k != '__refreshView'
+                    if empty
+                      if @$ds_evt # send change event before remove. This makes possible corrent exclude items from DSSet on change event
+                        lst.__onChange.call lst, @, propName, value, oldVal for lst in @$ds_evt by -1
+                      delete @.__change
+                      @$ds_chg.remove @
+                      return
+                  else if (changePair = change[propName]) # this propery was already change, so we preserv inital serverValue
+                    @$ds_chg.$ds_hist.add @, propName, value, changePair.v
+                    v.release @ if (v = changePair.v) instanceof DSObjectBase
+                    changePair.v = value
+                  else # it's first change of this property, but not first change for this whole document
+                    serverValue.addRef @ if serverValue instanceof DSObjectBase
+                    change[propName] = {v: value, s: serverValue}
+                    @$ds_chg.$ds_hist.add @, propName, value, undefined
+                  if @$ds_evt
+                    lst.__onChange.call lst, @, propName, value, oldVal for lst in @$ds_evt by -1
+                return
 
       DSObject.end.call @ # Note: We cannot simply call @end(), since this will cause a recursion of Editable definition
 

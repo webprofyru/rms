@@ -1,9 +1,11 @@
 div(ng-controller='View3' style='width:{{layout.area3.width}}px;height:{{layout.area3.height}}px')#sidebar
   .sub-header(ng-class='{narrow: layout.area3.width < 420}')
-    ul.tabs(ng-show='layout.area3.width >= 250')
-      li(rms-view3-drop-task='0' ng-click='config.activeSidebarTab = 0' ng-class='{active: config.activeSidebarTab == 0}') {{layout.area3.width < 440 ? 'NO DUE DATE' : 'WITHOUT DUE DATE'}}
-      li(rms-view3-drop-task='1' ng-click='config.activeSidebarTab = 1' ng-class='{active: config.activeSidebarTab == 1}') NEXT WEEK
-      li(ng-click='config.activeSidebarTab = 2' ng-class='{active: config.activeSidebarTab == 2}') {{layout.area3.width < 440 ? 'ALL TASKS' : 'ALL TASKS BY PROJECT'}}
+    //ul.tabs(ng-show='layout.area3.width >= 250')
+    table.tabs: tr
+      td(ng-if='features.clipboard == 0' rms-view3-drop-task='-1' ng-click='config.activeSidebarTab = -1' nowrap='' ng-class='{active: config.activeSidebarTab == -1}') {{layout.area3.width < 315 ? 'CLIP' : 'CLIPBOARD'}}
+      td(rms-view3-drop-task='0' ng-click='config.activeSidebarTab = 0' nowrap='' ng-class='{active: config.activeSidebarTab == 0}') {{layout.area3.width < 315 ? 'NO DATE' : layout.area3.width < 510 ? 'NO DUE DATE' : 'WITHOUT DUE DATE'}}
+      td(rms-view3-drop-task='1' ng-click='config.activeSidebarTab = 1' nowrap='' ng-class='{active: config.activeSidebarTab == 1}') {{layout.area3.width < 315 ? 'NEXT' : 'NEXT WEEK'}}
+      td(ng-click='config.activeSidebarTab = 2' nowrap='' ng-class='{active: config.activeSidebarTab == 2}') {{layout.area3.width < 315 ? 'TASKS' : layout.area3.width < 510 ? 'ALL TASKS' : 'ALL TASKS BY PROJECT'}}
   .content-block
     .load-spinner(ng-if="view.dataStatus =='load'")
       .spinner
@@ -59,6 +61,8 @@ div(ng-controller='View3' style='width:{{layout.area3.width}}px;height:{{layout.
                         div(rms-task='task', ng-model='task').view3-task {{task.title}}
                       td.col2
                         strong {{filter.taskPeriod(task, 'estimate')}}
+                      td.col3(ng-if='view3ActiveTab == -1' ng-click='task.clipboard = false; $event.stopPropagation()')
+                        img(src='./images/icons/close.svg')
 
             div(ng-if='config.view3GroupByPerson == 0')
               ul

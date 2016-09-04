@@ -9,9 +9,9 @@ module.exports = class TaskView extends DSObject
 
   @propDoc 'task', Task
   @propDoc 'time', PersonTimeTracking
-  @propNum 'x', 0, validate.required
-  @propNum 'y', 0, validate.required
-  @propNum 'len', 1, validate.required
+  @propNum 'x', init: 0, valid: validate.required
+  @propNum 'y', init: 0, valid: validate.required
+  @propNum 'len', init: 1, valid: validate.required
   @propObj 'split'
 
   @end()

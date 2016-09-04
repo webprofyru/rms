@@ -33,7 +33,7 @@ ngModule.factory 'View3', [
     class View3 extends DSView # () ->
       @begin 'View3'
 
-      @propData 'tasks', Task, {watch: ['duedate', 'priority']}
+      @propData 'tasks', Task, {watch: ['duedate', 'priority', 'clipboard']}
 
       @propPool 'poolPeople', PersonView
       @propList 'people', PersonView
@@ -62,6 +62,9 @@ ngModule.factory 'View3', [
             [mode, active] = args
             $rootScope.view3ActiveTab = active
             switch active
+              when -1 # clipboard
+                @__unwatchB?()
+                @dataUpdate {filter: 'clipboard', mode}
               when 0 # no duedate
                 @__unwatchB?()
                 @dataUpdate {filter: 'noduedate', mode}
@@ -118,7 +121,7 @@ ngModule.factory 'View3', [
         $scope.isPersonExpended = (personView) =>
           if assert
             error.invalidArg 'personView' if !(personView instanceof PersonView)
-          if (expandedRows = @expandedRows).hasOwnProperty (active = clickSideBarTab)
+          if (expandedRows = @expandedRows).hasOwnProperty (active = config.activeSidebarTab)
             if (viewExpandedRows = expandedRows[active]).hasOwnProperty(personKey = personView.$ds_key)
               return viewExpandedRows[personKey]
           true
@@ -261,9 +264,15 @@ ngModule.directive 'rmsView3DropTask', [
         else # group movement, if task has no split and 'ctrl' key is pressed while operation
           tasks = getDropTasksGroup()
 
-        addCommentAndSave tasks, ev.shiftKey, # You have to keep shift, if you need to make a comment
-          duedate: if activeTab() == 0 then null else moment($rootScope.startDateVal).add(1, 'week')
-          plan: false
+        fields = plan: false
+        switch activeTab()
+          when -1
+            fields.duedate = null
+            fields.clipboard = true
+          when 0 then fields.duedate = null
+          when 1 then fields.duedate = moment($rootScope.startDateVal).add(1, 'week')
+
+        addCommentAndSave tasks, ev.shiftKey, fields # You have to keep shift, if you need to make a comment
 
         $rootScope.$digest()
         ev.stopPropagation()

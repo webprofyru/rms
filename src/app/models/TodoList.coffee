@@ -11,7 +11,7 @@ module.exports = class TodoList extends DSObject
 
   @str = ((v) -> if v == null then '' else v.get('name'))
 
-  @propNum 'id', 0
+  @propNum 'id', init: 0
   @propStr 'name'
   @propDoc 'project', Project
 

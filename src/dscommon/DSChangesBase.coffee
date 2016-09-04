@@ -13,7 +13,7 @@ module.exports = class DSChangesBase extends DSData
   @noCache()
 
   @propDoc 'hist', DSHistory
-  @propNum 'count', 0
+  @propNum 'count', init: 0
 
   constructor: ((referry, key) ->
     DSData.call @, referry, key, {}

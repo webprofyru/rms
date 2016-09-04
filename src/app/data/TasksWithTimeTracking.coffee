@@ -26,7 +26,7 @@ ngModule.factory 'TasksWithTimeTracking', [
       @propDoc 'srcTasks', DSSet
       @propDoc 'srcTasksTimeTracking', DSSet
 
-      @propObj 'cancel', null
+      @propObj 'cancel', init: null
 
       @propSet 'tasks', Task
 

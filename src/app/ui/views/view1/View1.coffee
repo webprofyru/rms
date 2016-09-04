@@ -52,8 +52,8 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', 'TWTasks', 
     @propPool 'poolRows', Row
     @propList 'rows', Row
 
-    @propObj 'hiddenPeople', {}
-    @propNum 'hiddenPeopleCount', 0
+    @propObj 'hiddenPeople', init: {}
+    @propNum 'hiddenPeopleCount', init: 0
 
     @ds_dstr.push (->
       @__unwatchA()
@@ -348,7 +348,8 @@ ngModule.factory 'getDropTasksGroup', [
       duedate = $rootScope.modal.task.get('duedate').valueOf()
       responsible = $rootScope.modal.task.get('responsible')
       project = $rootScope.modal.task.get('project')
-      (t for k, t of allTasks.items when !t.plan && !t.split && t.get('responsible') == responsible && t.get('duedate')?.valueOf() == duedate && t.get('project') == project)]
+      res = (t for k, t of allTasks.items when !t.plan && !t.split && t.get('responsible') == responsible && t.get('duedate')?.valueOf() == duedate && t.get('project') == project)
+      if res.length == 0 then [$rootScope.modal.task] else res] # res.length == 0 could be when d'n'd task has plan == true
 
 ngModule.directive 'rmsView1DropTask', [
   'View1', '$rootScope', 'dsChanges', 'addCommentAndSave', 'getDropTasksGroup',

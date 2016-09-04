@@ -29,8 +29,8 @@ ngModule.factory 'config',
     class Config extends DSObject
       @begin 'Config'
 
-      @propStr 'token', null, validate.trimString
-      @propStr 'teamwork', 'http://teamwork.webprofy.ru/'
+      @propStr 'token', valid: validate.trimString
+      @propStr 'teamwork', init: 'http://teamwork.webprofy.ru/'
       @propCalc 'hasRoles', (-> @teamwork == 'http://teamwork.webprofy.ru/')
       @propCalc 'hasTimeReports', (-> @teamwork == 'http://teamwork.webprofy.ru/' || @teamwork == 'http://delightsoft.teamworkpm.net/')
 
@@ -48,17 +48,17 @@ ngModule.factory 'config',
       @propNum 'selectedCompany'
       @propNum 'selectedLoad'
 
-      @propNum 'activeSidebarTab', 0
+      @propNum 'activeSidebarTab', init: 0
 
       @propNum 'refreshPeriod'
 
-      @propNum 'view3GroupByPerson', 0
-      @propNum 'view3HidePeopleWOTasks', 0
-      @propStr 'view3FilterByPerson', ''
-      @propStr 'view3FilterByProject', ''
-      @propStr 'view3FilterByTask', ''
+      @propNum 'view3GroupByPerson', init: 0
+      @propNum 'view3HidePeopleWOTasks', init: 0
+      @propStr 'view3FilterByPerson', init: ''
+      @propStr 'view3FilterByProject', init: ''
+      @propStr 'view3FilterByTask', init: ''
 
-      @propNum 'histStart', -1 # first page of time-entries history within time.historyLimit range
+      @propNum 'histStart', init: -1 # first page of time-entries history within time.historyLimit range
 
       @onAnyPropChange ((item, propName, newVal, oldVal) -> # save to local storage
         return if propName == 'currentUserId' || propName == 'currentUser' # those props always taken from teamwork

@@ -33,7 +33,7 @@ ngModule.factory 'dsChanges', [
 
       @propObj 'dataService' # Note: It's propObj (not Doc) cause dsChanges must not have ref+1 to dsDataService
       @propDoc 'source', DSDataSource
-      @propObj 'cancel', null
+      @propObj 'cancel', init: null
 
       @ds_dstr.push (->
         @__unwatch2()
@@ -216,6 +216,7 @@ ngModule.factory 'dsChanges', [
                   .then ((resp) =>
                     @set 'cancel', null
                     if (resp.status == 201) # 0 means that request was canceled
+                      task.$ds_chg.$ds_hist.setSameAsServer task, 'comments' # remove comments from history to keep undo/redo consistent
                       task.release @
                       @save(tasks) # save next edited object, if any
                     else actionError(resp, resp.status == 0)
