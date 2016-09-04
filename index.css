@@ -1407,6 +1407,15 @@ ul {
           width: 2rem;
           text-align: center;
           line-height: 19px; }
+        /* line 116, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        #screen1 #sidebar .content-block .task-list-items .col3 {
+          opacity: 0.4;
+          width: 0.7rem;
+          line-height: 19px;
+          text-align: center; }
+          /* line 121, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+          #screen1 #sidebar .content-block .task-list-items .col3 > img {
+            width: 0.5rem; }
   /* line 1, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
   #screen1 #modal-task-info, #screen1 #modal-task {
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.23), 0 10px 40px rgba(0, 0, 0, 0.19);
