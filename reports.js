@@ -54,7 +54,7 @@ ngModule.factory('config', [
       });
 
       Config.propCalc('hasRoles', (function() {
-        return this.teamwork === 'http://teamwork.webprofy.ru/';
+        return this.teamwork === 'http://teamwork.webprofy.ru/' || this.teamwork === 'http://delightsoft.teamworkpm.net/';
       }));
 
       Config.propCalc('hasTimeReports', (function() {
@@ -2264,7 +2264,7 @@ module.exports = DSDocument = (function(superClass) {
       });
 
       Editable.prototype.__onChange = (function(item, propName, value, oldVal) {
-        var change, empty, i, j, len, lst, prop, ref1, s, val;
+        var change, empty, i, j, l, len, lst, prop, ref1, ref2, s, val;
         if ((prop = item.__props[propName]).common) {
           if (this.$ds_evt) {
             ref1 = this.$ds_evt;
@@ -2296,6 +2296,12 @@ module.exports = DSDocument = (function(superClass) {
           if (empty) {
             delete this.__change;
             this.$ds_chg.remove(this);
+          }
+        } else if (this.$ds_evt) {
+          ref2 = this.$ds_evt;
+          for (l = ref2.length - 1; l >= 0; l += -1) {
+            lst = ref2[l];
+            lst.__onChange.call(lst, this, propName, value, oldVal);
           }
         }
       });

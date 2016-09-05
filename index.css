@@ -1434,10 +1434,28 @@ ul {
     /* line 4, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
     #screen1 .show#modal-task-info, #screen1 .show#modal-task {
       display: block; }
-  /* line 17, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+    /* line 16, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+    #screen1 #modal-task-info .task-tag, #screen1 #modal-task .task-tag {
+      display: inline;
+      -webkit-border-radius: 5px;
+              border-radius: 5px;
+      float: left;
+      color: white;
+      padding: 0 4px;
+      margin-top: 4px;
+      margin-left: 4px; }
+      /* line 17, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+      #screen1 #modal-task-info .task-tag:first-child, #screen1 #modal-task .task-tag:first-child {
+        margin-left: 0; }
+      /* line 26, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+      #screen1 #modal-task-info .task-tag > img, #screen1 #modal-task .task-tag > img {
+        opacity: 0.4;
+        width: 6px;
+        padding: 0.2rem 0.2rem 0.2rem 0.4rem; }
+  /* line 33, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
   #screen1 #modal-task-info {
     width: 270px; }
-    /* line 21, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+    /* line 37, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
     #screen1 #modal-task-info li .task-info-label {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
@@ -1445,24 +1463,17 @@ ul {
       float: left;
       text-align: right;
       padding-right: 10px; }
-    /* line 25, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+    /* line 41, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
     #screen1 #modal-task-info li .task-info-value {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       width: 71.42857%;
       float: left; }
-      /* line 27, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+      /* line 43, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
       #screen1 #modal-task-info li .task-info-value.tags {
         font-size: 0.8rem;
         margin-top: -2px;
         margin-left: -4px; }
-      /* line 31, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
-      #screen1 #modal-task-info li .task-info-value .task-tag {
-        float: left;
-        color: white;
-        padding: 0 4px;
-        margin-top: 4px;
-        margin-left: 4px; }
   /* line 1, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
   #screen1 #modal-task {
     display: inline-table;
@@ -1484,12 +1495,17 @@ ul {
       margin-bottom: 8px; }
       /* line 17, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
       #screen1 #modal-task .task-modal-wrapper-main .task-modal-row {
+        width: 100%;
+        float: left;
         margin-bottom: 10px;
         overflow: auto; }
-        /* line 21, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 18, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        #screen1 #modal-task .task-modal-wrapper-main .task-modal-row.fix-person-row {
+          margin-bottom: 0; }
+        /* line 25, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row.overflow-visible {
           overflow: visible; }
-        /* line 23, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 27, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-row-title {
           -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -1497,123 +1513,123 @@ ul {
           float: left;
           text-align: right;
           padding-right: 1rem; }
-        /* line 27, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 31, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-row-value {
           -webkit-box-sizing: border-box;
           box-sizing: border-box;
           width: 76.92308%;
           float: left; }
-        /* line 29, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 33, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-title {
           width: 60%; }
-        /* line 31, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 35, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-estimate-hours {
           width: 2.3rem; }
-        /* line 33, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 37, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-estimate-minutes {
           width: 2.3rem;
           margin-left: 1rem; }
-        /* line 36, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 40, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-estimate-duration {
           padding-left: 0.2rem; }
-        /* line 38, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 42, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-duedate {
           width: 8rem; }
-        /* line 40, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 44, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-person {
           display: inline-block;
           float: left;
           width: 9rem; }
-        /* line 44, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 48, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-icon-link {
           vertical-align: middle;
           margin-top: -7px;
           padding-left: 0.5rem;
           height: 15px;
           opacity: 0.5; }
-          /* line 50, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+          /* line 54, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
           #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-icon-link:hover {
             opacity: 0.3; }
-        /* line 52, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 56, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-icon-recycling {
           margin-left: 0.5rem;
           cursor: pointer; }
-          /* line 55, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+          /* line 59, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
           #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-icon-recycling:hover {
             opacity: 0.5; }
-          /* line 57, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+          /* line 61, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
           #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-icon-recycling.icon-after-select {
             display: block;
             float: left;
             margin-top: 5px; }
-    /* line 61, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 65, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task .task-modal-wrapper-split {
       display: inline-block;
       vertical-align: top; }
-      /* line 64, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+      /* line 68, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
       #screen1 #modal-task .task-modal-wrapper-split table {
         margin-bottom: 1.5rem; }
-        /* line 66, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 70, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-split table th {
           text-align: left;
           padding-bottom: 10px; }
-        /* line 69, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 73, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-split table td {
           width: 5.4rem;
           padding: 4px; }
-          /* line 72, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+          /* line 76, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
           #screen1 #modal-task .task-modal-wrapper-split table td:first-child {
             width: 2rem; }
-          /* line 74, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+          /* line 78, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
           #screen1 #modal-task .task-modal-wrapper-split table td.warn {
             background-color: #D3724F; }
-          /* line 76, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+          /* line 80, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
           #screen1 #modal-task .task-modal-wrapper-split table td.select {
             background-color: #84d34f; }
-          /* line 79, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+          /* line 83, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
           #screen1 #modal-task .task-modal-wrapper-split table td .task-split-estimate-wrapper input {
             width: 25%;
             text-align: right; }
-            /* line 82, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+            /* line 86, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
             #screen1 #modal-task .task-modal-wrapper-split table td .task-split-estimate-wrapper input.task-modal-estimate-minutes {
               margin-left: 8px; }
-        /* line 85, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 89, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-split table tr.row-total-time td {
           font-size: 0.7rem;
           padding: 0 4px;
           line-height: 1;
           text-align: center; }
-      /* line 90, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+      /* line 94, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
       #screen1 #modal-task .task-modal-wrapper-split .table-icon-arrow {
         text-align: center; }
-        /* line 92, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 96, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-split .table-icon-arrow img {
           width: 1.4rem;
           cursor: pointer;
           opacity: 0.5; }
-          /* line 96, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+          /* line 100, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
           #screen1 #modal-task .task-modal-wrapper-split .table-icon-arrow img:hover {
             opacity: 0.3; }
-    /* line 99, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 103, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task input {
       padding: 2px 6px;
       -webkit-border-radius: 3px;
               border-radius: 3px;
       border: none; }
-    /* line 104, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 108, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task a {
       text-decoration: none; }
-    /* line 107, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 111, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task .btn.plan {
       margin-left: 12px; }
-    /* line 111, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 115, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task .btn-group .right {
       float: right; }
-    /* line 114, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 118, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task .splitDiff {
       padding-left: 1rem;
       color: yellow; }
-    /* line 118, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 122, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task .btn.auto-split {
       padding: 0px 7px;
       font-size: 0.8rem;
