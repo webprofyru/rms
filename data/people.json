@@ -216,7 +216,7 @@
         },
         {
             "id": 121030,
-            "role": "Programmer, Markuper, GroupKorovkin, GroupSkinteev",
+            "role": "Programmer, Markuper, GroupKorovkin",
             "name": "Валерий Серов",
             "email": "v.serov@webprofy.ru"
         },
@@ -291,12 +291,25 @@
             "role": "Manager, RMStrainee",
             "name": "Алла Молчанова",
             "email": "a.molchanova@webprofy.ru"
+        },
+        {
+            "id": 139024,
+            "role": "Programmer, Markuper, GroupKorovkin",
+            "name": "Павел Шестаков",
+            "email": "shestpa@gmail.com"
+        },
+        {
+            "id": 257346,
+            "role": "Programmer, Markuper, GroupKorovkin",
+            "name": "Вадим Зайнетдинов",
+            "email": "vadim.zvf@gmail.com"
         }
     ],
     "dailyPlan": {
     	"reloadTimeMin" : "5",
 	"hsize": "300",
 	"vsize": "400",
-	"finalWords": " ,отчет"
+	"finalWords": " ,отчет",
+	"dailyPlanTag": "37127"
     }
 }
