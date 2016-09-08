@@ -291,6 +291,18 @@
             "role": "Manager, RMStrainee",
             "name": "Алла Молчанова",
             "email": "a.molchanova@webprofy.ru"
+        },
+        {
+            "id": 139024,
+            "role": "Programmer, Markuper, GroupKorovkin",
+            "name": "Павел Шестаков",
+            "email": "shestpa@gmail.com"
+        },
+        {
+            "id": 257346,
+            "role": "Programmer, Markuper, GroupKorovkin",
+            "name": "Вадим Зайнетдинов",
+            "email": "vadim.zvf@gmail.com"
         }
     ],
     "dailyPlan": {
