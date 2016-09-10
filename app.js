@@ -86,7 +86,9 @@ ngModule.factory('config', [
 
       Config.propStr('selectedRole');
 
-      Config.propNum('selectedCompany');
+      Config.propNum('selectedCompany', {
+        init: -1
+      });
 
       Config.propNum('selectedLoad');
 
@@ -743,7 +745,7 @@ ngModule.factory('TasksWithTimeTracking', [
 
 
 },{"../../dscommon/DSData":53,"../../dscommon/DSDataServiceBase":56,"../../dscommon/DSDigest":58,"../../dscommon/DSSet":65,"../../dscommon/DSTags":66,"../../dscommon/util":68,"../models/Task":21,"../models/TaskTimeTracking":22}],6:[function(require,module,exports){
-var CHANGES_PERSISTANCE_VER, Comments, DSChangesBase, DSDataEditable, DSDigest, Person, RMSData, Task, assert, error, ngModule, serviceOwner,
+var CHANGES_PERSISTANCE_VER, Comments, DSChangesBase, DSDataEditable, DSDigest, DSSet, DSTags, Person, RMSData, Task, assert, error, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -760,6 +762,10 @@ DSDigest = require('../../dscommon/DSDigest');
 DSChangesBase = require('../../dscommon/DSChangesBase');
 
 DSDataEditable = require('../../dscommon/DSDataEditable');
+
+DSTags = require('../../dscommon/DSTags');
+
+DSSet = require('../../dscommon/DSSet');
 
 Person = require('../models/Person');
 
@@ -801,6 +807,8 @@ ngModule.factory('dsChanges', [
         init: null
       });
 
+      DSChanges.propDoc('tags', DSSet);
+
       DSChanges.ds_dstr.push((function() {
         var cancel;
         this.__unwatch2();
@@ -819,8 +827,41 @@ ngModule.factory('dsChanges', [
         DSChangesBase.call(this, referry, key);
       });
 
-      DSChanges.prototype.init = (function(dataService) {
-        this.__unwatch2 = DSDataSource.setLoadAndRefresh.call(this, this.set('dataService', dataService));
+      DSChanges.prototype.init = (function(dataService, tagsSet) {
+        this.set('dataService', dataService);
+        this.set('source', dataService.get('dataSource'));
+        this.set('tags', tagsSet);
+        Task.prototype.__props.tags.read = function(v) {
+          var i, len, ref, tagName, tags;
+          if (v === null) {
+            return null;
+          }
+          tags = null;
+          ref = v.split(',');
+          for (i = 0, len = ref.length; i < len; i++) {
+            tagName = ref[i];
+            if (tagsSet.items.hasOwnProperty(tagName = tagName.trim())) {
+              (tags || (tags = {}))[tagName] = tagsSet.items[tagName];
+            }
+          }
+          if (tags === null) {
+            return null;
+          }
+          return new DSTags(this, tags);
+        };
+        this.__unwatch2 = this.tags.watchStatus(this, (function(_this) {
+          return function(source, status) {
+            switch (status) {
+              case 'ready':
+                DSDigest.block((function() {
+                  return _this.load();
+                }));
+                break;
+              case 'nodata':
+                _this.set('status', 'nodata');
+            }
+          };
+        })(this));
       });
 
       DSChanges.prototype.clear = (function() {
@@ -997,6 +1038,11 @@ ngModule.factory('dsChanges', [
                 case 'comments':
                   void 0;
                   break;
+                case 'description':
+                  if (!change.hasOwnProperty('split')) {
+                    taskUpd['description'] = task.get('description');
+                  }
+                  break;
                 case 'split':
                   taskUpd['description'] = RMSData.put(task.get('description'), (split = propChange.v) ? {
                     split: propChange.v.valueOf()
@@ -1151,8 +1197,8 @@ ngModule.factory('dsChanges', [
 ]);
 
 
-},{"../../dscommon/DSChangesBase":52,"../../dscommon/DSDataEditable":54,"../../dscommon/DSDataSource":57,"../../dscommon/DSDigest":58,"../../dscommon/util":68,"../models/Person":16,"../models/Task":21,"../models/types/Comments":24,"../utils/RMSData":51}],7:[function(require,module,exports){
-var DSChangesBase, DSDataEditable, DSDataFiltered, DSDataServiceBase, DSObject, Person, PersonTimeTracking, Task, TaskTimeTracking, assert, base64, error, ngModule, serviceOwner,
+},{"../../dscommon/DSChangesBase":52,"../../dscommon/DSDataEditable":54,"../../dscommon/DSDataSource":57,"../../dscommon/DSDigest":58,"../../dscommon/DSSet":65,"../../dscommon/DSTags":66,"../../dscommon/util":68,"../models/Person":16,"../models/Task":21,"../models/types/Comments":24,"../utils/RMSData":51}],7:[function(require,module,exports){
+var DSChangesBase, DSDataEditable, DSDataFiltered, DSDataServiceBase, DSObject, Person, PersonTimeTracking, Tag, Task, TaskTimeTracking, assert, base64, error, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -1177,6 +1223,8 @@ DSDataEditable = require('../../dscommon/DSDataEditable');
 DSDataFiltered = require('../../dscommon/DSDataFiltered');
 
 Person = require('../models/Person');
+
+Tag = require('../models/Tag');
 
 Task = require('../models/Task');
 
@@ -1227,7 +1275,7 @@ ngModule.factory('dsDataService', [
       }));
 
       class1 = (function() {
-        var cancel;
+        var cancel, tags;
         DSDataServiceBase.apply(this, arguments);
         (this.set('dataSource', new DSDataSource(this, 'dataSource'))).release(this);
         cancel = null;
@@ -1268,7 +1316,12 @@ ngModule.factory('dsDataService', [
             }
           };
         })(this)), true);
-        (this.set('changes', dsChanges)).init(this);
+        tags = this.findDataSet(this, {
+          type: Tag,
+          mode: 'original'
+        });
+        (this.set('changes', dsChanges)).init(this, tags);
+        tags.release(this);
       });
 
       DSDataService.prototype.refresh = (function() {
@@ -1276,11 +1329,11 @@ ngModule.factory('dsDataService', [
       });
 
       DSDataService.prototype.findDataSet = (function(owner, params) {
-        var base, base1, base2, base3, base4, changesSet, data, originalSet, set, type;
+        var base, base1, base2, base3, base4, changesSet, data, originalSet, set, tags, type;
         DSDataServiceBase.prototype.findDataSet.call(this, owner, params);
         switch (params.type.docType) {
           case 'Tag':
-            if (typeof (base = (data = TWTags.pool.find(this, params))).init === "function") {
+            if (typeof (base = (data = TWTags.pool.find(this, {}))).init === "function") {
               base.init(this);
             }
             (set = data.get('tagsSet')).addRef(owner);
@@ -1375,9 +1428,14 @@ ngModule.factory('dsDataService', [
                 if (params.filter === 'all' && !params.hasOwnProperty('startDate')) {
                   if (!config.get('hasTimeReports') || params.source) {
                     delete params.source;
+                    tags = this.findDataSet(this, {
+                      type: Tag,
+                      mode: 'original'
+                    });
                     if (typeof (base4 = (data = TWTasks.pool.find(this, params))).init === "function") {
-                      base4.init(this);
+                      base4.init(this, tags);
                     }
+                    tags.release(this);
                   } else {
                     if ((data = TasksWithTimeTracking.pool.find(this, {})).init) {
                       data.init(this);
@@ -1466,7 +1524,7 @@ ngModule.factory('dsDataService', [
 ]);
 
 
-},{"../../dscommon/DSChangesBase":52,"../../dscommon/DSDataEditable":54,"../../dscommon/DSDataFiltered":55,"../../dscommon/DSDataServiceBase":56,"../../dscommon/DSDataSource":57,"../../dscommon/DSObject":62,"../../dscommon/util":68,"../../utils/base64":70,"../config":2,"../models/Person":16,"../models/PersonTimeTracking":18,"../models/Task":21,"../models/TaskTimeTracking":22,"./PeopleWithJson":3,"./PersonDayStatData":4,"./TasksWithTimeTracking":5,"./dsChanges":6,"./teamwork/TWPeople":10,"./teamwork/TWTags":11,"./teamwork/TWTasks":12,"./teamwork/TWTimeTracking":13}],8:[function(require,module,exports){
+},{"../../dscommon/DSChangesBase":52,"../../dscommon/DSDataEditable":54,"../../dscommon/DSDataFiltered":55,"../../dscommon/DSDataServiceBase":56,"../../dscommon/DSDataSource":57,"../../dscommon/DSObject":62,"../../dscommon/util":68,"../../utils/base64":70,"../config":2,"../models/Person":16,"../models/PersonTimeTracking":18,"../models/Tag":20,"../models/Task":21,"../models/TaskTimeTracking":22,"./PeopleWithJson":3,"./PersonDayStatData":4,"./TasksWithTimeTracking":5,"./dsChanges":6,"./teamwork/TWPeople":10,"./teamwork/TWTags":11,"./teamwork/TWTasks":12,"./teamwork/TWTimeTracking":13}],8:[function(require,module,exports){
 var Task, assert, ngModule, serviceOwner;
 
 assert = require('../../dscommon/util').assert;
@@ -1619,16 +1677,23 @@ ngModule.factory('DSDataTeamworkPaged', [
                   return this.get('source').httpPut(addPaging(page, this.get('request')), this.params.json, cancel);
               }
             }).call(_this)).then((function(resp) {
+              var res;
               if (resp.status === 200) {
                 _this.set('cancel', null);
                 if (_this.importResponse(resp.data, resp.status) === WORK_ENTRIES_WHOLE_PAGE) {
                   pageLoad(page + 1);
                   return;
                 }
-                DSDigest.block((function() {
+                res = DSDigest.block((function() {
                   return _this.finalizeLoad();
                 }));
-                _this._endLoad(true);
+                if (typeof res === 'object' && res !== null && 'then' in res) {
+                  res.then(function() {
+                    _this._endLoad(true);
+                  });
+                } else {
+                  _this._endLoad(true);
+                }
               } else {
                 onError(resp, resp.status === 0);
               }
@@ -1736,7 +1801,7 @@ error = require('../../../dscommon/util').error;
 Tag = require('../../models/Tag');
 
 ngModule.factory('TWTags', [
-  'DSDataTeamworkPaged', 'DSDataSource', '$rootScope', '$q', (function(DSDataTeamworkPaged, DSDataSource, $rootScope, $q) {
+  'DSDataTeamworkPaged', 'DSDataSource', '$rootScope', '$http', '$q', (function(DSDataTeamworkPaged, DSDataSource, $rootScope, $http, $q) {
     var TWTags;
     return TWTags = (function(superClass) {
       extend(TWTags, superClass);
@@ -1749,40 +1814,122 @@ ngModule.factory('TWTags', [
 
       TWTags.addPool();
 
+      TWTags.propObj('cancel', {
+        init: null
+      });
+
       TWTags.propSet('tags', Tag);
 
       TWTags.ds_dstr.push((function() {
-        this.__unwatch2();
+        this.__unwatch();
       }));
 
-      TWTags.prototype.init = (function(dsDataService) {
+      TWTags.prototype.init = function(dsDataService) {
         this.set('request', "tags.json");
-        this.__unwatch2 = DSDataSource.setLoadAndRefresh.call(this, dsDataService);
+        this.__unwatch = DSDataSource.setLoadAndRefresh.call(this, dsDataService);
         this.init = null;
-      });
+      };
 
       TWTags.prototype.startLoad = function() {
+        var onError;
         this.tagsMap = {};
+        onError = (function(_this) {
+          return function(error, isCancelled) {
+            if (!isCancelled) {
+              console.error('error: ', error);
+              _this.set('cancel', null);
+            }
+            return [];
+          };
+        })(this);
+        this.tagsJson = $http.get("data/tags.json?t=" + (new Date().getTime()), this.set('cancel', $q.defer())).then(((function(_this) {
+          return function(resp) {
+            var err, i, j, len, t, tags;
+            if (resp.status !== 200) {
+              return onError(resp, resp.status === 0);
+            } else {
+              _this.set('cancel', null);
+              tags = resp.data;
+              if (!Array.isArray(tags)) {
+                console.error('invalid tags.json');
+                return [];
+              }
+              err = false;
+              for (i = j = 0, len = tags.length; j < len; i = ++j) {
+                t = tags[i];
+                if (!(typeof t.name === 'string' && t.name.length >= 0)) {
+                  err = true;
+                  console.error("invalid tags.json: invalid 'name'", t);
+                }
+                if (t.hasOwnProperty('priority')) {
+                  if (typeof t.priority !== 'number') {
+                    err = true;
+                    console.error("invalid tags.json: invalid 'priority'", t);
+                  }
+                } else {
+                  t.priority = i;
+                }
+                if (!(!t.hasOwnProperty('color') || typeof t.color === 'string' && t.color.length >= 0)) {
+                  err = true;
+                  console.error("invalid tags.json: invalid 'color'", t);
+                }
+                if (!(!t.hasOwnProperty('border') || typeof t.border === 'string' && t.border.length >= 0)) {
+                  err = true;
+                  console.error("invalid tags.json: invalid 'border'", t);
+                }
+              }
+              if (err) {
+                return [];
+              } else {
+                return tags;
+              }
+            }
+          };
+        })(this)), onError);
       };
 
       TWTags.prototype.importResponse = function(json) {
-        var cnt, i, jsonTag, len, person, ref;
+        var cnt, j, jsonTag, len, person, ref, tagColor, tagName;
         cnt = 0;
         ref = json['tags'];
-        for (i = 0, len = ref.length; i < len; i++) {
-          jsonTag = ref[i];
+        for (j = 0, len = ref.length; j < len; j++) {
+          jsonTag = ref[j];
           ++cnt;
-          person = Tag.pool.find(this, jsonTag['name'], this.tagsMap);
+          person = Tag.pool.find(this, (tagName = jsonTag['name']), this.tagsMap);
           person.set('id', parseInt(jsonTag['id']));
-          person.set('name', jsonTag['name']);
-          person.set('color', jsonTag['color']);
+          person.set('name', tagName);
+          person.set('color', (tagColor = jsonTag['color']));
+          person.set('twColor', tagColor);
         }
         return cnt;
       };
 
       TWTags.prototype.finalizeLoad = function() {
-        this.get('tagsSet').merge(this, this.tagsMap);
-        delete this.tagsMap;
+        return this.tagsJson.then((function(_this) {
+          return function(tags) {
+            var j, len, tag, tagDoc;
+            _this.tagsJson = null;
+            for (j = 0, len = tags.length; j < len; j++) {
+              tag = tags[j];
+              if (!(_this.tagsMap.hasOwnProperty(tag.name))) {
+                continue;
+              }
+              tagDoc = _this.tagsMap[tag.name];
+              tagDoc.set('name', tag.name);
+              if (tag.hasOwnProperty('priority')) {
+                tagDoc.set('priority', tag.priority);
+              }
+              if (tag.color) {
+                tagDoc.set('color', tag.color);
+              }
+              if (tag.border) {
+                tagDoc.set('border', tag.border);
+              }
+            }
+            _this.get('tagsSet').merge(_this, _this.tagsMap);
+            delete _this.tagsMap;
+          };
+        })(this));
       };
 
       TWTags.end();
@@ -1799,7 +1946,7 @@ var DSData, DSDigest, DSTags, Person, PersonTimeTracking, Project, RMSData, Tag,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-module.exports = (ngModule = angular.module('data/teamwork/TWTasks', [require('../../../dscommon/DSDataSource')])).name;
+module.exports = (ngModule = angular.module('data/teamwork/TWTasks', [require('../../../dscommon/DSDataSource'), require('./TWTags')])).name;
 
 assert = require('../../../dscommon/util').assert;
 
@@ -1832,10 +1979,10 @@ TaskSplit = require('../../models/types/TaskSplit');
 RMSData = require('../../utils/RMSData');
 
 ngModule.factory('TWTasks', [
-  'DSDataSource', 'dsChanges', 'config', '$injector', '$http', '$q', function(DSDataSource, dsChanges, config, $injector, $http, $q) {
+  'TWTags', 'DSDataSource', 'dsChanges', 'config', '$injector', '$http', '$q', function(TWTags, DSDataSource, dsChanges, config, $injector, $http, $q) {
     var TWTasks;
     return TWTasks = (function(superClass) {
-      var alwaysTrue, class1, clazz, importTask, initCalcTaskPriority, isTaskInDatesRange, loadCompletedTaskForPersonTimeTracking, loadTagsJson, releaseMaps;
+      var class1, clazz, importTask, isTaskInDatesRange, loadCompletedTaskForPersonTimeTracking, releaseMaps;
 
       extend(TWTasks, superClass);
 
@@ -1863,12 +2010,9 @@ ngModule.factory('TWTasks', [
         init: null
       });
 
-      TWTasks.propObj('cancel2', {
-        init: null
-      });
-
       TWTasks.ds_dstr.push((function() {
         var cancel;
+        this.tags.release(this);
         if (cancel = this.get('cancel')) {
           cancel.resolve();
         }
@@ -1877,11 +2021,6 @@ ngModule.factory('TWTasks', [
       }));
 
       clazz = TWTasks;
-
-      TWTasks.calcTaskPriority = initCalcTaskPriority = (function(task) {
-        task.__setCalcPriority(Task.defaultTag.priority);
-        task.__setCalcStyle(Task.defaultTag);
-      });
 
       TWTasks.prototype.clear = function() {
         var cancel;
@@ -1901,6 +2040,7 @@ ngModule.factory('TWTasks', [
         this.peopleMap = {};
         this.projectMap = {};
         this.todoListMap = {};
+        this.tags = null;
         if (assert) {
           if (PersonTimeTracking.prototype.hasOwnProperty('setVisible')) {
             console.error("TWTasks:ctor: setVisible expects that their will be only one instance of TWTasks object");
@@ -1949,10 +2089,6 @@ ngModule.factory('TWTasks', [
         }
       });
 
-      alwaysTrue = (function(task) {
-        return true;
-      });
-
       TWTasks.filter = (function(params) {
         switch (params.filter) {
           case 'all':
@@ -1961,7 +2097,9 @@ ngModule.factory('TWTasks', [
                 return isTaskInDatesRange(params, task);
               };
             } else {
-              return alwaysTrue;
+              return function(task) {
+                return true;
+              };
             }
             break;
           case 'assigned':
@@ -1990,8 +2128,11 @@ ngModule.factory('TWTasks', [
         }
       });
 
-      TWTasks.prototype.init = (function(dsDataService) {
+      TWTasks.prototype.init = (function(dsDataService, tags1) {
         var filter, params, tasksSet;
+        this.tags = tags1;
+        this.set('source', dsDataService.get('dataSource'));
+        this.tags.addRef(this);
         this.set('request', (function() {
           switch ((params = this.get('params')).filter) {
             case 'all':
@@ -2028,8 +2169,19 @@ ngModule.factory('TWTasks', [
             }
           };
         })(this)));
-        this.__unwatch2 = DSDataSource.setLoadAndRefresh.call(this, dsDataService);
-        this.allTasksSet = filter === alwaysTrue;
+        this.__unwatch2 = this.tags.watchStatus(this, (function(_this) {
+          return function(source, status) {
+            switch (status) {
+              case 'ready':
+                DSDigest.block((function() {
+                  return _this.load();
+                }));
+                break;
+              case 'nodata':
+                _this.set('status', 'nodata');
+            }
+          };
+        })(this));
         this.init = null;
       });
 
@@ -2056,7 +2208,7 @@ ngModule.factory('TWTasks', [
       });
 
       importTask = (function(task, jsonTask) {
-        var data, date, desc, duedateStr, estimate, j, k, len, person, plan, project, ref, resp, split, tag, tagDoc, tags, timeIsLogged, todoList, v;
+        var data, date, desc, duedateStr, estimate, i, k, len, person, project, ref, resp, split, tag, tagDoc, tags, timeIsLogged, todoList, v;
         person = Person.pool.find(this, "" + jsonTask['creator-id'], this.peopleMap);
         project = Project.pool.find(this, "" + jsonTask['project-id'], this.projectMap);
         todoList = TodoList.pool.find(this, "" + jsonTask['todo-list-id'], this.todoListMap);
@@ -2091,20 +2243,15 @@ ngModule.factory('TWTasks', [
           task.set('plan', false);
         } else {
           tags = null;
-          plan = false;
           ref = jsonTask['tags'];
-          for (j = 0, len = ref.length; j < len; j++) {
-            tag = ref[j];
-            if (tag.name === config.planTag) {
-              plan = true;
-            }
+          for (i = 0, len = ref.length; i < len; i++) {
+            tag = ref[i];
             tagDoc = (tags != null ? tags : tags = {})[tag.name] = Tag.pool.find(this, tag.name);
             tagDoc.set('id', tag.id);
             tagDoc.set('name', tag.name);
-            tagDoc.set('color', tag.color);
+            tagDoc.set('color', tagDoc.set('twColor', tag.color));
             (tags || (tags = {}))[tag.name] = tagDoc;
           }
-          task.set('plan', plan);
           if (tags === null) {
             task.set('tags', null);
           } else {
@@ -2114,7 +2261,6 @@ ngModule.factory('TWTasks', [
               v.release(this);
             }
           }
-          clazz.calcTaskPriority(task);
         }
         todoList.set('id', parseInt(jsonTask['todo-list-id']));
         todoList.set('name', jsonTask['todo-list-name']);
@@ -2122,91 +2268,8 @@ ngModule.factory('TWTasks', [
         project.set('name', jsonTask['project-name']);
       });
 
-      clazz = TWTasks;
-
-      loadTagsJson = function() {
-        var onError2;
-        clazz.calcTaskPriority = initCalcTaskPriority;
-        onError2 = (function(_this) {
-          return function(error, isCancelled) {
-            if (!isCancelled) {
-              console.error('error: ', error);
-              _this.set('cancel2', null);
-            }
-          };
-        })(this);
-        $http.get("data/tags.json?t=" + (new Date().getTime()), this.set('cancel2', $q.defer())).then(((function(_this) {
-          return function(resp) {
-            var calcTaskPriority, err, i, j, k, len, ref, ref1, t, tags;
-            if (resp.status === 200) {
-              _this.set('cancel2', null);
-              tags = resp.data;
-              if (!Array.isArray(tags)) {
-                console.error('invalid tags.json');
-                return;
-              }
-              err = false;
-              for (i = j = 0, len = tags.length; j < len; i = ++j) {
-                t = tags[i];
-                if (!(typeof t.name === 'string' && t.name.length >= 0)) {
-                  err = true;
-                  console.error("invalid tags.json: invalid 'name'", t);
-                }
-                if (t.hasOwnProperty('priority')) {
-                  if (typeof t.priority !== 'number') {
-                    err = true;
-                    console.error("invalid tags.json: invalid 'priority'", t);
-                  }
-                } else {
-                  t.priority = i;
-                }
-                if (!(!t.hasOwnProperty('color') || typeof t.color === 'string' && t.color.length >= 0)) {
-                  err = true;
-                  console.error("invalid tags.json: invalid 'color'", t);
-                }
-                if (!(!t.hasOwnProperty('border') || typeof t.border === 'string' && t.border.length >= 0)) {
-                  err = true;
-                  console.error("invalid tags.json: invalid 'border'", t);
-                }
-              }
-              if (err) {
-                return;
-              }
-              clazz.calcTaskPriority = calcTaskPriority = function(task) {
-                var l, len1, tag, taskTags;
-                if ((taskTags = task.get('tags'))) {
-                  for (i = l = 0, len1 = tags.length; l < len1; i = ++l) {
-                    tag = tags[i];
-                    if (!(taskTags.get(tag.name))) {
-                      continue;
-                    }
-                    task.__setCalcPriority(tag.priority);
-                    task.__setCalcStyle(tag);
-                    return;
-                  }
-                }
-                task.__setCalcPriority(Task.defaultTag.priority);
-                task.__setCalcStyle(Task.defaultTag);
-              };
-              ref = Task.pool.items;
-              for (k in ref) {
-                t = ref[k];
-                calcTaskPriority(t);
-              }
-              ref1 = dsChanges.get('tasksSet').$ds_pool.items;
-              for (k in ref1) {
-                t = ref1[k];
-                calcTaskPriority(t);
-              }
-            } else {
-              onError2(resp, resp.status === 0);
-            }
-          };
-        })(this)), onError2);
-      };
-
       TWTasks.prototype.load = (function() {
-        var cancel, cancel2, clearChangesForClosedTasks, clipboardTasks, importResponse, onError, pageLoad, taskMap;
+        var cancel, clearChangesForClosedTasks, clipboardTasks, importResponse, onError, pageLoad, taskMap;
         if (assert) {
           if (!this.get('source')) {
             throw new Error('load(): Source is not specified');
@@ -2224,12 +2287,12 @@ ngModule.factory('TWTasks', [
         taskMap = {};
         importResponse = ((function(_this) {
           return function(json) {
-            var j, jsonTask, len, ref, task, taskId, todoItems;
+            var i, jsonTask, len, ref, task, taskId, todoItems;
             Task.pool.enableWatch(false);
             try {
               ref = (todoItems = json['todo-items']);
-              for (j = 0, len = ref.length; j < len; j++) {
-                jsonTask = ref[j];
+              for (i = 0, len = ref.length; i < len; i++) {
+                jsonTask = ref[i];
                 task = Task.pool.find(_this, taskId = "" + jsonTask['id'], taskMap);
                 task.set('id', parseInt(jsonTask['id']));
                 importTask.call(_this, task, jsonTask);
@@ -2260,12 +2323,6 @@ ngModule.factory('TWTasks', [
         })(this));
         if (cancel = this.get('cancel')) {
           cancel.resolve();
-        }
-        if (cancel2 = this.get('cancel2')) {
-          cancel2.resolve();
-        }
-        if (this.allTasksSet) {
-          loadTagsJson.call(this);
         }
         (pageLoad = (function(page) {
           this.get('source').httpGet((this.get('request')) + "&page=" + page + "&pageSize=250", this.set('cancel', $q.defer())).then(((function(_this) {
@@ -2328,7 +2385,6 @@ ngModule.factory('TWTasks', [
             }
             task.release(_this);
             releaseMaps.call(_this);
-            _this._endLoad(false);
           };
         })(this));
         this.get('source').httpGet("/tasks/" + task.id + ".json", this.set('cancel', $q.defer())).then(((function(_this) {
@@ -2373,7 +2429,7 @@ ngModule.factory('TWTasks', [
 ]);
 
 
-},{"../../../dscommon/DSData":53,"../../../dscommon/DSDataSource":57,"../../../dscommon/DSDigest":58,"../../../dscommon/DSTags":66,"../../../dscommon/util":68,"../../models/Person":16,"../../models/PersonTimeTracking":18,"../../models/Project":19,"../../models/Tag":20,"../../models/Task":21,"../../models/TaskTimeTracking":22,"../../models/TodoList":23,"../../models/types/TaskSplit":25,"../../ui/time":36,"../../utils/RMSData":51}],13:[function(require,module,exports){
+},{"../../../dscommon/DSData":53,"../../../dscommon/DSDataSource":57,"../../../dscommon/DSDigest":58,"../../../dscommon/DSTags":66,"../../../dscommon/util":68,"../../models/Person":16,"../../models/PersonTimeTracking":18,"../../models/Project":19,"../../models/Tag":20,"../../models/Task":21,"../../models/TaskTimeTracking":22,"../../models/TodoList":23,"../../models/types/TaskSplit":25,"../../ui/time":36,"../../utils/RMSData":51,"./TWTags":11}],13:[function(require,module,exports){
 var DSData, DSDigest, HISTORY_END_SEARCH_STEP, PersonTimeTracking, RMSData, Task, TaskSplit, TaskTimeTracking, WORK_ENTRIES_WHOLE_PAGE, assert, error, ngModule, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -3064,6 +3120,14 @@ module.exports = Tag = (function(superClass) {
 
   Tag.propStr('color');
 
+  Tag.propStr('twColor');
+
+  Tag.propStr('border');
+
+  Tag.propNum('priority', {
+    init: 1000
+  });
+
   Tag.end();
 
   return Tag;
@@ -3103,7 +3167,7 @@ Comments = require('./types/Comments');
 TaskSplit = require('./types/TaskSplit');
 
 module.exports = Task = (function(superClass) {
-  var defaultTag, originalEditableInit, processTagsEditable, processTagsOriginal;
+  var defaultTag, originalEditableInit, processTagsEditable, processTagsOriginal, updateTaskPriority;
 
   extend(Task, superClass);
 
@@ -3125,6 +3189,31 @@ module.exports = Task = (function(superClass) {
   };
 
   Task.addPool(true);
+
+  updateTaskPriority = function(task, val) {
+    var ref, tag, tagName, tagPriority, topPrior, topTag;
+    task.set('plan', !!(val && val.get(Task.planTag)));
+    if (val !== null) {
+      topPrior = 1000000;
+      topTag = null;
+      ref = val.map;
+      for (tagName in ref) {
+        tag = ref[tagName];
+        if (tag === true) {
+          console.info('tag:', tag);
+        }
+        if ((tagPriority = tag.get('priority')) < topPrior) {
+          topTag = tag;
+          topPrior = tagPriority;
+        }
+      }
+      task.__setCalcPriority(topTag.priority);
+      task.__setCalcStyle(topTag);
+    } else {
+      task.__setCalcPriority(defaultTag.priority);
+      task.__setCalcStyle(defaultTag);
+    }
+  };
 
   processTagsEditable = {
     __onChange: function(task, propName, val, oldVal) {
@@ -3155,8 +3244,7 @@ module.exports = Task = (function(superClass) {
           }
           break;
         case 'tags':
-          Task.TWTask.calcTaskPriority(task);
-          task.set('plan', !!(val && val.get(Task.planTag)));
+          updateTaskPriority(task, val);
       }
     }
   };
@@ -3164,7 +3252,7 @@ module.exports = Task = (function(superClass) {
   processTagsOriginal = {
     __onChange: function(task, propName, val, oldVal) {
       if (propName === 'tags') {
-        Task.TWTask.calcTaskPriority(task);
+        updateTaskPriority(task, val);
       }
     }
   };
@@ -3239,7 +3327,17 @@ module.exports = Task = (function(superClass) {
 
   Task.propTaskRelativeSplit('split');
 
-  Task.propStr('description');
+  Task.propStr('description', {
+    str: function(v) {
+      if (!v || v.length === 0) {
+        return '';
+      } else if (v.length <= 20) {
+        return v;
+      } else {
+        return (v.substr(0, 20)) + "...";
+      }
+    }
+  });
 
   Task.propComments('comments');
 
@@ -3257,12 +3355,15 @@ module.exports = Task = (function(superClass) {
     write: null
   });
 
-  Task.propBool('plan');
+  Task.propBool('plan', {
+    write: null,
+    read: null
+  });
 
   Task.propDSTags('tags');
 
   Task.propNum('priority', {
-    init: 1000,
+    init: defaultTag.priority,
     calc: true
   });
 
@@ -3359,7 +3460,7 @@ module.exports = Task = (function(superClass) {
 
   Task.Editable.prototype.init = function() {
     originalEditableInit.apply(this, arguments);
-    Task.TWTask.calcTaskPriority(this);
+    updateTaskPriority(this, this.get('tags'));
   };
 
   return Task;
@@ -4263,10 +4364,10 @@ ngModule.run([
         var duration, hours, minutes, props, res, type;
         if (assert) {
           if (doc) {
-            if (!(doc instanceof DSObject)) {
+            if (!(doc === null || doc instanceof DSObject)) {
               error.invalidArg('doc');
             }
-            if (!((props = doc.__proto__.__props).hasOwnProperty(prop))) {
+            if (!(prop === null || (props = doc.__proto__.__props).hasOwnProperty(prop))) {
               error.invalidArg('prop');
             }
             if (!((type = props[prop].type) === 'duration')) {
@@ -5159,7 +5260,7 @@ ngModule.directive('setTaskVisible', [
 
 
 },{}],34:[function(require,module,exports){
-var DSDigest, Person, PersonDayStat, TaskSplit, assert, ngModule, splitViewWeeksCount, time;
+var DSDigest, DSTags, Person, PersonDayStat, Tag, TaskSplit, assert, ngModule, splitViewWeeksCount, time;
 
 module.exports = (ngModule = angular.module('ui/tasks/rmsTaskEdit', [require('../../data/dsChanges'), require('../../data/dsDataService'), require('./TaskSplitWeekView'), require('./addCommentAndSave')])).name;
 
@@ -5168,6 +5269,10 @@ assert = require('../../../dscommon/util').assert;
 time = require('../../ui/time');
 
 DSDigest = require('../../../dscommon/DSDigest');
+
+DSTags = require('../../../dscommon/DSTags');
+
+Tag = require('../../models/Tag');
 
 Person = require('../../models/Person');
 
@@ -5183,7 +5288,7 @@ ngModule.directive('rmsTaskEdit', [
       restrict: 'A',
       scope: true,
       link: (function($scope, element, attrs) {
-        var close, duedate, edit, first, last, makeSplitView, modal, newTaskSplitWeekView, releaseSplitView, split, task, thisWeek, unwatchSplitLastDate, weeks;
+        var close, duedate, edit, first, last, makeSplitView, modal, newTaskSplitWeekView, releaseSplitView, split, task, thisWeek, unwatchSplitLastDate, updateTagsToSelect, weeks;
         modal = $rootScope.modal;
         $scope.edit = edit = {};
         unwatchSplitLastDate = null;
@@ -5239,10 +5344,104 @@ ngModule.directive('rmsTaskEdit', [
         }), (function() {
           return $scope.today = time.today;
         }));
+        $scope.$on('$destroy', function() {
+          if (typeof $scope._unwatch === "function") {
+            $scope._unwatch();
+          }
+          if (typeof $scope._unwatch2 === "function") {
+            $scope._unwatch2();
+          }
+          if (edit.tags && edit.tags !== task.get('tags')) {
+            edit.tags.release($scope);
+          }
+        });
         edit.title = task.get('title');
         edit.duedate = duedate = task.get('duedate');
         edit.estimate = task.get('estimate');
         edit.responsible = task.get('responsible');
+        edit.description = task.get('description');
+        edit.tagsSelect = [];
+        edit.tagsClone = false;
+        edit.tags = task.get('tags');
+        $scope.$watch((function() {
+          return edit.tags;
+        }), function(val) {
+          var tag, tagName;
+          $scope.orderedTags = val ? ((function() {
+            var ref, results;
+            ref = val.map;
+            results = [];
+            for (tagName in ref) {
+              tag = ref[tagName];
+              results.push(tag);
+            }
+            return results;
+          })()).sort(function(l, r) {
+            return l.get('priority') - r.get('priority');
+          }) : [];
+        });
+        (updateTagsToSelect = function() {
+          var allTags;
+          allTags = dsDataService.findDataSet($scope, {
+            type: Tag,
+            mode: 'original'
+          });
+          allTags.watchStatus($scope, function(source, status, prevStatus, unwatch) {
+            var tag, tagName;
+            $scope._unwatch2 = unwatch;
+            if (status !== 'ready') {
+              return;
+            }
+            unwatch();
+            $scope._unwatch2 = null;
+            $scope.tagsToSelect = ((function() {
+              var ref, ref1, results;
+              ref = allTags.items;
+              results = [];
+              for (tagName in ref) {
+                tag = ref[tagName];
+                if (!((ref1 = edit.tags) != null ? ref1.get(tagName) : void 0)) {
+                  results.push(tag);
+                }
+              }
+              return results;
+            })()).sort(function(l, r) {
+              return l.get('priority') - r.get('priority');
+            });
+            allTags.release($scope);
+          });
+        })();
+        edit.tagsSelected = null;
+        $scope.$watch((function() {
+          return edit.tagsSelected;
+        }), function() {
+          var oldTags, tagsValue;
+          if (!edit.tagsSelected) {
+            return;
+          }
+          tagsValue = (oldTags = edit.tags) ? edit.tags.clone($scope) : new DSTags($scope);
+          tagsValue.set(edit.tagsSelected.name, edit.tagsSelected);
+          edit.tags = tagsValue;
+          if (oldTags && task.get('tags') !== oldTags) {
+            oldTags.release($scope);
+          }
+          edit.tagsSelected = null;
+          updateTagsToSelect();
+        });
+        $scope.tagsRemove = function(tag) {
+          var oldTags, tagsValue;
+          if (Object.keys((oldTags = edit.tags).map).length > 1) {
+            tagsValue = oldTags.clone($scope);
+            tagsValue.set(tag.name, false);
+            edit.tags = tagsValue;
+          } else {
+            edit.tags = null;
+          }
+          if (oldTags && task.get('tags') !== oldTags) {
+            oldTags.release($scope);
+          }
+          updateTagsToSelect();
+        };
         edit.splitDiff = null;
         edit.firstWeek = thisWeek = moment().startOf('week');
         edit.splitDuedate = duedate !== null ? duedate : moment().startOf('day');
@@ -5265,8 +5464,8 @@ ngModule.directive('rmsTaskEdit', [
         if (!($scope.viewonly = !task.$u || _.isEmpty(task.$u))) {
           $scope.changes = false;
           $scope.$watch((function() {
-            var estimate, res, responsible, val;
-            res = [edit.title, (duedate = edit.duedate) === null ? null : duedate.valueOf(), (estimate = edit.estimate) === null ? null : estimate.valueOf(), (responsible = edit.responsible) === null ? null : responsible.$ds_key];
+            var estimate, res, responsible, tags, val;
+            res = [edit.title, edit.description, (duedate = edit.duedate) === null ? null : duedate.valueOf(), (estimate = edit.estimate) === null ? null : estimate.valueOf(), (responsible = edit.responsible) === null ? null : responsible.$ds_key, (tags = edit.tags) === null ? null : tags.valueOf()];
             if ((split = edit.split) !== null && (val = split.valueOf()).length > 0) {
               res = res.concat(val);
             }
@@ -5319,18 +5518,19 @@ ngModule.directive('rmsTaskEdit', [
               edit.splitDiff = null;
             }
           }), true);
-          $scope.splitPrevWeek = (function() {
-            edit.firstWeek.subtract(1, 'week');
-            edit.splitView.unshift(newTaskSplitWeekView(edit.firstWeek));
-            edit.splitView.pop().release($scope);
-          });
-          $scope.splitNextWeek = (function() {
-            var monday;
-            monday = moment(edit.firstWeek.add(1, 'week')).add(splitViewWeeksCount - 1, 'week');
-            edit.splitView.push(newTaskSplitWeekView(monday));
-            edit.splitView.shift().release($scope);
-          });
         }
+        $scope.splitPrevWeek = (function() {
+          var monday;
+          edit.firstWeek = monday = moment(edit.firstWeek).subtract(1, 'week');
+          edit.splitView.unshift(newTaskSplitWeekView(monday));
+          edit.splitView.pop().release($scope);
+        });
+        $scope.splitNextWeek = (function() {
+          var monday;
+          monday = moment(edit.firstWeek.add(1, 'week')).add(splitViewWeeksCount - 1, 'week');
+          edit.splitView.push(newTaskSplitWeekView(monday));
+          edit.splitView.shift().release($scope);
+        });
         $scope.close = close = (function() {
           $rootScope.modal = {
             type: null
@@ -5357,7 +5557,9 @@ ngModule.directive('rmsTaskEdit', [
             duedate: edit.duedate,
             estimate: edit.estimate,
             responsible: edit.responsible,
-            split: edit.isSplit && edit.split.valueOf().length > 0 ? edit.split : null
+            split: edit.isSplit && edit.split.valueOf().length > 0 ? edit.split : null,
+            tags: edit.tags,
+            description: edit.description
           };
           if (typeof plan === 'boolean') {
             update.plan = plan;
@@ -5388,11 +5590,6 @@ ngModule.directive('rmsTaskEdit', [
           res += hours + "h " + (minutes < 10 ? '0' + minutes : minutes) + "m";
           return res;
         });
-        $scope.$on('$destroy', (function() {
-          if (typeof $scope._unwatch === "function") {
-            $scope._unwatch();
-          }
-        }));
         $scope.autoSplitInProgress = false;
         return $scope.autoSplit = (function() {
           var d, e, initDuedate, initSplit, ref, ref1, reponsibleKey, splitWithinWeek;
@@ -5414,7 +5611,7 @@ ngModule.directive('rmsTaskEdit', [
           (split = edit.split).clear();
           edit.splitDuedate = moment(d);
           initDuedate = $scope.task.get('duedate');
-          initSplit = initDuedate !== null && $scope.edit.responsible === $scope.task.get('responsible') ? $scope.task.get('split') : null;
+          initSplit = initDuedate !== null && edit.responsible === $scope.task.get('responsible') ? $scope.task.get('split') : null;
           splitWithinWeek = (function() {
             var personDayStatSet, weekStart;
             personDayStatSet = dsDataService.findDataSet($scope, {
@@ -5461,7 +5658,7 @@ ngModule.directive('rmsTaskEdit', [
 ]);
 
 
-},{"../../../dscommon/DSDigest":58,"../../../dscommon/util":68,"../../data/dsChanges":6,"../../data/dsDataService":7,"../../models/Person":16,"../../models/PersonDayStat":17,"../../models/types/TaskSplit":25,"../../ui/time":36,"./TaskSplitWeekView":31,"./addCommentAndSave":32}],35:[function(require,module,exports){
+},{"../../../dscommon/DSDigest":58,"../../../dscommon/DSTags":66,"../../../dscommon/util":68,"../../data/dsChanges":6,"../../data/dsDataService":7,"../../models/Person":16,"../../models/PersonDayStat":17,"../../models/Tag":20,"../../models/types/TaskSplit":25,"../../ui/time":36,"./TaskSplitWeekView":31,"./addCommentAndSave":32}],35:[function(require,module,exports){
 var DSObject, assert, error, ngModule;
 
 module.exports = (ngModule = angular.module('ui/tasks/rmsTaskInfo', [])).name;
@@ -5478,7 +5675,7 @@ ngModule.directive('rmsTaskInfo', [
       restrict: 'A',
       scope: true,
       link: (function($scope, element, attrs) {
-        var modal;
+        var modal, tag, tagName, tags, task;
         modal = $rootScope.modal;
         if ($(window).height() > (modal.pos.top + 150)) {
           $scope.top = Math.ceil(modal.pos.top + 50);
@@ -5490,7 +5687,19 @@ ngModule.directive('rmsTaskInfo', [
         } else {
           $scope.left = Math.ceil(modal.pos.left - 300);
         }
-        $scope.task = modal.task;
+        $scope.task = task = modal.task;
+        $scope.orderedTags = (tags = task.get('tags')) ? ((function() {
+          var ref, results;
+          ref = tags.map;
+          results = [];
+          for (tagName in ref) {
+            tag = ref[tagName];
+            results.push(tag);
+          }
+          return results;
+        })()).sort(function(l, r) {
+          return l.get('priority') - r.get('priority');
+        }) : [];
       })
     };
   })
@@ -5958,7 +6167,7 @@ ngModule.factory('View1', [
         if (config.hasRoles) {
           $scope.filterCompanies = [
             {
-              id: null,
+              id: -1,
               name: 'All'
             }, $scope.selectedCompany = {
               id: 23872,
@@ -5968,14 +6177,15 @@ ngModule.factory('View1', [
               name: 'Freelancers'
             }
           ];
-          if ((selectedCompany = config.get('selectedCompany'))) {
-            ref1 = $scope.filterCompanies;
-            for (l = 0, len2 = ref1.length; l < len2; l++) {
-              i = ref1[l];
-              if (i.id === selectedCompany) {
-                $scope.selectedCompany = i;
-              }
+          selectedCompany = config.get('selectedCompany');
+          ref1 = $scope.filterCompanies;
+          for (l = 0, len2 = ref1.length; l < len2; l++) {
+            i = ref1[l];
+            if (!(i.id === selectedCompany)) {
+              continue;
             }
+            $scope.selectedCompany = i;
+            break;
           }
         }
         this.__unwatchA = $scope.$watch(((function(_this) {
@@ -6043,7 +6253,7 @@ ngModule.factory('View1', [
       });
 
       View1.prototype.render = (function() {
-        var companyId, days, daysTemp, f0, f1, f2, filter, hiddenPeople, j, k, len1, loadFilter, peopleStatus, personDayStat, personDayStatStatus, personTimeTracking, poolRows, r, ref, ref1, ref2, ref3, role, rolesMap, rows, selectedPeople, selectedRole, startDate, tasksByPerson, tasksStatus, timeByPerson, timeSpentTemp;
+        var companyId, days, daysTemp, f0, f1, f2, filter, hiddenPeople, j, k, len1, loadFilter, peopleStatus, personDayStat, personDayStatStatus, personTimeTracking, personTimeTrackingStatus, poolRows, r, ref, ref1, ref2, ref3, role, rolesMap, rows, selectedPeople, selectedRole, startDate, tasksByPerson, tasksStatus, timeByPerson, timeSpentTemp;
         if (!((peopleStatus = this.get('data').get('peopleStatus')) === 'ready' || peopleStatus === 'update')) {
           this.get('rowsList').merge(this, []);
           return;
@@ -6071,7 +6281,7 @@ ngModule.factory('View1', [
           break;
         }
         if (config.get('hasRoles')) {
-          if ((ref = this.scope.selectedCompany) != null ? ref.id : void 0) {
+          if (((ref = this.scope.selectedCompany) != null ? ref.id : void 0) !== -1) {
             companyId = this.scope.selectedCompany.id;
             f0 = filter;
             filter = (function(person) {
@@ -6114,7 +6324,7 @@ ngModule.factory('View1', [
             }
           }
           if (((ref3 = this.scope.selectedLoad) != null ? ref3.id : void 0) !== 0) {
-            if (this.get('data').get('personDayStatStatus') !== 'ready') {
+            if ((personDayStatStatus = this.get('data').get('personDayStatStatus')) !== 'ready' && personDayStatStatus !== 'update') {
               return;
             }
             personDayStat = this.get('data').get('personDayStat');
@@ -6183,7 +6393,7 @@ ngModule.factory('View1', [
             return task.get('responsible').$ds_key;
           }));
           timeByPerson = null;
-          if (this.data.personTimeTrackingStatus === 'ready') {
+          if ((personTimeTrackingStatus = this.data.personTimeTrackingStatus) === 'ready' || personTimeTrackingStatus === 'update') {
             timeSpentTemp = _.map([0, 1, 2, 3, 4, 5, 6], (function() {
               return moment.duration(0);
             }));
@@ -8965,29 +9175,31 @@ module.exports = DSDocument = (function(superClass) {
               lst.__onChange.call(lst, this, propName, value, oldVal);
             }
           }
-        } else if ((change = this.__change) && change.hasOwnProperty(propName) && prop.equal((val = (prop = change[propName]).v), value)) {
-          if (historyMode === 0) {
-            this.$ds_chg.$ds_hist.setSameAsServer(this, propName);
-          }
-          if ((s = prop.s) instanceof DSObjectBase) {
-            s.release(this);
-          }
-          if (val instanceof DSObjectBase) {
-            val.release(this);
-          }
-          delete change[propName];
-          empty = true;
-          for (j = 0, len = change.length; j < len; j++) {
-            propName = change[j];
-            if (!(propName !== '__error' && propName !== '__refreshView')) {
-              continue;
+        } else if ((change = this.__change) && change.hasOwnProperty(propName)) {
+          if (prop.equal((val = (prop = change[propName]).v), value)) {
+            if (historyMode === 0) {
+              this.$ds_chg.$ds_hist.setSameAsServer(this, propName);
             }
-            empty = false;
-            break;
-          }
-          if (empty) {
-            delete this.__change;
-            this.$ds_chg.remove(this);
+            if ((s = prop.s) instanceof DSObjectBase) {
+              s.release(this);
+            }
+            if (val instanceof DSObjectBase) {
+              val.release(this);
+            }
+            delete change[propName];
+            empty = true;
+            for (j = 0, len = change.length; j < len; j++) {
+              propName = change[j];
+              if (!(propName !== '__error' && propName !== '__refreshView')) {
+                continue;
+              }
+              empty = false;
+              break;
+            }
+            if (empty) {
+              delete this.__change;
+              this.$ds_chg.remove(this);
+            }
           }
         } else if (this.$ds_evt) {
           ref2 = this.$ds_evt;
@@ -9909,12 +10121,15 @@ module.exports = DSObjectBase = (function() {
   });
 
   DSObjectBase.prototype.readMap = (function(map) {
-    var propDesc, propName, props, value;
+    var propDesc, propName, props, val, value;
     props = this.__proto__.__props;
     for (propName in map) {
       value = map[propName];
-      if (props.hasOwnProperty(propName) && (propDesc = props[propName]).hasOwnProperty('read')) {
-        this[propName] = propDesc.read.call(this, value);
+      if (props.hasOwnProperty(propName) && (propDesc = props[propName]).read) {
+        this[propName] = val = propDesc.read.call(this, value);
+        if (val instanceof DSObjectBase) {
+          val.release(this);
+        }
       } else {
         console.error("Unexpected property " + propName);
       }
@@ -10010,7 +10225,7 @@ module.exports = DSObjectBase = (function() {
       if (!(!opts.hasOwnProperty('write') || !opts.write || typeof opts.write === 'function')) {
         throw new Error('Invalid value of opts.write');
       }
-      if (!(!opts.hasOwnProperty('read') || typeof opts.read === 'function')) {
+      if (!(!opts.hasOwnProperty('read') || !opts.read || typeof opts.read === 'function')) {
         throw new Error('Invalid value of opts.read');
       }
       if (!(!opts.hasOwnProperty('equal') || typeof opts.equal === 'function')) {
@@ -10069,9 +10284,9 @@ module.exports = DSObjectBase = (function() {
           return v.valueOf();
         }
       })),
-      read: opts.read || (function(v) {
+      read: opts.read || ((opts.hasOwnProperty('read') && !opts.read) || opts.calc || opts.common ? null : (function(v) {
         return v;
-      }),
+      })),
       equal: equal = opts.equal || (function(l, r) {
         return (l != null ? l.valueOf() : void 0) === (r != null ? r.valueOf() : void 0);
       }),
@@ -11183,7 +11398,7 @@ module.exports = DSTags = (function(superClass) {
       if (arguments.length === 2 && typeof (src = arguments[1]) === 'object') {
         void 0;
       } else {
-        if (typeof enums !== 'string') {
+        if (!(enums === void 0 || typeof enums === 'string')) {
           error.invalidArg('enums');
         }
       }
@@ -11527,7 +11742,7 @@ ngModule.factory('DSView', [
       viewSequence = 0;
 
       DSView.prototype.dataUpdate = (function(params) {
-        var data, k, newSet, ref, v;
+        var data, i, k, len, newSet, reactOnUpdate, ref, ref1, v;
         if (typeof params === 'undefined') {
           params = {};
         }
@@ -11572,17 +11787,30 @@ ngModule.factory('DSView', [
             delete v.newSet;
             this.__dirty++;
             v.unwatch = newSet.watch(this, v.listener);
-            v.unwatchStatus = newSet.watchStatus(this, ((function(_this) {
-              return function(source, status, prevStatus) {
-                var newStatus;
-                if ((prevStatus = _this.dataStatus) !== (newStatus = DSObject.integratedStatus(_this.__srcList))) {
-                  _this.dataStatus = newStatus;
-                  if (!((newStatus === 'ready' && prevStatus === 'update') || (newStatus === 'update' && prevStatus === 'ready'))) {
-                    _this.__dirty++;
+            reactOnUpdate = true;
+            if (v.watch !== null) {
+              ref1 = v.watch;
+              for (i = 0, len = ref1.length; i < len; i++) {
+                k = ref1[i];
+                reactOnUpdate = false;
+                break;
+              }
+            } else {
+              reactOnUpdate = false;
+            }
+            v.unwatchStatus = (function(_this) {
+              return function(reactOnUpdate) {
+                return newSet.watchStatus(_this, (function(source, status, prevStatus) {
+                  var newStatus;
+                  if ((prevStatus = _this.dataStatus) !== (newStatus = DSObject.integratedStatus(_this.__srcList))) {
+                    _this.dataStatus = newStatus;
+                    if (reactOnUpdate || !((newStatus === 'ready' && prevStatus === 'update') || (newStatus === 'update' && prevStatus === 'ready'))) {
+                      _this.__dirty++;
+                    }
                   }
-                }
+                }));
               };
-            })(this)));
+            })(this)(reactOnUpdate);
           }
         }
         if (!this.hasOwnProperty('__unwatch2')) {
@@ -11592,12 +11820,12 @@ ngModule.factory('DSView', [
             };
           })(this)), ((function(_this) {
             return function(val, oldVal) {
-              var ref1, rest, src, srcName;
+              var ref2, rest, src, srcName;
               if (traceView) {
                 rest = '';
-                ref1 = _this.__src;
-                for (srcName in ref1) {
-                  src = ref1[srcName];
+                ref2 = _this.__src;
+                for (srcName in ref2) {
+                  src = ref2[srcName];
                   rest += ", " + srcName + ": " + (src.set.get('status'));
                 }
                 console.info((++viewSequence) + ":" + (DSObject.desc(_this)) + ".render(): dataStatus: " + _this.dataStatus + rest);

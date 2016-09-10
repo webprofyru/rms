@@ -80,7 +80,9 @@ ngModule.factory('config', [
 
       Config.propStr('selectedRole');
 
-      Config.propNum('selectedCompany');
+      Config.propNum('selectedCompany', {
+        init: -1
+      });
 
       Config.propNum('selectedLoad');
 
@@ -426,16 +428,23 @@ ngModule.factory('DSDataTeamworkPaged', [
                   return this.get('source').httpPut(addPaging(page, this.get('request')), this.params.json, cancel);
               }
             }).call(_this)).then((function(resp) {
+              var res;
               if (resp.status === 200) {
                 _this.set('cancel', null);
                 if (_this.importResponse(resp.data, resp.status) === WORK_ENTRIES_WHOLE_PAGE) {
                   pageLoad(page + 1);
                   return;
                 }
-                DSDigest.block((function() {
+                res = DSDigest.block((function() {
                   return _this.finalizeLoad();
                 }));
-                _this._endLoad(true);
+                if (typeof res === 'object' && res !== null && 'then' in res) {
+                  res.then(function() {
+                    _this._endLoad(true);
+                  });
+                } else {
+                  _this._endLoad(true);
+                }
               } else {
                 onError(resp, resp.status === 0);
               }
@@ -683,6 +692,14 @@ module.exports = Tag = (function(superClass) {
 
   Tag.propStr('color');
 
+  Tag.propStr('twColor');
+
+  Tag.propStr('border');
+
+  Tag.propNum('priority', {
+    init: 1000
+  });
+
   Tag.end();
 
   return Tag;
@@ -722,7 +739,7 @@ Comments = require('./types/Comments');
 TaskSplit = require('./types/TaskSplit');
 
 module.exports = Task = (function(superClass) {
-  var defaultTag, originalEditableInit, processTagsEditable, processTagsOriginal;
+  var defaultTag, originalEditableInit, processTagsEditable, processTagsOriginal, updateTaskPriority;
 
   extend(Task, superClass);
 
@@ -744,6 +761,31 @@ module.exports = Task = (function(superClass) {
   };
 
   Task.addPool(true);
+
+  updateTaskPriority = function(task, val) {
+    var ref, tag, tagName, tagPriority, topPrior, topTag;
+    task.set('plan', !!(val && val.get(Task.planTag)));
+    if (val !== null) {
+      topPrior = 1000000;
+      topTag = null;
+      ref = val.map;
+      for (tagName in ref) {
+        tag = ref[tagName];
+        if (tag === true) {
+          console.info('tag:', tag);
+        }
+        if ((tagPriority = tag.get('priority')) < topPrior) {
+          topTag = tag;
+          topPrior = tagPriority;
+        }
+      }
+      task.__setCalcPriority(topTag.priority);
+      task.__setCalcStyle(topTag);
+    } else {
+      task.__setCalcPriority(defaultTag.priority);
+      task.__setCalcStyle(defaultTag);
+    }
+  };
 
   processTagsEditable = {
     __onChange: function(task, propName, val, oldVal) {
@@ -774,8 +816,7 @@ module.exports = Task = (function(superClass) {
           }
           break;
         case 'tags':
-          Task.TWTask.calcTaskPriority(task);
-          task.set('plan', !!(val && val.get(Task.planTag)));
+          updateTaskPriority(task, val);
       }
     }
   };
@@ -783,7 +824,7 @@ module.exports = Task = (function(superClass) {
   processTagsOriginal = {
     __onChange: function(task, propName, val, oldVal) {
       if (propName === 'tags') {
-        Task.TWTask.calcTaskPriority(task);
+        updateTaskPriority(task, val);
       }
     }
   };
@@ -858,7 +899,17 @@ module.exports = Task = (function(superClass) {
 
   Task.propTaskRelativeSplit('split');
 
-  Task.propStr('description');
+  Task.propStr('description', {
+    str: function(v) {
+      if (!v || v.length === 0) {
+        return '';
+      } else if (v.length <= 20) {
+        return v;
+      } else {
+        return (v.substr(0, 20)) + "...";
+      }
+    }
+  });
 
   Task.propComments('comments');
 
@@ -876,12 +927,15 @@ module.exports = Task = (function(superClass) {
     write: null
   });
 
-  Task.propBool('plan');
+  Task.propBool('plan', {
+    write: null,
+    read: null
+  });
 
   Task.propDSTags('tags');
 
   Task.propNum('priority', {
-    init: 1000,
+    init: defaultTag.priority,
     calc: true
   });
 
@@ -978,7 +1032,7 @@ module.exports = Task = (function(superClass) {
 
   Task.Editable.prototype.init = function() {
     originalEditableInit.apply(this, arguments);
-    Task.TWTask.calcTaskPriority(this);
+    updateTaskPriority(this, this.get('tags'));
   };
 
   return Task;
@@ -2273,29 +2327,31 @@ module.exports = DSDocument = (function(superClass) {
               lst.__onChange.call(lst, this, propName, value, oldVal);
             }
           }
-        } else if ((change = this.__change) && change.hasOwnProperty(propName) && prop.equal((val = (prop = change[propName]).v), value)) {
-          if (historyMode === 0) {
-            this.$ds_chg.$ds_hist.setSameAsServer(this, propName);
-          }
-          if ((s = prop.s) instanceof DSObjectBase) {
-            s.release(this);
-          }
-          if (val instanceof DSObjectBase) {
-            val.release(this);
-          }
-          delete change[propName];
-          empty = true;
-          for (j = 0, len = change.length; j < len; j++) {
-            propName = change[j];
-            if (!(propName !== '__error' && propName !== '__refreshView')) {
-              continue;
+        } else if ((change = this.__change) && change.hasOwnProperty(propName)) {
+          if (prop.equal((val = (prop = change[propName]).v), value)) {
+            if (historyMode === 0) {
+              this.$ds_chg.$ds_hist.setSameAsServer(this, propName);
             }
-            empty = false;
-            break;
-          }
-          if (empty) {
-            delete this.__change;
-            this.$ds_chg.remove(this);
+            if ((s = prop.s) instanceof DSObjectBase) {
+              s.release(this);
+            }
+            if (val instanceof DSObjectBase) {
+              val.release(this);
+            }
+            delete change[propName];
+            empty = true;
+            for (j = 0, len = change.length; j < len; j++) {
+              propName = change[j];
+              if (!(propName !== '__error' && propName !== '__refreshView')) {
+                continue;
+              }
+              empty = false;
+              break;
+            }
+            if (empty) {
+              delete this.__change;
+              this.$ds_chg.remove(this);
+            }
           }
         } else if (this.$ds_evt) {
           ref2 = this.$ds_evt;
@@ -2968,12 +3024,15 @@ module.exports = DSObjectBase = (function() {
   });
 
   DSObjectBase.prototype.readMap = (function(map) {
-    var propDesc, propName, props, value;
+    var propDesc, propName, props, val, value;
     props = this.__proto__.__props;
     for (propName in map) {
       value = map[propName];
-      if (props.hasOwnProperty(propName) && (propDesc = props[propName]).hasOwnProperty('read')) {
-        this[propName] = propDesc.read.call(this, value);
+      if (props.hasOwnProperty(propName) && (propDesc = props[propName]).read) {
+        this[propName] = val = propDesc.read.call(this, value);
+        if (val instanceof DSObjectBase) {
+          val.release(this);
+        }
       } else {
         console.error("Unexpected property " + propName);
       }
@@ -3069,7 +3128,7 @@ module.exports = DSObjectBase = (function() {
       if (!(!opts.hasOwnProperty('write') || !opts.write || typeof opts.write === 'function')) {
         throw new Error('Invalid value of opts.write');
       }
-      if (!(!opts.hasOwnProperty('read') || typeof opts.read === 'function')) {
+      if (!(!opts.hasOwnProperty('read') || !opts.read || typeof opts.read === 'function')) {
         throw new Error('Invalid value of opts.read');
       }
       if (!(!opts.hasOwnProperty('equal') || typeof opts.equal === 'function')) {
@@ -3128,9 +3187,9 @@ module.exports = DSObjectBase = (function() {
           return v.valueOf();
         }
       })),
-      read: opts.read || (function(v) {
+      read: opts.read || ((opts.hasOwnProperty('read') && !opts.read) || opts.calc || opts.common ? null : (function(v) {
         return v;
-      }),
+      })),
       equal: equal = opts.equal || (function(l, r) {
         return (l != null ? l.valueOf() : void 0) === (r != null ? r.valueOf() : void 0);
       }),
@@ -4242,7 +4301,7 @@ module.exports = DSTags = (function(superClass) {
       if (arguments.length === 2 && typeof (src = arguments[1]) === 'object') {
         void 0;
       } else {
-        if (typeof enums !== 'string') {
+        if (!(enums === void 0 || typeof enums === 'string')) {
           error.invalidArg('enums');
         }
       }
