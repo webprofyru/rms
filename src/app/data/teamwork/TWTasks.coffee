@@ -44,7 +44,6 @@ ngModule.factory 'TWTasks', [
       @propPool 'completedTasksPool', Task
 
       @propObj 'cancel', init: null
-      @propObj 'cancel2', init: null
 
       @ds_dstr.push (->
         @tags.release @
@@ -270,7 +269,6 @@ ngModule.factory 'TWTasks', [
           return)
 
         cancel.resolve() if cancel = @get('cancel') # stop any ongoing load
-        cancel2.resolve() if cancel2 = @get('cancel2')
 
         (pageLoad = ((page) ->
           @get('source').httpGet("#{@get('request')}&page=#{page}&pageSize=250", @set('cancel', $q.defer()))
@@ -316,7 +314,6 @@ ngModule.factory 'TWTasks', [
             @set 'cancel', null
           task.release @
           releaseMaps.call @
-          @_endLoad false
           return)
 
         @get('source').httpGet("/tasks/#{task.id}.json", @set('cancel', $q.defer()))

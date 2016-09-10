@@ -70,7 +70,6 @@ include ../../tasks/_timeTracking.jade
                             i.fa.fa-caret-down(ng-if='!row.expand')
                             i.fa.fa-caret-up(ng-if='row.expand')
                 .estimate {{filter.taskPeriod(row.personDayStat, 'totalPeriodTime')}}
-                  //strong {{filter.taskPeriod(row.personDayStat, 'totalPeriodTime')}}
                 .total.drop-zone(ng-repeat="dayStat in row.personDayStat.dayStats", class="day{{$index}}" data-day='{{$index}}')
                   .loaded(class="{{taskSummaryColor(dayStat)}}" style="width:{{dayTaskWidth(dayStat)}}%")
                   span.person-day-time {{filter.taskPeriod(dayStat, 'tasksTotal', dayStat.timeSpent)}}

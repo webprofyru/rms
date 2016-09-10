@@ -79,13 +79,14 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', 'TWTasks', 
       if config.hasRoles # it's webProfy
 
         $scope.filterCompanies = [
-          {id: null, name: 'All'}
+          {id: -1, name: 'All'}
           $scope.selectedCompany = {id: 23872, name: 'WebProfy'}
           {id: 50486, name: 'Freelancers'}]
 
-        if (selectedCompany = config.get('selectedCompany'))
-          for i in $scope.filterCompanies when i.id == selectedCompany
-            $scope.selectedCompany = i
+        selectedCompany = config.get('selectedCompany')
+        for i in $scope.filterCompanies when i.id == selectedCompany
+          $scope.selectedCompany = i
+          break
 
       @__unwatchA = $scope.$watch (=> [@get('startDate')?.valueOf(), $scope.mode, $scope.dataService.showTimeSpent]), (([startDateVal, mode, showTimeSpent]) =>
         @dataUpdate {startDate: moment(startDateVal), endDate: moment(startDateVal).add(6, 'days'), mode, showTimeSpent}
@@ -146,7 +147,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', 'TWTasks', 
 
       if config.get('hasRoles') # it's WebProfy extended case
 
-        if @scope.selectedCompany?.id
+        if @scope.selectedCompany?.id != -1
           companyId = @scope.selectedCompany.id
           f0 = filter
           filter = ((person) -> f0(person) && person.get('companyId') == companyId)
@@ -172,7 +173,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', 'TWTasks', 
             filter = ((person) -> f1(person) && person.get('roles')?.get(role))
 
         if @scope.selectedLoad?.id != 0
-          return if @get('data').get('personDayStatStatus') != 'ready'
+          return if (personDayStatStatus = @get('data').get('personDayStatStatus')) != 'ready' && personDayStatStatus != 'update'
           personDayStat = @get('data').get('personDayStat')
           loadFilter = if @scope.selectedLoad.id == 1
             ((person) ->
@@ -200,8 +201,8 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', 'TWTasks', 
       daysTemp =  _.map [0..6], (-> moment.duration(0))
       timeSpentTemp = _.map [0..6], (-> moment.duration(0))
 
-      if !(((tasksStatus = @get('data').get('tasksStatus')) == 'ready' || tasksStatus == 'update') &&
-           ((personDayStatStatus = @get('data').get('personDayStatStatus')) == 'ready' || personDayStatStatus == 'update'))
+      unless ((tasksStatus = @get('data').get('tasksStatus')) == 'ready' || tasksStatus == 'update') &&
+           ((personDayStatStatus = @get('data').get('personDayStatStatus')) == 'ready' || personDayStatStatus == 'update')
         _.forEach rows, ((row) => # clear all
           row.get('tasksList').merge @, []
           row.set 'personDayStat', null
@@ -209,7 +210,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', 'TWTasks', 
       else # render
         tasksByPerson = _.groupBy @data.tasks, ((task) -> task.get('responsible').$ds_key)
         timeByPerson = null
-        if @data.personTimeTrackingStatus == 'ready' # note: in 'update' state we should hide
+        if (personTimeTrackingStatus = @data.personTimeTrackingStatus) == 'ready' || personTimeTrackingStatus == 'update'
           timeSpentTemp = _.map [0..6], (-> moment.duration(0))
           timeByPerson = _.groupBy (personTimeTracking = @data.personTimeTracking), ((task) -> task.get('personId'))
         _.forEach rows, ((row) =>

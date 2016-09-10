@@ -46,7 +46,7 @@ ngModule.factory 'config',
       @propCalc 'canUserSetPlan', (-> @currentUser?.roles?.get(@teamleadRole) || @teamwork == 'http://delightsoft.teamworkpm.net/')
 
       @propStr 'selectedRole'
-      @propNum 'selectedCompany'
+      @propNum 'selectedCompany', init: -1
       @propNum 'selectedLoad'
 
       @propNum 'activeSidebarTab', init: 0

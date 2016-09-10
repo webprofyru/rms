@@ -103,6 +103,7 @@ ngModule.directive 'rmsTask', [
           element.css 'border', if style.border then style.border else ''
           return
 
+
       $scope.$watch "#{attrs.rmsTask}.$u", (val) ->
         if val
           # The jQuery event object does not have a dataTransfer property

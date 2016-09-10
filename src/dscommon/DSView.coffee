@@ -114,10 +114,18 @@ ngModule.factory 'DSView', ['dsDataService', '$log', ((dsDataService, $log) ->
           @__srcList[v.index] = v.set = newSet; delete v.newSet
           @__dirty++
           v.unwatch = newSet.watch @, v.listener
-          v.unwatchStatus = newSet.watchStatus @, ((source, status, prevStatus) =>
+
+          reactOnUpdate = true
+          if v.watch != null
+            for k in v.watch
+              reactOnUpdate = false
+              break
+          else reactOnUpdate = false
+
+          v.unwatchStatus = do (reactOnUpdate) => newSet.watchStatus @, ((source, status, prevStatus) =>
             if (prevStatus = @dataStatus) != (newStatus = DSObject.integratedStatus(@__srcList))
               @dataStatus = newStatus
-              if !((newStatus == 'ready' && prevStatus == 'update') || (newStatus == 'update' && prevStatus == 'ready')) # update status is equal to ready
+              if reactOnUpdate || !((newStatus == 'ready' && prevStatus == 'update') || (newStatus == 'update' && prevStatus == 'ready')) # update status is equal to ready
                 @__dirty++
             return)
       if !@hasOwnProperty('__unwatch2') # on first dataUpdate
