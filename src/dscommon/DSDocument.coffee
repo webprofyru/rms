@@ -105,19 +105,22 @@ module.exports = class DSDocument extends DSObject
         if (prop = item.__props[propName]).common
          if @$ds_evt
             lst.__onChange.call lst, @, propName, value, oldVal for lst in @$ds_evt by -1
-        else if (change = @__change) && change.hasOwnProperty(propName) && prop.equal((val = (prop = change[propName]).v), value) # server val is the same as last edition of the propName
-          if historyMode == 0
-            @$ds_chg.$ds_hist.setSameAsServer @, propName
-          s.release @ if (s = prop.s) instanceof DSObjectBase
-          val.release @ if val instanceof DSObjectBase
-          delete change[propName]
-          empty = true
-          for propName in change when propName != '__error' && propName != '__refreshView'
-            empty = false
-            break
-          if empty
-            delete @.__change
-            @$ds_chg.remove @
+        else if (change = @__change) && change.hasOwnProperty(propName)
+          if prop.equal((val = (prop = change[propName]).v), value) # server val is the same as last edition of the propName
+            if historyMode == 0
+              @$ds_chg.$ds_hist.setSameAsServer @, propName
+            s.release @ if (s = prop.s) instanceof DSObjectBase
+            val.release @ if val instanceof DSObjectBase
+            delete change[propName]
+            empty = true
+            for propName in change when propName != '__error' && propName != '__refreshView'
+              empty = false
+              break
+            if empty
+              delete @.__change
+              @$ds_chg.remove @
+        else if @$ds_evt
+          lst.__onChange.call lst, @, propName, value, oldVal for lst in @$ds_evt by -1
         return)
 
       _clearChanges: -> # removes all changes made to the task, and cleaning up a hisotry of those changes

@@ -19,6 +19,7 @@ module.exports = (ngModule = angular.module 'ui/ui', [
 
   require './widgets/widgetDate'
   require './widgets/widgetDuration'
+  require './widgets/widgetDurationReadOnly'
 #  require './widgets/widgetScroller'
 
   require './tasks/rmsTask'

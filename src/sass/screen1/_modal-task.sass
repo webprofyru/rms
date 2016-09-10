@@ -1,4 +1,12 @@
 #modal-task
+  .backdrop
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background-color: #000000
+    opacity: 0.1
   @extend %modal-task
   display: inline-table
   top: 20%
@@ -15,6 +23,17 @@
     display: inline-block
     margin-bottom: 8px
     .task-modal-row
+      &.fix-person-row
+        margin-bottom: 0
+      .point
+        height: 16px
+        width: 16px
+        border-radius: 3px
+        margin-right: 2px
+      &.tags
+        margin-bottom: -4px
+      width: 100%
+      float: left
       margin-bottom: 10px
       overflow: auto
       @include layout(13 no-gutters)
@@ -26,6 +45,8 @@
         padding-right: 1rem
       .task-modal-row-value
         @include span(10)
+        &.tags
+          margin-left: -3px
       .task-modal-title
         width: 60%
       .task-modal-estimate-hours
@@ -41,6 +62,12 @@
         display: inline-block
         float: left
         width: 9rem
+      .task-modal-tag
+        display: inline-block
+        float: left
+        width: 9rem
+        margin-left: 3px
+        margin-top: 2px
       .task-modal-icon-link
         vertical-align: middle
         margin-top: -7px
@@ -64,6 +91,8 @@
     table
       margin-bottom: 1.5rem
       th
+        font-weight: normal
+        font-size: 11px
         text-align: left
         padding-bottom: 10px
       td
@@ -76,7 +105,7 @@
         &.select
           background-color: rgb(132, 211, 79)
         .task-split-estimate-wrapper
-          input
+          input, div
             width: 25%
             text-align: right
             &.task-modal-estimate-minutes

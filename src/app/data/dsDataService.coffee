@@ -24,6 +24,7 @@ DSDataEditable = require '../../dscommon/DSDataEditable'
 DSDataFiltered = require '../../dscommon/DSDataFiltered'
 
 Person = require '../models/Person'
+Tag = require '../models/Tag'
 Task = require '../models/Task'
 TaskTimeTracking = require '../models/TaskTimeTracking'
 PersonTimeTracking = require '../models/PersonTimeTracking'
@@ -89,7 +90,10 @@ ngModule.factory 'dsDataService', [
 
             return), true
 
-        (@set 'changes', dsChanges).init @
+        tags = @findDataSet @, {type: Tag, mode: 'original'}
+        (@set 'changes', dsChanges).init @, tags
+        tags.release @
+
         return)
 
       refresh: (->
@@ -101,7 +105,7 @@ ngModule.factory 'dsDataService', [
 
         switch params.type.docType
           when 'Tag'
-            (data = TWTags.pool.find @, params).init? @
+            (data = TWTags.pool.find @, {}).init? @
             (set = data.get('tagsSet')).addRef owner; data.release @
             return set
           when 'PersonDayStat'
@@ -166,7 +170,9 @@ ngModule.factory 'dsDataService', [
                 if params.filter == 'all' && !params.hasOwnProperty('startDate')
                   if !config.get('hasTimeReports') || params.source
                     delete params.source
-                    (data = TWTasks.pool.find(@, params)).init? @
+                    tags = @findDataSet @, {type: Tag, mode: 'original'}
+                    (data = TWTasks.pool.find(@, params)).init? @, tags
+                    tags.release @
                   else # it's extra DSData that links Task and TaskTimeTracking
                     if (data = TasksWithTimeTracking.pool.find(@, {})).init then data.init @
                   (set = data.get('tasksSet')).addRef owner; data.release @

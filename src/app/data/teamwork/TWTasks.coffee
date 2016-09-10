@@ -1,5 +1,6 @@
 module.exports = (ngModule = angular.module 'data/teamwork/TWTasks', [
   require '../../../dscommon/DSDataSource'
+  require './TWTags'
 ]).name
 
 assert = require('../../../dscommon/util').assert
@@ -23,8 +24,8 @@ TaskSplit = require '../../models/types/TaskSplit'
 RMSData = require '../../utils/RMSData'
 
 ngModule.factory 'TWTasks', [
-  'DSDataSource', 'dsChanges', 'config', '$injector', '$http', '$q',
-  (DSDataSource, dsChanges, config, $injector, $http, $q) ->
+  'TWTags', 'DSDataSource', 'dsChanges', 'config', '$injector', '$http', '$q',
+  (TWTags, DSDataSource, dsChanges, config, $injector, $http, $q) ->
 
     class TWTasks extends DSData
 
@@ -46,17 +47,13 @@ ngModule.factory 'TWTasks', [
       @propObj 'cancel2', init: null
 
       @ds_dstr.push (->
+        @tags.release @
         cancel.resolve() if cancel = @get('cancel')
         @__unwatch1()
         @__unwatch2()
         return)
 
       clazz = @
-
-      @calcTaskPriority = initCalcTaskPriority = ((task) ->
-        task.__setCalcPriority Task.defaultTag.priority
-        task.__setCalcStyle Task.defaultTag
-        return)
 
       clear: ->
         DSData::clear.call @
@@ -72,6 +69,7 @@ ngModule.factory 'TWTasks', [
         @peopleMap = {}
         @projectMap = {}
         @todoListMap = {}
+        @tags = null
 
         if assert
           console.error "TWTasks:ctor: setVisible expects that their will be only one instance of TWTasks object" if PersonTimeTracking::hasOwnProperty('setVisible')
@@ -110,15 +108,13 @@ ngModule.factory 'TWTasks', [
         else
           params.startDate <= split.lastDate(duedate = task.get('duedate')) && split.firstDate(duedate) <= params.endDate)
 
-      alwaysTrue = ((task) -> true)
-
       @filter = ((params) ->
         return switch params.filter
           when 'all'
             if moment.isMoment(params.startDate)
               ((task) -> isTaskInDatesRange(params, task))
             else
-              alwaysTrue
+              ((task) -> true)
           when 'assigned'
             ((task) -> task.get('responsible') != null && isTaskInDatesRange(params, task))
           when 'notassigned'
@@ -133,7 +129,11 @@ ngModule.factory 'TWTasks', [
             throw new Error "Not supported filter: #{params.filter}"
         )
 
-      init: ((dsDataService) ->
+      init: ((dsDataService, @tags) ->
+
+        @set 'source', dsDataService.get('dataSource')
+        @tags.addRef @
+
         @set 'request', switch (params = @get('params')).filter
           when 'all'
             if moment.isMoment(params.startDate)
@@ -159,8 +159,11 @@ ngModule.factory 'TWTasks', [
           else
             tasksSet.remove item if tasksSet.items.hasOwnProperty item.$ds_key
           return)
-        @__unwatch2 = DSDataSource.setLoadAndRefresh.call @, dsDataService
-        @allTasksSet = filter == alwaysTrue
+        @__unwatch2 = @tags.watchStatus @, (source, status) => # wait while DSTags are loaded before starting loading tasks
+          switch status # copied from DSDataSource.setLoadAndRefresh()
+            when 'ready' then DSDigest.block (=> @load())
+            when 'nodata' then @set 'status', 'nodata'
+          return
         @init = null
         return)
 
@@ -210,22 +213,17 @@ ngModule.factory 'TWTasks', [
           task.set 'plan', false
         else
           tags = null
-          plan = false
           for tag in jsonTask['tags']
-            plan = true if tag.name == config.planTag # Note: It's hardcoded tag name
             tagDoc = (tags ?= {})[tag.name] = Tag.pool.find @, tag.name
             tagDoc.set 'id', tag.id
             tagDoc.set 'name', tag.name
-            tagDoc.set 'color', tag.color
+            tagDoc.set 'color', tagDoc.set 'twColor', tag.color
             (tags ||= {})[tag.name] = tagDoc
-          task.set 'plan', plan
           if tags == null
             task.set 'tags', null
           else
             (task.set 'tags', new DSTags @, tags).release @
             v.release @ for k, v of tags
-
-          clazz.calcTaskPriority task # calc priority based on task tags
 
         todoList.set 'id', parseInt jsonTask['todo-list-id']
         todoList.set 'name', jsonTask['todo-list-name']
@@ -233,56 +231,6 @@ ngModule.factory 'TWTasks', [
         project.set 'id', parseInt jsonTask['project-id']
         project.set 'name', jsonTask['project-name']
         return)
-
-      clazz = @
-
-      loadTagsJson = ->
-        clazz.calcTaskPriority = initCalcTaskPriority
-        onError2 = (error, isCancelled) =>
-          if !isCancelled
-            console.error 'error: ', error
-            @set 'cancel2', null
-          return # onError2 =
-        $http.get "data/tags.json?t=#{new Date().getTime()}", @set('cancel2', $q.defer())
-        .then(
-          ((resp) => # ok
-            if (resp.status == 200) # 0 means that request was canceled
-              @set 'cancel2', null
-              tags = resp.data
-              # check data format
-              unless Array.isArray(tags)
-                console.error 'invalid tags.json'
-                return
-              err = false
-              for t, i in tags
-                unless typeof t.name == 'string' && t.name.length >= 0
-                  err = true; console.error "invalid tags.json: invalid 'name'", t
-                if t.hasOwnProperty('priority')
-                  unless typeof t.priority == 'number'
-                    err = true; console.error "invalid tags.json: invalid 'priority'", t
-                else
-                  t.priority = i
-                unless !t.hasOwnProperty('color') || typeof t.color == 'string' && t.color.length >= 0
-                  err = true; console.error "invalid tags.json: invalid 'color'", t
-                unless !t.hasOwnProperty('border') || typeof t.border == 'string' && t.border.length >= 0
-                  err = true; console.error "invalid tags.json: invalid 'border'", t
-              return if err
-              # define globally available method of task prioritization
-              clazz.calcTaskPriority = calcTaskPriority = (task) ->
-                if (taskTags = task.get('tags'))
-                  for tag, i in tags when taskTags.get(tag.name)
-                    task.__setCalcPriority tag.priority
-                    task.__setCalcStyle tag
-                    return
-                task.__setCalcPriority Task.defaultTag.priority
-                task.__setCalcStyle Task.defaultTag
-                return
-              # apply to already existing tasks
-              calcTaskPriority(t) for k, t of Task.pool.items # original Task docs
-              calcTaskPriority(t) for k, t of dsChanges.get('tasksSet').$ds_pool.items # edited Task docs
-            else onError2(resp, resp.status == 0)
-            return), onError2)
-        return
 
       load: (->
         if assert
@@ -323,8 +271,6 @@ ngModule.factory 'TWTasks', [
 
         cancel.resolve() if cancel = @get('cancel') # stop any ongoing load
         cancel2.resolve() if cancel2 = @get('cancel2')
-
-        loadTagsJson.call @ if @allTasksSet
 
         (pageLoad = ((page) ->
           @get('source').httpGet("#{@get('request')}&page=#{page}&pageSize=250", @set('cancel', $q.defer()))

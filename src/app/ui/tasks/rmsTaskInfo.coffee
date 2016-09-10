@@ -22,7 +22,12 @@ ngModule.directive 'rmsTaskInfo', ['$rootScope', '$window', (($rootScope, $windo
       else
         $scope.left = Math.ceil(modal.pos.left - 300)
 
-      $scope.task = modal.task
+      $scope.task = task = modal.task
+
+      $scope.orderedTags =
+        if (tags = task.get('tags'))
+          (tag for tagName, tag of tags.map).sort (l, r) -> l.get('priority') - r.get('priority')
+        else []
 
       return)
 

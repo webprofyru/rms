@@ -37,11 +37,11 @@ ngModule.run ['$rootScope', (($rootScope) ->
       date = doc.get(prop)
       return if !date then '' else date.format 'DD.MM')
 
-    taskPeriod: ((doc, prop, time) -> # Hacx: time parameter is quick solution to add spent time to estimate
+    taskPeriod: ((doc, prop, time) -> # Hack: time parameter is quick solution to add spent time to estimate
       if assert
         if doc
-          error.invalidArg 'doc' if !(doc instanceof DSObject)
-          error.invalidArg 'prop' if !((props = doc.__proto__.__props).hasOwnProperty prop)
+          error.invalidArg 'doc' unless doc == null || doc instanceof DSObject
+          error.invalidArg 'prop' unless prop == null || (props = doc.__proto__.__props).hasOwnProperty prop
           throw new Error "Expected property with type 'duration', but property '#{prop}' has type #{type}" if !((type = props[prop].type) == 'duration')
       res = ''
 
@@ -54,7 +54,6 @@ ngModule.run ['$rootScope', (($rootScope) ->
           minutes = time % 60
         if hours || minutes
           res += if hours then "#{hours}h " else ''
-#          res += ' ' if hours && minutes
           res += "#{minutes}m" if minutes
         else res += '0'
       else if typeof time == null then res += '0'

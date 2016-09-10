@@ -12,5 +12,5 @@
     li(ng-if='task.tags')
       span.task-info-label Tags:
       span.task-info-value.tags
-        span.task-tag(ng-repeat='(key, tag) in task.tags.map' style='background-color: {{tag.color}}') {{tag.name}}
+        span.task-tag(ng-repeat='tag in orderedTags' style='background-color: {{tag.color}}') {{tag.name}}
 

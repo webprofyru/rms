@@ -10,7 +10,10 @@ module.exports = class Tag extends DSDocument
 
   @propNum 'id', init: 0
   @propStr 'name'
-  @propStr 'color'
+  @propStr 'color' # color from tags.json, if such
+  @propStr 'twColor' # original color from Teamwork
+  @propStr 'border'
+  @propNum 'priority', init: 1000
 
   @end()
 

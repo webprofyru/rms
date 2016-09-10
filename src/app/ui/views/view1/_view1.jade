@@ -33,19 +33,15 @@ include ../../tasks/_timeTracking.jade
           .dot1
           .dot2
       .sub-header(ng-if="view.data.peopleStatus == 'ready' || view.data.peopleStatus == 'update'")
-        .left-space
-          div(ng-if='view.hiddenPeopleCount > 0').unhide
-            span(ng-click='view.unhideAll(); $event.preventDefault()').action Unhide
+        table.left-space(width='100%'): tr
+          td: div.unhide(ng-if='view.hiddenPeopleCount > 0')
+            span.action(ng-click='view.unhideAll(); $event.preventDefault()') Unhide
             span {{view.hiddenPeopleCount + (view.hiddenPeopleCount == 1 ? ' person' : ' people')}}
-          //.input-wrapper(ng-if='config.hasRoles')
-          //    input(type='text' ng-init='demo4=false' ng-focus='demo4=true' ng-blur='demo4=false')
-          //            i.fa.fa-search
-          //            span.demo-msg not working
+          td(align='right'): .week-number Week: {{view.startDate.week()}}
         .prev-next-week
           button.btn(ng-click='view.periodChange(-1)' rms-view1-mouse-over-week-change='-1')
             i.fa.fa-caret-left
         .day(ng-repeat='day in view.days')
-          //strong(ng-bind-html='filter.calendarHeader(day, "date")')
           div(ng-bind-html='filter.calendarHeader(day, "date")')
           small(ng-bind-html='filter.taskPeriod(day, "workTime", day.timeSpent)')
         .prev-next-week

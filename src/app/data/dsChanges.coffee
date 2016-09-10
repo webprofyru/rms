@@ -10,6 +10,8 @@ error = require('../../dscommon/util').error
 DSDigest = require('../../dscommon/DSDigest')
 DSChangesBase = require('../../dscommon/DSChangesBase')
 DSDataEditable = require('../../dscommon/DSDataEditable')
+DSTags = require('../../dscommon/DSTags')
+DSSet = require('../../dscommon/DSSet')
 
 Person = require('../models/Person')
 Task = require('../models/Task')
@@ -34,6 +36,7 @@ ngModule.factory 'dsChanges', [
       @propObj 'dataService' # Note: It's propObj (not Doc) cause dsChanges must not have ref+1 to dsDataService
       @propDoc 'source', DSDataSource
       @propObj 'cancel', init: null
+      @propDoc 'tags', DSSet
 
       @ds_dstr.push (->
         @__unwatch2()
@@ -46,8 +49,27 @@ ngModule.factory 'dsChanges', [
         DSChangesBase.call @, referry, key
         return)
 
-      init: ((dataService) ->
-        @__unwatch2 = DSDataSource.setLoadAndRefresh.call @, (@set 'dataService', dataService)
+      init: ((dataService, tagsSet) ->
+
+        @set 'dataService', dataService
+        @set 'source', dataService.get('dataSource')
+        @set 'tags', tagsSet
+
+        Task::__props.tags.read = (v) ->
+          return null if v == null
+          tags = null
+          for tagName in v.split ','
+            if tagsSet.items.hasOwnProperty(tagName = tagName.trim())
+              (tags ||= {})[tagName] = tagsSet.items[tagName]
+          return null if tags == null
+          new DSTags @, tags
+
+        @__unwatch2 = @tags.watchStatus @, (source, status) => # wait while DSTags are loaded before starting loading tasks
+          switch status # copied from DSDataSource.setLoadAndRefresh()
+            when 'ready' then DSDigest.block (=> @load())
+            when 'nodata' then @set 'status', 'nodata'
+          return
+
         return)
 
       clear: (->
@@ -148,6 +170,8 @@ ngModule.factory 'dsChanges', [
           switch propName
             when 'title' then undefined
             when 'comments' then undefined
+            when 'description'
+              taskUpd['description'] = task.get('description') unless change.hasOwnProperty('split')
             when 'split'
               taskUpd['description'] = RMSData.put task.get('description'), if split = propChange.v then {split: propChange.v.valueOf()} else null
               taskUpd['start-date'] = if split == null || (duedate = task.get('duedate')) == null then '' else split.firstDate(duedate).format('YYYYMMDD')

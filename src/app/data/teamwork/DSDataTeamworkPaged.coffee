@@ -64,8 +64,11 @@ ngModule.factory 'DSDataTeamworkPaged', ['DSDataSource', '$rootScope', '$q', ((D
               if @importResponse(resp.data, resp.status) == WORK_ENTRIES_WHOLE_PAGE
                 pageLoad page + 1
                 return
-              DSDigest.block (=> @finalizeLoad())
-              @_endLoad true
+              res = DSDigest.block (=> @finalizeLoad())
+              if typeof res == 'object' && res != null && 'then' of res # it's promise
+                res.then => @_endLoad true; return
+              else
+                @_endLoad true
             else onError(resp, resp.status == 0)
             return), onError))(1)
 

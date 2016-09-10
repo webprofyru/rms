@@ -51,7 +51,7 @@ module.exports = class DSTags extends DSObjectBase
       if arguments.length == 2 && typeof (src = arguments[1]) == 'object'
         undefined
       else
-        error.invalidArg 'enums' unless typeof enums == 'string'
+        error.invalidArg 'enums' unless enums == undefined || typeof enums == 'string'
     if arguments.length == 2 && typeof (src = arguments[1]) == 'object'
       if src.__proto__ == DSTags::
         @map = _.clone src.map

@@ -10,7 +10,9 @@ assert = require('../../../dscommon/util').assert
 time = require('../../ui/time')
 
 DSDigest = require '../../../dscommon/DSDigest'
+DSTags = require '../../../dscommon/DSTags'
 
+Tag = require '../../models/Tag'
 Person = require '../../models/Person'
 TaskSplit = require '../../models/types/TaskSplit'
 PersonDayStat = require '../../models/PersonDayStat'
@@ -62,10 +64,63 @@ ngModule.directive 'rmsTaskEdit', [
       $scope.task = task = modal.task
       $scope.$watch (-> time.today.valueOf()), (-> $scope.today = time.today)
 
+      $scope.$on '$destroy', ->
+        $scope._unwatch?()
+        $scope._unwatch2?()
+        edit.tags.release $scope if edit.tags && edit.tags != task.get('tags')
+        return
+
       edit.title = task.get('title')
       edit.duedate = duedate = task.get('duedate')
       edit.estimate = task.get('estimate')
       edit.responsible = task.get('responsible')
+      edit.description = task.get('description')
+
+      edit.tagsSelect = []
+      edit.tagsClone = false
+      edit.tags = task.get('tags')
+
+      $scope.$watch (-> edit.tags), (val) ->
+        $scope.orderedTags =
+          if val
+            (tag for tagName, tag of val.map).sort (l, r) -> l.get('priority') - r.get('priority')
+          else []
+        return
+
+      (updateTagsToSelect = ->
+        allTags = dsDataService.findDataSet $scope, type: Tag, mode: 'original'
+        allTags.watchStatus $scope, (source, status, prevStatus, unwatch) ->
+          $scope._unwatch2 = unwatch
+          return unless status == 'ready'
+          unwatch(); $scope._unwatch2 = null
+          $scope.tagsToSelect = (tag for tagName, tag of allTags.items when not edit.tags?.get(tagName)).sort (l, r) -> l.get('priority') - r.get('priority')
+          allTags.release $scope
+          return
+        return)()
+
+      edit.tagsSelected = null
+
+      $scope.$watch (-> edit.tagsSelected), -> # add tag
+        return unless edit.tagsSelected
+        tagsValue = if (oldTags = edit.tags) then edit.tags.clone($scope) else new DSTags($scope)
+        tagsValue.set edit.tagsSelected.name, edit.tagsSelected
+        edit.tags = tagsValue
+        oldTags.release $scope if oldTags && task.get('tags') != oldTags
+        edit.tagsSelected = null
+        updateTagsToSelect()
+        return
+
+      $scope.tagsRemove = (tag) ->
+        if Object.keys((oldTags = edit.tags).map).length > 1
+          tagsValue = oldTags.clone($scope)
+          tagsValue.set tag.name, false
+          edit.tags = tagsValue
+        else
+          edit.tags = null
+        oldTags.release $scope if oldTags && task.get('tags') != oldTags
+        updateTagsToSelect()
+        return
+
       edit.splitDiff = null
       edit.firstWeek = thisWeek = moment().startOf('week')
       edit.splitDuedate = if duedate != null then duedate else moment().startOf('day')
@@ -86,9 +141,11 @@ ngModule.directive 'rmsTaskEdit', [
         $scope.$watch (->
             res = [ # watch all possible changes, except isSplit that has special logic
               edit.title
+              edit.description
               if (duedate = edit.duedate) == null then null else duedate.valueOf()
               if (estimate = edit.estimate) == null then null else estimate.valueOf()
-              if (responsible = edit.responsible) == null then null else responsible.$ds_key]
+              if (responsible = edit.responsible) == null then null else responsible.$ds_key
+              if (tags = edit.tags) == null then null else tags.valueOf()]
             res = res.concat val if (split = edit.split) != null && (val = split.valueOf()).length > 0 # append split if there is some. intentionally not taking edit.isSplit
             return res), ((val, oldVal) -> $scope.changes = (val != oldVal); return), true
         $scope.$watch (-> edit.isSplit), ((isSplit) -> # watch isSplit
@@ -112,16 +169,16 @@ ngModule.directive 'rmsTaskEdit', [
             edit.splitDiff = if newVal != 0 && ((splitDiff = edit.splitDiff) == null || splitDiff.valueOf() != newVal) then newDiff else null
           else edit.splitDiff = null
           return), true
-        $scope.splitPrevWeek = (-> # click on left arrow on task.split
-          edit.firstWeek.subtract(1, 'week')
-          edit.splitView.unshift newTaskSplitWeekView edit.firstWeek
-          edit.splitView.pop().release $scope
-          return)
-        $scope.splitNextWeek = (-> # click on right arrow on task.split
-          monday = moment(edit.firstWeek.add(1, 'week')).add(splitViewWeeksCount - 1, 'week')
-          edit.splitView.push newTaskSplitWeekView monday
-          edit.splitView.shift().release $scope
-          return)
+      $scope.splitPrevWeek = (-> # click on left arrow on task.split
+        edit.firstWeek = monday = moment(edit.firstWeek).subtract(1, 'week')
+        edit.splitView.unshift newTaskSplitWeekView monday
+        edit.splitView.pop().release $scope
+        return)
+      $scope.splitNextWeek = (-> # click on right arrow on task.split
+        monday = moment(edit.firstWeek.add(1, 'week')).add(splitViewWeeksCount - 1, 'week')
+        edit.splitView.push newTaskSplitWeekView monday
+        edit.splitView.shift().release $scope
+        return)
 
       $scope.close = close = (->
         $rootScope.modal = {type: null}
@@ -151,6 +208,8 @@ ngModule.directive 'rmsTaskEdit', [
           estimate: edit.estimate
           responsible: edit.responsible
           split: if edit.isSplit && edit.split.valueOf().length > 0 then edit.split else null
+          tags: edit.tags
+          description: edit.description
         update.plan = plan if typeof plan == 'boolean'
         addCommentAndSave task, $event.shiftKey, update
         .then ((saved) ->
@@ -170,9 +229,6 @@ ngModule.directive 'rmsTaskEdit', [
         minutes = diff.minutes()
         res += "#{hours}h #{if minutes < 10 then '0' + minutes else minutes}m"
         return res)
-      $scope.$on '$destroy', (->
-        $scope._unwatch?()
-        return)
       $scope.autoSplitInProgress = false
       $scope.autoSplit = (->
         if assert
@@ -188,7 +244,7 @@ ngModule.directive 'rmsTaskEdit', [
         (split = edit.split).clear()
         edit.splitDuedate = moment(d)
         initDuedate = $scope.task.get('duedate')
-        initSplit = if initDuedate != null && $scope.edit.responsible == $scope.task.get('responsible') then $scope.task.get('split') else null
+        initSplit = if initDuedate != null && edit.responsible == $scope.task.get('responsible') then $scope.task.get('split') else null
 
         splitWithinWeek = (->
           personDayStatSet = dsDataService.findDataSet $scope,

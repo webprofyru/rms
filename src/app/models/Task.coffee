@@ -28,6 +28,24 @@ module.exports = class Task extends DSDocument
 
   @addPool true
 
+  updateTaskPriority = (task, val) ->
+    task.set 'plan', !!(val && val.get(Task.planTag))
+    if val != null
+      topPrior = 1000000
+      topTag = null
+      #for tagName, tag of val.map when (tagPriority = tag.get('priority')) < topPrior
+      for tagName, tag of val.map
+        console.info 'tag:', tag if tag == true
+        if (tagPriority = tag.get('priority')) < topPrior
+          topTag = tag
+          topPrior = tagPriority
+      task.__setCalcPriority topTag.priority
+      task.__setCalcStyle topTag
+    else
+      task.__setCalcPriority defaultTag.priority
+      task.__setCalcStyle defaultTag
+    return
+
   processTagsEditable =
     __onChange: (task, propName, val, oldVal) ->
       switch propName
@@ -51,15 +69,13 @@ module.exports = class Task extends DSDocument
             task.set 'tags', tags
             tags.release @
         when 'tags'
-          # Note: Task.TWTask will be defined in TWTask code
-          Task.TWTask.calcTaskPriority task
-          task.set 'plan', !!(val && val.get(Task.planTag))
+          updateTaskPriority task, val
       return
 
   processTagsOriginal =
     __onChange: (task, propName, val, oldVal) =>
       if propName == 'tags'
-        Task.TWTask.calcTaskPriority task
+        updateTaskPriority task, val
       return
 
   @ds_ctor.push ->
@@ -90,7 +106,11 @@ module.exports = class Task extends DSDocument
   @propDoc 'project', Project
   @propTaskRelativeSplit 'split'
 
-  @propStr 'description'
+  @propStr 'description', str: (v) ->
+    if !v || v.length == 0 then ''
+    else if v.length <= 20 then v
+    else "#{v.substr 0, 20}..."
+
   @propComments 'comments'
 
   # Note: null - time tracking is not expected, (timeTracking.isReady == false) - time data is not loaded yet
@@ -100,17 +120,16 @@ module.exports = class Task extends DSDocument
   @propBool 'completed'
   @propBool 'isReady', write: null
 
-  @propBool 'plan' # TODO: Remove - replace by tags
-  @propDSTags 'tags'
+  @propBool 'plan', write: null, read: null # TODO: Initial solution.  It's depricated by 'tags', but still in use
+  @propDSTags 'tags' # 'read:' option, is defined in dsChanges.init()
 
   # calculated props
-  @propNum 'priority', init: 1000, calc: true
+  @propNum 'priority', init: defaultTag.priority, calc: true
   @propObj 'style', init: (-> defaultTag), calc: true
 
   if clipboardMode == 0
     @propBool 'clipboard', init: false, common: true
 
-  #  @propCalc 'isOverdue', (-> (duedate = @get('duedate')) != null && duedate < time.today)
   isOverdue: (-> (duedate = @get('duedate')) != null && duedate < time.today)
 
   timeWithinEstimate: (->
@@ -146,7 +165,5 @@ module.exports = class Task extends DSDocument
 
   @Editable::init = ->
     originalEditableInit.apply @, arguments
-    Task.TWTask.calcTaskPriority @
+    updateTaskPriority @, @get('tags')
     return
-
-

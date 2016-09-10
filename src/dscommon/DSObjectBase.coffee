@@ -106,8 +106,9 @@ module.exports = class DSObjectBase
   readMap: ((map) ->
     props = @.__proto__.__props
     for propName, value of map
-      if props.hasOwnProperty(propName) && (propDesc = props[propName]).hasOwnProperty('read')
-        @[propName] = propDesc.read.call @, value
+      if props.hasOwnProperty(propName) && (propDesc = props[propName]).read
+        @[propName] = val = propDesc.read.call @, value
+        val.release @ if val instanceof DSObjectBase
       else console.error "Unexpected property #{propName}"
     return)
 
@@ -152,7 +153,7 @@ module.exports = class DSObjectBase
       throw new Error "Invalid init value: #{opts.init}" if opts.hasOwnProperty('valid') && opts.valid(if typeof (init = opts.init) == 'function' then init() else init) == undefined
       throw new Error 'Invalid value of opts.valid' unless !opts.hasOwnProperty('valid') || typeof opts.valid == 'function'
       throw new Error 'Invalid value of opts.write' unless !opts.hasOwnProperty('write') || !opts.write || typeof opts.write == 'function'
-      throw new Error 'Invalid value of opts.read' unless !opts.hasOwnProperty('read') || typeof opts.read == 'function'
+      throw new Error 'Invalid value of opts.read' unless !opts.hasOwnProperty('read') || !opts.read || typeof opts.read == 'function'
       throw new Error 'Invalid value of opts.equal' unless !opts.hasOwnProperty('equal') || typeof opts.equal == 'function'
       throw new Error 'Invalid value of opts.str' unless !opts.hasOwnProperty('str') || typeof opts.str == 'function'
       throw new Error 'Invalid value of opts.get' unless !opts.hasOwnProperty('get') || typeof opts.get == 'function'
@@ -180,7 +181,7 @@ module.exports = class DSObjectBase
       name: opts.name
       type: opts.type
       write: opts.write || (if (opts.hasOwnProperty('write') && !opts.write) || opts.calc || opts.common then null else ((v) -> if v == null then null else v.valueOf()))
-      read: opts.read || ((v) -> v)
+      read: opts.read || (if (opts.hasOwnProperty('read') && !opts.read) || opts.calc || opts.common then null else ((v) -> v))
       equal: equal = (opts.equal || ((l, r) -> l?.valueOf() == r?.valueOf()))
       str: opts.str || ((v) -> if v == null then '' else v.toString())
       readonly: opts.readonly || false

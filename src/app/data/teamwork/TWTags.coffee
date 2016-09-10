@@ -10,7 +10,7 @@ Tag = require '../../models/Tag'
 
 # Zork: Note: This code is not in use.  Instead we are loading tags right with loading tasks.  Might be later this code will be used in task tags editing.
 
-ngModule.factory 'TWTags', ['DSDataTeamworkPaged', 'DSDataSource', '$rootScope', '$q', ((DSDataTeamworkPaged, DSDataSource, $rootScope, $q) ->
+ngModule.factory 'TWTags', ['DSDataTeamworkPaged', 'DSDataSource', '$rootScope', '$http', '$q', ((DSDataTeamworkPaged, DSDataSource, $rootScope, $http, $q) ->
 
   return class TWTags extends DSDataTeamworkPaged
 
@@ -18,20 +18,54 @@ ngModule.factory 'TWTags', ['DSDataTeamworkPaged', 'DSDataSource', '$rootScope',
 
     @addPool()
 
+    @propObj 'cancel', init: null
+
     @propSet 'tags', Tag
 
     @ds_dstr.push (->
-      @__unwatch2()
+      @__unwatch()
       return)
 
-    init: ((dsDataService) ->
+    init: (dsDataService) ->
       @set 'request', "tags.json"
-      @__unwatch2 = DSDataSource.setLoadAndRefresh.call @, dsDataService
+      @__unwatch = DSDataSource.setLoadAndRefresh.call @, dsDataService
       @init = null
-      return)
+      return
 
     startLoad: ->
+
       @tagsMap = {}
+
+      onError = (error, isCancelled) =>
+        if !isCancelled
+          console.error 'error: ', error
+          @set 'cancel', null
+        return []
+
+      @tagsJson = $http.get "data/tags.json?t=#{new Date().getTime()}", @set('cancel', $q.defer())
+      .then(((resp) => # ok
+        unless resp.status == 200 # 0 means that request was canceled
+          onError resp, resp.status == 0
+        else
+          @set 'cancel', null
+          tags = resp.data
+          unless Array.isArray(tags) # check data format
+            console.error 'invalid tags.json'
+            return []
+          err = false
+          for t, i in tags
+            unless typeof t.name == 'string' && t.name.length >= 0
+              err = true; console.error "invalid tags.json: invalid 'name'", t
+            if t.hasOwnProperty('priority')
+              unless typeof t.priority == 'number'
+                err = true; console.error "invalid tags.json: invalid 'priority'", t
+            else
+              t.priority = i
+            unless !t.hasOwnProperty('color') || typeof t.color == 'string' && t.color.length >= 0
+              err = true; console.error "invalid tags.json: invalid 'color'", t
+            unless !t.hasOwnProperty('border') || typeof t.border == 'string' && t.border.length >= 0
+              err = true; console.error "invalid tags.json: invalid 'border'", t
+          if err then [] else tags), onError)
       return
 
     importResponse: (json) ->
@@ -42,22 +76,27 @@ ngModule.factory 'TWTags', ['DSDataTeamworkPaged', 'DSDataSource', '$rootScope',
 
         ++cnt
 
-        person = Tag.pool.find @, jsonTag['name'], @tagsMap
+        person = Tag.pool.find @, (tagName = jsonTag['name']), @tagsMap
 
         person.set 'id', parseInt jsonTag['id']
-        person.set 'name', jsonTag['name']
-        person.set 'color', jsonTag['color']
+        person.set 'name', tagName
+        person.set 'color', (tagColor = jsonTag['color'])
+        person.set 'twColor', tagColor
 
       cnt
 
     finalizeLoad: ->
 
-      @get('tagsSet').merge @, @tagsMap
-
-      delete @tagsMap
-
-      return
+      @tagsJson.then (tags) => # apply data/tags.json info to teamwork tags
+        @tagsJson = null
+        for tag in tags when @tagsMap.hasOwnProperty(tag.name)
+          tagDoc = @tagsMap[tag.name]
+          tagDoc.set 'name', tag.name
+          tagDoc.set 'priority', tag.priority if tag.hasOwnProperty('priority')
+          tagDoc.set 'color', tag.color if tag.color
+          tagDoc.set 'border', tag.border if tag.border
+        @get('tagsSet').merge @, @tagsMap
+        delete @tagsMap
+        return
 
     @end())]
-
-

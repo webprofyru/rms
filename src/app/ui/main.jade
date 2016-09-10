@@ -11,4 +11,6 @@
   div(ng-if='addCommentAndSave')
     include ./tasks/_addCommentAndSave.jade
 
+  .backdrop(ng-if='modal.type == "task-edit"')
+
 include ./account/_account.jade
