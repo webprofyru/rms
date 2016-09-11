@@ -69,17 +69,10 @@ ngModule.factory 'ViewChanges', ['DSView', 'dsChanges', '$log', ((DSView, dsChan
         isDark = !isDark
         isFirst = true
         task.__change.__refreshView = refreshView
-        remove = do (task) -> (->
-          (hist = dsChanges.get('hist')).startBlock()
-          try
-            DSDigest.block (->
-              for propName, propChange of task.__change when propName != '__error' && propName != '__refreshView'
-                task.set propName, task.$ds_doc.get(propName)
-              return)
-          finally
-            hist.endBlock()
+        remove = do (task) -> ->
+          dsChanges.removeChanges task
           refreshView()
-          return)
+          return
         for propName, propChange of task.__change when propName != '__error' && propName != '__refreshView' && propName != 'clipboard'
           prop = props[propName]
           changes.push(change = poolChanges.find @, "#{task.$ds_key}.#{propName}")
@@ -96,10 +89,6 @@ ngModule.factory 'ViewChanges', ['DSView', 'dsChanges', '$log', ((DSView, dsChan
           if remove
             change.remove = remove
             remove = null
-#          change.remove = do (task, propName) -> (->
-#            task.set propName, task.$ds_doc.get(propName) # set edited-doc property value to the current prop value of server-doc
-#            refreshView()
-#            return)
         if task.__change.__error
           changes.push(change = poolChanges.find @, "#{task.$ds_key}.__error")
           change.set 'isDark', isDark

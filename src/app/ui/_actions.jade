@@ -11,7 +11,7 @@ ul.action-buttons
         table: tr
             td: img(src='./images/icons/server.svg')
             td original
-    li.changes(ng-class='{disabled: !changes.anyChange()}' ng-click='changes.anyChange() && showChanges()')
+    li.changes(ng-if='!config.autosave' ng-class='{disabled: !changes.anyChange()}' ng-click='changes.anyChange() && showChanges()')
         table: tr
             td: img(src='./images/icons/list.svg')
             td changes

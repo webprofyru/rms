@@ -47,11 +47,13 @@ ngModule.factory 'config',
 
       @propStr 'selectedRole'
       @propNum 'selectedCompany', init: -1
+      @propNum 'selectedManager'
       @propNum 'selectedLoad'
 
       @propNum 'activeSidebarTab', init: 0
 
       @propNum 'refreshPeriod'
+      @propNum 'autosave', init: 0
 
       @propNum 'view3GroupByPerson', init: 0
       @propNum 'view3HidePeopleWOTasks', init: 0

@@ -8,6 +8,10 @@
         label(for='refreshPeriod') Refresh period (minutes):
         input(name='refreshPeriod' type='number' placeholder='Manual refresh' pattern='^\\s*\\d{0,4}\\s*$' ng-model='refreshPeriod')
         span.error(ng-show='accountForm.refreshPeriod.$invalid') Invalid value
+      .field.autoSave
+        label
+          input(name='refreshPeriod' type='checkbox' ng-model='autosave')
+          | Autosave
       .btn-group
         button.btn(type='submit' ng-disabled='accountForm.$pristine || accountForm.$invalid' ng-click='save()') Save
         button.btn.right(type='button' ng-click='close()') Close
