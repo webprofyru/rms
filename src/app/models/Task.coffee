@@ -34,7 +34,6 @@ module.exports = class Task extends DSDocument
       topTag = null
       #for tagName, tag of val.map when (tagPriority = tag.get('priority')) < topPrior
       for tagName, tag of val.map
-        console.info 'tag:', tag if tag == true
         if (tagPriority = tag.get('priority')) < topPrior
           topTag = tag
           topPrior = tagPriority

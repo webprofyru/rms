@@ -26,7 +26,7 @@ ngModule.directive 'rmsTaskInfo', ['$rootScope', '$window', (($rootScope, $windo
 
       $scope.orderedTags =
         if (tags = task.get('tags'))
-          (tag for tagName, tag of tags.map).sort (l, r) -> l.get('priority') - r.get('priority')
+          (tag for tagName, tag of tags.map).sort (l, r) -> if (d = l.get('priority') - r.get('priority')) != 0 then d else l.get('name').localeCompare(r.get('name'))
         else []
 
       return)

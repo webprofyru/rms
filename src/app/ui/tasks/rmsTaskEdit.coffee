@@ -83,7 +83,7 @@ ngModule.directive 'rmsTaskEdit', [
       $scope.$watch (-> edit.tags), (val) ->
         $scope.orderedTags =
           if val
-            (tag for tagName, tag of val.map).sort (l, r) -> l.get('priority') - r.get('priority')
+            (tag for tagName, tag of val.map).sort (l, r) -> if (d = l.get('priority') - r.get('priority')) != 0 then d else l.get('name').localeCompare(r.get('name'))
           else []
         return
 
@@ -93,7 +93,7 @@ ngModule.directive 'rmsTaskEdit', [
           $scope._unwatch2 = unwatch
           return unless status == 'ready'
           unwatch(); $scope._unwatch2 = null
-          $scope.tagsToSelect = (tag for tagName, tag of allTags.items when not edit.tags?.get(tagName)).sort (l, r) -> l.get('priority') - r.get('priority')
+          $scope.tagsToSelect = (tag for tagName, tag of allTags.items when not edit.tags?.get(tagName)).sort (l, r) -> if (d = l.get('priority') - r.get('priority')) != 0 then d else l.get('name').localeCompare(r.get('name'))
           allTags.release $scope
           return
         return)()

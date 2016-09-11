@@ -42,7 +42,9 @@ ngModule.factory 'addCommentAndSave', [
 
         @__deferred =  $q.defer()
 
-        changes.clipboard = false unless changes.hasOwnProperty('clipboard')
+        if changes.hasOwnProperty('duedate') && !changes.hasOwnProperty('clipboard')
+          unless (if Array.isArray(document) then document[0] else document).get('duedate')?.valueOf() == changes.duedate?.valueOf()
+            changes.clipboard = false
 
         # set plansChange to true, only if new plan value is false and there is at least one document with plan equal to true
         if changes.hasOwnProperty('plan') && !changes.plan

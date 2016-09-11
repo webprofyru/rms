@@ -19,7 +19,6 @@ ngModule.run ['config', '$rootScope', 'db', ((config, $rootScope, db)->
   $rootScope.taskModal = {}
   $rootScope.startDateVal = null
   $rootScope.view3ActiveTab = null
-  $rootScope.features = require './features'
   return)]
 
 ngModule.config [

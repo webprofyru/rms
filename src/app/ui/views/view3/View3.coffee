@@ -223,7 +223,7 @@ ngModule.factory 'View3', [
                   todoListView.set 'todoList', TodoList.pool.items[todoListKey]
                   todoListView.set 'tasksCount', _.size todoListGroup
                   todoListView.set 'totalEstimate', _.reduce todoListGroup, ((sum, task) -> if (estimate = task.get('estimate')) then sum.add estimate else sum), moment.duration(0)
-                  todoListView.get('tasksList').merge @, _.map todoListGroup, ((task) => task.addRef @)
+                  todoListView.get('tasksList').merge @, (_.map todoListGroup, ((task) => task.addRef @)).sort TWTasks.tasksSortRule
                   return todoListView)
                 return projectView)).sort ((left, right) ->
                   if (leftLC = left.get('project').get('name').toLowerCase()) < (rightLC = right.get('project').get('name').toLowerCase()) then -1
