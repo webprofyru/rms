@@ -406,6 +406,13 @@ ul {
     /* line 30, C:/SVN/_WebProfyManagement/src/sass/partials/_modal-login.sass */
     #modal-login .btn-group .btn.right {
       float: right; }
+  /* line 32, C:/SVN/_WebProfyManagement/src/sass/partials/_modal-login.sass */
+  #modal-login .autoSave {
+    margin-bottom: 18px; }
+    /* line 34, C:/SVN/_WebProfyManagement/src/sass/partials/_modal-login.sass */
+    #modal-login .autoSave > label > input {
+      vertical-align: middle;
+      margin-right: 4px; }
 
 /* line 1, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
 #svc-emails {
@@ -906,11 +913,11 @@ ul {
       /* line 18, C:/SVN/_WebProfyManagement/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons .edited {
         width: 70px;
-        margin-left: 20px; }
-      /* line 21, C:/SVN/_WebProfyManagement/src/sass/screen1/_actions.sass */
+        margin-left: 20px;
+        margin-right: 20px; }
+      /* line 22, C:/SVN/_WebProfyManagement/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons .changes {
-        width: 70px;
-        margin-left: 20px; }
+        width: 70px; }
         /* line 24, C:/SVN/_WebProfyManagement/src/sass/screen1/_actions.sass */
         #screen1 .action-buttons .changes.disabled {
           cursor: default;
