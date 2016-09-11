@@ -14,6 +14,7 @@ DSTags = require('../../dscommon/DSTags')
 DSSet = require('../../dscommon/DSSet')
 
 Person = require('../models/Person')
+Tag = require('../models/Tag')
 Task = require('../models/Task')
 Comments = require('../models/types/Comments')
 
@@ -36,26 +37,24 @@ ngModule.factory 'dsChanges', [
       @propObj 'dataService' # Note: It's propObj (not Doc) cause dsChanges must not have ref+1 to dsDataService
       @propDoc 'source', DSDataSource
       @propObj 'cancel', init: null
-      @propDoc 'tags', DSSet
 
-      @ds_dstr.push (->
+      @ds_dstr.push ->
         @__unwatch2()
         @__unwatch3()
         @__unwatch4?()
         @__unwatchStatus1?()
         @__unwatchStatus2?()
+        @__unwatchStatus3?()
         cancel.resolve() if cancel = @get('cancel')
-        return)
+        return
 
-      constructor: ((referry, key) ->
+      constructor: (referry, key) ->
         DSChangesBase.call @, referry, key
-        return)
 
-      init: ((dataService, tagsSet) ->
+      init: (dsDataService) ->
 
-        @set 'dataService', dataService
-        @set 'source', dataService.get('dataSource')
-        @set 'tags', tagsSet
+        @set 'dataService', dsDataService
+        @set 'source', dsDataService.get('dataSource')
 
         Task::__props.tags.read = (v) ->
           return null if v == null
@@ -66,11 +65,13 @@ ngModule.factory 'dsChanges', [
           return null if tags == null
           new DSTags @, tags
 
-        @__unwatch2 = @tags.watchStatus @, (source, status) => # wait while DSTags are loaded before starting loading tasks
+        tagsSet = dsDataService.findDataSet @, {type: Tag, mode: 'original'}
+        @__unwatch2 = tagsSet.watchStatus @, (source, status) => # wait while DSTags are loaded before starting loading tasks
           switch status # copied from DSDataSource.setLoadAndRefresh()
             when 'ready' then DSDigest.block (=> @load())
             when 'nodata' then @set 'status', 'nodata'
           return
+        tagsSet.release @
 
         @__unwatch3 = $rootScope.$watch (-> config.get 'autosave'), (autosave) =>
           if autosave
@@ -81,78 +82,80 @@ ngModule.factory 'dsChanges', [
             @__unwatch4?(); @__unwatch4 = null
           return
 
-        return)
+        return # init: ->
 
       clear: (->
         @__unwatchStatus2?(); delete @__unwatchStatus2
         @reset()
         return)
 
-      load: (->
+      load: ->
         if @get('status') != 'ready'
           return if !@_startLoad()
           $u = DSDataEditable(Task.Editable).$u # TODO: Make this comes from project rights
           if (changes = localStorageService.get('changes'))
             if changes.ver == CHANGES_PERSISTANCE_VER && changes.source.url == config.get('teamwork') && changes.source.token == config.get('token')
               peopleSet = @get('dataService').findDataSet @, {type: Person, mode: 'original'}
-              @__unwatchStatus2 = peopleSet.watchStatus @, ((source, status, prevStatus, unwatch) =>
-                return if !(status == 'ready')
+              @__unwatchStatus2 = peopleSet.watchStatus @, (source, status, prevStatus, unwatch) =>
+                return unless status == 'ready'
                 unwatch() # only once
-                DSDigest.block (=>
-                  Task.pool.enableWatch false
-                  step1 = @mapToChanges(changes.changes)
-                  for personKey, loadList of step1.load.Person # step 2
-                    if !peopleSet.items.hasOwnProperty(personKey)
-                      console.error 'Person #{personKey} missing in server data'
-                    else
-                      person = peopleSet.items[personKey]
-                      f(person) for f in loadList
-                  tasksSetPool = (tasksSet = @get 'tasksSet').$ds_pool
-                  set = {}
-                  for taskKey, taskChange of step1.changes.tasks # step 3
-                    if Task.pool.items.hasOwnProperty(taskKey) then (task = Task.pool.items[taskKey]).addRef @
-                    else (task = Task.pool.find(@, taskKey)).readMap(changes.tasks[taskKey]) # restore server task from local storage
-                    (taskEditable = tasksSetPool.find(@, taskKey, set)).init(task, tasksSet, taskChange)
-                    taskEditable.$u = $u
-                    unless taskEditable.hasOwnProperty '__change' # all changes met server version
-                      delete set[taskEditable.$ds_key]
-                      taskEditable.release @
-                    task.release @
-                  tasksSet.merge @, set
-                  Task.pool.enableWatch true
-                  @_endLoad true
-                  return)
-                return)
+                originalTasks = @get('dataService').findDataSet @, {type: Task, mode: 'original', filter: 'all'}
+                @__unwatchStatus3 = originalTasks.watchStatus @, (source, status, prevStatus, unwatch) =>
+                  return unless status == 'ready'
+                  unwatch() # only once
+                  DSDigest.block =>
+                    Task.pool.enableWatch false
+                    step1 = @mapToChanges(changes.changes)
+                    for personKey, loadList of step1.load.Person # step 2
+                      if !peopleSet.items.hasOwnProperty(personKey)
+                        console.error 'Person #{personKey} missing in server data'
+                      else
+                        person = peopleSet.items[personKey]
+                        f(person) for f in loadList
+                    tasksSetPool = (tasksSet = @get 'tasksSet').$ds_pool
+                    set = {}
+                    for taskKey, taskChange of step1.changes.tasks # step 3
+                      continue unless originalTasks.items.hasOwnProperty(taskKey) && !((task = originalTasks.items[taskKey]).get 'completed') # task is not either removed or completed
+                      (taskEditable = tasksSetPool.find(@, taskKey, set)).init(task, tasksSet, taskChange)
+                      taskEditable.$u = $u
+                      unless taskEditable.hasOwnProperty '__change' # all changes met server version
+                        delete set[taskEditable.$ds_key]
+                        taskEditable.release @
+                      task.release @
+                    tasksSet.merge @, set
+                    Task.pool.enableWatch true
+                    @_endLoad true
+                    return # DSDigest.block =>
+                  return # originalTasks.watchStatus (source, status, prevStatus, unwatch) =>
+                originalTasks.release @
+                return # peopleSet.watchStatus @, ((source, status, prevStatus, unwatch) =>
               peopleSet.release @
-            else
+            else # if changes.ver == CHANGES_PERSISTANCE_VER...
               localStorageService.remove('changes') # those changes from another account
               @_endLoad true
-          else
+          else # if (changes = localStorageService.get('changes'))
             @_endLoad true # no changes in the local storage
-        return)
+        return # load: ->
 
-      persist: (->
+      persist: ->
         if !@hasOwnProperty('__persist')
           @__persist = $timeout (=>
             delete @__persist
             @saveToLocalStorage()
             return)
-        return)
+        return # persis: ->
 
-      saveToLocalStorage: (->
+      saveToLocalStorage: ->
         if !@anyChange()
           localStorageService.remove 'changes'
         else
           changes = @changesToMap()
           tasks = {}
-          for taskKey of changes.tasks
-            tasks[taskKey] = Task.pool.items[taskKey].writeMap()
           localStorageService.set 'changes', {
             ver: CHANGES_PERSISTANCE_VER
             changes
-            source: {url: config.get('teamwork'), token: config.get('token')}
-            tasks}
-        return)
+            source: {url: config.get('teamwork'), token: config.get('token')}}
+        return # saveToLocalStorage: ->
 
       removeChanges: removeChanges = (task) ->
         (hist = task.$ds_chg.$ds_hist).startBlock()
@@ -163,7 +166,7 @@ ngModule.factory 'dsChanges', [
             return)
         finally
           hist.endBlock()
-        return
+        return # removeChanges: ->
 
       trimTitle = (title) -> if title.length > 60 then "#{title.substr 0, 60}..." else title
 

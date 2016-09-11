@@ -90,9 +90,7 @@ ngModule.factory 'dsDataService', [
 
             return), true
 
-        tags = @findDataSet @, {type: Tag, mode: 'original'}
-        (@set 'changes', dsChanges).init @, tags
-        tags.release @
+        (@set 'changes', dsChanges).init @
 
         return)
 
@@ -170,9 +168,7 @@ ngModule.factory 'dsDataService', [
                 if params.filter == 'all' && !params.hasOwnProperty('startDate')
                   if !config.get('hasTimeReports') || params.source
                     delete params.source
-                    tags = @findDataSet @, {type: Tag, mode: 'original'}
-                    (data = TWTasks.pool.find(@, params)).init? @, tags
-                    tags.release @
+                    (data = TWTasks.pool.find(@, params)).init? @
                   else # it's extra DSData that links Task and TaskTimeTracking
                     if (data = TasksWithTimeTracking.pool.find(@, {})).init then data.init @
                   (set = data.get('tasksSet')).addRef owner; data.release @

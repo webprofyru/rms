@@ -46,7 +46,6 @@ ngModule.factory 'TWTasks', [
       @propObj 'cancel', init: null
 
       @ds_dstr.push (->
-        @tags.release @
         cancel.resolve() if cancel = @get('cancel')
         @__unwatch1()
         @__unwatch2()
@@ -68,7 +67,6 @@ ngModule.factory 'TWTasks', [
         @peopleMap = {}
         @projectMap = {}
         @todoListMap = {}
-        @tags = null
 
         if assert
           console.error "TWTasks:ctor: setVisible expects that their will be only one instance of TWTasks object" if PersonTimeTracking::hasOwnProperty('setVisible')
@@ -128,10 +126,9 @@ ngModule.factory 'TWTasks', [
             throw new Error "Not supported filter: #{params.filter}"
         )
 
-      init: ((dsDataService, @tags) ->
+      init: ((dsDataService) ->
 
         @set 'source', dsDataService.get('dataSource')
-        @tags.addRef @
 
         @set 'request', switch (params = @get('params')).filter
           when 'all'
@@ -158,11 +155,15 @@ ngModule.factory 'TWTasks', [
           else
             tasksSet.remove item if tasksSet.items.hasOwnProperty item.$ds_key
           return)
-        @__unwatch2 = @tags.watchStatus @, (source, status) => # wait while DSTags are loaded before starting loading tasks
+
+        tagsSet = dsDataService.findDataSet @, {type: Tag, mode: 'original'}
+        @__unwatch2 = tagsSet.watchStatus @, (source, status) => # wait while DSTags are loaded before starting loading tasks
           switch status # copied from DSDataSource.setLoadAndRefresh()
             when 'ready' then DSDigest.block (=> @load())
             when 'nodata' then @set 'status', 'nodata'
           return
+        tagsSet.release @
+
         @init = null
         return)
 
