@@ -17,6 +17,7 @@ ngModule.directive 'rmsAccount', ['config', '$rootScope', ((config, $rootScope) 
       $scope.url = config.teamwork
       $scope.token = config.token
       $scope.refreshPeriod = config.refreshPeriod
+      $scope.autosave = !!config.autosave
       $scope.save = (->
         url = $scope.url.trim()
         token = $scope.token.trim()
@@ -26,6 +27,7 @@ ngModule.directive 'rmsAccount', ['config', '$rootScope', ((config, $rootScope) 
         config.teamwork = url
         config.token = token
         config.refreshPeriod = $scope.refreshPeriod
+        config.autosave = if $scope.autosave then 1 else 0
         close()
         return)
       $scope.close = close = (->

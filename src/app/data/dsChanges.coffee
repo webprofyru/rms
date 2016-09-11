@@ -26,8 +26,8 @@ ngModule.run ['dsChanges', '$rootScope', ((dsChanges, $rootScope) ->
 CHANGES_PERSISTANCE_VER = 1 # increase every time then compatibility with previous version of format is lost
 
 ngModule.factory 'dsChanges', [
-  'DSDataSource', 'config', 'localStorageService', '$http', '$timeout', '$q',
-  ((DSDataSource, config, localStorageService, $http, $timeout, $q) ->
+  'DSDataSource', 'config', 'localStorageService', '$rootScope', '$http', '$timeout', '$q',
+  ((DSDataSource, config, localStorageService, $rootScope, $http, $timeout, $q) ->
     class DSChanges extends DSChangesBase
       @begin 'DSChanges'
 
@@ -40,6 +40,8 @@ ngModule.factory 'dsChanges', [
 
       @ds_dstr.push (->
         @__unwatch2()
+        @__unwatch3()
+        @__unwatch4?()
         @__unwatchStatus1?()
         @__unwatchStatus2?()
         cancel.resolve() if cancel = @get('cancel')
@@ -68,6 +70,15 @@ ngModule.factory 'dsChanges', [
           switch status # copied from DSDataSource.setLoadAndRefresh()
             when 'ready' then DSDigest.block (=> @load())
             when 'nodata' then @set 'status', 'nodata'
+          return
+
+        @__unwatch3 = $rootScope.$watch (-> config.get 'autosave'), (autosave) =>
+          if autosave
+            @__unwatch4 = @get('tasksSet').watch @,
+              add: saveChanges = => $rootScope.$evalAsync => @save(); return
+              change: saveChanges
+          else
+            @__unwatch4?(); @__unwatch4 = null
           return
 
         return)
@@ -143,12 +154,36 @@ ngModule.factory 'dsChanges', [
             tasks}
         return)
 
+      removeChanges: removeChanges = (task) ->
+        (hist = task.$ds_chg.$ds_hist).startBlock()
+        try
+          DSDigest.block (->
+            for propName, propChange of task.__change when propName != '__error' && propName != '__refreshView'
+              task.set propName, task.$ds_doc.get(propName)
+            return)
+        finally
+          hist.endBlock()
+        return
+
+      trimTitle = (title) -> if title.length > 60 then "#{title.substr 0, 60}..." else title
+
+      reportSuccessSave = (task) ->
+        if config.get 'autosave'
+          toastr.success "Task '#{trimTitle task.get 'title'}' updated", 'Update task', timeOut: 2000
+        return
+
+      reportFailedSave = (reason, task) ->
+        if config.get 'autosave'
+          toastr.error "Task '#{trimTitle task.get 'title'}' update failed. Reason: #{reason}", 'Update task', positionClass: 'toast-top-center'
+        removeChanges task
+        return
+
       save: do (saveInProgress = null) => ((tasks) ->
         return saveInProgress.promise if saveInProgress && !tasks
         if !tasks # it's first task in the line, so let's record others
           saveInProgress = $q.defer()
           tasks = (task.addRef @ for taskKey, task of @get('tasks'))
-        newReponsible = null
+        newResponsible = null
         upd = {'todo-item': taskUpd = {}}
 
         if !(task = tasks.shift()) # it's nothing to save
@@ -181,7 +216,7 @@ ngModule.factory 'dsChanges', [
             when 'estimate'
               taskUpd['estimated-minutes'] = if propChange.v then Math.floor propChange.v.asMinutes() else '0'
             when 'responsible'
-              taskUpd['responsible-party-id'] = if (newReponsible = propChange.v) then [propChange.v.get('id')] else []
+              taskUpd['responsible-party-id'] = if (newResponsible = propChange.v) then [propChange.v.get('id')] else []
             when 'tags'
               taskUpd['tags'] = if (tags = task.get('tags')?.map) then (tag for tag of tags).join() else ''
             when 'plan'
@@ -190,27 +225,22 @@ ngModule.factory 'dsChanges', [
                 if propChange.v then "Поставлено в план на #{task.get('duedate').format 'DD.MM.YYYY'}"
                 else "Снято с плана.  Причина:")
               task.set 'comments', comments
-# Replaced by saving tags directly
-#              taskUpd['tags'] = v =
-#                if (tags = task.get('tags')?.map)
-#                  if propChange.v
-#                    newTags = (tag for tag of tags)
-#                    newTags.unshift(config.planTag) # add tag
-#                  else
-#                    newTags = (tag for tag of tags when tag != config.planTag) # remove tag
-#                  newTags.join()
-#                else if propChange.v then config.planTag else ''
             else
               console.error "change.save(): Property #{propName} not expected to be changed"
 
-        actionError = ((error, isCancelled) =>
+        actionError = (error, isCancelled) =>
           if !isCancelled
-            console.error 'error: ', error
+            if config.get 'autosave'
+              reportFailedSave error, task
+              removeChanges task
+            else
+              task.__change.__error = error
+              task.__change.__refreshView?()
             @set 'cancel', null
           task.release @
           saveInProgress.reject()
           saveInProgress = null
-          return)
+          return
 
         saveTaskAction = (=>
           @get('source').httpPut("tasks/#{task.get('id')}.json", upd, @set('cancel', $q.defer()))
@@ -241,6 +271,7 @@ ngModule.factory 'dsChanges', [
                     @set 'cancel', null
                     if (resp.status == 201) # 0 means that request was canceled
                       task.$ds_chg.$ds_hist.setSameAsServer task, 'comments' # remove comments from history to keep undo/redo consistent
+                      reportSuccessSave task
                       task.release @
                       @save(tasks) # save next edited object, if any
                     else actionError(resp, resp.status == 0)
@@ -266,16 +297,20 @@ ngModule.factory 'dsChanges', [
 #                        return), actionError
 #                    return)).call @
                 else
+                  reportSuccessSave task
                   task.release @
                   @save(tasks) # save next edited object, if any
               else
-                task.__change.__error = resp.data.MESSAGE
-                task.__change.__refreshView?()
+                if config.get 'autosave'
+                  reportFailedSave resp.data.MESSAGE, task
+                else
+                  task.__change.__error = resp.data.MESSAGE
+                  task.__change.__refreshView?()
                 task.release @
                 @save(tasks) # save next edited object, if any
               return), actionError))
 
-        if newReponsible == null
+        if newResponsible == null
           saveTaskAction()
         else if (projectPeople = (project = task.get('project')).get('people')) == null # we do not know yet list of people on project
           @get('source').httpGet("projects/#{project.get('id')}/people.json", @set('cancel', $q.defer()))
@@ -285,11 +320,11 @@ ngModule.factory 'dsChanges', [
               if (resp.status == 200) # 0 means that request was canceled
                 project.set 'people', projectPeople = {}
                 projectPeople[p.id] = true for p in resp.data.people
-                @addPersonToProject project, newReponsible, saveTaskAction, actionError
+                @addPersonToProject project, newResponsible, saveTaskAction, actionError
               else actionError(resp, resp.status == 0)
               return), actionError)
-        else if !projectPeople.hasOwnProperty(newReponsible.get('id')) # person is not on a project
-          @addPersonToProject project, newReponsible, saveTaskAction
+        else if !projectPeople.hasOwnProperty(newResponsible.get('id')) # person is not on a project
+          @addPersonToProject project, newResponsible, saveTaskAction
         else saveTaskAction()
 
         return saveInProgress.promise);

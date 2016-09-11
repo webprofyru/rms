@@ -24,7 +24,7 @@ include ../../tasks/_timeTracking.jade
         ui-select-match(placeholder='Select load...') {{$select.selected.name}}
         ui-select-choices(repeat='load in filterLoad | filter: {name: $select.search}')
           div(ng-bind-html='load.name | highlight: $select.search')
-    td(valign='top').actions
+    td(valign='top' style='width: {{config.autosave ? 420 : 500}}px').actions
       include ../../_actions.jade
   div(style='width:{{layout.area1.width}}px;height:{{layout.height}}px')
     #top-block(style='width:{{layout.area1.width}}px;height:{{layout.area1.height}}px')
