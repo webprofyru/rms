@@ -1,6 +1,5 @@
 assert = require('./util').assert
 error = require('./util').error
-historyMode = require('../app/features').history
 
 DSObjectBase = require './DSObjectBase'
 DSObject = require './DSObject'
@@ -79,7 +78,18 @@ module.exports = class DSHistory extends DSObject
         oldVal.addRef @
       hist.push m = {i: item, p: prop, n: newVal, o: oldVal}
       m.b = blockId if blockId
-      @histTop = hist.length
+      if (@histTop = histTop = hist.length) > 200
+        cnt = -1
+        loop
+          b = hist[++cnt].b
+          while ++cnt < histTop
+            if (h = hist[cnt]).b == b
+              v.release @ if (v = h.n) instanceof DSObjectBase
+              v.release @ if (v = h.o) instanceof DSObjectBase
+            else break
+          break if (histTop - cnt) <= 200
+        @hist = hist = hist[cnt..]
+        @histTop = hist.length
     return)
 
   setSameAsServer: ((item, prop) ->

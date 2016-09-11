@@ -1,6 +1,5 @@
 assert = require('../../dscommon/util').assert
 error = require('../../dscommon/util').error
-clipboardMode = require('../features').clipboard
 
 time = require('../ui/time')
 
@@ -127,8 +126,7 @@ module.exports = class Task extends DSDocument
   @propNum 'priority', init: defaultTag.priority, calc: true
   @propObj 'style', init: (-> defaultTag), calc: true
 
-  if clipboardMode == 0
-    @propBool 'clipboard', init: false, common: true
+  @propBool 'clipboard', init: false, common: true
 
   isOverdue: (-> (duedate = @get('duedate')) != null && duedate < time.today)
 

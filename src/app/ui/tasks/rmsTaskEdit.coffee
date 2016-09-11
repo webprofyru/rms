@@ -124,7 +124,7 @@ ngModule.directive 'rmsTaskEdit', [
       edit.splitDiff = null
       edit.firstWeek = thisWeek = moment().startOf('week')
       edit.splitDuedate = if duedate != null then duedate else moment().startOf('day')
-      if edit.isSplit = (edit.split = if (split = task.get('split')) != null then split.clone() else null) != null
+      if edit.isSplit = (edit.split = if (split = task.get('split')) != null then split.clone() else null) != null && edit.duedate != null && edit.estimate != null
         first = moment(split.firstDate(duedate)).startOf('week')
         last = moment(split.lastDate(duedate)).startOf('week')
         if (weeks = moment.duration(last.diff(first)).asWeeks()) < splitViewWeeksCount # can fit
@@ -139,15 +139,19 @@ ngModule.directive 'rmsTaskEdit', [
       if !($scope.viewonly = !task.$u || _.isEmpty(task.$u))
         $scope.changes = false
         $scope.$watch (->
-            res = [ # watch all possible changes, except isSplit that has special logic
-              edit.title
-              edit.description
-              if (duedate = edit.duedate) == null then null else duedate.valueOf()
-              if (estimate = edit.estimate) == null then null else estimate.valueOf()
-              if (responsible = edit.responsible) == null then null else responsible.$ds_key
-              if (tags = edit.tags) == null then null else tags.valueOf()]
-            res = res.concat val if (split = edit.split) != null && (val = split.valueOf()).length > 0 # append split if there is some. intentionally not taking edit.isSplit
-            return res), ((val, oldVal) -> $scope.changes = (val != oldVal); return), true
+          res = [ # watch all possible changes, except isSplit that has special logic
+            edit.title
+            edit.description
+            if (duedate = edit.duedate) == null then null else duedate.valueOf()
+            if (estimate = edit.estimate) == null then null else estimate.valueOf()
+            if (responsible = edit.responsible) == null then null else responsible.$ds_key
+            if (tags = edit.tags) == null then null else tags.valueOf()]
+          res = res.concat val if (split = edit.split) != null && (val = split.valueOf()).length > 0 # append split if there is some. intentionally not taking edit.isSplit
+          return res),
+          ((val, oldVal) ->
+            $scope.changes = (val != oldVal)
+            edit.isSplit = false if val[2] == null || val[3] == null
+            return), true
         $scope.$watch (-> edit.isSplit), ((isSplit) -> # watch isSplit
           if isSplit
             edit.split = new TaskSplit() if edit.split == null

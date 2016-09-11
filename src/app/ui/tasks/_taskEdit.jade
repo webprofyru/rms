@@ -15,6 +15,7 @@ form#modal-task(ng-switch-when='task-edit' rms-task-edit='')
       input.task-modal-title(type='text' ng-model='edit.title')
       a(href="{{config.teamwork + 'tasks/' + task.id}}" target='_blank')
         img.task-modal-icon-link(src="./images/icons/link.svg")
+
     .task-modal-row(ng-if='!task.$u.estimate')
       .task-modal-row-title Estimate:
       .task-modal-row-value {{filter.taskPeriod(task, 'estimate')}}
@@ -27,11 +28,6 @@ form#modal-task(ng-switch-when='task-edit' rms-task-edit='')
       img(src="./images/icons/recycling-can.svg" ng-click="edit.estimate = null").task-modal-icon-recycling
       span.splitDiff(ng-if='edit.splitDiff' style='color:yellow') {{filter.periodDiff(edit.splitDiff)}}
 
-    .task-modal-row(ng-if='task.$u.estimate')
-      .task-modal-row-title Split:
-      input(type="checkbox" name="is-split" ng-model='edit.isSplit')
-      button.btn.auto-split(ng-click='autoSplit()' ng-disabled='!edit.isSplit || edit.duedate == null || edit.duedate < today || edit.estimate == null || edit.responsible == null') AutoSplit
-
     .task-modal-row(ng-if='!task.$u.duedate')
       .task-modal-row-title DueDate:
       .task-modal-row-value {{filter.taskEditDueDate(edit.duedate)}}
@@ -40,6 +36,12 @@ form#modal-task(ng-switch-when='task-edit' rms-task-edit='')
       .task-modal-row-title DueDate:
       input.task-modal-duedate(type='text')
       img(src="./images/icons/recycling-can.svg" ng-click="edit.duedate = null").task-modal-icon-recycling
+
+    .task-modal-row(ng-if='task.$u.estimate')
+      .task-modal-row-title Split:
+      input(type="checkbox" name="is-split" ng-model='edit.isSplit' ng-disabled='!edit.estimate || !edit.duedate')
+      button.btn.auto-split(ng-click='autoSplit()' ng-disabled='!edit.isSplit || edit.duedate == null || edit.duedate < today || edit.estimate == null || edit.responsible == null') AutoSplit
+
     .task-modal-row(ng-if='!task.$u.responsible')
       .task-modal-row-title Person:
       .task-modal-row-value {{task.responsible.title}}

@@ -2,7 +2,7 @@ div(ng-controller='View3' style='width:{{layout.area3.width}}px;height:{{layout.
   .sub-header(ng-class='{narrow: layout.area3.width < 420}')
     //ul.tabs(ng-show='layout.area3.width >= 250')
     table.tabs: tr
-      td(ng-if='features.clipboard == 0' rms-view3-drop-task='-1' ng-click='config.activeSidebarTab = -1' nowrap='' ng-class='{active: config.activeSidebarTab == -1}') {{layout.area3.width < 315 ? 'CLIP' : 'CLIPBOARD'}}
+      td(rms-view3-drop-task='-1' ng-click='config.activeSidebarTab = -1' nowrap='' ng-class='{active: config.activeSidebarTab == -1}') {{layout.area3.width < 315 ? 'CLIP' : 'CLIPBOARD'}}
       td(rms-view3-drop-task='0' ng-click='config.activeSidebarTab = 0' nowrap='' ng-class='{active: config.activeSidebarTab == 0}') {{layout.area3.width < 315 ? 'NO DATE' : layout.area3.width < 510 ? 'NO DUE DATE' : 'WITHOUT DUE DATE'}}
       td(rms-view3-drop-task='1' ng-click='config.activeSidebarTab = 1' nowrap='' ng-class='{active: config.activeSidebarTab == 1}') {{layout.area3.width < 315 ? 'NEXT' : 'NEXT WEEK'}}
       td(ng-click='config.activeSidebarTab = 2' nowrap='' ng-class='{active: config.activeSidebarTab == 2}') {{layout.area3.width < 315 ? 'TASKS' : layout.area3.width < 510 ? 'ALL TASKS' : 'ALL TASKS BY PROJECT'}}

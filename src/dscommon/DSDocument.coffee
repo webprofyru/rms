@@ -1,6 +1,5 @@
 assert = require('./util').assert
 error = require('./util').error
-historyMode = require('../app/features').history
 traceRefs = require('./util').traceRefs
 
 DSObjectBase = require './DSObjectBase'
@@ -107,8 +106,6 @@ module.exports = class DSDocument extends DSObject
             lst.__onChange.call lst, @, propName, value, oldVal for lst in @$ds_evt by -1
         else if (change = @__change) && change.hasOwnProperty(propName)
           if prop.equal((val = (prop = change[propName]).v), value) # server val is the same as last edition of the propName
-            if historyMode == 0
-              @$ds_chg.$ds_hist.setSameAsServer @, propName
             s.release @ if (s = prop.s) instanceof DSObjectBase
             val.release @ if val instanceof DSObjectBase
             delete change[propName]
@@ -126,8 +123,6 @@ module.exports = class DSDocument extends DSObject
       _clearChanges: -> # removes all changes made to the task, and cleaning up a hisotry of those changes
         if (change = @__change)
           for propName, prop of change # fix history
-            if historyMode == 0
-              @$ds_chg.$ds_hist.setSameAsServer @, propName
             if @$ds_evt
               lst.__onChange.call lst, @, propName, @$ds_doc[propName], prop.v for lst in @$ds_evt by -1
             s.release @ if (s = prop.s) instanceof DSObjectBase
@@ -173,9 +168,9 @@ module.exports = class DSDocument extends DSObject
                     oldVal.addRef @ if oldVal instanceof DSObjectBase
                     change[propName] = {v: value, s: oldVal}
                     @addRef @; @$ds_chg.add @, @
-                    @$ds_chg.$ds_hist.add @, propName, value, undefined
+                    @$ds_chg.$ds_hist.add @, propName, value, oldVal
                   else if equal((serverValue = @$ds_doc[propName]), value) # new value is equal to server value of this property
-                    @$ds_chg.$ds_hist.add @, propName, undefined, (changePair = change[propName]).v
+                    @$ds_chg.$ds_hist.add @, propName, oldVal, (changePair = change[propName]).v
                     v.release @ if (v = changePair.v) instanceof DSObjectBase
                     s.release @ if (s = changePair.s) instanceof DSObjectBase
                     delete change[propName]
@@ -193,7 +188,7 @@ module.exports = class DSDocument extends DSObject
                   else # it's first change of this property, but not first change for this whole document
                     serverValue.addRef @ if serverValue instanceof DSObjectBase
                     change[propName] = {v: value, s: serverValue}
-                    @$ds_chg.$ds_hist.add @, propName, value, undefined
+                    @$ds_chg.$ds_hist.add @, propName, value, oldVal
                   if @$ds_evt
                     lst.__onChange.call lst, @, propName, value, oldVal for lst in @$ds_evt by -1
                 return
