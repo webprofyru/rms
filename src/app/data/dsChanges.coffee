@@ -177,7 +177,7 @@ ngModule.factory 'dsChanges', [
 
       reportFailedSave = (reason, task) ->
         if config.get 'autosave'
-          toastr.error "Task '#{trimTitle task.get 'title'}' update failed. Reason: #{reason}", 'Update task', positionClass: 'toast-top-center'
+          toastr.error "Task '#{trimTitle task.get 'title'}' update failed. Reason: #{reason}", 'Update task', positionClass: 'toast-top-center', newestOnTop: true
         removeChanges task
         return
 

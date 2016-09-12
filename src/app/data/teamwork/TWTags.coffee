@@ -38,11 +38,14 @@ ngModule.factory 'TWTags', ['DSDataTeamworkPaged', 'DSDataSource', '$rootScope',
 
       onError = (error, isCancelled) =>
         if !isCancelled
-          console.error 'error: ', error
+          if error.hasOwnProperty('status') # it's $http response
+            toastr.error "Failed to load <i>data/tags.json</i>:<br/><br/> #{error.status} #{error.statusText}", null, positionClass: 'toast-top-center', newestOnTop: true, timeOut: -1
+          else # it's an exception
+            toastr.error "Invalid <i>data/tags.json</i>:<br/><br/> #{error.message}", null, positionClass: 'toast-top-center', newestOnTop: true, timeOut: -1
           @set 'cancel', null
         return []
 
-      @tagsJson = $http.get "data/tags.json?t=#{new Date().getTime()}", @set('cancel', $q.defer())
+      @tagsJson = $http.get "data/tags.json?t=#{new Date().getTime()}", timeout: @set('cancel', $q.defer()), transformResponse:  ((data, headers, status) -> JSONLint.parse data if status == 200)
       .then(((resp) => # ok
         unless resp.status == 200 # 0 means that request was canceled
           onError resp, resp.status == 0

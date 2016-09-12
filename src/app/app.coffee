@@ -1,9 +1,9 @@
 toastr.options =
   'closeButton': false
   'debug': false
-  'newestOnTop': true
+  'newestOnTop': false
   'progressBar': false
-  'positionClass': 'toast-top-right'
+  'positionClass': 'toast-bottom-right'
   'preventDuplicates': false
   'onclick': null
   'showDuration': '300'
@@ -14,6 +14,8 @@ toastr.options =
   'hideEasing': 'linear'
   'showMethod': 'fadeIn'
   'hideMethod': 'fadeOut'
+
+window.JSONLint = require '../../static/libs/jsonlint/jsonlint.js'
 
 require './ng-app'
 

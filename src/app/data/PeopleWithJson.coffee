@@ -46,15 +46,18 @@ ngModule.factory 'PeopleWithJson', [
 
         onError = ((error, isCancelled) =>
           if !isCancelled
-            console.error 'error: ', error
+            if error.hasOwnProperty('status') # it's $http response
+              toastr.error "Failed to load <i>data/people.json</i>:<br/><br/> #{error.status} #{error.statusText}", null, positionClass: 'toast-top-center', newestOnTop: true, timeOut: -1
+            else # it's an exception
+              toastr.error "Invalid <i>data/people.json</i>:<br/><br/> #{error.message}", null, positionClass: 'toast-top-center', newestOnTop: true, timeOut: -1
             @set 'cancel', null
           @_endLoad false
           return)
-        
+
         load = (=>
           return unless @_startLoad()
           cancel = @set('cancel', $q.defer())
-          $http.get "data/people.json?t=#{new Date().getTime()}", cancel
+          $http.get "data/people.json?t=#{new Date().getTime()}", timeout: cancel, transformResponse: ((data, headers, status) -> JSONLint.parse data if status == 200)
           .then(
             ((resp) => # ok
               if (resp.status == 200) # 0 means that request was canceled
