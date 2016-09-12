@@ -47,7 +47,7 @@ ngModule.factory 'config',
 
       @propStr 'selectedRole'
       @propNum 'selectedCompany', init: -1
-      @propNum 'selectedManager'
+      @propStr 'selectedManager'
       @propNum 'selectedLoad'
 
       @propNum 'activeSidebarTab', init: 0

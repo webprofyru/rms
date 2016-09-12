@@ -57,17 +57,17 @@ ngModule.factory 'View3', [
         @expandedProj = {}
         @expandedRows = {}
 
-        @__unwatchA = $scope.$watch (-> [$scope.mode, config.activeSidebarTab]),
-          ((args) =>
-            [mode, active] = args
+        @__unwatchA = $scope.$watch (-> [$scope.mode, config.activeSidebarTab, $scope.selectedManager?.$ds_key]),
+          (([mode, active, selectedManager]) =>
             $rootScope.view3ActiveTab = active
+            selectedManager = null unless selectedManager
             switch active
               when -1 # clipboard
                 @__unwatchB?()
-                @dataUpdate {filter: 'clipboard', mode}
+                @dataUpdate {filter: 'clipboard', mode, manager: selectedManager}
               when 0 # no duedate
                 @__unwatchB?()
-                @dataUpdate {filter: 'noduedate', mode}
+                @dataUpdate {filter: 'noduedate', mode, manager: selectedManager}
               when 1 # next week
                 @__unwatchB = $scope.$watch (-> $scope.$parent.view.startDate?.valueOf()), (startDateVal) =>
                   $rootScope.startDateVal = startDateVal
@@ -76,11 +76,12 @@ ngModule.factory 'View3', [
                   else
                     nextWeekStartDate = moment(startDateVal).add 1, 'week'
                     nextWeekEndDate = moment(nextWeekStartDate).endOf 'week'
-                    @dataUpdate {filter: 'all', mode, startDate: nextWeekStartDate, endDate: nextWeekEndDate}
+                    @dataUpdate {filter: 'all', mode, startDate: nextWeekStartDate, endDate: nextWeekEndDate, manager: selectedManager}
                   return
               when 2 # all tasks by project
                 @__unwatchB?()
-                @dataUpdate {filter: 'all', mode}
+                @dataUpdate {filter: 'all', mode, manager: selectedManager}
+            $scope.tasks = @get('data').get('tasksSet') # TODO: Remove - it's debug
             return), true
 
         @__unwatchC = $scope.$watch (-> [config.view3GroupByPerson, config.view3HidePeopleWOTasks, config.view3FilterByPerson, config.view3FilterByProject, config.view3FilterByTask]), (=>

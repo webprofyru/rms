@@ -22,28 +22,28 @@
       h3
         width: 100%
 
-  @include breakpoint(1150px)
-    @include layout((2, 2, 3, 2, 3, 2, 3, 1, 10) no-gatters)
+  @include breakpoint(1300px)
+    @include layout((2, 2, 3, 2, 3, 2, 3, 2, 3, 1, 10) no-gatters)
     table.header
       td.text
         width: 10%
       td.filters
-        width: 90%
-        $filtersLayout: (2, 3, 2, 3, 2, 3)
+        width: 98%
+        $filtersLayout: (2, 3, 2, 3, 2, 3, 2, 3)
         & > span
           @include span(1 at 1 of $filtersLayout no-gatters)
         .ui-select
           @include span(1 at 2 of $filtersLayout no-gatters)
 
-  @include breakpoint(0px 1150px)
-    @include layout((2, 2, 3, 2, 3, 2, 3, 1, 10) no-gatters)
+  @include breakpoint(0px 1300px)
+    @include layout((2, 2, 3, 2, 3, 2, 3, 2, 3, 1, 10) no-gatters)
     table.header
       td.text
-        width: 15%
+        width: 10%
       td.filters
-        width: 85%
+        width: 90%
         @include container
-        $filtersLayout: (0, 3, 0, 3, 0, 3)
+        $filtersLayout: (0, 3, 0, 3, 0, 3, 0, 3)
         & > span
           display: none
         .ui-select
@@ -52,14 +52,14 @@
   @include breakpoint(1400px)
     table.header
       td.actions
-        width: 500px
+        //width: 500px
         .action-buttons
           width: 100%
 
   @include breakpoint(0px 1400px)
     table.header
       td.actions
-        width: 290px
+        //width: 290px
         .action-buttons
           width: 100%
 

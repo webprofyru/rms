@@ -64,13 +64,28 @@ ngModule.factory 'PeopleWithJson', [
                 @set 'cancel', null
                 DSDigest.block (=>
                   peopleRoles = $rootScope.peopleRoles = resp.data.roles # set roles to those who are in the list
-                  if (selectedRole = config.get('selectedRole'))
+                  if (selectedRole = $rootScope.selectedRole = config.get('selectedRole'))
                     for i in peopleRoles when i.role == selectedRole
                       $rootScope.selectedRole = i
+                      break
+                  filterManagers = $rootScope.filterManagers = [{name: 'All', $ds_key: null}]
                   for personInfo in resp.data.people
                     if teamworkPeople.items.hasOwnProperty(personKey = "#{personInfo.id}")
-                      teamworkPeople.items[personKey].set 'roles', dstags = new DSTags @, personInfo.role
-                      dstags.release @
+                      (twPerson = teamworkPeople.items[personKey]).set 'roles', dstags = new DSTags @, personInfo.role; dstags.release @
+                      if personInfo.hasOwnProperty('projects') # Hack: It's an array of ides, so I do not treat it as a property - at the moment we don't have proper type
+                        unless Array.isArray(personInfo.projects)
+                          console.error "Person #{personInfo.name}: Invalid prop 'projects'"
+                        else
+                          try
+                            twPerson.projects = projectMap = {}
+                            projectMap[projectId] = true for projectId in personInfo.projects
+                            filterManagers.push twPerson
+                          catch
+                            console.error "Person #{personInfo.name}: Invalid prop 'projects'"
+                  if selectedManager = $rootScope.selectedManager = config.get('selectedManager')
+                    for i in filterManagers when i.$ds_key == selectedManager
+                      $rootScope.selectedManager = i
+                      break
                   map = {} # copy whole list of people
                   for personKey, person of teamworkPeople.items
                     map[personKey] = person; person.addRef @

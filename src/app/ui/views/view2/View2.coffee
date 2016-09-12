@@ -45,10 +45,17 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', 'TWTasks', (
     constructor: (($scope, key) ->
       DSView.call @, $scope, key
 
-      @__unwatchA = $scope.$watch (-> [$scope.$parent.view.startDate?.valueOf(), $scope.mode]), ((args) =>
-        [startDateVal, mode] = args
-        @dataUpdate {startDate: moment(startDateVal), endDate: moment(startDateVal).add(6, 'days'), mode}
-        return), true
+      @__unwatchA = $scope.$watch (-> [
+          $scope.$parent.view.startDate?.valueOf(),
+          $scope.mode,
+          $scope.selectedManager?.$ds_key]),
+        (([startDateVal, mode, selectedManager]) =>
+          @dataUpdate
+            startDate: moment(startDateVal)
+            endDate: moment(startDateVal).add(6, 'days')
+            mode: mode
+            manager: if selectedManager then selectedManager else null
+          return), true
 
       return)
 

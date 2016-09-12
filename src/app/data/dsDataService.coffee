@@ -216,6 +216,8 @@ ngModule.factory 'dsDataService', [
                 if srcParams.filter == 'all' || srcParams.filter == 'assigned' || srcParams.filter == 'notassigned'
                   requestParams.startDate = srcParams.startDate
                   requestParams.endDate = srcParams.endDate
+                if srcParams.manager
+                  requestParams.manager = srcParams.manager
             else
               throw new Error "Not supported model type (4): #{docType}"
           newSet = @findDataSet owner, requestParams

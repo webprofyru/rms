@@ -88,16 +88,32 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', 'TWTasks', 
           $scope.selectedCompany = i
           break
 
-      @__unwatchA = $scope.$watch (=> [@get('startDate')?.valueOf(), $scope.mode, $scope.dataService.showTimeSpent]), (([startDateVal, mode, showTimeSpent]) =>
-        @dataUpdate {startDate: moment(startDateVal), endDate: moment(startDateVal).add(6, 'days'), mode, showTimeSpent}
-        return), true
+      @__unwatchA = $scope.$watch((=> [
+          @get('startDate')?.valueOf(),
+          $scope.mode,
+          $scope.dataService.showTimeSpent,
+          $scope.selectedManager?.$ds_key]),
+        (([startDateVal, mode, showTimeSpent, selectedManager]) =>
+          @dataUpdate
+            startDate: moment(startDateVal)
+            endDate: moment(startDateVal).add(6, 'days')
+            mode: mode
+            showTimeSpent: showTimeSpent
+            manager: if selectedManager then selectedManager else null
+          return), true)
 
-      @__unwatchB = $scope.$watch (-> [$scope.selectedRole, $scope.selectedCompany, $scope.selectedLoad]), (([selectedRole, selectedCompany, selectedLoad]) =>
-        if $rootScope.peopleRoles
-          config.set 'selectedRole', if selectedRole then selectedRole.role else null
-        config.set 'selectedCompany', if selectedCompany then selectedCompany.id else null
-        config.set 'selectedLoad', if selectedLoad then selectedLoad.id else 0
-        @__dirty++), true
+      @__unwatchB = $scope.$watch (-> [
+          $scope.selectedRole, $scope.selectedCompany, $scope.selectedManager, $scope.selectedLoad]),
+        (([selectedRole, selectedCompany, selectedManager, selectedLoad]) =>
+          if $rootScope.peopleRoles
+            config.set 'selectedRole', if selectedRole then selectedRole.role else null
+            $scope.selectedRole = null unless selectedRole?.role
+          if $rootScope.filterManagers
+            config.set 'selectedManager', if selectedManager then selectedManager.$ds_key else null
+            $scope.selectedManager = null unless selectedManager?.$ds_key
+          config.set 'selectedCompany', if selectedCompany then selectedCompany.id else null
+          config.set 'selectedLoad', if selectedLoad then selectedLoad.id else 0
+          @__dirty++), true
 
       @__unwatchC = $scope.$watch (=> [config.get('currentUserId'), @get('data').get('peopleStatus')]), (([currentUserId, peopleStatus]) =>
         unless currentUserId != null && (peopleStatus == 'ready' || peopleStatus == 'update')

@@ -105,26 +105,39 @@ ngModule.factory 'TWTasks', [
         else
           params.startDate <= split.lastDate(duedate = task.get('duedate')) && split.firstDate(duedate) <= params.endDate)
 
-      @filter = ((params) ->
-        return switch params.filter
+      @filter = (params) ->
+
+        steps = []
+        
+        switch params.filter
           when 'all'
             if moment.isMoment(params.startDate)
-              ((task) -> isTaskInDatesRange(params, task))
+              steps.push ((task) -> isTaskInDatesRange(params, task))
             else
-              ((task) -> true)
+              steps.push ((task) -> true)
           when 'assigned'
-            ((task) -> task.get('responsible') != null && isTaskInDatesRange(params, task))
+            steps.push ((task) -> task.get('responsible') != null && isTaskInDatesRange(params, task))
           when 'notassigned'
-            ((task) -> task.get('responsible') == null && isTaskInDatesRange(params, task))
+            steps.push ((task) -> task.get('responsible') == null && isTaskInDatesRange(params, task))
           when 'overdue'
-            ((task) -> (date = task.get('duedate')) != null && date < time.today)
+            steps.push ((task) -> (date = task.get('duedate')) != null && date < time.today)
           when 'noduedate'
-            ((task) -> task.get('duedate') == null)
+            steps.push ((task) -> task.get('duedate') == null)
           when 'clipboard'
-            ((task) -> task.get('clipboard'))
+            steps.push ((task) -> task.get('clipboard'))
           else
             throw new Error "Not supported filter: #{params.filter}"
-        )
+
+        if params.manager
+          if (projects = Person.pool.items[params.manager].projects)
+            steps.push (task) -> projects.hasOwnProperty task.get('project').get('id')
+
+        if steps.length == 1 then steps[0] # @filter =
+        else
+          (task) ->
+            for step in steps
+              return false unless step(task)
+            true
 
       init: ((dsDataService) ->
 

@@ -19,12 +19,17 @@ include ../../tasks/_timeTracking.jade
         ui-select-match(placeholder='Select company...') {{$select.selected.name}}
         ui-select-choices(repeat='company in filterCompanies | filter: {name: $select.search}')
           div(ng-bind-html='company.name | highlight: $select.search')
+      span.contract Manager:
+      ui-select.contract(ng-model='$parent.$parent.selectedManager', theme='selectize', ng-disabled='disabled').ui-select
+        ui-select-match(placeholder='Select manager...') {{$select.selected.name}}
+        ui-select-choices(repeat='manager in filterManagers | filter: {name: $select.search}')
+          div(ng-bind-html='manager.name | highlight: $select.search')
       span.workload By workload:
       ui-select.workload(ng-model='$parent.$parent.selectedLoad', theme='selectize', ng-disabled='disabled').ui-select
         ui-select-match(placeholder='Select load...') {{$select.selected.name}}
         ui-select-choices(repeat='load in filterLoad | filter: {name: $select.search}')
           div(ng-bind-html='load.name | highlight: $select.search')
-    td(valign='top' style='width: {{config.autosave ? 420 : 500}}px').actions
+    td(valign='top' style='width: {{layout.width <= 1400 ? (config.autosave ? 246 : 290) : (config.autosave ? 420 : 500)}}px').actions
       include ../../_actions.jade
   div(style='width:{{layout.area1.width}}px;height:{{layout.height}}px')
     #top-block(style='width:{{layout.area1.width}}px;height:{{layout.area1.height}}px')
