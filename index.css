@@ -629,32 +629,32 @@ ul {
       /* line 22, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.text h3 {
         width: 100%; }
-    @media (min-width: 1150px) {
+    @media (min-width: 1300px) {
       /* line 28, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.text {
         width: 10%; }
       /* line 30, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.filters {
-        width: 90%; }
+        width: 98%; }
         /* line 33, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
         #screen1 #container table.header td.filters > span {
           -webkit-box-sizing: border-box;
           box-sizing: border-box;
-          width: 13.33333%;
+          width: 10%;
           float: left; }
         /* line 35, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
         #screen1 #container table.header td.filters .ui-select {
           -webkit-box-sizing: border-box;
           box-sizing: border-box;
-          width: 20%;
+          width: 15%;
           float: left; } }
-    @media (min-width: 0px) and (max-width: 1150px) {
+    @media (min-width: 0px) and (max-width: 1300px) {
       /* line 41, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.text {
-        width: 15%; }
+        width: 10%; }
       /* line 43, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.filters {
-        width: 85%;
+        width: 90%;
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
         max-width: 100%;
@@ -672,22 +672,16 @@ ul {
         #screen1 #container table.header td.filters .ui-select {
           -webkit-box-sizing: border-box;
           box-sizing: border-box;
-          width: 33.33333%;
+          width: 25%;
           float: left; } }
     @media (min-width: 1400px) {
-      /* line 54, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
-      #screen1 #container table.header td.actions {
-        width: 500px; }
-        /* line 56, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
-        #screen1 #container table.header td.actions .action-buttons {
-          width: 100%; } }
+      /* line 56, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+      #screen1 #container table.header td.actions .action-buttons {
+        width: 100%; } }
     @media (min-width: 0px) and (max-width: 1400px) {
-      /* line 61, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
-      #screen1 #container table.header td.actions {
-        width: 290px; }
-        /* line 63, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
-        #screen1 #container table.header td.actions .action-buttons {
-          width: 100%; } }
+      /* line 63, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+      #screen1 #container table.header td.actions .action-buttons {
+        width: 100%; } }
     /* line 66, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
     #screen1 #container .header {
       width: 100%;
@@ -703,7 +697,7 @@ ul {
       #screen1 #container .header .filters {
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
-        width: 53.57143%;
+        width: 45.45455%;
         float: left; }
         /* line 78, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
         #screen1 #container .header .filters > span {

@@ -84,7 +84,7 @@ ngModule.factory('config', [
         init: -1
       });
 
-      Config.propNum('selectedManager');
+      Config.propStr('selectedManager');
 
       Config.propNum('selectedLoad');
 
@@ -260,7 +260,19 @@ ngModule.factory('PeopleWithJson', [
         onError = ((function(_this) {
           return function(error, isCancelled) {
             if (!isCancelled) {
-              console.error('error: ', error);
+              if (error.hasOwnProperty('status')) {
+                toastr.error("Failed to load <i>data/people.json</i>:<br/><br/> " + error.status + " " + error.statusText, null, {
+                  positionClass: 'toast-top-center',
+                  newestOnTop: true,
+                  timeOut: -1
+                });
+              } else {
+                toastr.error("Invalid <i>data/people.json</i>:<br/><br/> " + error.message, null, {
+                  positionClass: 'toast-top-center',
+                  newestOnTop: true,
+                  timeOut: -1
+                });
+              }
               _this.set('cancel', null);
             }
             _this._endLoad(false);
@@ -273,32 +285,74 @@ ngModule.factory('PeopleWithJson', [
               return;
             }
             cancel = _this.set('cancel', $q.defer());
-            $http.get("data/people.json?t=" + (new Date().getTime()), cancel).then((function(resp) {
+            $http.get("data/people.json?t=" + (new Date().getTime()), {
+              timeout: cancel,
+              transformResponse: (function(data, headers, status) {
+                if (status === 200) {
+                  return JSONLint.parse(data);
+                }
+              })
+            }).then((function(resp) {
               if (resp.status === 200) {
                 _this.set('cancel', null);
                 DSDigest.block((function() {
-                  var dstags, i, j, k, len, len1, map, peopleRoles, person, personInfo, personKey, ref, ref1, selectedRole;
+                  var dstags, error1, filterManagers, i, j, k, l, len, len1, len2, len3, m, map, peopleRoles, person, personInfo, personKey, projectId, projectMap, ref, ref1, ref2, selectedManager, selectedRole, twPerson;
                   peopleRoles = $rootScope.peopleRoles = resp.data.roles;
-                  if ((selectedRole = config.get('selectedRole'))) {
+                  if ((selectedRole = $rootScope.selectedRole = config.get('selectedRole'))) {
                     for (j = 0, len = peopleRoles.length; j < len; j++) {
                       i = peopleRoles[j];
-                      if (i.role === selectedRole) {
-                        $rootScope.selectedRole = i;
+                      if (!(i.role === selectedRole)) {
+                        continue;
                       }
+                      $rootScope.selectedRole = i;
+                      break;
                     }
                   }
+                  filterManagers = $rootScope.filterManagers = [
+                    {
+                      name: 'All',
+                      $ds_key: null
+                    }
+                  ];
                   ref = resp.data.people;
                   for (k = 0, len1 = ref.length; k < len1; k++) {
                     personInfo = ref[k];
                     if (teamworkPeople.items.hasOwnProperty(personKey = "" + personInfo.id)) {
-                      teamworkPeople.items[personKey].set('roles', dstags = new DSTags(_this, personInfo.role));
+                      (twPerson = teamworkPeople.items[personKey]).set('roles', dstags = new DSTags(_this, personInfo.role));
                       dstags.release(_this);
+                      if (personInfo.hasOwnProperty('projects')) {
+                        if (!Array.isArray(personInfo.projects)) {
+                          console.error("Person " + personInfo.name + ": Invalid prop 'projects'");
+                        } else {
+                          try {
+                            twPerson.projects = projectMap = {};
+                            ref1 = personInfo.projects;
+                            for (l = 0, len2 = ref1.length; l < len2; l++) {
+                              projectId = ref1[l];
+                              projectMap[projectId] = true;
+                            }
+                            filterManagers.push(twPerson);
+                          } catch (error1) {
+                            console.error("Person " + personInfo.name + ": Invalid prop 'projects'");
+                          }
+                        }
+                      }
+                    }
+                  }
+                  if (selectedManager = $rootScope.selectedManager = config.get('selectedManager')) {
+                    for (m = 0, len3 = filterManagers.length; m < len3; m++) {
+                      i = filterManagers[m];
+                      if (!(i.$ds_key === selectedManager)) {
+                        continue;
+                      }
+                      $rootScope.selectedManager = i;
+                      break;
                     }
                   }
                   map = {};
-                  ref1 = teamworkPeople.items;
-                  for (personKey in ref1) {
-                    person = ref1[personKey];
+                  ref2 = teamworkPeople.items;
+                  for (personKey in ref2) {
+                    person = ref2[personKey];
                     map[personKey] = person;
                     person.addRef(_this);
                   }

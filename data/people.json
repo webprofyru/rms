@@ -2,7 +2,7 @@
     "roles": [
         {
             "role": null,
-            "name": "Все"
+            "name": "All"
         },
         {
             "role": "Except managers",
@@ -110,7 +110,16 @@
             "id": 112015,
             "role": "Programmer, Teamlead",
             "name": "Alexey Zorkaltsev",
-            "email": "alexey@zorkaltsev.com"
+            "email": "alexey@zorkaltsev.com",
+            "projects": [87822, 154875, 169023]
+        },
+        {
+            "comment": "Zork: It's DEBUG user. Do not remove !!!",
+            "id": 54838,
+            "role": "Programmer, Teamlead",
+            "name": "Alexey Zorkaltsev",
+            "email": "alexey@zorkaltsev.com",
+            "projects": [87822, 154875, 169023]
         },
         {
             "id": 48693,
@@ -200,7 +209,8 @@
           "id": 115545,
           "role": "Manager, RMStrainee",
           "name": "Анна Комарова",
-          "email": "a.komarova@webprofy.ru"
+          "email": "a.komarova@webprofy.ru",
+          "projects": [154875]
         },
         {
           "id": 115566,
