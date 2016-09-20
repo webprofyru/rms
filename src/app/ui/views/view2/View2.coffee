@@ -115,17 +115,16 @@ ngModule.directive 'rmsView2DayDropTask', [
 
       el.addEventListener 'drop', (ev) ->
 
-        day = getDay(ev)
-
-        unless ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate != null
-          tasks = [$rootScope.modal.task]
-        else # group movement, if task has no split and 'ctrl' key is pressed while operation
-          tasks = getDropTasksGroup()
-
-        addCommentAndSave tasks, ev.shiftKey, # You have to keep shift, if you need to make a comment
-          responsible: null
-          duedate: if day == -1 then null else $scope.view1.get('days')[day].get('date')
-          plan: false
+        if ev.dataTransfer.getData('task')
+          day = getDay(ev)
+          unless ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate != null
+            tasks = [$rootScope.modal.task]
+          else # group movement, if task has no split and 'ctrl' key is pressed while operation
+            tasks = getDropTasksGroup()
+          addCommentAndSave tasks, ev.shiftKey, # You have to keep shift, if you need to make a comment
+            responsible: null
+            duedate: if day == -1 then null else $scope.view1.get('days')[day].get('date')
+            plan: false
 
         $rootScope.$digest()
         ev.stopPropagation()

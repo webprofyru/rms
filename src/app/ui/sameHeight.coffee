@@ -15,7 +15,6 @@ ngModule.directive "sameHeight", ->
     return
   link: ($scope, element, attrs, ctrl) ->
     if attrs.sameHeight
-      console.info '1.', attrs.sameHeight
       $scope.$watch attrs.sameHeight, ->
         $scope.resizeInProgress()
     return
@@ -45,7 +44,6 @@ ngModule.directive "sameHeightSrc", ->
               clearInterval timer
               progress = false
           else # it's changing
-            console.info '3.'
             f(prevHeight) for f in ctrl.update
             roundsCount = roundsToBeStable
         return), roundPeriod

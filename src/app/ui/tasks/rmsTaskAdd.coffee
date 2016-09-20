@@ -11,7 +11,6 @@ ngModule.directive 'rmsTaskAdd', [
           type: 'task-edit'
 
       dragStart = (ev)-> # Note: If we use jQuery.on for this event, we don't have e.dataTransfer option
-        console.info '2.'
 #        $rootScope.modal =
 #          type: 'drag-start'
 #          task: task = $scope.$eval attrs.rmsTask
@@ -24,7 +23,6 @@ ngModule.directive 'rmsTaskAdd', [
         true # (ev)->
 
       dragEnd = (ev)->
-        console.info '3.'
         element.removeClass 'drag-start'
 #        $rootScope.modal = {type: null}
 #        $rootScope.$digest()

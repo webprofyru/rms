@@ -64,7 +64,7 @@ ngModule.factory 'addCommentAndSave', [
         newChanges = []; anyChange = false
         for propName, propDesc of document.__props
           if changes.hasOwnProperty propName
-            if !document.$u.hasOwnProperty propName
+            if !document.$u?.hasOwnProperty propName
               console.error "Doc #{document.toString()}: Prop #{propName}: Property is not editable"
               continue
             if typeof(propDesc.valid (value = changes[propName])) == 'undefined'

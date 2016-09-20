@@ -388,24 +388,25 @@ ngModule.directive 'rmsView1DropTask', [
 
       el.addEventListener 'drop', (ev) ->
 
-        day = _.findIndex $('.drop-zone', element), (value) ->
-          $v = $(value)
-          $v.offset().left + $v.width() >= ev.clientX # (value) ->
+        if ev.dataTransfer.getData('task')
+          day = _.findIndex $('.drop-zone', element), (value) ->
+            $v = $(value)
+            $v.offset().left + $v.width() >= ev.clientX # (value) ->
 
-        unless ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate != null
-          tasks = [$rootScope.modal.task]
-        else # group movement, if task has no split and 'ctrl' key is pressed while operation
-          tasks = getDropTasksGroup()
+          unless ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate != null
+            tasks = [$rootScope.modal.task]
+          else # group movement, if task has no split and 'ctrl' key is pressed while operation
+            tasks = getDropTasksGroup()
 
-        if day < 0
-          addCommentAndSave tasks, ev.shiftKey, # You have to keep shift, if you need to make a comment
-            responsible: $scope.row.get('person')
-            plan: false
-        else
-          addCommentAndSave tasks, ev.shiftKey, # You have to keep shift, if you need to make a comment
-            responsible: $scope.row.get('person')
-            duedate: $scope.view.get('days')[day].get('date')
-            plan: false
+          if day < 0
+            addCommentAndSave tasks, ev.shiftKey, # You have to keep shift, if you need to make a comment
+              responsible: $scope.row.get('person')
+              plan: false
+          else
+            addCommentAndSave tasks, ev.shiftKey, # You have to keep shift, if you need to make a comment
+              responsible: $scope.row.get('person')
+              duedate: $scope.view.get('days')[day].get('date')
+              plan: false
 
         $rootScope.$digest()
         ev.stopPropagation()

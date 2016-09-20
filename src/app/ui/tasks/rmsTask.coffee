@@ -103,35 +103,33 @@ ngModule.directive 'rmsTask', [
           element.css 'border', if style.border then style.border else ''
           return
 
+      dragStart = listenerFunc = (ev)-> # Note: If we use jQuery.on for this event, we don't have e.dataTransfer option
+        $rootScope.modal =
+          type: 'drag-start'
+          task: task = $scope.$eval attrs.rmsTask
+          scope: $scope
+        $rootScope.$digest()
+        element.addClass 'drag-start'
+        ev.dataTransfer.effectAllowed = 'move'
+        ev.dataTransfer.setData 'task', task
+        ev.dataTransfer.setDragImage $('#task-drag-ghost')[0], 20, 20
+        true # (e)->
+      dragEnd = (ev)->
+        $rootScope.modal = {type: null}
+        element.removeClass 'drag-start'
+        $rootScope.$digest()
+        true # (e)->
 
+      el = element[0]
       $scope.$watch "#{attrs.rmsTask}.$u", (val) ->
         if val
-          # The jQuery event object does not have a dataTransfer property
-          el = element[0]
           el.draggable = true
-
-          el.addEventListener 'dragstart', listenerFunc = (ev)-> # Note: If we use jQuery.on for this event, we don't have e.dataTransfer option
-            $rootScope.modal =
-              type: 'drag-start'
-              task: task = $scope.$eval attrs.rmsTask
-              scope: $scope
-            $rootScope.$digest()
-            element.addClass 'drag-start'
-            ev.dataTransfer.effectAllowed = 'move'
-            ev.dataTransfer.setData 'task', task
-            ev.dataTransfer.setDragImage $('#task-drag-ghost')[0], 20, 20
-            true # (e)->
-
-          el.addEventListener 'dragend', (ev)->
-            $rootScope.modal = {type: null}
-            element.removeClass 'drag-start'
-            $rootScope.$digest()
-            true # (e)->
+          el.addEventListener 'dragstart', dragStart
+          el.addEventListener 'dragend', dragEnd
         else
-          el = element[0]
           el.draggable = false
-          el.removeEventListener 'dragstart', listenerFunc
-          element.off 'dragend'
+          el.removeEventListener 'dragstart', dragStart
+          el.removeEventListener 'dragend', dragEnd
         return # (val) ->
       return # link
     ] # ($rootScope, $timeout) ->

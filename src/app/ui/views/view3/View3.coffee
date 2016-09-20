@@ -81,7 +81,6 @@ ngModule.factory 'View3', [
               when 2 # all tasks by project
                 @__unwatchB?()
                 @dataUpdate {filter: 'all', mode, manager: selectedManager}
-            $scope.tasks = @get('data').get('tasksSet') # TODO: Remove - it's debug
             return), true
 
         @__unwatchC = $scope.$watch (-> [config.view3GroupByPerson, config.view3HidePeopleWOTasks, config.view3FilterByPerson, config.view3FilterByProject, config.view3FilterByTask]), (=>
@@ -260,20 +259,22 @@ ngModule.directive 'rmsView3DropTask', [
 
       el.addEventListener 'drop', (ev) ->
 
-        unless ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate != null
-          tasks = [$rootScope.modal.task]
-        else # group movement, if task has no split and 'ctrl' key is pressed while operation
-          tasks = getDropTasksGroup()
+        if ev.dataTransfer.getData('task')
 
-        fields = plan: false
-        switch activeTab()
-          when -1
-            fields.duedate = null
-            fields.clipboard = true
-          when 0 then fields.duedate = null
-          when 1 then fields.duedate = moment($rootScope.startDateVal).add(1, 'week')
+          unless ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate != null
+            tasks = [$rootScope.modal.task]
+          else # group movement, if task has no split and 'ctrl' key is pressed while operation
+            tasks = getDropTasksGroup()
 
-        addCommentAndSave tasks, ev.shiftKey, fields # You have to keep shift, if you need to make a comment
+          fields = plan: false
+          switch activeTab()
+            when -1
+              fields.duedate = null
+              fields.clipboard = true
+            when 0 then fields.duedate = null
+            when 1 then fields.duedate = moment($rootScope.startDateVal).add(1, 'week')
+
+          addCommentAndSave tasks, ev.shiftKey, fields # You have to keep shift, if you need to make a comment
 
         $rootScope.$digest()
         ev.stopPropagation()
