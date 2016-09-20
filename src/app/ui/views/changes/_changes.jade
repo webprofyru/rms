@@ -16,7 +16,7 @@
                 td: div {{item.prop}}
                 td: div {{item.value}}
                 td: div {{item.conflict}}
-                td: img(ng-if='item.remove' src="./images/icons/recycling-can.svg" ng-click='item.remove()').icon-remove
+                td: img(no-drag='' ng-if='item.remove' src="./images/icons/recycling-can.svg" ng-click='item.remove()').icon-remove
             tr(ng-repeat-end='' ng-if='item.error' class='error' ng-class='{dark: item.isDark}')
                 td: | &nbsp;
                 td(colspan='4'): | Error: {{item.error}}
@@ -24,11 +24,11 @@
     .btn-group
         ul
             li(ng-click='view.changes.length && reset()' ng-class='{disabled: !view.changes.length}'): table: tr
-                td: img(src='./images/icons/recycling-man.svg')
+                td: img(no-drag='' src='./images/icons/recycling-man.svg')
                 td reset
             li(ng-click='showChanges()').changes-modal-close: table: tr
-                td: img(src='./images/icons/close.svg').close
+                td: img(no-drag='' src='./images/icons/close.svg').close
                 td close
             li(ng-click='view.changes.length && save()' ng-class='{disabled: !view.changes.length}').changes-modal-save: table: tr
-                td: img(src='./images/icons/fly.svg')
+                td: img(no-drag='' src='./images/icons/fly.svg')
                 td save

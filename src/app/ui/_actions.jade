@@ -1,25 +1,27 @@
 ul.action-buttons
-    li.refresh(ng-click='dataService.refresh()')
-        img(src='./images/icons/refresh.svg')
-    li.time-spent(ng-if='config.hasRoles' ng-click='dataService.showTimeSpent = !dataService.showTimeSpent' ng-class='{active: dataService.showTimeSpent}')
-        img(ng-src="{{dataService.showTimeSpent ? './images/icons/wall-clock-white.svg' : './images/icons/wall-clock.svg'}}")
-    li.edited(ng-if="mode=='edited'" ng-click="setMode('original')")
-        table: tr
-            td: img(src='./images/icons/edit.svg')
-            td edited
-    li.edited(ng-if="mode=='original'" ng-click="setMode('edited')")
-        table: tr
-            td: img(src='./images/icons/server.svg')
-            td original
-    li.changes(ng-if='!config.autosave' ng-class='{disabled: !changes.anyChange()}' ng-click='changes.anyChange() && showChanges()')
-        table: tr
-            td: img(src='./images/icons/list.svg')
-            td changes
-    li.undo.without-sign(ng-class='{disabled: !changes.hist.hasUndo()}' ng-click='changes.hist.hasUndo() && changes.hist.undo()')
-        img(src='./images/icons/undo.svg')
-    li.redo.without-sign(ng-class='{disabled: !changes.hist.hasRedo()}' ng-click='changes.hist.hasRedo() && changes.hist.redo()')
-        img(src='./images/icons/redo.svg')
-    li.account(ng-click='showAccount()')
-        table: tr
-            td: img(src='./images/icons/user.svg')
-            td account
+  li.addTask(ng-if="mode=='edited'" rms-task-add='' ng-click='addTask()' title='Add new task')
+    img(src='./images/icons/plus.svg')
+  li.refresh(ng-click='dataService.refresh()' title='Refresh data')
+    img(no-drag='' src='./images/icons/refresh.svg')
+  li.time-spent(ng-if='config.hasRoles' ng-click='dataService.showTimeSpent = !dataService.showTimeSpent' ng-class='{active: dataService.showTimeSpent}' title='Show time spent')
+    img(no-drag='' src='./images/icons/wall-clock.svg')
+  li.edited(ng-if="mode=='edited'" ng-click="setMode('original')" title='Show server data')
+    table: tr
+      td: img(no-drag='' src='./images/icons/edit.svg')
+      td edited
+  li.edited.active(ng-if="mode=='original'" ng-click="setMode('edited')" title='Show edited data')
+    table: tr
+      td: img(no-drag='' src='./images/icons/server.svg')
+      td original
+  li.changes(ng-if='!config.autosave' ng-class='{disabled: !changes.anyChange()}' ng-click='changes.anyChange() && showChanges()' title='Save changes')
+    table: tr
+      td: img(no-drag='' src='./images/icons/list.svg')
+      td changes
+  li.undo.without-sign(ng-class='{disabled: !changes.hist.hasUndo()}' ng-click='changes.hist.hasUndo() && changes.hist.undo()' title='Undo')
+    img(no-drag='' src='./images/icons/undo.svg')
+  li.redo.without-sign(ng-class='{disabled: !changes.hist.hasRedo()}' ng-click='changes.hist.hasRedo() && changes.hist.redo()' title='Redo')
+    img(no-drag='' src='./images/icons/redo.svg')
+  li.account(ng-click='showAccount()' title='Account settings')
+    table: tr
+      td: img(no-drag='' src='./images/icons/user.svg')
+      td account

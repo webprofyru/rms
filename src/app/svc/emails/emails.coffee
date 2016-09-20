@@ -73,7 +73,7 @@ ctrl =
           continue if person.get('roles') == null # it's got to be a client
           projects = {}
           for taskKey, task of tasksSet.items when task.get('responsible') == person && task.get('estimate') != null
-            continue if task.get('todoList').get('id') == 462667 # skip vocations tasks
+            continue if task.get('taskList').get('id') == 462667 # skip vocations tasks
             if !(projectState = projects[projectKey = (project = task.get('project')).$ds_key])
               projectState = projects[projectKey] =
                 id: project.get('id')
@@ -82,7 +82,7 @@ ctrl =
                 optHours: moment.duration()
                 manager: ''
 
-            hours = if task.get('title').toLowerCase().indexOf('бронь') != -1 || task.get('todoList').get('name').toLowerCase().indexOf('бронь') != -1
+            hours = if task.get('title').toLowerCase().indexOf('бронь') != -1 || task.get('taskList').get('name').toLowerCase().indexOf('бронь') != -1
               projectState.optHours
             else projectState.planHours
 

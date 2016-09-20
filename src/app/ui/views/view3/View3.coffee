@@ -11,13 +11,13 @@ error = require('../../../../dscommon/util').error
 
 # Global models
 Task = require('../../../models/Task')
-TodoList = require('../../../models/TodoList')
+TaskList = require('../../../models/TaskList')
 Project = require('../../../models/Project')
 
 # View specific models
 PersonView = require('./models/PersonView')
 ProjectView = require('./models/ProjectView')
-TodoListView = require('./models/TodoListView')
+TaskListView = require('./models/TaskListView')
 Row = require('../view1/models/Row')
 
 ngModule.controller 'View3', [
@@ -148,8 +148,8 @@ ngModule.factory 'View3', [
 
         if config.view3GroupByPerson == 0
 
-          tasksByTodoList = _.groupBy tasks, ((task) -> task.get('todoList').$ds_key)
-          tasksByProject = _.groupBy tasksByTodoList, ((todoList) -> todoList[0].get('project').$ds_key)
+          tasksByTaskList = _.groupBy tasks, ((task) -> task.get('taskList').$ds_key)
+          tasksByProject = _.groupBy tasksByTaskList, ((taskList) -> taskList[0].get('project').$ds_key)
 
           if (filterByProject = config.view3FilterByProject)?.length > 0
             filterByProject = filterByProject.trim().toLowerCase()
@@ -160,14 +160,14 @@ ngModule.factory 'View3', [
           projects = @get('projectsList').merge @, (_.map tasksByProject, ((projectGroup, projectKey) =>
             projectView = poolProjects.find @, projectKey
             projectView.set 'project', Project.pool.items[projectKey]
-            projectView.get('todoListsList').merge @, _.map projectGroup, ((todoListGroup) =>
-              todoListKey = todoListGroup[0].get('todoList').$ds_key
-              todoListView = projectView.poolTodoLists.find @, todoListKey
-              todoListView.set 'todoList', TodoList.pool.items[todoListKey]
-              todoListView.set 'tasksCount', _.size todoListGroup
-              todoListView.set 'totalEstimate', _.reduce todoListGroup, ((sum, task) -> if (estimate = task.get('estimate')) then sum.add estimate else sum), moment.duration(0)
-              todoListView.get('tasksList').merge @, (_.map todoListGroup, ((task) => task.addRef @)).sort TWTasks.tasksSortRule
-              return todoListView)
+            projectView.get('taskListsList').merge @, _.map projectGroup, ((taskListGroup) =>
+              taskListKey = taskListGroup[0].get('taskList').$ds_key
+              taskListView = projectView.poolTaskLists.find @, taskListKey
+              taskListView.set 'taskList', TaskList.pool.items[taskListKey]
+              taskListView.set 'tasksCount', _.size taskListGroup
+              taskListView.set 'totalEstimate', _.reduce taskListGroup, ((sum, task) -> if (estimate = task.get('estimate')) then sum.add estimate else sum), moment.duration(0)
+              taskListView.get('tasksList').merge @, (_.map taskListGroup, ((task) => task.addRef @)).sort TWTasks.tasksSortRule
+              return taskListView)
             return projectView)).sort ((left, right) ->
               if (leftLC = left.get('project').get('name').toLowerCase()) < (rightLC = right.get('project').get('name').toLowerCase()) then -1 else if leftLC > rightLC then 1 else 0)
 
@@ -202,8 +202,8 @@ ngModule.factory 'View3', [
 
             if tasksByPeople.hasOwnProperty(personViewKey = (if r != 'null' then r.$ds_key else 'null')) # non empty
 
-              tasksByTodoList = _.groupBy tasksByPeople[personViewKey], ((task) -> task.get('todoList').$ds_key)
-              tasksByProject = _.groupBy tasksByTodoList, ((todoList) -> todoList[0].get('project').$ds_key)
+              tasksByTaskList = _.groupBy tasksByPeople[personViewKey], ((task) -> task.get('taskList').$ds_key)
+              tasksByProject = _.groupBy tasksByTaskList, ((taskList) -> taskList[0].get('project').$ds_key)
 
               if filterByProject
                 for k, v of tasksByProject when not (Project.pool.items[k].get('name').toLowerCase().indexOf(filterByProject) >= 0)
@@ -218,14 +218,14 @@ ngModule.factory 'View3', [
               personView.get('projectsList').merge @, (_.map tasksByProject, ((projectGroup, projectKey) =>
                 projectView = poolProjects.find @, projectKey
                 projectView.set 'project', Project.pool.items[projectKey]
-                projectView.get('todoListsList').merge @, _.map projectGroup, ((todoListGroup) =>
-                  todoListKey = todoListGroup[0].get('todoList').$ds_key
-                  todoListView = projectView.poolTodoLists.find @, todoListKey
-                  todoListView.set 'todoList', TodoList.pool.items[todoListKey]
-                  todoListView.set 'tasksCount', _.size todoListGroup
-                  todoListView.set 'totalEstimate', _.reduce todoListGroup, ((sum, task) -> if (estimate = task.get('estimate')) then sum.add estimate else sum), moment.duration(0)
-                  todoListView.get('tasksList').merge @, (_.map todoListGroup, ((task) => task.addRef @)).sort TWTasks.tasksSortRule
-                  return todoListView)
+                projectView.get('taskListsList').merge @, _.map projectGroup, ((taskListGroup) =>
+                  taskListKey = taskListGroup[0].get('taskList').$ds_key
+                  taskListView = projectView.poolTaskLists.find @, taskListKey
+                  taskListView.set 'taskList', TaskList.pool.items[taskListKey]
+                  taskListView.set 'tasksCount', _.size taskListGroup
+                  taskListView.set 'totalEstimate', _.reduce taskListGroup, ((sum, task) -> if (estimate = task.get('estimate')) then sum.add estimate else sum), moment.duration(0)
+                  taskListView.get('tasksList').merge @, (_.map taskListGroup, ((task) => task.addRef @)).sort TWTasks.tasksSortRule
+                  return taskListView)
                 return projectView)).sort ((left, right) ->
                   if (leftLC = left.get('project').get('name').toLowerCase()) < (rightLC = right.get('project').get('name').toLowerCase()) then -1
                   else if leftLC > rightLC then 1 else 0)

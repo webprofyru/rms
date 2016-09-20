@@ -14,15 +14,13 @@
       width: auto
 
   table.header
-    &.original-tasks
-      background-color: $color-header-original-tasks
     height: 40px
     width: 100%
     td.text
       h3
         width: 100%
 
-  @include breakpoint(1300px)
+  @include breakpoint(1350px)
     @include layout((2, 2, 3, 2, 3, 2, 3, 2, 3, 1, 10) no-gatters)
     table.header
       td.text
@@ -35,7 +33,7 @@
         .ui-select
           @include span(1 at 2 of $filtersLayout no-gatters)
 
-  @include breakpoint(0px 1300px)
+  @include breakpoint(0px 1350px)
     @include layout((2, 2, 3, 2, 3, 2, 3, 2, 3, 1, 10) no-gatters)
     table.header
       td.text
@@ -52,21 +50,19 @@
   @include breakpoint(1400px)
     table.header
       td.actions
-        //width: 500px
         .action-buttons
           width: 100%
 
   @include breakpoint(0px 1400px)
     table.header
       td.actions
-        //width: 290px
         .action-buttons
           width: 100%
 
   .header
     width: 100%
     height: $header-height
-    background: $color-header-light
+    background: $color-header
     h3
       padding-left: $wide-border
       line-height: $header-height
@@ -97,4 +93,4 @@
     @include absolute-pos(null, null, 0, 0)
     width: 100%
     background: $color-bg
-    border-top: 1px solid darken($color-header-dark, 5%)
+    border-top: $border

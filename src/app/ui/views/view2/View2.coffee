@@ -38,6 +38,8 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', 'TWTasks', (
     @propList 'tasksNotAssigned', TaskView
     @propNum  'tasksNotAssignedHeight', init: 0
 
+    @propNum 'renderVer', 0
+
     @ds_dstr.push (->
       @__unwatchA()
       return)
@@ -74,7 +76,7 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', 'TWTasks', (
         tasksOverdue.sort TWTasks.tasksSortRule
         @get('tasksOverdueList').merge @, tasksOverdue
 
-      if !((status = @get('data').get('tasksNotAssignedStatus')) == 'ready' || status == 'update')
+      unless (status = @get('data').get('tasksNotAssignedStatus')) == 'ready' || status == 'update'
         @get('tasksNotAssignedList').merge @, []
         @set 'tasksNotAssignedHeight', 0
       else
@@ -83,8 +85,9 @@ ngModule.factory 'View2', ['View1', 'DSView', '$rootScope', '$log', 'TWTasks', (
           taskView = poolTasksNotassignedViews.find @, task.$ds_key
           taskView.set 'task', task
           return taskView).sort taskViewsSortRule
-
         @set 'tasksNotAssignedHeight', View1.layoutTaskView startDate, tasksNotAssigned
+
+      @set 'renderVer', (@get('renderVer') + 1)
 
       return)
 

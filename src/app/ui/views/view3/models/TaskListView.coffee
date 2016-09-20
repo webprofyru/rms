@@ -2,12 +2,12 @@ DSObject = require('../../../../../dscommon/DSObject')
 validate = require('../../../../../dscommon/util').validate
 
 Task = require('../../../../models/Task')
-TodoList = require('../../../../models/TodoList')
+TaskList = require('../../../../models/TaskList')
 
-module.exports = class TodoListView extends DSObject
-  @begin 'TodoListView'
+module.exports = class TaskListView extends DSObject
+  @begin 'TaskListView'
 
-  @propDoc  'todoList', TodoList
+  @propDoc  'taskList', TaskList
   @propList 'tasks', Task
   @propNum  'tasksCount', init: 0
   @propDuration 'totalEstimate'

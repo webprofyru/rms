@@ -2,11 +2,11 @@ include ../../tasks/_task.jade
 include ../../tasks/_timeTracking.jade
 
 #container(ng-controller='View1')
-  .header(ng-if='!config.hasRoles' ng-class='{"original-tasks": mode == "original"}')
+  .header(ng-if='!config.hasRoles')
     h3 People
     include ../../_actions.jade
 
-  table.header(ng-if='config.hasRoles' ng-class='{"original-tasks": mode == "original"}'): tr
+  table.header(ng-if='config.hasRoles'): tr
     td(valign='top').text: h3 People
     td.filters
       span.speciality Speciality:
@@ -29,7 +29,7 @@ include ../../tasks/_timeTracking.jade
         ui-select-match(placeholder='Select load...') {{$select.selected.name}}
         ui-select-choices(repeat='load in filterLoad | filter: {name: $select.search}')
           div(ng-bind-html='load.name | highlight: $select.search')
-    td(valign='top' style='width: {{layout.width <= 1400 ? (config.autosave ? 246 : 290) : (config.autosave ? 420 : 500)}}px').actions
+    td(valign='top' style='width: {{(layout.width <= 1600 ? (config.autosave ? 288 : 328) : (config.autosave ? 466 : 546)) - (mode == "original" ? (layout.width <= 1600 ?  42 : 47) : 0)}}px').actions
       include ../../_actions.jade
   div(style='width:{{layout.area1.width}}px;height:{{layout.height}}px')
     #top-block(style='width:{{layout.area1.width}}px;height:{{layout.area1.height}}px')
@@ -54,25 +54,25 @@ include ../../tasks/_timeTracking.jade
             i.fa.fa-caret-right
       .people(ng-if="view.data.peopleStatus == 'ready' || view.data.peopleStatus == 'update'")
         .scroll-viewport(style='height:{{layout.area1.height - 42}}px')
-          .scroll-body
-            .vertical-lines
+          .scroll-body(same-height='view.renderVer')
+            .vertical-lines(same-height-dest='')
               - var n = 1
               while n <= 9
                 .col(class="col" + n++)
-            ul.people-table
+            ul.people-table(same-height-src='')
               li.person-row.drop-zone(data-day='-1', ng-repeat='row in view.rows', ng-class='{expand:row.expand}', rms-view1-drop-task='', style="{{expandedHeight(row)}}")
                 .person-info
                   table
                     tbody
                       tr
                         td.hide
-                          img(src='./images/icons/eye46.svg', ng-click='view.hideRow(row)').hide
+                          img(no-drag='' src='./images/icons/eye46.svg', ng-click='view.hideRow(row)').hide
                         td.avatar
-                          img.avatar(ng-src='{{row.person.avatar}}', alt='')
+                          img.avatar(no-drag='' ng-src='{{row.person.avatar}}', alt='')
                         td.name {{row.person.name}}
                         td.expand
-                          .expand-icon(ng-click='row.expand = !row.expand')
-                            i.fa.fa-caret-down(ng-if='!row.expand')
+                          .expand-icon(ng-click='row.expand = !row.expand; resizeInProgress()')
+                            i.fa.fa-caret-down(ng-if='!row.expand' )
                             i.fa.fa-caret-up(ng-if='row.expand')
                 .estimate {{filter.taskPeriod(row.personDayStat, 'totalPeriodTime')}}
                 .total.drop-zone(ng-repeat="dayStat in row.personDayStat.dayStats", class="day{{$index}}" data-day='{{$index}}')
@@ -85,7 +85,7 @@ include ../../tasks/_timeTracking.jade
                       +task('taskView.task', 'taskView.time', 'taskView.task')
                       +timeTracking()
 
-    .handler.handler-horiz(ui-layout-resizer='horizontal', style='left:{{Math.round(layout.area1.width / 2 - 22.5)}}px;top:{{Math.round(layout.area1.height - 7.5) + 40}}px')
+    .handler.handler-horiz(ui-layout-resizer='horizontal', style='left:{{Math.round(layout.area1.width / 2 - 22.5)}}px;top:{{Math.round(layout.area1.height - 7.5) + 44}}px')
       i.fa.fa-caret-down
       i.fa.fa-caret-up
 

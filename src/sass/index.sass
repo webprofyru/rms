@@ -30,13 +30,28 @@ html
 $wide-container: layout(80% 1 0)
 
 //colors
-$color-header-light: #D8D8D8
-$color-header-original-tasks: #D5B374
-$color-header-dark: #C6C6C6
+//$color-header: #CBC895
+//$color-header: #B3E0BB
+//$color-header: #A9CBFF
+$color-header: #E2CD8A
+
+$color-header-light: lighten($color-header, 8%)
+//$color-header-dark: darken($color-header, 30%)
+$color-header-dark: darken($color-header, 15%)
+
 $color-bg: #F0F0F0
 $color-dark-white: #FAFAFA
+$color-white: #FFFFFF
+$color-black: #000000
+$color-border: #AAAAAA
+$border: 1px solid #AAAAAA
 
-
+$button-color: $color-black
+$button-background-color: lighten($color-header, 20%)
+$button-background-hover-color: lighten($color-header, 15%)
+$button-active-color: $color-white
+$button-active-background-color: darken($color-header, 30%)
+$button-active-background-hover-color: darken($color-header, 25%)
 
 $color-task-blue: #BCD2E9
 $color-task-bright-blue: #D1F0ED
@@ -47,13 +62,13 @@ $color-task-orange: #F7BC50
 
 //sizes
 
-$header-height: 40px
+$header-height: 44px
 $wide-border: 1rem
 
 //--- Mixins
 
 @mixin btn($bg-color,$color)
-  border: 1px solid #000000
+  border: $border
   padding: 5px 12px 5px 10px
   background: $bg-color
   color: $color

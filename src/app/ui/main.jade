@@ -1,4 +1,4 @@
-#screen1(ui-layout='', style='width:{{layout.width}}px;height:{{layout.height + 40}}px')
+#screen1(ui-layout='', style='width:{{layout.width}}px;height:{{layout.height + 44}}px')
 
   include ./views/view1/_view1.jade
 
@@ -11,6 +11,6 @@
   div(ng-if='addCommentAndSave')
     include ./tasks/_addCommentAndSave.jade
 
-  .backdrop(ng-if='modal.type == "task-edit"')
+  .backdrop(ng-if='modal.type != null && modal.type != "task-info" && modal.type != "drag-start"')
 
 include ./account/_account.jade

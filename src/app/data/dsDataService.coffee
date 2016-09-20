@@ -2,6 +2,8 @@ module.exports = (ngModule = angular.module 'data/dsDataService', [
   require './PeopleWithJson'
   require './TasksWithTimeTracking'
   require './teamwork/TWPeople'
+  require './teamwork/TWProjects'
+  require './teamwork/TWTaskLists'
   require './teamwork/TWTasks'
   require './teamwork/TWTags'
   require './teamwork/TWTimeTracking'
@@ -34,8 +36,8 @@ ngModule.run ['dsDataService', '$rootScope', ((dsDataService, $rootScope) ->
   return)]
 
 ngModule.factory 'dsDataService', [
- 'TWPeople', 'TWTasks', 'TWTags', 'TWTimeTracking', 'PeopleWithJson', 'TasksWithTimeTracking', 'PersonDayStatData', 'DSDataSource', 'dsChanges', 'config', '$http', '$rootScope', '$q',
- ((TWPeople, TWTasks, TWTags, TWTimeTracking, PeopleWithJson, TasksWithTimeTracking, PersonDayStatData, DSDataSource, dsChanges, config, $http, $rootScope, $q) ->
+ 'TWPeople', 'TWTasks', 'TWProjects', 'TWTaskLists', 'TWTags', 'TWTimeTracking', 'PeopleWithJson', 'TasksWithTimeTracking', 'PersonDayStatData', 'DSDataSource', 'dsChanges', 'config', '$http', '$rootScope', '$q',
+ ((TWPeople, TWTasks, TWProjects, TWTaskLists, TWTags, TWTimeTracking, PeopleWithJson, TasksWithTimeTracking, PersonDayStatData, DSDataSource, dsChanges, config, $http, $rootScope, $q) ->
 
     class DSDataService extends DSDataServiceBase
       @begin 'DSDataService'
@@ -163,6 +165,16 @@ ngModule.factory 'dsDataService', [
                 (data = TWPeople.pool.find(@, params)).init? @
                 (set = data.get('peopleSet')).addRef owner; data.release @
                 return set
+              when 'Project'
+                delete params.source
+                (data = TWProjects.pool.find(@, params)).init? @
+                (set = data.get('projectsSet')).addRef owner; data.release @
+                return set
+              when 'TaskList'
+                delete params.source
+                (data = TWTaskLists.pool.find(@, params)).init? @
+                (set = data.get('taskListsSet')).addRef owner; data.release @
+                return set
               when 'Task'
 # Version 2 - request all non-completed tasks at once.  This resolves plenty of issues
                 if params.filter == 'all' && !params.hasOwnProperty('startDate')
@@ -196,10 +208,10 @@ ngModule.factory 'dsDataService', [
           srcParams = _.assign {}, v.params, params
           requestParams = {type: type = v.type, mode: mode = srcParams.mode}
           switch (docType = type.docType)
-            when 'Tag'
+            when 'Tag', 'Person', 'Project'
               undefined
-            when 'Person'
-              undefined
+            when 'TaskList'
+              requestParams.project = srcParams.project
             when 'PersonDayStat'
               requestParams.startDate = srcParams.startDate
               requestParams.endDate = srcParams.endDate

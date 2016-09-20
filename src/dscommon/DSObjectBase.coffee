@@ -95,7 +95,9 @@ module.exports = class DSObjectBase
     return @)
 
   toString: (->
-    return "#{@__proto__.$ds_docType}:#{@$ds_key}#{if typeof @$ds_pool == 'object' then '@' + @$ds_pool else ''}")
+    return "#{@__proto__.$ds_docType}@#{@$ds_key}#{if typeof @$ds_pool == 'object' then ' <- ' + @$ds_pool else ''}")
+
+  toJSON: -> "#{@__proto__.$ds_docType}@#{@$ds_key}"
 
   writeMap: (->
     res = {}

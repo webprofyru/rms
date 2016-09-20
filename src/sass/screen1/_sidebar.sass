@@ -1,7 +1,7 @@
 #sidebar
   @include absolute-pos($header-height, 0, null, null)
   background: $color-bg
-  border-left: 1px solid darken($color-header-dark, 5%)
+  border-left: $border
   .none
     padding-top: 6px
     padding-left: 24px
@@ -20,18 +20,17 @@
       border-collapse: separate
       & > tbody > tr > td
         height: 30px
-        //float: left
         border-top-left-radius: 4px
         border-top-right-radius: 4px
-        //margin-right: 3px
         padding: 0 14px
         cursor: pointer
-        background: #828282
-        color: #B0B0B0
+        background: $color-header-dark
+        color: $color-dark-white
         overflow: hidden
         text-overflow: ellipsis
         &.active
-          background: $color-bg
+          background: #FFFFFF
+          border: $border
           color: #000000
     &.narrow
       table.tabs > tbody > tr > td
@@ -86,9 +85,8 @@
           padding-left: 5px
     .task-list-items
       &.plan
-        border-style: solid
+        border: $border
         border-width: 2px
-        border-color: #000000
       padding-left: 20px
       margin-left: 1rem
       width: 100%
@@ -107,7 +105,7 @@
           text-overflow: ellipsis
           background: $color-task-blue
           border-radius: 5px
-          border: 1px solid darken($color-task-blue, 10%)
+          border: $border
           padding: 2px 6px
       .col2
         width: 2rem

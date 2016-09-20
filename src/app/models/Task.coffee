@@ -7,7 +7,7 @@ DSDocument = require('../../dscommon/DSDocument')
 
 Project = require('./Project')
 Person = require('./Person')
-TodoList = require('./TodoList')
+TaskList = require('./TaskList')
 TaskTimeTracking = require('./TaskTimeTracking')
 Tag = require './Tag'
 
@@ -100,7 +100,7 @@ module.exports = class Task extends DSDocument
   @propDoc 'creator', Person
   # TODO: No support for multiple persons
   @propDoc 'responsible', Person
-  @propDoc 'todoList', TodoList
+  @propDoc 'taskList', TaskList
   @propDoc 'project', Project
   @propTaskRelativeSplit 'split'
 

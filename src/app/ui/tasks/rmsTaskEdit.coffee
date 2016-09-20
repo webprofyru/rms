@@ -11,11 +11,17 @@ time = require('../../ui/time')
 
 DSDigest = require '../../../dscommon/DSDigest'
 DSTags = require '../../../dscommon/DSTags'
+DSDataEditable = require('../../../dscommon/DSDataEditable')
 
 Tag = require '../../models/Tag'
+Task = require '../../models/Task'
+TaskList = require '../../models/TaskList'
 Person = require '../../models/Person'
+Project = require '../../models/Project'
 TaskSplit = require '../../models/types/TaskSplit'
 PersonDayStat = require '../../models/PersonDayStat'
+
+Task$u = DSDataEditable(Task.Editable).$u
 
 splitViewWeeksCount = 3
 
@@ -67,18 +73,84 @@ ngModule.directive 'rmsTaskEdit', [
       $scope.$on '$destroy', ->
         $scope._unwatch?()
         $scope._unwatch2?()
+        $scope._unwatch3?()
+        $scope._unwatch4?()
         edit.tags.release $scope if edit.tags && edit.tags != task.get('tags')
         return
 
-      edit.title = task.get('title')
-      edit.duedate = duedate = task.get('duedate')
-      edit.estimate = task.get('estimate')
-      edit.responsible = task.get('responsible')
-      edit.description = task.get('description')
+      if (edit.newTask = newTask = (task == undefined))
+        newTaskValues = $rootScope.newTaskValues
+        # TODO: Select documents based on saved IDes
+        # TODO: Add project and taskList selectors
+        edit.project = newTaskValues?.project || null
+        edit.taskList = newTaskValues?.taskList || null
+        edit.responsible = newTaskValues?.taskList || null
+        edit.title = null
+        edit.description = null
+        edit.duedate = duedate = if newTaskValues?.duedate then moment(newTaskValues.duedate) else null
+        edit.estimate = if newTaskValues?.estimate then moment.duration(newTaskValues.estimate) else null
+        edit.tags = if newTaskValues?.tags then new DSTags $scope, newTaskValues.tags else null
 
-      edit.tagsSelect = []
-      edit.tagsClone = false
-      edit.tags = task.get('tags')
+        unwatchA = null
+        allProjects = dsDataService.findDataSet $scope, type: Project, mode: 'original'
+        allProjects.watchStatus $scope, (source, status, prevStatus, unwatch) ->
+          # TODO: Select current project
+          $scope._unwatch3 = ->
+            unwatchA?()
+            unwatch()
+            allProjects.release $scope
+            project.release $scope for project in $scope.projectsList
+            $scope.projectsList = null
+            return
+          return unless status == 'ready'
+          unwatch(); $scope._unwatch3 = null
+          project.addRef $scope for project in ($scope.projectsList = (project for projectKey, project of allProjects.items).sort (l, r) -> l.get('name').localeCompare(r.get('name')))
+          unless unwatchA
+            unwatchA = $scope.$watch (-> edit.project?.$ds_key), (projectKey) ->
+              $scope.taskListsList = null
+              edit.taskList = null
+              if projectKey
+                if $scope.taskListsList
+                  taskList.release $scope for taskList in $scope.taskListsList
+                  $scope.taskListsList = null
+                allTodoLists = dsDataService.findDataSet $scope, type: TaskList, mode: 'original', project: edit.project
+                allTodoLists.watchStatus $scope, (source, status, prevStatus, unwatch) ->
+                  # TODO: Select current task list
+                  $scope._unwatch4 = ->
+                    unwatch()
+                    allTodoLists.release $scope
+                    if $scope.taskLists
+                      taskList.release $scope for taskList in $scope.taskLists
+                      $scope.taskLists = null
+                    return
+                  return unless status == 'ready'
+                  unwatch(); $scope._unwatch4 = null
+                  project.addRef $scope for project in ($scope.taskListsList = (todoList for todoListKey, todoList of allTodoLists.items).sort (l, r) -> l.get('position') - r.get('position'))
+                  allTodoLists.release $scope
+              else
+                if $scope.taskLists
+                  taskList.release $scope for taskList in $scope.taskLists
+                  $scope.taskLists = null
+              return
+          allProjects.release $scope
+          return
+
+        $scope.task = task = # fake task, to do not have a deal with rewriting task split logic
+          $u: Task$u
+          get: (propName) ->
+            switch propName
+              when 'split', 'duedate', 'responsible', 'tags' then null
+              else throw new Error "Unexpected prop: #{propName}"
+
+      else
+        edit.project = task.get('project')
+        edit.taskList = task.get('taskList')
+        edit.title = task.get('title')
+        edit.duedate = duedate = task.get('duedate')
+        edit.estimate = task.get('estimate')
+        edit.responsible = task.get('responsible')
+        edit.description = task.get('description')
+        edit.tags = task.get('tags')
 
       $scope.$watch (-> edit.tags), (val) ->
         $scope.orderedTags =
@@ -140,6 +212,8 @@ ngModule.directive 'rmsTaskEdit', [
         $scope.changes = false
         $scope.$watch (->
           res = [ # watch all possible changes, except isSplit that has special logic
+            if (project = edit.project) == null then null else project.$ds_key
+            if (taskList = edit.taskList) == null then null else taskList.$ds_key
             edit.title
             edit.description
             if (duedate = edit.duedate) == null then null else duedate.valueOf()
@@ -150,15 +224,15 @@ ngModule.directive 'rmsTaskEdit', [
           return res),
           ((val, oldVal) ->
             $scope.changes = (val != oldVal)
-            edit.isSplit = false if val[2] == null || val[3] == null
+            edit.isSplit = false if val[4] == null || val[5] == null
             return), true
-        $scope.$watch (-> edit.isSplit), ((isSplit) -> # watch isSplit
+        $scope.$watch (-> edit.isSplit), ((isSplit, oldIsSplit) -> # watch isSplit
           if isSplit
             edit.split = new TaskSplit() if edit.split == null
             makeSplitView() if edit.splitView == null
           else
             releaseSplitView() if edit.splitView != null
-          $scope.changes = true if edit.split?.valueOf().length > 0 # it's non empty split
+          $scope.changes = true if isSplit != oldIsSplit && edit.split?.valueOf().length > 0 # it's non empty split
           return)
         $scope.$watch (-> edit.duedate?.valueOf()),
           ((duedateValue, oldDuedateValue) -> # shift task.split on duedate change, if suitable
@@ -226,6 +300,7 @@ ngModule.directive 'rmsTaskEdit', [
         plan = dayModel.get('plan')
         initPlan = dayModel.get('initPlan')
         diff = moment.duration timeLeft
+        # TODO: Use edit.responsible
         diff.add initPlan if initPlan != null && $scope.task.get('responsible') == edit.responsible
         diff.subtract val if (val = plan.val) != null
         res = if (val = diff.valueOf()) < 0 then (diff = moment.duration(-val); '- ') else ''

@@ -1,12 +1,4 @@
 #modal-task
-  .backdrop
-    position: absolute
-    top: 0
-    left: 0
-    right: 0
-    bottom: 0
-    background-color: #000000
-    opacity: 0.1
   @extend %modal-task
   display: inline-table
   top: 20%
@@ -23,22 +15,31 @@
     display: inline-block
     margin-bottom: 8px
     .task-modal-row
-      &.fix-person-row
-        margin-bottom: 0
+      &.project
+        margin-top: 12px
+      &.project.edit, &.task-list.edit, &.split.edit, &.tags.edit
+        margin-bottom: 4px
+        overflow: visible
+      &.responsible.edit
+        margin-bottom: 6px
+        overflow: visible
+      &.split.edit
+        margin-bottom: 8px
+        & > input[type=checkbox]
+          vertical-align: middle
+      &.tags.edit
+        .task-modal-row-title
+          margin-top: 4px
       .point
         height: 16px
         width: 16px
         border-radius: 3px
         margin-right: 2px
-      &.tags
-        margin-bottom: -4px
       width: 100%
       float: left
       margin-bottom: 10px
       overflow: auto
       @include layout(13 no-gutters)
-      &.overflow-visible
-        overflow: visible
       .task-modal-row-title
         @include span(3)
         text-align: right
@@ -49,6 +50,8 @@
           margin-left: -3px
       .task-modal-title
         width: 60%
+      .task-modal-description
+        width: 73%
       .task-modal-estimate-hours
         width: 2.3rem
       .task-modal-estimate-minutes
@@ -58,6 +61,10 @@
         padding-left: 0.2rem
       .task-modal-duedate
         width: 8rem
+      .task-modal-project, .task-modal-task-list
+        display: inline-block
+        float: left
+        width: 19rem
       .task-modal-person
         display: inline-block
         float: left
@@ -103,7 +110,7 @@
         &.warn
           background-color: #D3724F
         &.select
-          background-color: rgb(132, 211, 79)
+          background-color: #CBC896
         .task-split-estimate-wrapper
           input, div
             width: 25%

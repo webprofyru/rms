@@ -2,14 +2,14 @@ DSObject = require('../../../../../dscommon/DSObject')
 validate = require('../../../../../dscommon/util').validate
 
 Project = require('../../../../models/Project')
-TodoListView = require('./TodoListView')
+TaskListView = require('./TaskListView')
 
 module.exports = class ProjectView extends DSObject
   @begin 'ProjectView'
 
   @propDoc  'project', Project
-  @propPool 'poolTodoLists', TodoListView
-  @propList 'todoLists', TodoListView
+  @propPool 'poolTaskLists', TaskListView
+  @propList 'taskLists', TaskListView
 
   @end()
 

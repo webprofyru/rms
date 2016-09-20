@@ -4,7 +4,7 @@
   padding: 3px 9px
   $btn-width-unit: 20px
   //&.narrow
-  @include breakpoint(0px 1400px)
+  @include breakpoint(0px 1600px)
     li
       width: $btn-width-unit
       //@include pre(1)
@@ -12,15 +12,19 @@
       table td:nth-child(2)
         display: none
   //&:not(.narrow)
-  @include breakpoint(1400px)
+  @include breakpoint(1600px)
+    .addTask
+      margin-right: $space-unit * 2
     .time-spent
       margin-left: $space-unit * 2
     .edited
-      width: $btn-width-unit * 3.5
+      width: $btn-width-unit * 3.2
+      &.active
+        width: $btn-width-unit * 3.5
       margin-left: $space-unit * 2
       margin-right: $space-unit * 2
     .changes
-      width: $btn-width-unit * 3.5
+      width: $btn-width-unit * 3.8
       &.disabled
         cursor: default
         opacity: 0.2
@@ -38,24 +42,33 @@
     float: left
     height: 30px
     padding: 2px 7px 0px
-    border: 1px solid grey
+    border: $border
     border-radius: 5px
     font-size: 13px
-    opacity: 0.6
+    opacity: 1
+    color: $button-color
+    background-color: $button-background-color
     cursor: pointer
+    //&:active
+    //  @include card($depth: 0)
     &:hover:not(.disabled)
-      background-color: darken($color-header-light, 10%)
+      background-color: $button-background-hover-color
     &.active:hover
-      background-color: darken($color-header-light, 30%)
+      background-color: $button-active-background-hover-color
     & > img // Just icon button
       width: $btn-width-unit
       text-align: center
       width: 17px
       margin-top: 2px
-    &.refresh > img, &.time-spent > img
+    &.addTask > img, &.refresh > img, &.time-spent > img
       margin-top: 5px
+    &:not(.active, .disabled)
+      @include card($depth: 1)
     &.active
-      background-color: darken($color-header-light, 50%)
+      color: $button-active-color
+      background-color: $button-active-background-color
+      img
+        filter: invert(100%)
     table // Icon with label button
       height: 100%
       td

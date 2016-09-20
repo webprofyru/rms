@@ -52,6 +52,8 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', 'TWTasks', 
     @propPool 'poolRows', Row
     @propList 'rows', Row
 
+    @propNum 'renderVer', 0
+
     @propObj 'hiddenPeople', init: {}
     @propNum 'hiddenPeopleCount', init: 0
 
@@ -283,6 +285,9 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', 'TWTasks', 
         day.set 'workTime', daysTemp[index]
         day.set 'timeSpent', if (timeSpentTemp[index].valueOf() == 0) then null else timeSpentTemp[index]
         return)
+
+      @set 'renderVer', (@get('renderVer') + 1)
+
       return)
 
     # 1. open tasks comes first
@@ -353,7 +358,7 @@ ngModule.factory 'View1', ['DSView', 'config', '$rootScope', '$log', 'TWTasks', 
             day = 0
             taskStartDate = startDate
           _.forEach tasksForTheDay, ((taskView) -> maxY = Math.max maxY, positionTaskView(pos, taskView, taskStartDate, day, getTime); return)
-      return maxY)
+      return maxY + 1)
 
     @end())]
 

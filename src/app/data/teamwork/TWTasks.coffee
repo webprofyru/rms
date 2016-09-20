@@ -11,7 +11,7 @@ time = require '../../ui/time'
 Task = require '../../models/Task'
 Tag = require '../../models/Tag'
 Person = require '../../models/Person'
-TodoList = require '../../models/TodoList'
+TaskList = require '../../models/TaskList'
 Project = require '../../models/Project'
 TaskTimeTracking = require '../../models/TaskTimeTracking'
 PersonTimeTracking = require '../../models/PersonTimeTracking'
@@ -66,7 +66,7 @@ ngModule.factory 'TWTasks', [
 
         @peopleMap = {}
         @projectMap = {}
-        @todoListMap = {}
+        @taskListMap = {}
 
         if assert
           console.error "TWTasks:ctor: setVisible expects that their will be only one instance of TWTasks object" if PersonTimeTracking::hasOwnProperty('setVisible')
@@ -182,7 +182,7 @@ ngModule.factory 'TWTasks', [
 
       releaseMaps = (->
         (v.release @; delete @peopleMap[k]) for k, v of @peopleMap
-        (v.release @; delete @todoListMap[k]) for k, v of @todoListMap
+        (v.release @; delete @taskListMap[k]) for k, v of @taskListMap
         (v.release @; delete @projectMap[k]) for k, v of @projectMap
         return)
 
@@ -190,12 +190,12 @@ ngModule.factory 'TWTasks', [
 
         person = Person.pool.find @, "#{jsonTask['creator-id']}", @peopleMap
         project = Project.pool.find @, "#{jsonTask['project-id']}", @projectMap
-        todoList = TodoList.pool.find @, "#{jsonTask['todo-list-id']}", @todoListMap
-        todoList.set 'project', project
+        taskList = TaskList.pool.find @, "#{jsonTask['todo-list-id']}", @taskListMap
+        taskList.set 'project', project
 
         task.set 'creator', person
         task.set 'project', project
-        task.set 'todoList', todoList
+        task.set 'taskList', taskList
         task.set 'title', jsonTask['content']
         task.set 'estimate', if (estimate = jsonTask['estimated-minutes']) then moment.duration(estimate, 'minutes') else null
         task.set 'duedate', if (duedateStr = jsonTask['due-date']) then moment(duedateStr, 'YYYYMMDD') else null
@@ -238,8 +238,8 @@ ngModule.factory 'TWTasks', [
             (task.set 'tags', new DSTags @, tags).release @
             v.release @ for k, v of tags
 
-        todoList.set 'id', parseInt jsonTask['todo-list-id']
-        todoList.set 'name', jsonTask['todo-list-name']
+        taskList.set 'id', parseInt jsonTask['todo-list-id']
+        taskList.set 'name', jsonTask['todo-list-name']
 
         project.set 'id', parseInt jsonTask['project-id']
         project.set 'name', jsonTask['project-name']

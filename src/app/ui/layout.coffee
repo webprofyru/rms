@@ -13,7 +13,7 @@ area3MinWidth = 10
 windowMinWidth = 900
 windowMinHeight = area1MinHeight + area3MinWidth
 
-headerHeight = 40
+headerHeight = 44
 actionsWidth = 440
 actionsMinWidth = 440
 

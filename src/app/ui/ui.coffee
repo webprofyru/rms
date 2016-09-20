@@ -24,11 +24,14 @@ module.exports = (ngModule = angular.module 'ui/ui', [
   require './tasks/rmsTaskEdit'
   require './tasks/TaskSplitWeekView'
   require './tasks/rmsTaskInfo'
+  require './tasks/rmsTaskAdd'
 
   require './tasks/addCommentAndSave'
 
   require './layout'
   require './filters'
+  require './noDrag'
+  require './sameHeight'
 
 ]).name
 
