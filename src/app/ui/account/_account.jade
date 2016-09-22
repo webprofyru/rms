@@ -1,4 +1,4 @@
-#modal-login(ng-init='loginIsShown=false' ng-class='{show:loginIsShown}' ng-if='isShowAccount' rms-account='')
+#account(ng-init='loginIsShown=false' ng-class='{show:loginIsShown}' ng-if='isShowAccount' rms-account='')
     form.body(name='accountForm')
       .field.company
           input(type='text' placeholder='teamwork url' ng-model='url')
@@ -13,5 +13,5 @@
           input(name='refreshPeriod' type='checkbox' ng-model='autosave')
           | Autosave
       .btn-group
-        button.btn(type='submit' ng-disabled='accountForm.$pristine || accountForm.$invalid' ng-click='save()') Save
-        button.btn.right(type='button' ng-click='close()') Close
+        button.flat-button(type='submit' ng-disabled='accountForm.$pristine || accountForm.$invalid' ng-click='save()') Save
+        button.flat-button.right(type='button' ng-click='close()') Close

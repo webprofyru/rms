@@ -46,7 +46,7 @@ form#modal-task(ng-switch-when='task-edit' rms-task-edit='')
       input(type='number').task-modal-estimate-minutes
       span.task-modal-estimate-duration m
       img.task-modal-icon-recycling(no-drag='' src="./images/icons/recycling-can.svg" ng-click="edit.estimate = null")
-      span.splitDiff(ng-if='edit.splitDiff' style='color:yellow') {{filter.periodDiff(edit.splitDiff)}}
+      span.splitDiff.warn(ng-if='edit.splitDiff') {{filter.periodDiff(edit.splitDiff)}}
 
     .task-modal-row.duedate(ng-if='!task.$u.duedate')
       .task-modal-row-title DueDate:

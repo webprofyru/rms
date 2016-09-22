@@ -3,13 +3,15 @@
   display: inline-table
   top: 20%
   left: 50%
-  -webkit-transform: translate(-50%, 0)
-  -moz-transform: translate(-50%, 0)
   transform: translate(-50%, 0)
   .task-modal-link
     float: left
   .task-modal-close
     float: right
+  .select
+    background-color: $color-header-dark
+  .warn
+    background-color: saturate($color-header-dark, 50%)
   .task-modal-wrapper-main
     width: 30rem
     display: inline-block
@@ -108,10 +110,6 @@
         padding: 4px
         &:first-child
           width: 2rem
-        &.warn
-          background-color: #D3724F
-        &.select
-          background-color: #CBC896
         .task-split-estimate-wrapper
           input, div
             width: 25%
@@ -145,6 +143,8 @@
 
   .form-btn-row
     padding: 0 12px 4px 12px
+    button
+      height: 26px
     .plan
       margin-left: 22px
     .right
@@ -153,8 +153,8 @@
       width: 70px
 
   .splitDiff
-    padding-left: 1rem
-    color: yellow
+    margin-left: 1rem
+    padding: 2px 4px
 
   .auto-split
     height: 22px

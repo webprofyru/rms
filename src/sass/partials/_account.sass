@@ -1,12 +1,13 @@
-#modal-login
+#account
+  z-index: 80
   position: absolute
   right: 0
   top: 40px
   width: 200px
+  padding: 20px
   border: $border
   border-radius: 0 0 0 5px
-  padding: 20px
-  background: #EDE9E9
+  background: $color-header-light
   label
     font-size: 12px
   .field
@@ -19,16 +20,10 @@
       color: red
       font-size: 12px
   .btn-group
-    .btn
-      float: left
-      font-size: 13px
-      padding: 2px 5px
-      margin-right: 10px
-      cursor: pointer
-      &:hover
-        background: $color-header
-      &.right
-        float: right
+    button
+      height: 26px
+    .right
+      float: right
   .autoSave
     margin-bottom: 18px
     & > label > input
