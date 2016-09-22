@@ -32,6 +32,7 @@ module.exports = (ngModule = angular.module 'ui/ui', [
   require './filters'
   require './noDrag'
   require './sameHeight'
+  require './sameWidth'
 
 ]).name
 

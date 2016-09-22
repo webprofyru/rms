@@ -43,6 +43,8 @@ ngModule.factory 'ViewChanges', ['DSView', 'dsChanges', '$log', ((DSView, dsChan
     @propPool 'poolChanges', Change
     @propList 'changes', Change
 
+    @propNum 'renderVer', 0
+
     constructor: (($scope, key) ->
       DSView.call @, $scope, key
       @dataUpdate {}
@@ -95,6 +97,9 @@ ngModule.factory 'ViewChanges', ['DSView', 'dsChanges', '$log', ((DSView, dsChan
           change.set 'error', task.__change.__error
 
       @get('changesList').merge @, changes
+
+      @set 'renderVer', (@get('renderVer') + 1)
+
       return)
 
     @end())]

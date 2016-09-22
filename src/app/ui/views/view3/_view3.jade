@@ -42,11 +42,10 @@ div(ng-controller='View3' style='width:{{layout.area3.width}}px;height:{{layout.
                   td.right-padding &nbsp;
                 td: .clear: img.clear(no-drag='' ng-click='config.view3FilterByTask = ""' src='./images/icons/close.svg' title='Clear field')
         td.mode
-          .action-buttons
-            li.groupByPerson(title='Group tasks by people' ng-class='{active: config.view3GroupByPerson}' ng-click='config.view3GroupByPerson = config.view3GroupByPerson == 1 ? 0 : 1'): ul
-              img(no-drag='' src='./images/icons/users.svg')
-            li.hideEmptyPeople(title='Hide people without tasks' ng-if='config.view3GroupByPerson' ng-class='{active: config.view3HidePeopleWOTasks}' ng-click='config.view3HidePeopleWOTasks = config.view3HidePeopleWOTasks == 1 ? 0 : 1'): ul
-              img(no-drag='' src='./images/icons/profile.svg')
+          button.flat-button.groupByPerson(title='Group tasks by people' ng-class='{active: config.view3GroupByPerson}' ng-click='config.view3GroupByPerson = config.view3GroupByPerson == 1 ? 0 : 1'): ul
+            img(no-drag='' src='./images/icons/users.svg')
+          button.flat-button.hideEmptyPeople(title='Hide people without tasks' ng-if='config.view3GroupByPerson' ng-class='{active: config.view3HidePeopleWOTasks}' ng-click='config.view3HidePeopleWOTasks = config.view3HidePeopleWOTasks == 1 ? 0 : 1'): ul
+            img(no-drag='' src='./images/icons/profile.svg')
       .scroll-viewport(style='height:{{layout.area3.height - (config.view3GroupByPerson == 0 ? 120 : 148)}}px')
         .scroll-body
 

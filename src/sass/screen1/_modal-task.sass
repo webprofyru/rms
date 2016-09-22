@@ -16,7 +16,7 @@
     margin-bottom: 8px
     .task-modal-row
       &.project
-        margin-top: 12px
+        margin-top: 8px
       &.project.edit, &.task-list.edit, &.split.edit, &.tags.edit
         margin-bottom: 4px
         overflow: visible
@@ -93,6 +93,7 @@
           float: left
           margin-top: 5px
   .task-modal-wrapper-split
+    margin-top: 14px
     display: inline-block
     vertical-align: top
     table
@@ -123,14 +124,16 @@
           padding: 0 4px
           line-height: 1
           text-align: center
+      tr.row-arrows
+        td
+          padding-top: 10px
     .table-icon-arrow
       text-align: center
-      img
-        width: 1.4rem
-        cursor: pointer
-        opacity: 0.5
-        &:hover
-          opacity: 0.3
+      width: 40px
+      height: 26px
+      & > img
+        padding-top: 2px
+        margin-top: 0
 
   input
     padding: 2px 6px
@@ -140,19 +143,20 @@
   a
     text-decoration: none
 
-  .btn.plan
-    margin-left: 12px
-
-  .btn-group
+  .form-btn-row
+    padding: 0 12px 4px 12px
+    .plan
+      margin-left: 22px
     .right
       float: right
+    .save, .right
+      width: 70px
 
   .splitDiff
     padding-left: 1rem
     color: yellow
 
-  .btn.auto-split
-    padding: 0px 7px
-    font-size: 0.8rem
-    line-height: 1.5
+  .auto-split
+    height: 22px
+    line-height: 10px
     margin-left: 1rem

@@ -74,7 +74,7 @@ form#modal-task(ng-switch-when='task-edit' rms-task-edit='')
     .task-modal-row.split.edit(ng-if='task.$u.estimate')
       .task-modal-row-title Split:
       input(type="checkbox" name="is-split" ng-model='edit.isSplit' ng-disabled='!edit.estimate || !edit.duedate')
-      button.btn.auto-split(ng-click='autoSplit()' ng-disabled='!edit.isSplit || edit.duedate == null || edit.duedate < today || edit.estimate == null || edit.responsible == null') AutoSplit
+      button.flat-button.auto-split(ng-click='autoSplit()' ng-disabled='!edit.isSplit || edit.duedate == null || edit.duedate < today || edit.estimate == null || edit.responsible == null') AutoSplit
 
     .task-modal-row.tags(ng-if='!task.$u.tags')
       .task-modal-row-title Tags:
@@ -116,17 +116,20 @@ form#modal-task(ng-switch-when='task-edit' rms-task-edit='')
             .task-split-estimate-wrapper(ng-if='task.$u.split' widget-duration='' ng-model='week.days[$parent.$parent.$index].plan.val')
               input.task-modal-estimate-hours(type='number' tabindex='{{20 + (2 * $parent.$parent.$index) + (20 * $index)}}')
               input.task-modal-estimate-minutes(type='number' tabindex='{{21 + (2 * $parent.$parent.$index) + (20 * $index)}}')
-        tr
+        tr.row-arrows
           td
-          td.table-icon-arrow(ng-click='splitPrevWeek()'): img(no-drag='' src='./images/icons/arrow-left.svg')
+          td(align='center')
+            button.flat-button.table-icon-arrow(ng-click='splitPrevWeek()')
+              img(no-drag='' src='./images/icons/arrow-left.svg')
           td
-          td.table-icon-arrow(ng-click='splitNextWeek()'): img(no-drag='' src='./images/icons/arrow-right.svg')
+          td(align='center')
+            button.flat-button.table-icon-arrow(ng-click='splitNextWeek()')
+              img(no-drag='' src='./images/icons/arrow-right.svg')
 
   .form-btn-row
-    .btn-group
-      button.btn(type='submit' ng-if='!viewonly && edit.newTask' ng-disabled='!(changes && edit.project && edit.taskList && edit.title)' ng-click='save($event, false)') Add
-      button.btn(type='submit' ng-if='!viewonly && !edit.newTask' ng-disabled='!(changes && edit.project && edit.taskList && edit.title)' ng-click='save($event, false)') Save
-      button.btn.plan(ng-disabled='!(edit.project && edit.taskList && edit.title)' ng-if='!viewonly && task.$u.plan && !edit.newTask && config.canUserSetPlan && !task.plan' ng-click='save($event, true)') {{changes ? 'Save & ' : ''}} Add to plan
-      button.btn.plan(ng-disabled='!(edit.project && edit.taskList && edit.title)' ng-if='!viewonly && task.$u.plan && config.canUserSetPlan && task.plan && changes' ng-click='save($event, true)') Save & Keep in plan
-      button.btn.plan(ng-disabled='!(edit.project && edit.taskList && edit.title)' ng-if='!viewonly && task.$u.plan && config.canUserSetPlan && task.plan && !changes' ng-click='save($event, false)') {{changes ? 'Save & ' : ''}} Remove from plan
-      button.btn.right(ng-click='close()') Close
+    button.flat-button.save(type='submit' ng-if='!viewonly && edit.newTask' ng-disabled='!(changes && edit.project && edit.taskList && edit.title)' ng-click='save($event, false)') Add
+    button.flat-button.save(type='submit' ng-if='!viewonly && !edit.newTask' ng-disabled='!(changes && edit.project && edit.taskList && edit.title)' ng-click='save($event, false)') Save
+    button.flat-button.plan(ng-disabled='!(edit.project && edit.taskList && edit.title)' ng-if='!viewonly && task.$u.plan && !edit.newTask && config.canUserSetPlan && !task.plan' ng-click='save($event, true)') {{changes ? 'Save & ' : ''}} Add to plan
+    button.flat-button.plan(ng-disabled='!(edit.project && edit.taskList && edit.title)' ng-if='!viewonly && task.$u.plan && config.canUserSetPlan && task.plan && changes' ng-click='save($event, true)') Save & Keep in plan
+    button.flat-button.plan(ng-disabled='!(edit.project && edit.taskList && edit.title)' ng-if='!viewonly && task.$u.plan && config.canUserSetPlan && task.plan && !changes' ng-click='save($event, false)') {{changes ? 'Save & ' : ''}} Remove from plan
+    button.flat-button.right(ng-click='close()') Close

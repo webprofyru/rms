@@ -28,20 +28,6 @@ $btn-width-unit: 20px
         font-weight: 500
         text-decoration: underline
 
-  .btn
-    border: none
-    border-radius: 4px
-    color: #000000
-    background: $color-dark-white
-    @include card($depth: 2)
-    &:active
-      @include card($depth: 0)
-    &:hover
-      background: darken($color-dark-white, 10%)
-    &:disabled
-      //color: #d8d8d8
-      opacity: 0.2
-
   .selector
     font-size: 12px
     &>span

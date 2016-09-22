@@ -17,21 +17,15 @@
         & > td.mode
           vertical-align: top
           text-align: right
-          width: 40px
           display: inline-block
           padding-top: 2px
           padding-left: 4px
           margin-right: 4px
-          & > .action-buttons
-            padding: 0 !important
-            & > li
-              height: 26px;
-              &.groupByPerson
-                padding-top: 8px !important
-                padding-bottom: 0px !important
-              &.hideEmptyPeople
-                margin-top: 3px;
-                padding: 10px 8px 0px 9px !important;
+          & > button
+            margin-left: 4px
+            width: 36px
+            &.hideEmptyPeople
+              margin-top: 7px;
 
   table.filters > tbody
     & > tr
@@ -57,6 +51,7 @@
         width: 100%
         border-radius: 3px
         .clear
+          cursor: pointer
           height: 26px
           width: 20px
         img.clear

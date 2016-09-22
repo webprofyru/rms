@@ -9,21 +9,31 @@
   transform: translate(-50%, 0)
   width: 70%
   padding: 5px 15px
-  border: $border
-  background-color: #EDE9E9
+  background-color: $color-header-light
   border-radius: 5px
   font-size: 12px
   h3
-    margin: 5px 0
-  .main-table
+    margin: 10px 0
+  .action-buttons
+    width: 84px
+    padding: 3px 0
+  table.title
+    margin-bottom: 6px
+  .main-table-border
+    border: $border
+  table.header
+    th
+      font-weight: normal
+    background-color: lighten($color-header-light, 10%)
+    border-bottom: 1px solid #AAAAAA
+    line-height: 20px
+  table.main-table
     table-layout: fixed
     width: 100%
     tr.dark
-      background-color: darken(#EDE9E9, 10%)
+      background-color: darken($color-header-light, 5%)
     tr.error
       color: red
-    th
-      background-color: #EDE9E9
     td, th
       text-align: left
       padding: 2px 5px
@@ -49,43 +59,27 @@
         text-align: center
         border-right: none
   .table-scroll
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: lighten($color-header-light, 5%)
     table-layout: fixed
-    overflow: scroll
     .icon-remove
       cursor: pointer
       &:hover
         opacity: 0.5
   .btn-group
+    width: 100%
     margin-top: 1rem
-    li
+    button.changes-modal-reset
       float: left
-      height: 30px
-      padding: 2px 7px 0px
-      border: $border
-      border-radius: 5px
-      font-size: 13px
-      font-weight: bold
-      opacity: 0.6
-      cursor: pointer
-      &:hover:not(.disabled)
-        background-color: darken($color-header-light, 10%)
-      &.disabled
-        cursor: default
-        opacity: 0.2
-      table
-        height: 100%
-        td
-          vertical-align: middle
-          line-height: 1
-          &:nth-child(2)
-            padding-left: 3px
-      &.changes-modal-save
-        float: right
-        margin-right: 1rem
-      &.changes-modal-close
-        float: right
-        img
-          width: 12px
+    button.changes-modal-save
+      float: right
+      margin-right: 1rem
+    button.changes-modal-close
+      float: right
       img
-        width: 20px
-        margin-top: 2px
+        width: 12px
+        padding-right: 2px
+    img
+      width: 20px
+      margin-top: 2px
