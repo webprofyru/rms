@@ -21,9 +21,6 @@ ngModule.directive 'rmsAccount', ['config', '$rootScope', ((config, $rootScope) 
       $scope.save = (->
         url = $scope.url.trim()
         token = $scope.token.trim()
-        if url.length > 0
-          if url.charAt(url.length - 1) != '/'
-            url += '/'
         config.teamwork = url
         config.token = token
         config.refreshPeriod = $scope.refreshPeriod

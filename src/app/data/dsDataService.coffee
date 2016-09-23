@@ -68,9 +68,9 @@ ngModule.factory 'dsDataService', [
         @__unwatch2 = $rootScope.$watch (-> [config.get('teamwork'), config.get('token')]), (([teamwork, token]) =>
 
           if !(teamwork && token)
+            $rootScope.connected = false
             @get('dataSource').setConnection(null, null)
           else
-            $rootScope.connected = false
             (cancel.resolve(); cancel = null) if cancel
 
             onError = ((error, isCancelled) =>

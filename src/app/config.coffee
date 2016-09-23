@@ -22,6 +22,11 @@ ngModule.run ['$rootScope', 'config', (($rootScope, config) ->
 VER_MAJOR = 1
 VER_MINOR = 1
 
+fixUrl = (url) ->
+  return null unless url = /https?:\/\/.*?($|\/)/.exec(url)[0]
+  url = url + '/' if url.charAt(url.length - 1) != '/'
+  url
+
 ngModule.factory 'config',
   ['$http', 'localStorageService',
   (($http, localStorageService) ->
@@ -30,7 +35,7 @@ ngModule.factory 'config',
       @begin 'Config'
 
       @propStr 'token', valid: validate.trimString
-      @propStr 'teamwork', init: 'http://teamwork.webprofy.ru/'
+      @propStr 'teamwork', init: 'http://teamwork.webprofy.ru/', valid: fixUrl
       #@propCalc 'hasRoles', (-> @teamwork == 'http://teamwork.webprofy.ru/')
       @propCalc 'hasRoles', (-> @teamwork == 'http://teamwork.webprofy.ru/' || @teamwork == 'http://delightsoft.teamworkpm.net/')
       @propCalc 'hasTimeReports', (-> @teamwork == 'http://teamwork.webprofy.ru/' || @teamwork == 'http://delightsoft.teamworkpm.net/')
