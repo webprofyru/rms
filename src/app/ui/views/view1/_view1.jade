@@ -11,22 +11,22 @@ include ../../tasks/_timeTracking.jade
     td.filters(ng-if='!connected')
     td.filters(ng-if='connected')
       span.speciality Speciality:
-      ui-select.speciality(ng-model='$parent.$parent.selectedRole', theme='selectize', ng-disabled='disabled').ui-select
+      ui-select.speciality(ng-model='$parent.$parent.$parent.selectedRole', theme='selectize', ng-disabled='disabled').ui-select
         ui-select-match(placeholder='Select role...') {{$select.selected.name}}
         ui-select-choices(repeat='role in peopleRoles | filter: {name: $select.search}')
           div(ng-bind-html='role.name | highlight: $select.search')
       span.contract Contract:
-      ui-select.contract(ng-model='$parent.$parent.selectedCompany', theme='selectize', ng-disabled='disabled').ui-select
+      ui-select.contract(ng-model='$parent.$parent.$parent.selectedCompany', theme='selectize', ng-disabled='disabled').ui-select
         ui-select-match(placeholder='Select company...') {{$select.selected.name}}
         ui-select-choices(repeat='company in filterCompanies | filter: {name: $select.search}')
           div(ng-bind-html='company.name | highlight: $select.search')
       span.contract Manager:
-      ui-select.contract(ng-model='$parent.$parent.selectedManager', theme='selectize', ng-disabled='disabled').ui-select
+      ui-select.contract(ng-model='$parent.$parent.$parent.selectedManager', theme='selectize', ng-disabled='disabled').ui-select
         ui-select-match(placeholder='Select manager...') {{$select.selected.name}}
         ui-select-choices(repeat='manager in filterManagers | filter: {name: $select.search}')
           div(ng-bind-html='manager.name | highlight: $select.search')
       span.workload By workload:
-      ui-select.workload(ng-model='$parent.$parent.selectedLoad', theme='selectize', ng-disabled='disabled').ui-select
+      ui-select.workload(ng-model='$parent.$parent.$parent.selectedLoad', theme='selectize', ng-disabled='disabled').ui-select
         ui-select-match(placeholder='Select load...') {{$select.selected.name}}
         ui-select-choices(repeat='load in filterLoad | filter: {name: $select.search}')
           div(ng-bind-html='load.name | highlight: $select.search')

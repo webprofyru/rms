@@ -36,9 +36,9 @@ ngModule.factory 'config',
 
       @propStr 'token', valid: validate.trimString
       @propStr 'teamwork', init: 'http://teamwork.webprofy.ru/', valid: fixUrl
-      #@propCalc 'hasRoles', (-> @teamwork == 'http://teamwork.webprofy.ru/')
-      @propCalc 'hasRoles', (-> @teamwork == 'http://teamwork.webprofy.ru/' || @teamwork == 'http://delightsoft.teamworkpm.net/')
-      @propCalc 'hasTimeReports', (-> @teamwork == 'http://teamwork.webprofy.ru/' || @teamwork == 'http://delightsoft.teamworkpm.net/')
+#      @propCalc 'hasRoles', (-> @teamwork.indexOf('://teamwork.webprofy.ru/') > 0)
+      @propCalc 'hasRoles', (-> @teamwork.indexOf('://teamwork.webprofy.ru/') > 0 || @teamwork.indexOf('://delightsoft.teamworkpm.net/') > 0)
+      @propCalc 'hasTimeReports', (-> @teamwork.indexOf('://teamwork.webprofy.ru/') > 0 || @teamwork.indexOf('://delightsoft.teamworkpm.net/') > 0)
 
       @propConst 'planTag', 'План'
       @propConst 'teamleadRole', 'Teamlead'
