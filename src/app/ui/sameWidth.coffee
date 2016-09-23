@@ -16,7 +16,6 @@ ngModule.directive "sameWidth", ->
   link: ($scope, element, attrs, ctrl) ->
     if attrs.sameWidth
       $scope.$watch attrs.sameWidth, ->
-        console.info 'a.'
         $scope.resizeInProgress()
     return
 
@@ -29,7 +28,6 @@ ngModule.directive "sameWidthSrc", ->
     el = element[0]
     ctrl.scope.resizeInProgress = ->
       return if progress
-      console.info 'b.'
       progress = true
       initWidth = el.clientWidth
       prevWidth = null
@@ -38,19 +36,15 @@ ngModule.directive "sameWidthSrc", ->
       timer = setInterval (->
         unless changed # it's not changed yet
           if initWidth != (prevWidth = el.clientWidth)
-            console.info '1.'
             changed = true
             f(prevWidth) for f in ctrl.update
         else
           v = prevWidth
           if v == (prevWidth = el.clientWidth) # it's stable
-            console.info '3.'
             if --roundsCount == 0
-              console.info '4.'
               clearInterval timer
               progress = false
           else # it's changing
-            console.info '2.'
             f(prevWidth) for f in ctrl.update
             roundsCount = roundsToBeStable
         return), roundPeriod
@@ -71,5 +65,3 @@ ngModule.directive "sameWidthDest", ->
       element.width h
       return
     return
-
-

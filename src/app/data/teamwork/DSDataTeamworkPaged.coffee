@@ -44,7 +44,6 @@ ngModule.factory 'DSDataTeamworkPaged', ['DSDataSource', '$rootScope', '$q', ((D
         if !isCancelled
           console.error 'error: ', error
           @set 'cancel', null
-        console.info '1.'
         @_endLoad false
         return)
 

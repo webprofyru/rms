@@ -170,7 +170,7 @@ module.exports = class DSDocument extends DSObject
                     @addRef @; @$ds_chg.add @, @
                     @$ds_chg.$ds_hist.add @, propName, value, oldVal
                   else if equal((serverValue = @$ds_doc[propName]), value) # new value is equal to server value of this property
-                    @$ds_chg.$ds_hist.add @, propName, oldVal, (changePair = change[propName]).v
+                    @$ds_chg.$ds_hist.add @, propName, value, (changePair = change[propName]).v
                     v.release @ if (v = changePair.v) instanceof DSObjectBase
                     s.release @ if (s = changePair.s) instanceof DSObjectBase
                     delete change[propName]
