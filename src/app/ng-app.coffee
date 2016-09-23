@@ -19,6 +19,7 @@ ngModule.run ['config', '$rootScope', 'db', ((config, $rootScope, db)->
   $rootScope.taskModal = {}
   $rootScope.startDateVal = null
   $rootScope.view3ActiveTab = null
+  $rootScope.connnected = null
   return)]
 
 ngModule.config [

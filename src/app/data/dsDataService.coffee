@@ -70,20 +70,24 @@ ngModule.factory 'dsDataService', [
           if !(teamwork && token)
             @get('dataSource').setConnection(null, null)
           else
+            $rootScope.connected = false
             (cancel.resolve(); cancel = null) if cancel
 
             onError = ((error, isCancelled) =>
+              $rootScope.connected = false
               if !isCancelled
                 console.error 'error: ', error
                 cancel = null
               @get('dataSource').setConnection(null, null)
               return)
 
+            $rootScope.connected = null
             $http.get "#{teamwork}authenticate.json",
               timeout: (cancel = $q.defer()).promise
               headers: {Authorization: "Basic #{base64.encode(token)}"}
             .then ((resp) =>
               if (resp.status == 200) # 0 means that request was canceled
+                $rootScope.connected = true
                 cancel = null
                 config.set 'currentUserId', resp.data['account']['userId']
                 @get('dataSource').setConnection(teamwork, token)

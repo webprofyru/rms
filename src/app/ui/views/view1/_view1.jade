@@ -8,7 +8,8 @@ include ../../tasks/_timeTracking.jade
 
   table.header(ng-if='config.hasRoles'): tr
     td(valign='top').text: h3 People
-    td.filters
+    td.filters(ng-if='!connected')
+    td.filters(ng-if='connected')
       span.speciality Speciality:
       ui-select.speciality(ng-model='$parent.$parent.selectedRole', theme='selectize', ng-disabled='disabled').ui-select
         ui-select-match(placeholder='Select role...') {{$select.selected.name}}
@@ -33,6 +34,7 @@ include ../../tasks/_timeTracking.jade
       include ../../_actions.jade
   div(style='width:{{layout.area1.width}}px;height:{{layout.height}}px')
     #top-block(style='width:{{layout.area1.width}}px;height:{{layout.area1.height}}px')
+      include ../../_setupInstruction
       .load-spinner(ng-if="view.data.peopleStatus == 'load' || view.data.peopleStatus == 'update' || view.data.tasksStatus == 'load' || view.data.tasksStatus == 'update'")
         .spinner
           .dot1
