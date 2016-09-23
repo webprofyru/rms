@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var DSObject, Person, VER_MAJOR, VER_MINOR, assert, ngModule, serviceOwner, validate,
+var DSObject, Person, VER_MAJOR, VER_MINOR, assert, fixUrl, ngModule, serviceOwner, validate,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -33,6 +33,16 @@ VER_MAJOR = 1;
 
 VER_MINOR = 1;
 
+fixUrl = function(url) {
+  if (!(url = /https?:\/\/.*?($|\/)/.exec(url)[0])) {
+    return null;
+  }
+  if (url.charAt(url.length - 1) !== '/') {
+    url = url + '/';
+  }
+  return url;
+};
+
 ngModule.factory('config', [
   '$http', 'localStorageService', (function($http, localStorageService) {
     var Config, config, desc, keepConnection, keepOtherOptions, name, ref, v, ver, verMajor, verMinor, verParts;
@@ -50,15 +60,16 @@ ngModule.factory('config', [
       });
 
       Config.propStr('teamwork', {
-        init: 'http://teamwork.webprofy.ru/'
+        init: 'http://teamwork.webprofy.ru/',
+        valid: fixUrl
       });
 
       Config.propCalc('hasRoles', (function() {
-        return this.teamwork === 'http://teamwork.webprofy.ru/' || this.teamwork === 'http://delightsoft.teamworkpm.net/';
+        return this.teamwork.indexOf('://teamwork.webprofy.ru/') > 0 || this.teamwork.indexOf('://delightsoft.teamworkpm.net/') > 0;
       }));
 
       Config.propCalc('hasTimeReports', (function() {
-        return this.teamwork === 'http://teamwork.webprofy.ru/' || this.teamwork === 'http://delightsoft.teamworkpm.net/';
+        return this.teamwork.indexOf('://teamwork.webprofy.ru/') > 0 || this.teamwork.indexOf('://delightsoft.teamworkpm.net/') > 0;
       }));
 
       Config.propConst('planTag', 'План');
@@ -761,7 +772,7 @@ module.exports = Tag = (function(superClass) {
 
 
 },{"../../dscommon/DSDocument":18,"../../dscommon/util":25}],8:[function(require,module,exports){
-var Comments, DSDocument, DSTags, Person, Project, Tag, Task, TaskSplit, TaskTimeTracking, TodoList, assert, error, time,
+var Comments, DSDocument, DSTags, Person, Project, Tag, Task, TaskList, TaskSplit, TaskTimeTracking, assert, error, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -777,7 +788,7 @@ Project = require('./Project');
 
 Person = require('./Person');
 
-TodoList = require('./TodoList');
+TaskList = require('./TaskList');
 
 TaskTimeTracking = require('./TaskTimeTracking');
 
@@ -941,7 +952,7 @@ module.exports = Task = (function(superClass) {
 
   Task.propDoc('responsible', Person);
 
-  Task.propDoc('todoList', TodoList);
+  Task.propDoc('taskList', TaskList);
 
   Task.propDoc('project', Project);
 
@@ -1086,7 +1097,56 @@ module.exports = Task = (function(superClass) {
 })(DSDocument);
 
 
-},{"../../dscommon/DSDocument":18,"../../dscommon/DSTags":24,"../../dscommon/util":25,"../ui/time":13,"./Person":5,"./Project":6,"./Tag":7,"./TaskTimeTracking":9,"./TodoList":10,"./types/Comments":11,"./types/TaskSplit":12}],9:[function(require,module,exports){
+},{"../../dscommon/DSDocument":18,"../../dscommon/DSTags":24,"../../dscommon/util":25,"../ui/time":13,"./Person":5,"./Project":6,"./Tag":7,"./TaskList":9,"./TaskTimeTracking":10,"./types/Comments":11,"./types/TaskSplit":12}],9:[function(require,module,exports){
+var DSObject, Project, TaskList, assert, error,
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+assert = require('../../dscommon/util').assert;
+
+error = require('../../dscommon/util').error;
+
+DSObject = require('../../dscommon/DSObject');
+
+Project = require('./Project');
+
+module.exports = TaskList = (function(superClass) {
+  extend(TaskList, superClass);
+
+  function TaskList() {
+    return TaskList.__super__.constructor.apply(this, arguments);
+  }
+
+  TaskList.begin('TaskList');
+
+  TaskList.addPool();
+
+  TaskList.str = (function(v) {
+    if (v === null) {
+      return '';
+    } else {
+      return v.get('name');
+    }
+  });
+
+  TaskList.propNum('id', {
+    init: 0
+  });
+
+  TaskList.propStr('name');
+
+  TaskList.propDoc('project', Project);
+
+  TaskList.propNum('position');
+
+  TaskList.end();
+
+  return TaskList;
+
+})(DSObject);
+
+
+},{"../../dscommon/DSObject":20,"../../dscommon/util":25,"./Project":6}],10:[function(require,module,exports){
 var DSObject, TaskTimeTracking,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -1129,54 +1189,7 @@ module.exports = TaskTimeTracking = (function(superClass) {
 })(DSObject);
 
 
-},{"../../dscommon/DSObject":20}],10:[function(require,module,exports){
-var DSObject, Project, TodoList, assert, error,
-  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
-
-assert = require('../../dscommon/util').assert;
-
-error = require('../../dscommon/util').error;
-
-DSObject = require('../../dscommon/DSObject');
-
-Project = require('./Project');
-
-module.exports = TodoList = (function(superClass) {
-  extend(TodoList, superClass);
-
-  function TodoList() {
-    return TodoList.__super__.constructor.apply(this, arguments);
-  }
-
-  TodoList.begin('TodoList');
-
-  TodoList.addPool();
-
-  TodoList.str = (function(v) {
-    if (v === null) {
-      return '';
-    } else {
-      return v.get('name');
-    }
-  });
-
-  TodoList.propNum('id', {
-    init: 0
-  });
-
-  TodoList.propStr('name');
-
-  TodoList.propDoc('project', Project);
-
-  TodoList.end();
-
-  return TodoList;
-
-})(DSObject);
-
-
-},{"../../dscommon/DSObject":20,"../../dscommon/util":25,"./Project":6}],11:[function(require,module,exports){
+},{"../../dscommon/DSObject":20}],11:[function(require,module,exports){
 var Comments, DSDocument, assert, error;
 
 assert = require('../../../dscommon/util').assert;
@@ -2500,7 +2513,7 @@ module.exports = DSDocument = (function(superClass) {
                       this.$ds_chg.add(this, this);
                       this.$ds_chg.$ds_hist.add(this, propName, value, oldVal);
                     } else if (equal((serverValue = this.$ds_doc[propName]), value)) {
-                      this.$ds_chg.$ds_hist.add(this, propName, oldVal, (changePair = change[propName]).v);
+                      this.$ds_chg.$ds_hist.add(this, propName, value, (changePair = change[propName]).v);
                       if ((v = changePair.v) instanceof DSObjectBase) {
                         v.release(this);
                       }
@@ -3045,8 +3058,12 @@ module.exports = DSObjectBase = (function() {
   });
 
   DSObjectBase.prototype.toString = (function() {
-    return this.__proto__.$ds_docType + ":" + this.$ds_key + (typeof this.$ds_pool === 'object' ? '@' + this.$ds_pool : '');
+    return this.__proto__.$ds_docType + "@" + this.$ds_key + (typeof this.$ds_pool === 'object' ? ' <- ' + this.$ds_pool : '');
   });
+
+  DSObjectBase.prototype.toJSON = function() {
+    return this.__proto__.$ds_docType + "@" + this.$ds_key;
+  };
 
   DSObjectBase.prototype.writeMap = (function() {
     var prop, propName, ref, res;

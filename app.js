@@ -4055,8 +4055,8 @@ require('./ng-app');
 moment.locale('ru');
 
 
-},{"../../static/libs/jsonlint/jsonlint.js":87,"./ng-app":42}],19:[function(require,module,exports){
-var DSObject, Person, VER_MAJOR, VER_MINOR, assert, ngModule, serviceOwner, validate,
+},{"../../static/libs/jsonlint/jsonlint.js":93,"./ng-app":44}],19:[function(require,module,exports){
+var DSObject, Person, VER_MAJOR, VER_MINOR, assert, fixUrl, ngModule, serviceOwner, validate,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -4090,6 +4090,16 @@ VER_MAJOR = 1;
 
 VER_MINOR = 1;
 
+fixUrl = function(url) {
+  if (!(url = /https?:\/\/.*?($|\/)/.exec(url)[0])) {
+    return null;
+  }
+  if (url.charAt(url.length - 1) !== '/') {
+    url = url + '/';
+  }
+  return url;
+};
+
 ngModule.factory('config', [
   '$http', 'localStorageService', (function($http, localStorageService) {
     var Config, config, desc, keepConnection, keepOtherOptions, name, ref, v, ver, verMajor, verMinor, verParts;
@@ -4107,15 +4117,16 @@ ngModule.factory('config', [
       });
 
       Config.propStr('teamwork', {
-        init: 'http://teamwork.webprofy.ru/'
+        init: 'http://teamwork.webprofy.ru/',
+        valid: fixUrl
       });
 
       Config.propCalc('hasRoles', (function() {
-        return this.teamwork === 'http://teamwork.webprofy.ru/' || this.teamwork === 'http://delightsoft.teamworkpm.net/';
+        return this.teamwork.indexOf('://teamwork.webprofy.ru/') > 0 || this.teamwork.indexOf('://delightsoft.teamworkpm.net/') > 0;
       }));
 
       Config.propCalc('hasTimeReports', (function() {
-        return this.teamwork === 'http://teamwork.webprofy.ru/' || this.teamwork === 'http://delightsoft.teamworkpm.net/';
+        return this.teamwork.indexOf('://teamwork.webprofy.ru/') > 0 || this.teamwork.indexOf('://delightsoft.teamworkpm.net/') > 0;
       }));
 
       Config.propConst('planTag', 'План');
@@ -4239,7 +4250,7 @@ ngModule.factory('config', [
 ]);
 
 
-},{"../dscommon/DSObject":78,"../dscommon/util":84,"../utils/angular-local-storage.js":85,"./models/Person":32}],20:[function(require,module,exports){
+},{"../dscommon/DSObject":84,"../dscommon/util":90,"../utils/angular-local-storage.js":91,"./models/Person":34}],20:[function(require,module,exports){
 var DSData, DSDataServiceBase, DSDigest, DSSet, DSTags, Person, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -4451,7 +4462,7 @@ ngModule.factory('PeopleWithJson', [
 ]);
 
 
-},{"../../dscommon/DSData":69,"../../dscommon/DSDataServiceBase":72,"../../dscommon/DSDigest":74,"../../dscommon/DSSet":81,"../../dscommon/DSTags":82,"../../dscommon/util":84,"../models/Person":32}],21:[function(require,module,exports){
+},{"../../dscommon/DSData":75,"../../dscommon/DSDataServiceBase":78,"../../dscommon/DSDigest":80,"../../dscommon/DSSet":87,"../../dscommon/DSTags":88,"../../dscommon/util":90,"../models/Person":34}],21:[function(require,module,exports){
 var DSData, DSDataServiceBase, DSDigest, DSDocument, DSSet, Person, PersonDayStat, Task, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -4735,7 +4746,7 @@ ngModule.factory('PersonDayStatData', [
 ]);
 
 
-},{"../../dscommon/DSData":69,"../../dscommon/DSDataServiceBase":72,"../../dscommon/DSDigest":74,"../../dscommon/DSDocument":75,"../../dscommon/DSSet":81,"../../dscommon/util":84,"../models/Person":32,"../models/PersonDayStat":33,"../models/Task":37}],22:[function(require,module,exports){
+},{"../../dscommon/DSData":75,"../../dscommon/DSDataServiceBase":78,"../../dscommon/DSDigest":80,"../../dscommon/DSDocument":81,"../../dscommon/DSSet":87,"../../dscommon/util":90,"../models/Person":34,"../models/PersonDayStat":35,"../models/Task":39}],22:[function(require,module,exports){
 var DSData, DSDataServiceBase, DSDigest, DSSet, DSTags, Task, TaskTimeTracking, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -4855,7 +4866,7 @@ ngModule.factory('TasksWithTimeTracking', [
 ]);
 
 
-},{"../../dscommon/DSData":69,"../../dscommon/DSDataServiceBase":72,"../../dscommon/DSDigest":74,"../../dscommon/DSSet":81,"../../dscommon/DSTags":82,"../../dscommon/util":84,"../models/Task":37,"../models/TaskTimeTracking":38}],23:[function(require,module,exports){
+},{"../../dscommon/DSData":75,"../../dscommon/DSDataServiceBase":78,"../../dscommon/DSDigest":80,"../../dscommon/DSSet":87,"../../dscommon/DSTags":88,"../../dscommon/util":90,"../models/Task":39,"../models/TaskTimeTracking":41}],23:[function(require,module,exports){
 var CHANGES_PERSISTANCE_VER, Comments, DSChangesBase, DSDataEditable, DSDigest, DSSet, DSTags, Person, RMSData, Tag, Task, assert, error, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -5405,12 +5416,12 @@ ngModule.factory('dsChanges', [
 ]);
 
 
-},{"../../dscommon/DSChangesBase":68,"../../dscommon/DSDataEditable":70,"../../dscommon/DSDataSource":73,"../../dscommon/DSDigest":74,"../../dscommon/DSSet":81,"../../dscommon/DSTags":82,"../../dscommon/util":84,"../models/Person":32,"../models/Tag":36,"../models/Task":37,"../models/types/Comments":40,"../utils/RMSData":67}],24:[function(require,module,exports){
+},{"../../dscommon/DSChangesBase":74,"../../dscommon/DSDataEditable":76,"../../dscommon/DSDataSource":79,"../../dscommon/DSDigest":80,"../../dscommon/DSSet":87,"../../dscommon/DSTags":88,"../../dscommon/util":90,"../models/Person":34,"../models/Tag":38,"../models/Task":39,"../models/types/Comments":42,"../utils/RMSData":73}],24:[function(require,module,exports){
 var DSChangesBase, DSDataEditable, DSDataFiltered, DSDataServiceBase, DSObject, Person, PersonTimeTracking, Tag, Task, TaskTimeTracking, assert, base64, error, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-module.exports = (ngModule = angular.module('data/dsDataService', [require('./PeopleWithJson'), require('./TasksWithTimeTracking'), require('./teamwork/TWPeople'), require('./teamwork/TWTasks'), require('./teamwork/TWTags'), require('./teamwork/TWTimeTracking'), require('./PersonDayStatData'), require('./dsChanges'), require('../../dscommon/DSDataSource'), require('../config')])).name;
+module.exports = (ngModule = angular.module('data/dsDataService', [require('./PeopleWithJson'), require('./TasksWithTimeTracking'), require('./teamwork/TWPeople'), require('./teamwork/TWProjects'), require('./teamwork/TWTaskLists'), require('./teamwork/TWTasks'), require('./teamwork/TWTags'), require('./teamwork/TWTimeTracking'), require('./PersonDayStatData'), require('./dsChanges'), require('../../dscommon/DSDataSource'), require('../config')])).name;
 
 assert = require('../../dscommon/util').assert;
 
@@ -5447,7 +5458,7 @@ ngModule.run([
 ]);
 
 ngModule.factory('dsDataService', [
-  'TWPeople', 'TWTasks', 'TWTags', 'TWTimeTracking', 'PeopleWithJson', 'TasksWithTimeTracking', 'PersonDayStatData', 'DSDataSource', 'dsChanges', 'config', '$http', '$rootScope', '$q', (function(TWPeople, TWTasks, TWTags, TWTimeTracking, PeopleWithJson, TasksWithTimeTracking, PersonDayStatData, DSDataSource, dsChanges, config, $http, $rootScope, $q) {
+  'TWPeople', 'TWTasks', 'TWProjects', 'TWTaskLists', 'TWTags', 'TWTimeTracking', 'PeopleWithJson', 'TasksWithTimeTracking', 'PersonDayStatData', 'DSDataSource', 'dsChanges', 'config', '$http', '$rootScope', '$q', (function(TWPeople, TWTasks, TWProjects, TWTaskLists, TWTags, TWTimeTracking, PeopleWithJson, TasksWithTimeTracking, PersonDayStatData, DSDataSource, dsChanges, config, $http, $rootScope, $q) {
     var DSDataService;
     DSDataService = (function(superClass) {
       var class1;
@@ -5494,6 +5505,7 @@ ngModule.factory('dsDataService', [
             var onError, teamwork, token;
             teamwork = arg[0], token = arg[1];
             if (!(teamwork && token)) {
+              $rootScope.connected = false;
               return _this.get('dataSource').setConnection(null, null);
             } else {
               if (cancel) {
@@ -5501,12 +5513,14 @@ ngModule.factory('dsDataService', [
                 cancel = null;
               }
               onError = (function(error, isCancelled) {
+                $rootScope.connected = false;
                 if (!isCancelled) {
                   console.error('error: ', error);
                   cancel = null;
                 }
                 _this.get('dataSource').setConnection(null, null);
               });
+              $rootScope.connected = null;
               $http.get(teamwork + "authenticate.json", {
                 timeout: (cancel = $q.defer()).promise,
                 headers: {
@@ -5514,6 +5528,7 @@ ngModule.factory('dsDataService', [
                 }
               }).then((function(resp) {
                 if (resp.status === 200) {
+                  $rootScope.connected = true;
                   cancel = null;
                   config.set('currentUserId', resp.data['account']['userId']);
                   _this.get('dataSource').setConnection(teamwork, token);
@@ -5532,7 +5547,7 @@ ngModule.factory('dsDataService', [
       });
 
       DSDataService.prototype.findDataSet = (function(owner, params) {
-        var base, base1, base2, base3, base4, changesSet, data, originalSet, set, type;
+        var base, base1, base2, base3, base4, base5, base6, changesSet, data, originalSet, set, type;
         DSDataServiceBase.prototype.findDataSet.call(this, owner, params);
         switch (params.type.docType) {
           case 'Tag':
@@ -5627,12 +5642,28 @@ ngModule.factory('dsDataService', [
                 (set = data.get('peopleSet')).addRef(owner);
                 data.release(this);
                 return set;
+              case 'Project':
+                delete params.source;
+                if (typeof (base4 = (data = TWProjects.pool.find(this, params))).init === "function") {
+                  base4.init(this);
+                }
+                (set = data.get('projectsSet')).addRef(owner);
+                data.release(this);
+                return set;
+              case 'TaskList':
+                delete params.source;
+                if (typeof (base5 = (data = TWTaskLists.pool.find(this, params))).init === "function") {
+                  base5.init(this);
+                }
+                (set = data.get('taskListsSet')).addRef(owner);
+                data.release(this);
+                return set;
               case 'Task':
                 if (params.filter === 'all' && !params.hasOwnProperty('startDate')) {
                   if (!config.get('hasTimeReports') || params.source) {
                     delete params.source;
-                    if (typeof (base4 = (data = TWTasks.pool.find(this, params))).init === "function") {
-                      base4.init(this);
+                    if (typeof (base6 = (data = TWTasks.pool.find(this, params))).init === "function") {
+                      base6.init(this);
                     }
                   } else {
                     if ((data = TasksWithTimeTracking.pool.find(this, {})).init) {
@@ -5672,10 +5703,12 @@ ngModule.factory('dsDataService', [
           };
           switch ((docType = type.docType)) {
             case 'Tag':
+            case 'Person':
+            case 'Project':
               void 0;
               break;
-            case 'Person':
-              void 0;
+            case 'TaskList':
+              requestParams.project = srcParams.project;
               break;
             case 'PersonDayStat':
               requestParams.startDate = srcParams.startDate;
@@ -5725,7 +5758,7 @@ ngModule.factory('dsDataService', [
 ]);
 
 
-},{"../../dscommon/DSChangesBase":68,"../../dscommon/DSDataEditable":70,"../../dscommon/DSDataFiltered":71,"../../dscommon/DSDataServiceBase":72,"../../dscommon/DSDataSource":73,"../../dscommon/DSObject":78,"../../dscommon/util":84,"../../utils/base64":86,"../config":19,"../models/Person":32,"../models/PersonTimeTracking":34,"../models/Tag":36,"../models/Task":37,"../models/TaskTimeTracking":38,"./PeopleWithJson":20,"./PersonDayStatData":21,"./TasksWithTimeTracking":22,"./dsChanges":23,"./teamwork/TWPeople":27,"./teamwork/TWTags":28,"./teamwork/TWTasks":29,"./teamwork/TWTimeTracking":30}],25:[function(require,module,exports){
+},{"../../dscommon/DSChangesBase":74,"../../dscommon/DSDataEditable":76,"../../dscommon/DSDataFiltered":77,"../../dscommon/DSDataServiceBase":78,"../../dscommon/DSDataSource":79,"../../dscommon/DSObject":84,"../../dscommon/util":90,"../../utils/base64":92,"../config":19,"../models/Person":34,"../models/PersonTimeTracking":36,"../models/Tag":38,"../models/Task":39,"../models/TaskTimeTracking":41,"./PeopleWithJson":20,"./PersonDayStatData":21,"./TasksWithTimeTracking":22,"./dsChanges":23,"./teamwork/TWPeople":27,"./teamwork/TWProjects":28,"./teamwork/TWTags":29,"./teamwork/TWTaskLists":30,"./teamwork/TWTasks":31,"./teamwork/TWTimeTracking":32}],25:[function(require,module,exports){
 var Task, assert, ngModule, serviceOwner;
 
 assert = require('../../dscommon/util').assert;
@@ -5784,7 +5817,7 @@ ngModule.run([
 ]);
 
 
-},{"../../dscommon/util":84,"../models/Task.coffee":37,"./dsDataService.coffee":24}],26:[function(require,module,exports){
+},{"../../dscommon/util":90,"../models/Task.coffee":39,"./dsDataService.coffee":24}],26:[function(require,module,exports){
 var DSData, DSDigest, WORK_ENTRIES_WHOLE_PAGE, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -5912,7 +5945,7 @@ ngModule.factory('DSDataTeamworkPaged', [
 ]);
 
 
-},{"../../../dscommon/DSData":69,"../../../dscommon/DSDigest":74,"../../../dscommon/util":84}],27:[function(require,module,exports){
+},{"../../../dscommon/DSData":75,"../../../dscommon/DSDigest":80,"../../../dscommon/util":90}],27:[function(require,module,exports){
 var Person, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -5988,7 +6021,78 @@ ngModule.factory('TWPeople', [
 ]);
 
 
-},{"../../../dscommon/DSDataSource":73,"../../../dscommon/util":84,"../../models/Person":32,"./DSDataTeamworkPaged":26}],28:[function(require,module,exports){
+},{"../../../dscommon/DSDataSource":79,"../../../dscommon/util":90,"../../models/Person":34,"./DSDataTeamworkPaged":26}],28:[function(require,module,exports){
+var Project, assert, error, ngModule,
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+module.exports = (ngModule = angular.module('data/teamwork/TWProjects', [require('../../../dscommon/DSDataSource'), require('./DSDataTeamworkPaged')])).name;
+
+assert = require('../../../dscommon/util').assert;
+
+error = require('../../../dscommon/util').error;
+
+Project = require('../../models/Project');
+
+ngModule.factory('TWProjects', [
+  'DSDataTeamworkPaged', 'DSDataSource', '$rootScope', '$q', (function(DSDataTeamworkPaged, DSDataSource, $rootScope, $q) {
+    var TWProjects;
+    return TWProjects = (function(superClass) {
+      extend(TWProjects, superClass);
+
+      function TWProjects() {
+        return TWProjects.__super__.constructor.apply(this, arguments);
+      }
+
+      TWProjects.begin('TWProjects');
+
+      TWProjects.addPool();
+
+      TWProjects.propSet('projects', Project);
+
+      TWProjects.ds_dstr.push((function() {
+        this.__unwatch2();
+      }));
+
+      TWProjects.prototype.init = (function(dsDataService) {
+        this.set('request', "projects.json?status=ACTIVE");
+        this.__unwatch2 = DSDataSource.setLoadAndRefresh.call(this, dsDataService);
+        this.init = null;
+      });
+
+      TWProjects.prototype.startLoad = function() {
+        return this.projectsMap = {};
+      };
+
+      TWProjects.prototype.importResponse = function(json) {
+        var cnt, i, jsonProject, len, project, ref;
+        cnt = 0;
+        ref = json['projects'];
+        for (i = 0, len = ref.length; i < len; i++) {
+          jsonProject = ref[i];
+          ++cnt;
+          project = Project.pool.find(this, "" + jsonProject['id'], this.projectsMap);
+          project.set('id', parseInt(jsonProject['id']));
+          project.set('name', jsonProject['name']);
+        }
+        return cnt;
+      };
+
+      TWProjects.prototype.finalizeLoad = function() {
+        this.get('projectsSet').merge(this, this.projectsMap);
+        delete this.projectsMap;
+      };
+
+      TWProjects.end();
+
+      return TWProjects;
+
+    })(DSDataTeamworkPaged);
+  })
+]);
+
+
+},{"../../../dscommon/DSDataSource":79,"../../../dscommon/util":90,"../../models/Project":37,"./DSDataTeamworkPaged":26}],29:[function(require,module,exports){
 var Tag, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -6161,8 +6265,88 @@ ngModule.factory('TWTags', [
 ]);
 
 
-},{"../../../dscommon/DSDataSource":73,"../../../dscommon/util":84,"../../models/Tag":36,"./DSDataTeamworkPaged":26}],29:[function(require,module,exports){
-var DSData, DSDigest, DSTags, Person, PersonTimeTracking, Project, RMSData, Tag, Task, TaskSplit, TaskTimeTracking, TodoList, assert, error, ngModule, time,
+},{"../../../dscommon/DSDataSource":79,"../../../dscommon/util":90,"../../models/Tag":38,"./DSDataTeamworkPaged":26}],30:[function(require,module,exports){
+var Project, TaskList, assert, error, ngModule,
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+module.exports = (ngModule = angular.module('data/teamwork/TWTaskLists', [require('../../../dscommon/DSDataSource'), require('./DSDataTeamworkPaged')])).name;
+
+assert = require('../../../dscommon/util').assert;
+
+error = require('../../../dscommon/util').error;
+
+Project = require('../../models/Project');
+
+TaskList = require('../../models/TaskList');
+
+ngModule.factory('TWTaskLists', [
+  'DSDataTeamworkPaged', 'DSDataSource', '$rootScope', '$q', (function(DSDataTeamworkPaged, DSDataSource, $rootScope, $q) {
+    var TWTaskLists;
+    return TWTaskLists = (function(superClass) {
+      extend(TWTaskLists, superClass);
+
+      function TWTaskLists() {
+        return TWTaskLists.__super__.constructor.apply(this, arguments);
+      }
+
+      TWTaskLists.begin('TWTaskLists');
+
+      TWTaskLists.addPool();
+
+      TWTaskLists.propSet('taskLists', TaskList);
+
+      TWTaskLists.propDoc('project', Project);
+
+      TWTaskLists.ds_dstr.push((function() {
+        this.__unwatch2();
+      }));
+
+      TWTaskLists.prototype.init = (function(dsDataService) {
+        var project;
+        this.set('project', project = this.get('params').project);
+        this.set('request', "projects/" + (this.project.get('id')) + "/tasklists.json");
+        this.__unwatch2 = DSDataSource.setLoadAndRefresh.call(this, dsDataService);
+        this.init = null;
+      });
+
+      TWTaskLists.prototype.startLoad = function() {
+        return this.taskListsMap = {};
+      };
+
+      TWTaskLists.prototype.importResponse = function(json) {
+        var cnt, i, jsonTaskList, len, project, ref, taskList;
+        cnt = 0;
+        project = this.get('project');
+        ref = json['tasklists'];
+        for (i = 0, len = ref.length; i < len; i++) {
+          jsonTaskList = ref[i];
+          ++cnt;
+          taskList = TaskList.pool.find(this, "" + jsonTaskList['id'], this.taskListsMap);
+          taskList.set('id', parseInt(jsonTaskList['id']));
+          taskList.set('name', jsonTaskList['name']);
+          taskList.set('project', project);
+          taskList.set('position', jsonTaskList['position']);
+        }
+        return cnt;
+      };
+
+      TWTaskLists.prototype.finalizeLoad = function() {
+        this.get('taskListsSet').merge(this, this.taskListsMap);
+        delete this.taskListsMap;
+      };
+
+      TWTaskLists.end();
+
+      return TWTaskLists;
+
+    })(DSDataTeamworkPaged);
+  })
+]);
+
+
+},{"../../../dscommon/DSDataSource":79,"../../../dscommon/util":90,"../../models/Project":37,"../../models/TaskList":40,"./DSDataTeamworkPaged":26}],31:[function(require,module,exports){
+var DSData, DSDigest, DSTags, Person, PersonTimeTracking, Project, RMSData, Tag, Task, TaskList, TaskSplit, TaskTimeTracking, assert, error, ngModule, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -6180,7 +6364,7 @@ Tag = require('../../models/Tag');
 
 Person = require('../../models/Person');
 
-TodoList = require('../../models/TodoList');
+TaskList = require('../../models/TaskList');
 
 Project = require('../../models/Project');
 
@@ -6258,7 +6442,7 @@ ngModule.factory('TWTasks', [
         DSData.apply(this, arguments);
         this.peopleMap = {};
         this.projectMap = {};
-        this.todoListMap = {};
+        this.taskListMap = {};
         if (assert) {
           if (PersonTimeTracking.prototype.hasOwnProperty('setVisible')) {
             console.error("TWTasks:ctor: setVisible expects that their will be only one instance of TWTasks object");
@@ -6442,11 +6626,11 @@ ngModule.factory('TWTasks', [
           v.release(this);
           delete this.peopleMap[k];
         }
-        ref1 = this.todoListMap;
+        ref1 = this.taskListMap;
         for (k in ref1) {
           v = ref1[k];
           v.release(this);
-          delete this.todoListMap[k];
+          delete this.taskListMap[k];
         }
         ref2 = this.projectMap;
         for (k in ref2) {
@@ -6457,14 +6641,14 @@ ngModule.factory('TWTasks', [
       });
 
       importTask = (function(task, jsonTask) {
-        var data, date, desc, duedateStr, estimate, i, k, len, person, project, ref, resp, split, tag, tagDoc, tags, timeIsLogged, todoList, v;
+        var data, date, desc, duedateStr, estimate, i, k, len, person, project, ref, resp, split, tag, tagDoc, tags, taskList, timeIsLogged, v;
         person = Person.pool.find(this, "" + jsonTask['creator-id'], this.peopleMap);
         project = Project.pool.find(this, "" + jsonTask['project-id'], this.projectMap);
-        todoList = TodoList.pool.find(this, "" + jsonTask['todo-list-id'], this.todoListMap);
-        todoList.set('project', project);
+        taskList = TaskList.pool.find(this, "" + jsonTask['todo-list-id'], this.taskListMap);
+        taskList.set('project', project);
         task.set('creator', person);
         task.set('project', project);
-        task.set('todoList', todoList);
+        task.set('taskList', taskList);
         task.set('title', jsonTask['content']);
         task.set('estimate', (estimate = jsonTask['estimated-minutes']) ? moment.duration(estimate, 'minutes') : null);
         task.set('duedate', (duedateStr = jsonTask['due-date']) ? moment(duedateStr, 'YYYYMMDD') : null);
@@ -6511,8 +6695,8 @@ ngModule.factory('TWTasks', [
             }
           }
         }
-        todoList.set('id', parseInt(jsonTask['todo-list-id']));
-        todoList.set('name', jsonTask['todo-list-name']);
+        taskList.set('id', parseInt(jsonTask['todo-list-id']));
+        taskList.set('name', jsonTask['todo-list-name']);
         project.set('id', parseInt(jsonTask['project-id']));
         project.set('name', jsonTask['project-name']);
       });
@@ -6678,7 +6862,7 @@ ngModule.factory('TWTasks', [
 ]);
 
 
-},{"../../../dscommon/DSData":69,"../../../dscommon/DSDataSource":73,"../../../dscommon/DSDigest":74,"../../../dscommon/DSTags":82,"../../../dscommon/util":84,"../../models/Person":32,"../../models/PersonTimeTracking":34,"../../models/Project":35,"../../models/Tag":36,"../../models/Task":37,"../../models/TaskTimeTracking":38,"../../models/TodoList":39,"../../models/types/TaskSplit":41,"../../ui/time":52,"../../utils/RMSData":67,"./TWTags":28}],30:[function(require,module,exports){
+},{"../../../dscommon/DSData":75,"../../../dscommon/DSDataSource":79,"../../../dscommon/DSDigest":80,"../../../dscommon/DSTags":88,"../../../dscommon/util":90,"../../models/Person":34,"../../models/PersonTimeTracking":36,"../../models/Project":37,"../../models/Tag":38,"../../models/Task":39,"../../models/TaskList":40,"../../models/TaskTimeTracking":41,"../../models/types/TaskSplit":43,"../../ui/time":58,"../../utils/RMSData":73,"./TWTags":29}],32:[function(require,module,exports){
 var DSData, DSDigest, HISTORY_END_SEARCH_STEP, PersonTimeTracking, RMSData, Task, TaskSplit, TaskTimeTracking, WORK_ENTRIES_WHOLE_PAGE, assert, error, ngModule, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7000,7 +7184,7 @@ ngModule.factory('TWTimeTracking', [
 ]);
 
 
-},{"../../../dscommon/DSData":69,"../../../dscommon/DSDataSource":73,"../../../dscommon/DSDigest":74,"../../../dscommon/util":84,"../../config":19,"../../db":31,"../../models/PersonTimeTracking":34,"../../models/Task":37,"../../models/TaskTimeTracking":38,"../../models/types/TaskSplit":41,"../../ui/time":52,"../../utils/RMSData":67}],31:[function(require,module,exports){
+},{"../../../dscommon/DSData":75,"../../../dscommon/DSDataSource":79,"../../../dscommon/DSDigest":80,"../../../dscommon/util":90,"../../config":19,"../../db":33,"../../models/PersonTimeTracking":36,"../../models/Task":39,"../../models/TaskTimeTracking":41,"../../models/types/TaskSplit":43,"../../ui/time":58,"../../utils/RMSData":73}],33:[function(require,module,exports){
 var DSObject, assert, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7078,7 +7262,7 @@ ngModule.factory('db', [
 ]);
 
 
-},{"../dscommon/DSObject":78,"../dscommon/util":84}],32:[function(require,module,exports){
+},{"../dscommon/DSObject":84,"../dscommon/util":90}],34:[function(require,module,exports){
 var DSDocument, DSTags, Person, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7148,7 +7332,7 @@ module.exports = Person = (function(superClass) {
 })(DSDocument);
 
 
-},{"../../dscommon/DSDocument":75,"../../dscommon/DSTags":82,"../../dscommon/util":84}],33:[function(require,module,exports){
+},{"../../dscommon/DSDocument":81,"../../dscommon/DSTags":88,"../../dscommon/util":90}],35:[function(require,module,exports){
 var DSObject, Person, PersonDayStat, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7242,7 +7426,7 @@ module.exports = PersonDayStat = (function(superClass) {
 })(DSObject);
 
 
-},{"../../dscommon/DSObject":78,"../../dscommon/util":84,"./Person":32}],34:[function(require,module,exports){
+},{"../../dscommon/DSObject":84,"../../dscommon/util":90,"./Person":34}],36:[function(require,module,exports){
 var DSObject, PersonTimeTracking, Task,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7285,7 +7469,7 @@ module.exports = PersonTimeTracking = (function(superClass) {
 })(DSObject);
 
 
-},{"../../dscommon/DSObject":78,"../models/Task":37}],35:[function(require,module,exports){
+},{"../../dscommon/DSObject":84,"../models/Task":39}],37:[function(require,module,exports){
 var DSObject, Project, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7332,7 +7516,7 @@ module.exports = Project = (function(superClass) {
 })(DSObject);
 
 
-},{"../../dscommon/DSObject":78,"../../dscommon/util":84}],36:[function(require,module,exports){
+},{"../../dscommon/DSObject":84,"../../dscommon/util":90}],38:[function(require,module,exports){
 var DSDocument, Tag, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7377,8 +7561,8 @@ module.exports = Tag = (function(superClass) {
 })(DSDocument);
 
 
-},{"../../dscommon/DSDocument":75,"../../dscommon/util":84}],37:[function(require,module,exports){
-var Comments, DSDocument, DSTags, Person, Project, Tag, Task, TaskSplit, TaskTimeTracking, TodoList, assert, error, time,
+},{"../../dscommon/DSDocument":81,"../../dscommon/util":90}],39:[function(require,module,exports){
+var Comments, DSDocument, DSTags, Person, Project, Tag, Task, TaskList, TaskSplit, TaskTimeTracking, assert, error, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -7394,7 +7578,7 @@ Project = require('./Project');
 
 Person = require('./Person');
 
-TodoList = require('./TodoList');
+TaskList = require('./TaskList');
 
 TaskTimeTracking = require('./TaskTimeTracking');
 
@@ -7558,7 +7742,7 @@ module.exports = Task = (function(superClass) {
 
   Task.propDoc('responsible', Person);
 
-  Task.propDoc('todoList', TodoList);
+  Task.propDoc('taskList', TaskList);
 
   Task.propDoc('project', Project);
 
@@ -7703,7 +7887,56 @@ module.exports = Task = (function(superClass) {
 })(DSDocument);
 
 
-},{"../../dscommon/DSDocument":75,"../../dscommon/DSTags":82,"../../dscommon/util":84,"../ui/time":52,"./Person":32,"./Project":35,"./Tag":36,"./TaskTimeTracking":38,"./TodoList":39,"./types/Comments":40,"./types/TaskSplit":41}],38:[function(require,module,exports){
+},{"../../dscommon/DSDocument":81,"../../dscommon/DSTags":88,"../../dscommon/util":90,"../ui/time":58,"./Person":34,"./Project":37,"./Tag":38,"./TaskList":40,"./TaskTimeTracking":41,"./types/Comments":42,"./types/TaskSplit":43}],40:[function(require,module,exports){
+var DSObject, Project, TaskList, assert, error,
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+assert = require('../../dscommon/util').assert;
+
+error = require('../../dscommon/util').error;
+
+DSObject = require('../../dscommon/DSObject');
+
+Project = require('./Project');
+
+module.exports = TaskList = (function(superClass) {
+  extend(TaskList, superClass);
+
+  function TaskList() {
+    return TaskList.__super__.constructor.apply(this, arguments);
+  }
+
+  TaskList.begin('TaskList');
+
+  TaskList.addPool();
+
+  TaskList.str = (function(v) {
+    if (v === null) {
+      return '';
+    } else {
+      return v.get('name');
+    }
+  });
+
+  TaskList.propNum('id', {
+    init: 0
+  });
+
+  TaskList.propStr('name');
+
+  TaskList.propDoc('project', Project);
+
+  TaskList.propNum('position');
+
+  TaskList.end();
+
+  return TaskList;
+
+})(DSObject);
+
+
+},{"../../dscommon/DSObject":84,"../../dscommon/util":90,"./Project":37}],41:[function(require,module,exports){
 var DSObject, TaskTimeTracking,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7746,54 +7979,7 @@ module.exports = TaskTimeTracking = (function(superClass) {
 })(DSObject);
 
 
-},{"../../dscommon/DSObject":78}],39:[function(require,module,exports){
-var DSObject, Project, TodoList, assert, error,
-  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
-
-assert = require('../../dscommon/util').assert;
-
-error = require('../../dscommon/util').error;
-
-DSObject = require('../../dscommon/DSObject');
-
-Project = require('./Project');
-
-module.exports = TodoList = (function(superClass) {
-  extend(TodoList, superClass);
-
-  function TodoList() {
-    return TodoList.__super__.constructor.apply(this, arguments);
-  }
-
-  TodoList.begin('TodoList');
-
-  TodoList.addPool();
-
-  TodoList.str = (function(v) {
-    if (v === null) {
-      return '';
-    } else {
-      return v.get('name');
-    }
-  });
-
-  TodoList.propNum('id', {
-    init: 0
-  });
-
-  TodoList.propStr('name');
-
-  TodoList.propDoc('project', Project);
-
-  TodoList.end();
-
-  return TodoList;
-
-})(DSObject);
-
-
-},{"../../dscommon/DSObject":78,"../../dscommon/util":84,"./Project":35}],40:[function(require,module,exports){
+},{"../../dscommon/DSObject":84}],42:[function(require,module,exports){
 var Comments, DSDocument, assert, error;
 
 assert = require('../../../dscommon/util').assert;
@@ -7928,7 +8114,7 @@ module.exports = Comments = (function() {
 })();
 
 
-},{"../../../dscommon/DSDocument":75,"../../../dscommon/util":84}],41:[function(require,module,exports){
+},{"../../../dscommon/DSDocument":81,"../../../dscommon/util":90}],43:[function(require,module,exports){
 var DSDocument, TaskSplit, assert, error;
 
 assert = require('../../../dscommon/util').assert;
@@ -8256,7 +8442,7 @@ module.exports = TaskSplit = (function() {
 })();
 
 
-},{"../../../dscommon/DSDocument":75,"../../../dscommon/util":84}],42:[function(require,module,exports){
+},{"../../../dscommon/DSDocument":81,"../../../dscommon/util":90}],44:[function(require,module,exports){
 var ngModule;
 
 module.exports = (ngModule = angular.module('app', ['ui.router', 'ui.select', require('./ui/ui'), require('./data/dsDataService'), require('./data/persistClipboard'), require('./svc/emails/emails'), require('./db')])).name;
@@ -8267,6 +8453,7 @@ ngModule.run([
     $rootScope.taskModal = {};
     $rootScope.startDateVal = null;
     $rootScope.view3ActiveTab = null;
+    $rootScope.connnected = null;
   })
 ]);
 
@@ -8278,7 +8465,7 @@ ngModule.config([
 ]);
 
 
-},{"./data/dsDataService":24,"./data/persistClipboard":25,"./db":31,"./svc/emails/emails":43,"./ui/ui":53}],43:[function(require,module,exports){
+},{"./data/dsDataService":24,"./data/persistClipboard":25,"./db":33,"./svc/emails/emails":45,"./ui/ui":59}],45:[function(require,module,exports){
 var Person, Task, base64, ctrl, ngModule;
 
 base64 = require('../../../utils/base64');
@@ -8373,7 +8560,7 @@ ctrl = [
             if (!(task.get('responsible') === person && task.get('estimate') !== null)) {
               continue;
             }
-            if (task.get('todoList').get('id') === 462667) {
+            if (task.get('taskList').get('id') === 462667) {
               continue;
             }
             if (!(projectState = projects[projectKey = (project = task.get('project')).$ds_key])) {
@@ -8385,7 +8572,7 @@ ctrl = [
                 manager: ''
               };
             }
-            hours = task.get('title').toLowerCase().indexOf('бронь') !== -1 || task.get('todoList').get('name').toLowerCase().indexOf('бронь') !== -1 ? projectState.optHours : projectState.planHours;
+            hours = task.get('title').toLowerCase().indexOf('бронь') !== -1 || task.get('taskList').get('name').toLowerCase().indexOf('бронь') !== -1 ? projectState.optHours : projectState.planHours;
             if ((split = task.get('split'))) {
               duedate = task.get('duedate');
               d = moment(startDate);
@@ -8485,7 +8672,7 @@ ctrl = [
 ];
 
 
-},{"../../../utils/base64":86,"../../data/dsDataService":24,"../../models/Person":32,"../../models/Task":37}],44:[function(require,module,exports){
+},{"../../../utils/base64":92,"../../data/dsDataService":24,"../../models/Person":34,"../../models/Task":39}],46:[function(require,module,exports){
 var ngModule;
 
 module.exports = (ngModule = angular.module('ui/account/rmsAccount', [require('../../config')])).name;
@@ -8517,11 +8704,6 @@ ngModule.directive('rmsAccount', [
           var token, url;
           url = $scope.url.trim();
           token = $scope.token.trim();
-          if (url.length > 0) {
-            if (url.charAt(url.length - 1) !== '/') {
-              url += '/';
-            }
-          }
           config.teamwork = url;
           config.token = token;
           config.refreshPeriod = $scope.refreshPeriod;
@@ -8537,7 +8719,7 @@ ngModule.directive('rmsAccount', [
 ]);
 
 
-},{"../../config":19}],45:[function(require,module,exports){
+},{"../../config":19}],47:[function(require,module,exports){
 var DSObject, assert, dayOfWeek, error, ngModule;
 
 assert = require('../../dscommon/util').assert;
@@ -8759,7 +8941,7 @@ ngModule.run([
 ]);
 
 
-},{"../../dscommon/DSObject":78,"../../dscommon/util":84}],46:[function(require,module,exports){
+},{"../../dscommon/DSObject":84,"../../dscommon/util":90}],48:[function(require,module,exports){
 var DOMWrapper, actionsMinWidth, actionsWidth, area1MinHeight, area1MinWidth, area2MinHeight, area3MinWidth, assert, error, headerHeight, ngModule, windowMinHeight, windowMinWidth;
 
 assert = require('../../dscommon/util').assert;
@@ -8780,7 +8962,7 @@ windowMinWidth = 900;
 
 windowMinHeight = area1MinHeight + area3MinWidth;
 
-headerHeight = 40;
+headerHeight = 44;
 
 actionsWidth = 440;
 
@@ -8916,7 +9098,253 @@ ngModule.directive('uiLayoutContainer', [
 ]);
 
 
-},{"../../dscommon/util":84}],47:[function(require,module,exports){
+},{"../../dscommon/util":90}],49:[function(require,module,exports){
+var assert, error, ngModule;
+
+assert = require('../../dscommon/util').assert;
+
+error = require('../../dscommon/util').error;
+
+module.exports = (ngModule = angular.module('ui/noDrag', [])).name;
+
+ngModule.directive("noDrag", function() {
+  return {
+    link: function($scope, element) {
+      var el;
+      el = element[0];
+      el.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+      });
+    }
+  };
+});
+
+
+},{"../../dscommon/util":90}],50:[function(require,module,exports){
+var assert, error, ngModule, roundPeriod, roundsToBeStable;
+
+assert = require('../../dscommon/util').assert;
+
+error = require('../../dscommon/util').error;
+
+module.exports = (ngModule = angular.module('ui/sameHeight', [])).name;
+
+roundPeriod = 10;
+
+roundsToBeStable = 10;
+
+ngModule.directive("sameHeight", function() {
+  return {
+    scope: true,
+    controller: [
+      '$scope', function($scope) {
+        this.height = 0;
+        this.update = [];
+        this.scope = $scope;
+      }
+    ],
+    link: function($scope, element, attrs, ctrl) {
+      if (attrs.sameHeight) {
+        $scope.$watch(attrs.sameHeight, function() {
+          return $scope.resizeInProgress();
+        });
+      }
+    }
+  };
+});
+
+ngModule.directive("sameHeightSrc", function() {
+  return {
+    require: '^sameHeight',
+    scope: false,
+    link: function($scope, element, attr, ctrl) {
+      var progress, timer;
+      timer = null;
+      progress = false;
+      ctrl.scope.resizeInProgress = function() {
+        var changed, initHeight, prevHeight, roundsCount;
+        if (progress) {
+          return;
+        }
+        progress = true;
+        initHeight = element.height();
+        prevHeight = null;
+        roundsCount = roundsToBeStable;
+        changed = false;
+        timer = setInterval((function() {
+          var f, i, j, len, len1, ref, ref1, v;
+          if (!changed) {
+            if (initHeight !== (prevHeight = element.height())) {
+              changed = true;
+              ref = ctrl.update;
+              for (i = 0, len = ref.length; i < len; i++) {
+                f = ref[i];
+                f(prevHeight);
+              }
+            }
+          } else {
+            v = prevHeight;
+            if (v === (prevHeight = element.height())) {
+              if (--roundsCount === 0) {
+                clearInterval(timer);
+                progress = false;
+              }
+            } else {
+              ref1 = ctrl.update;
+              for (j = 0, len1 = ref1.length; j < len1; j++) {
+                f = ref1[j];
+                f(prevHeight);
+              }
+              roundsCount = roundsToBeStable;
+            }
+          }
+        }), roundPeriod);
+      };
+      ctrl.scope.$on('$destroy', function() {
+        clearInterval(timer);
+      });
+      $scope.$evalAsync(function() {
+        var f, i, len, ref, results, v;
+        v = element.height();
+        ref = ctrl.update;
+        results = [];
+        for (i = 0, len = ref.length; i < len; i++) {
+          f = ref[i];
+          results.push(f(v));
+        }
+        return results;
+      });
+    }
+  };
+});
+
+ngModule.directive("sameHeightDest", function() {
+  return {
+    require: '^sameHeight',
+    scope: false,
+    link: function($scope, element, attr, ctrl) {
+      ctrl.update.push(function(h) {
+        element.height(h);
+      });
+    }
+  };
+});
+
+
+},{"../../dscommon/util":90}],51:[function(require,module,exports){
+var assert, error, ngModule, roundPeriod, roundsToBeStable;
+
+assert = require('../../dscommon/util').assert;
+
+error = require('../../dscommon/util').error;
+
+module.exports = (ngModule = angular.module('ui/sameWidth', [])).name;
+
+roundPeriod = 30;
+
+roundsToBeStable = 10;
+
+ngModule.directive("sameWidth", function() {
+  return {
+    scope: true,
+    controller: [
+      '$scope', function($scope) {
+        this.width = 0;
+        this.update = [];
+        this.scope = $scope;
+      }
+    ],
+    link: function($scope, element, attrs, ctrl) {
+      if (attrs.sameWidth) {
+        $scope.$watch(attrs.sameWidth, function() {
+          return $scope.resizeInProgress();
+        });
+      }
+    }
+  };
+});
+
+ngModule.directive("sameWidthSrc", function() {
+  return {
+    require: '^sameWidth',
+    scope: false,
+    link: function($scope, element, attr, ctrl) {
+      var el, progress, timer;
+      timer = null;
+      progress = false;
+      el = element[0];
+      ctrl.scope.resizeInProgress = function() {
+        var changed, initWidth, prevWidth, roundsCount;
+        if (progress) {
+          return;
+        }
+        progress = true;
+        initWidth = el.clientWidth;
+        prevWidth = null;
+        roundsCount = roundsToBeStable;
+        changed = false;
+        timer = setInterval((function() {
+          var f, i, j, len, len1, ref, ref1, v;
+          if (!changed) {
+            if (initWidth !== (prevWidth = el.clientWidth)) {
+              changed = true;
+              ref = ctrl.update;
+              for (i = 0, len = ref.length; i < len; i++) {
+                f = ref[i];
+                f(prevWidth);
+              }
+            }
+          } else {
+            v = prevWidth;
+            if (v === (prevWidth = el.clientWidth)) {
+              if (--roundsCount === 0) {
+                clearInterval(timer);
+                progress = false;
+              }
+            } else {
+              ref1 = ctrl.update;
+              for (j = 0, len1 = ref1.length; j < len1; j++) {
+                f = ref1[j];
+                f(prevWidth);
+              }
+              roundsCount = roundsToBeStable;
+            }
+          }
+        }), roundPeriod);
+      };
+      ctrl.scope.$on('$destroy', function() {
+        clearInterval(timer);
+      });
+      $scope.$evalAsync(function() {
+        var f, i, len, ref, results, v;
+        v = el.clientWidth;
+        ref = ctrl.update;
+        results = [];
+        for (i = 0, len = ref.length; i < len; i++) {
+          f = ref[i];
+          results.push(f(v));
+        }
+        return results;
+      });
+    }
+  };
+});
+
+ngModule.directive("sameWidthDest", function() {
+  return {
+    require: '^sameWidth',
+    scope: false,
+    link: function($scope, element, attr, ctrl) {
+      ctrl.update.push(function(h) {
+        element.width(h);
+      });
+    }
+  };
+});
+
+
+},{"../../dscommon/util":90}],52:[function(require,module,exports){
 var DSObject, Person, PersonDayStat, Task, TaskSplit, assert, ngModule, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -9116,7 +9544,7 @@ ngModule.factory('TaskSplitWeekView', [
 ]);
 
 
-},{"../../../dscommon/DSObject":78,"../../../dscommon/DSView":83,"../../../dscommon/util":84,"../../models/Person":32,"../../models/PersonDayStat":33,"../../models/Task":37,"../../models/types/TaskSplit":41,"../time":52}],48:[function(require,module,exports){
+},{"../../../dscommon/DSObject":84,"../../../dscommon/DSView":89,"../../../dscommon/util":90,"../../models/Person":34,"../../models/PersonDayStat":35,"../../models/Task":39,"../../models/types/TaskSplit":43,"../time":58}],53:[function(require,module,exports){
 var Comments, DSDigest, DSDocument, DSObject, Person, assert, error, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -9170,7 +9598,7 @@ ngModule.factory('addCommentAndSave', [
       AddCommentAndSave.propBool('plansChange');
 
       AddCommentAndSave.prototype.show = (function(document, showDialog, changes) {
-        var anyChange, doc, i, j, len, len1, newChanges, plansChange, promise, propDesc, propName, ref, ref1, ref2, value;
+        var anyChange, doc, i, j, len, len1, newChanges, plansChange, promise, propDesc, propName, ref, ref1, ref2, ref3, value;
         if (assert) {
           if (!(document !== null && ((Array.isArray(document) && document.length > 0 && document[0] instanceof DSDocument) || document instanceof DSDocument))) {
             error.invalidArg('document');
@@ -9218,7 +9646,7 @@ ngModule.factory('addCommentAndSave', [
         for (propName in ref2) {
           propDesc = ref2[propName];
           if (changes.hasOwnProperty(propName)) {
-            if (!document.$u.hasOwnProperty(propName)) {
+            if (!((ref3 = document.$u) != null ? ref3.hasOwnProperty(propName) : void 0)) {
               console.error("Doc " + (document.toString()) + ": Prop " + propName + ": Property is not editable");
               continue;
             }
@@ -9370,7 +9798,7 @@ ngModule.factory('addCommentAndSave', [
 ]);
 
 
-},{"../../../dscommon/DSDigest":74,"../../../dscommon/DSDocument":75,"../../../dscommon/DSObject":78,"../../../dscommon/util":84,"../../config":19,"../../data/dsChanges":23,"../../data/dsDataService":24,"../../models/Person":32,"../../models/types/Comments":40}],49:[function(require,module,exports){
+},{"../../../dscommon/DSDigest":80,"../../../dscommon/DSDocument":81,"../../../dscommon/DSObject":84,"../../../dscommon/util":90,"../../config":19,"../../data/dsChanges":23,"../../data/dsDataService":24,"../../models/Person":34,"../../models/types/Comments":42}],54:[function(require,module,exports){
 var ngModule;
 
 module.exports = (ngModule = angular.module('ui/tasks/rmsTask', [])).name;
@@ -9389,7 +9817,7 @@ ngModule.directive('rmsTask', [
       restrict: 'A',
       require: 'ngModel',
       link: function($scope, element, attrs, model) {
-        var listenerFunc;
+        var dragEnd, dragStart, el, listenerFunc;
         element.on('click', (function(e) {
           var modal;
           e.stopPropagation();
@@ -9441,38 +9869,38 @@ ngModule.directive('rmsTask', [
             element.css('border', style.border ? style.border : '');
           });
         }
+        dragStart = listenerFunc = function(ev) {
+          var task;
+          $rootScope.modal = {
+            type: 'drag-start',
+            task: task = $scope.$eval(attrs.rmsTask),
+            scope: $scope
+          };
+          $rootScope.$digest();
+          element.addClass('drag-start');
+          ev.dataTransfer.effectAllowed = 'move';
+          ev.dataTransfer.setData('task', task);
+          ev.dataTransfer.setDragImage($('#task-drag-ghost')[0], 20, 20);
+          return true;
+        };
+        dragEnd = function(ev) {
+          $rootScope.modal = {
+            type: null
+          };
+          element.removeClass('drag-start');
+          $rootScope.$digest();
+          return true;
+        };
+        el = element[0];
         $scope.$watch(attrs.rmsTask + ".$u", function(val) {
-          var el;
           if (val) {
-            el = element[0];
             el.draggable = true;
-            el.addEventListener('dragstart', listenerFunc = function(ev) {
-              var task;
-              $rootScope.modal = {
-                type: 'drag-start',
-                task: task = $scope.$eval(attrs.rmsTask),
-                scope: $scope
-              };
-              $rootScope.$digest();
-              element.addClass('drag-start');
-              ev.dataTransfer.effectAllowed = 'move';
-              ev.dataTransfer.setData('task', task);
-              ev.dataTransfer.setDragImage($('#task-drag-ghost')[0], 20, 20);
-              return true;
-            });
-            el.addEventListener('dragend', function(ev) {
-              $rootScope.modal = {
-                type: null
-              };
-              element.removeClass('drag-start');
-              $rootScope.$digest();
-              return true;
-            });
+            el.addEventListener('dragstart', dragStart);
+            el.addEventListener('dragend', dragEnd);
           } else {
-            el = element[0];
             el.draggable = false;
-            el.removeEventListener('dragstart', listenerFunc);
-            element.off('dragend');
+            el.removeEventListener('dragstart', dragStart);
+            el.removeEventListener('dragend', dragEnd);
           }
         });
       }
@@ -9497,8 +9925,47 @@ ngModule.directive('setTaskVisible', [
 ]);
 
 
-},{}],50:[function(require,module,exports){
-var DSDigest, DSTags, Person, PersonDayStat, Tag, TaskSplit, assert, ngModule, splitViewWeeksCount, time;
+},{}],55:[function(require,module,exports){
+var ngModule;
+
+module.exports = (ngModule = angular.module('ui/tasks/rmsTaskAdd', [])).name;
+
+ngModule.directive('rmsTaskAdd', [
+  '$rootScope', function($rootScope) {
+    return {
+      link: function($scope, element) {
+        var dragEnd, dragStart, el, i, len, ref;
+        $scope.addTask = function() {
+          return $rootScope.modal = {
+            type: 'task-edit'
+          };
+        };
+        dragStart = function(ev) {
+          element.addClass('drag-start');
+          ev.dataTransfer.effectAllowed = 'move';
+          ev.dataTransfer.setData('new', true);
+          ev.dataTransfer.setDragImage(element[0], 20, 20);
+          return true;
+        };
+        dragEnd = function(ev) {
+          element.removeClass('drag-start');
+          return true;
+        };
+        ref = $('*', element).addBack();
+        for (i = 0, len = ref.length; i < len; i++) {
+          el = ref[i];
+          el.draggable = true;
+          el.addEventListener('dragstart', dragStart);
+          el.addEventListener('dragend', dragEnd);
+        }
+      }
+    };
+  }
+]);
+
+
+},{}],56:[function(require,module,exports){
+var DSDataEditable, DSDigest, DSTags, Person, PersonDayStat, Project, Tag, Task, Task$u, TaskList, TaskSplit, assert, ngModule, splitViewWeeksCount, time;
 
 module.exports = (ngModule = angular.module('ui/tasks/rmsTaskEdit', [require('../../data/dsChanges'), require('../../data/dsDataService'), require('./TaskSplitWeekView'), require('./addCommentAndSave')])).name;
 
@@ -9510,13 +9977,23 @@ DSDigest = require('../../../dscommon/DSDigest');
 
 DSTags = require('../../../dscommon/DSTags');
 
+DSDataEditable = require('../../../dscommon/DSDataEditable');
+
 Tag = require('../../models/Tag');
 
+Task = require('../../models/Task');
+
+TaskList = require('../../models/TaskList');
+
 Person = require('../../models/Person');
+
+Project = require('../../models/Project');
 
 TaskSplit = require('../../models/types/TaskSplit');
 
 PersonDayStat = require('../../models/PersonDayStat');
+
+Task$u = DSDataEditable(Task.Editable).$u;
 
 splitViewWeeksCount = 3;
 
@@ -9526,7 +10003,7 @@ ngModule.directive('rmsTaskEdit', [
       restrict: 'A',
       scope: true,
       link: (function($scope, element, attrs) {
-        var close, duedate, edit, first, last, makeSplitView, modal, newTaskSplitWeekView, releaseSplitView, split, task, thisWeek, unwatchSplitLastDate, updateTagsToSelect, weeks;
+        var allProjects, close, duedate, edit, first, last, makeSplitView, modal, newTask, newTaskSplitWeekView, newTaskValues, releaseSplitView, split, task, thisWeek, unwatchA, unwatchSplitLastDate, updateTagsToSelect, weeks;
         modal = $rootScope.modal;
         $scope.edit = edit = {};
         unwatchSplitLastDate = null;
@@ -9589,18 +10066,166 @@ ngModule.directive('rmsTaskEdit', [
           if (typeof $scope._unwatch2 === "function") {
             $scope._unwatch2();
           }
+          if (typeof $scope._unwatch3 === "function") {
+            $scope._unwatch3();
+          }
+          if (typeof $scope._unwatch4 === "function") {
+            $scope._unwatch4();
+          }
           if (edit.tags && edit.tags !== task.get('tags')) {
             edit.tags.release($scope);
           }
         });
-        edit.title = task.get('title');
-        edit.duedate = duedate = task.get('duedate');
-        edit.estimate = task.get('estimate');
-        edit.responsible = task.get('responsible');
-        edit.description = task.get('description');
-        edit.tagsSelect = [];
-        edit.tagsClone = false;
-        edit.tags = task.get('tags');
+        if ((edit.newTask = newTask = task === void 0)) {
+          newTaskValues = $rootScope.newTaskValues;
+          edit.project = (newTaskValues != null ? newTaskValues.project : void 0) || null;
+          edit.taskList = (newTaskValues != null ? newTaskValues.taskList : void 0) || null;
+          edit.responsible = (newTaskValues != null ? newTaskValues.taskList : void 0) || null;
+          edit.title = null;
+          edit.description = null;
+          edit.duedate = duedate = (newTaskValues != null ? newTaskValues.duedate : void 0) ? moment(newTaskValues.duedate) : null;
+          edit.estimate = (newTaskValues != null ? newTaskValues.estimate : void 0) ? moment.duration(newTaskValues.estimate) : null;
+          edit.tags = (newTaskValues != null ? newTaskValues.tags : void 0) ? new DSTags($scope, newTaskValues.tags) : null;
+          unwatchA = null;
+          allProjects = dsDataService.findDataSet($scope, {
+            type: Project,
+            mode: 'original'
+          });
+          allProjects.watchStatus($scope, function(source, status, prevStatus, unwatch) {
+            var i, len, project, projectKey, ref;
+            $scope._unwatch3 = function() {
+              var i, len, project, ref;
+              if (typeof unwatchA === "function") {
+                unwatchA();
+              }
+              unwatch();
+              allProjects.release($scope);
+              ref = $scope.projectsList;
+              for (i = 0, len = ref.length; i < len; i++) {
+                project = ref[i];
+                project.release($scope);
+              }
+              $scope.projectsList = null;
+            };
+            if (status !== 'ready') {
+              return;
+            }
+            unwatch();
+            $scope._unwatch3 = null;
+            ref = ($scope.projectsList = ((function() {
+              var ref, results;
+              ref = allProjects.items;
+              results = [];
+              for (projectKey in ref) {
+                project = ref[projectKey];
+                results.push(project);
+              }
+              return results;
+            })()).sort(function(l, r) {
+              return l.get('name').localeCompare(r.get('name'));
+            }));
+            for (i = 0, len = ref.length; i < len; i++) {
+              project = ref[i];
+              project.addRef($scope);
+            }
+            if (!unwatchA) {
+              unwatchA = $scope.$watch((function() {
+                var ref1;
+                return (ref1 = edit.project) != null ? ref1.$ds_key : void 0;
+              }), function(projectKey) {
+                var allTodoLists, j, k, len1, len2, ref1, ref2, taskList;
+                $scope.taskListsList = null;
+                edit.taskList = null;
+                if (projectKey) {
+                  if ($scope.taskListsList) {
+                    ref1 = $scope.taskListsList;
+                    for (j = 0, len1 = ref1.length; j < len1; j++) {
+                      taskList = ref1[j];
+                      taskList.release($scope);
+                    }
+                    $scope.taskListsList = null;
+                  }
+                  allTodoLists = dsDataService.findDataSet($scope, {
+                    type: TaskList,
+                    mode: 'original',
+                    project: edit.project
+                  });
+                  allTodoLists.watchStatus($scope, function(source, status, prevStatus, unwatch) {
+                    var k, len2, ref2, todoList, todoListKey;
+                    $scope._unwatch4 = function() {
+                      var k, len2, ref2;
+                      unwatch();
+                      allTodoLists.release($scope);
+                      if ($scope.taskLists) {
+                        ref2 = $scope.taskLists;
+                        for (k = 0, len2 = ref2.length; k < len2; k++) {
+                          taskList = ref2[k];
+                          taskList.release($scope);
+                        }
+                        $scope.taskLists = null;
+                      }
+                    };
+                    if (status !== 'ready') {
+                      return;
+                    }
+                    unwatch();
+                    $scope._unwatch4 = null;
+                    ref2 = ($scope.taskListsList = ((function() {
+                      var ref2, results;
+                      ref2 = allTodoLists.items;
+                      results = [];
+                      for (todoListKey in ref2) {
+                        todoList = ref2[todoListKey];
+                        results.push(todoList);
+                      }
+                      return results;
+                    })()).sort(function(l, r) {
+                      return l.get('position') - r.get('position');
+                    }));
+                    for (k = 0, len2 = ref2.length; k < len2; k++) {
+                      project = ref2[k];
+                      project.addRef($scope);
+                    }
+                    return allTodoLists.release($scope);
+                  });
+                } else {
+                  if ($scope.taskLists) {
+                    ref2 = $scope.taskLists;
+                    for (k = 0, len2 = ref2.length; k < len2; k++) {
+                      taskList = ref2[k];
+                      taskList.release($scope);
+                    }
+                    $scope.taskLists = null;
+                  }
+                }
+              });
+            }
+            allProjects.release($scope);
+          });
+          $scope.task = task = {
+            $u: Task$u,
+            get: function(propName) {
+              switch (propName) {
+                case 'split':
+                case 'duedate':
+                case 'responsible':
+                case 'tags':
+                  return null;
+                default:
+                  throw new Error("Unexpected prop: " + propName);
+              }
+            }
+          };
+        } else {
+          edit.project = task.get('project');
+          edit.taskList = task.get('taskList');
+          edit.title = task.get('title');
+          edit.duedate = duedate = task.get('duedate');
+          edit.estimate = task.get('estimate');
+          edit.responsible = task.get('responsible');
+          edit.description = task.get('description');
+          edit.tags = task.get('tags');
+        }
         $scope.$watch((function() {
           return edit.tags;
         }), function(val) {
@@ -9712,21 +10337,21 @@ ngModule.directive('rmsTaskEdit', [
         if (!($scope.viewonly = !task.$u || _.isEmpty(task.$u))) {
           $scope.changes = false;
           $scope.$watch((function() {
-            var estimate, res, responsible, tags, val;
-            res = [edit.title, edit.description, (duedate = edit.duedate) === null ? null : duedate.valueOf(), (estimate = edit.estimate) === null ? null : estimate.valueOf(), (responsible = edit.responsible) === null ? null : responsible.$ds_key, (tags = edit.tags) === null ? null : tags.valueOf()];
+            var estimate, project, res, responsible, tags, taskList, val;
+            res = [(project = edit.project) === null ? null : project.$ds_key, (taskList = edit.taskList) === null ? null : taskList.$ds_key, edit.title, edit.description, (duedate = edit.duedate) === null ? null : duedate.valueOf(), (estimate = edit.estimate) === null ? null : estimate.valueOf(), (responsible = edit.responsible) === null ? null : responsible.$ds_key, (tags = edit.tags) === null ? null : tags.valueOf()];
             if ((split = edit.split) !== null && (val = split.valueOf()).length > 0) {
               res = res.concat(val);
             }
             return res;
           }), (function(val, oldVal) {
             $scope.changes = val !== oldVal;
-            if (val[2] === null || val[3] === null) {
+            if (val[4] === null || val[5] === null) {
               edit.isSplit = false;
             }
           }), true);
           $scope.$watch((function() {
             return edit.isSplit;
-          }), (function(isSplit) {
+          }), (function(isSplit, oldIsSplit) {
             var ref;
             if (isSplit) {
               if (edit.split === null) {
@@ -9740,7 +10365,7 @@ ngModule.directive('rmsTaskEdit', [
                 releaseSplitView();
               }
             }
-            if (((ref = edit.split) != null ? ref.valueOf().length : void 0) > 0) {
+            if (isSplit !== oldIsSplit && ((ref = edit.split) != null ? ref.valueOf().length : void 0) > 0) {
               $scope.changes = true;
             }
           }));
@@ -9909,7 +10534,7 @@ ngModule.directive('rmsTaskEdit', [
 ]);
 
 
-},{"../../../dscommon/DSDigest":74,"../../../dscommon/DSTags":82,"../../../dscommon/util":84,"../../data/dsChanges":23,"../../data/dsDataService":24,"../../models/Person":32,"../../models/PersonDayStat":33,"../../models/Tag":36,"../../models/types/TaskSplit":41,"../../ui/time":52,"./TaskSplitWeekView":47,"./addCommentAndSave":48}],51:[function(require,module,exports){
+},{"../../../dscommon/DSDataEditable":76,"../../../dscommon/DSDigest":80,"../../../dscommon/DSTags":88,"../../../dscommon/util":90,"../../data/dsChanges":23,"../../data/dsDataService":24,"../../models/Person":34,"../../models/PersonDayStat":35,"../../models/Project":37,"../../models/Tag":38,"../../models/Task":39,"../../models/TaskList":40,"../../models/types/TaskSplit":43,"../../ui/time":58,"./TaskSplitWeekView":52,"./addCommentAndSave":53}],57:[function(require,module,exports){
 var DSObject, assert, error, ngModule;
 
 module.exports = (ngModule = angular.module('ui/tasks/rmsTaskInfo', [])).name;
@@ -9962,7 +10587,7 @@ ngModule.directive('rmsTaskInfo', [
 ]);
 
 
-},{"../../../dscommon/DSObject":78,"../../../dscommon/util":84}],52:[function(require,module,exports){
+},{"../../../dscommon/DSObject":84,"../../../dscommon/util":90}],58:[function(require,module,exports){
 var time, updateToday;
 
 module.exports = time = {
@@ -9978,7 +10603,7 @@ module.exports = time = {
 }))();
 
 
-},{}],53:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 var DSObjectBase, PersonDayStat, assert, error, ngModule, totalRelease, uiCtrl;
 
 assert = require('../../dscommon/util').assert;
@@ -9991,7 +10616,7 @@ DSObjectBase = require('../../dscommon/DSObjectBase');
 
 PersonDayStat = require('../models/PersonDayStat');
 
-module.exports = (ngModule = angular.module('ui/ui', ['ui.router', 'ngSanitize', require('./views/view1/View1'), require('./views/view2/View2'), require('./views/view3/View3'), require('./views/changes/ViewChanges'), require('./account/rmsAccount'), require('./widgets/widgetDate'), require('./widgets/widgetDuration'), require('./tasks/rmsTask'), require('./tasks/rmsTaskEdit'), require('./tasks/TaskSplitWeekView'), require('./tasks/rmsTaskInfo'), require('./tasks/addCommentAndSave'), require('./layout'), require('./filters')])).name;
+module.exports = (ngModule = angular.module('ui/ui', ['ui.router', 'ngSanitize', require('./views/view1/View1'), require('./views/view2/View2'), require('./views/view3/View3'), require('./views/changes/ViewChanges'), require('./account/rmsAccount'), require('./widgets/widgetDate'), require('./widgets/widgetDuration'), require('./tasks/rmsTask'), require('./tasks/rmsTaskEdit'), require('./tasks/TaskSplitWeekView'), require('./tasks/rmsTaskInfo'), require('./tasks/rmsTaskAdd'), require('./tasks/addCommentAndSave'), require('./layout'), require('./filters'), require('./noDrag'), require('./sameHeight'), require('./sameWidth')])).name;
 
 ngModule.config([
   '$urlRouterProvider', '$stateProvider', '$locationProvider', '$httpProvider', (function($urlRouterProvider, $stateProvider, $locationProvider, $httpProvider) {
@@ -10072,7 +10697,7 @@ uiCtrl = [
 ];
 
 
-},{"../../dscommon/DSObjectBase":79,"../../dscommon/util":84,"../models/PersonDayStat":33,"./account/rmsAccount":44,"./filters":45,"./layout":46,"./tasks/TaskSplitWeekView":47,"./tasks/addCommentAndSave":48,"./tasks/rmsTask":49,"./tasks/rmsTaskEdit":50,"./tasks/rmsTaskInfo":51,"./views/changes/ViewChanges":54,"./views/view1/View1":56,"./views/view2/View2":60,"./views/view3/View3":61,"./widgets/widgetDate":65,"./widgets/widgetDuration":66}],54:[function(require,module,exports){
+},{"../../dscommon/DSObjectBase":85,"../../dscommon/util":90,"../models/PersonDayStat":35,"./account/rmsAccount":46,"./filters":47,"./layout":48,"./noDrag":49,"./sameHeight":50,"./sameWidth":51,"./tasks/TaskSplitWeekView":52,"./tasks/addCommentAndSave":53,"./tasks/rmsTask":54,"./tasks/rmsTaskAdd":55,"./tasks/rmsTaskEdit":56,"./tasks/rmsTaskInfo":57,"./views/changes/ViewChanges":60,"./views/view1/View1":62,"./views/view2/View2":66,"./views/view3/View3":67,"./widgets/widgetDate":71,"./widgets/widgetDuration":72}],60:[function(require,module,exports){
 var Change, DSDigest, DSObject, Person, Task, assert, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -10160,6 +10785,8 @@ ngModule.factory('ViewChanges', [
 
       ViewChange.propList('changes', Change);
 
+      ViewChange.propNum('renderVer', 0);
+
       class1 = (function($scope, key) {
         DSView.call(this, $scope, key);
         this.dataUpdate({});
@@ -10229,6 +10856,7 @@ ngModule.factory('ViewChanges', [
           }
         }
         this.get('changesList').merge(this, changes);
+        this.set('renderVer', this.get('renderVer') + 1);
       });
 
       ViewChange.end();
@@ -10240,7 +10868,7 @@ ngModule.factory('ViewChanges', [
 ]);
 
 
-},{"../../../../dscommon/DSDigest":74,"../../../../dscommon/DSObject":78,"../../../../dscommon/DSView":83,"../../../../dscommon/util":84,"../../../data/dsChanges":23,"../../../models/Person":32,"../../../models/Task":37,"./models/Change":55}],55:[function(require,module,exports){
+},{"../../../../dscommon/DSDigest":80,"../../../../dscommon/DSObject":84,"../../../../dscommon/DSView":89,"../../../../dscommon/util":90,"../../../data/dsChanges":23,"../../../models/Person":34,"../../../models/Task":39,"./models/Change":61}],61:[function(require,module,exports){
 var Change, DSDocument, DSObject, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -10281,7 +10909,7 @@ module.exports = Change = (function(superClass) {
 })(DSObject);
 
 
-},{"../../../../../dscommon/DSDocument":75,"../../../../../dscommon/DSObject":78,"../../../../../dscommon/util":84}],56:[function(require,module,exports){
+},{"../../../../../dscommon/DSDocument":81,"../../../../../dscommon/DSObject":84,"../../../../../dscommon/util":90}],62:[function(require,module,exports){
 var DSDigest, Day, Person, PersonDayStat, PersonTimeTracking, Row, Tag, Task, TaskView, assert, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -10364,6 +10992,8 @@ ngModule.factory('View1', [
       View1.propPool('poolRows', Row);
 
       View1.propList('rows', Row);
+
+      View1.propNum('renderVer', 0);
 
       View1.propObj('hiddenPeople', {
         init: {}
@@ -10736,6 +11366,7 @@ ngModule.factory('View1', [
           day.set('workTime', daysTemp[index]);
           day.set('timeSpent', timeSpentTemp[index].valueOf() === 0 ? null : timeSpentTemp[index]);
         }));
+        this.set('renderVer', this.get('renderVer') + 1);
       });
 
       View1.taskViewsSortRule = taskViewsSortRule = (function(leftView, rightView) {
@@ -10858,7 +11489,7 @@ ngModule.factory('View1', [
             }));
           }
         }
-        return maxY;
+        return maxY + 1;
       });
 
       View1.end();
@@ -10917,27 +11548,29 @@ ngModule.directive('rmsView1DropTask', [
         });
         return el.addEventListener('drop', function(ev) {
           var day, modal, tasks;
-          day = _.findIndex($('.drop-zone', element), function(value) {
-            var $v;
-            $v = $(value);
-            return $v.offset().left + $v.width() >= ev.clientX;
-          });
-          if (!(ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate !== null)) {
-            tasks = [$rootScope.modal.task];
-          } else {
-            tasks = getDropTasksGroup();
-          }
-          if (day < 0) {
-            addCommentAndSave(tasks, ev.shiftKey, {
-              responsible: $scope.row.get('person'),
-              plan: false
+          if (ev.dataTransfer.getData('task')) {
+            day = _.findIndex($('.drop-zone', element), function(value) {
+              var $v;
+              $v = $(value);
+              return $v.offset().left + $v.width() >= ev.clientX;
             });
-          } else {
-            addCommentAndSave(tasks, ev.shiftKey, {
-              responsible: $scope.row.get('person'),
-              duedate: $scope.view.get('days')[day].get('date'),
-              plan: false
-            });
+            if (!(ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate !== null)) {
+              tasks = [$rootScope.modal.task];
+            } else {
+              tasks = getDropTasksGroup();
+            }
+            if (day < 0) {
+              addCommentAndSave(tasks, ev.shiftKey, {
+                responsible: $scope.row.get('person'),
+                plan: false
+              });
+            } else {
+              addCommentAndSave(tasks, ev.shiftKey, {
+                responsible: $scope.row.get('person'),
+                duedate: $scope.view.get('days')[day].get('date'),
+                plan: false
+              });
+            }
           }
           $rootScope.$digest();
           ev.stopPropagation();
@@ -10972,7 +11605,7 @@ ngModule.directive('rmsView1MouseOverWeekChange', [
 ]);
 
 
-},{"../../../../dscommon/DSDigest":74,"../../../../dscommon/DSView":83,"../../../../dscommon/util":84,"../../../config":19,"../../../data/dsChanges":23,"../../../data/dsDataService":24,"../../../data/teamwork/TWTasks":29,"../../../models/Person":32,"../../../models/PersonDayStat":33,"../../../models/PersonTimeTracking":34,"../../../models/Tag":36,"../../../models/Task":37,"../../tasks/addCommentAndSave":48,"./models/Day":57,"./models/Row":58,"./models/TaskView":59}],57:[function(require,module,exports){
+},{"../../../../dscommon/DSDigest":80,"../../../../dscommon/DSView":89,"../../../../dscommon/util":90,"../../../config":19,"../../../data/dsChanges":23,"../../../data/dsDataService":24,"../../../data/teamwork/TWTasks":31,"../../../models/Person":34,"../../../models/PersonDayStat":35,"../../../models/PersonTimeTracking":36,"../../../models/Tag":38,"../../../models/Task":39,"../../tasks/addCommentAndSave":53,"./models/Day":63,"./models/Row":64,"./models/TaskView":65}],63:[function(require,module,exports){
 var DSObject, Day,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -11005,7 +11638,7 @@ module.exports = Day = (function(superClass) {
 })(DSObject);
 
 
-},{"../../../../../dscommon/DSObject":78}],58:[function(require,module,exports){
+},{"../../../../../dscommon/DSObject":84}],64:[function(require,module,exports){
 var DSObject, Person, PersonDayStat, Row, TaskView, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -11050,7 +11683,7 @@ module.exports = Row = (function(superClass) {
 })(DSObject);
 
 
-},{"../../../../../dscommon/DSObject":78,"../../../../../dscommon/util":84,"../../../../models/Person":32,"../../../../models/PersonDayStat":33,"./TaskView":59}],59:[function(require,module,exports){
+},{"../../../../../dscommon/DSObject":84,"../../../../../dscommon/util":90,"../../../../models/Person":34,"../../../../models/PersonDayStat":35,"./TaskView":65}],65:[function(require,module,exports){
 var DSObject, PersonTimeTracking, Task, TaskView, validate,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -11100,7 +11733,7 @@ module.exports = TaskView = (function(superClass) {
 })(DSObject);
 
 
-},{"../../../../../dscommon/DSObject":78,"../../../../../dscommon/util":84,"../../../../models/PersonTimeTracking":34,"../../../../models/Task":37}],60:[function(require,module,exports){
+},{"../../../../../dscommon/DSObject":84,"../../../../../dscommon/util":90,"../../../../models/PersonTimeTracking":36,"../../../../models/Task":39}],66:[function(require,module,exports){
 var DSDigest, Task, TaskView, assert, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -11160,6 +11793,8 @@ ngModule.factory('View2', [
       View2.propNum('tasksNotAssignedHeight', {
         init: 0
       });
+
+      View2.propNum('renderVer', 0);
 
       View2.ds_dstr.push((function() {
         this.__unwatchA();
@@ -11221,6 +11856,7 @@ ngModule.factory('View2', [
           })(this))).sort(taskViewsSortRule));
           this.set('tasksNotAssignedHeight', View1.layoutTaskView(startDate, tasksNotAssigned));
         }
+        this.set('renderVer', this.get('renderVer') + 1);
       });
 
       View2.end();
@@ -11261,17 +11897,19 @@ ngModule.directive('rmsView2DayDropTask', [
         });
         el.addEventListener('drop', function(ev) {
           var day, modal, tasks;
-          day = getDay(ev);
-          if (!(ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate !== null)) {
-            tasks = [$rootScope.modal.task];
-          } else {
-            tasks = getDropTasksGroup();
+          if (ev.dataTransfer.getData('task')) {
+            day = getDay(ev);
+            if (!(ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate !== null)) {
+              tasks = [$rootScope.modal.task];
+            } else {
+              tasks = getDropTasksGroup();
+            }
+            addCommentAndSave(tasks, ev.shiftKey, {
+              responsible: null,
+              duedate: day === -1 ? null : $scope.view1.get('days')[day].get('date'),
+              plan: false
+            });
           }
-          addCommentAndSave(tasks, ev.shiftKey, {
-            responsible: null,
-            duedate: day === -1 ? null : $scope.view1.get('days')[day].get('date'),
-            plan: false
-          });
           $rootScope.$digest();
           ev.stopPropagation();
           return false;
@@ -11282,8 +11920,8 @@ ngModule.directive('rmsView2DayDropTask', [
 ]);
 
 
-},{"../../../../dscommon/DSDigest":74,"../../../../dscommon/DSView":83,"../../../../dscommon/util":84,"../../../data/dsChanges":23,"../../../data/dsDataService":24,"../../../data/teamwork/TWTasks":29,"../../../models/Task":37,"../../tasks/addCommentAndSave":48,"../view1/View1":56,"../view1/models/TaskView":59}],61:[function(require,module,exports){
-var PersonView, Project, ProjectView, Row, Task, TodoList, TodoListView, assert, error, ngModule,
+},{"../../../../dscommon/DSDigest":80,"../../../../dscommon/DSView":89,"../../../../dscommon/util":90,"../../../data/dsChanges":23,"../../../data/dsDataService":24,"../../../data/teamwork/TWTasks":31,"../../../models/Task":39,"../../tasks/addCommentAndSave":53,"../view1/View1":62,"../view1/models/TaskView":65}],67:[function(require,module,exports){
+var PersonView, Project, ProjectView, Row, Task, TaskList, TaskListView, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -11295,7 +11933,7 @@ error = require('../../../../dscommon/util').error;
 
 Task = require('../../../models/Task');
 
-TodoList = require('../../../models/TodoList');
+TaskList = require('../../../models/TaskList');
 
 Project = require('../../../models/Project');
 
@@ -11303,7 +11941,7 @@ PersonView = require('./models/PersonView');
 
 ProjectView = require('./models/ProjectView');
 
-TodoListView = require('./models/TodoListView');
+TaskListView = require('./models/TaskListView');
 
 Row = require('../view1/models/Row');
 
@@ -11416,7 +12054,6 @@ ngModule.factory('View3', [
                   manager: selectedManager
                 });
             }
-            $scope.tasks = _this.get('data').get('tasksSet');
           };
         })(this)), true);
         this.__unwatchC = $scope.$watch((function() {
@@ -11506,7 +12143,7 @@ ngModule.factory('View3', [
       };
 
       View3.prototype.render = function() {
-        var filterByPerson, filterByProject, filterByTask, i, k, len, personView, personViewKey, poolPeople, poolProjects, projects, r, ref, ref1, ref2, ref3, resultRows, rows, status, tasks, tasksByPeople, tasksByProject, tasksByTodoList, v;
+        var filterByPerson, filterByProject, filterByTask, i, k, len, personView, personViewKey, poolPeople, poolProjects, projects, r, ref, ref1, ref2, ref3, resultRows, rows, status, tasks, tasksByPeople, tasksByProject, tasksByTaskList, v;
         if (!((status = this.get('data').get('tasksStatus')) === 'ready' || status === 'update')) {
           this.get('projectsList').merge(this, []);
           return;
@@ -11519,11 +12156,11 @@ ngModule.factory('View3', [
           }));
         }
         if (config.view3GroupByPerson === 0) {
-          tasksByTodoList = _.groupBy(tasks, (function(task) {
-            return task.get('todoList').$ds_key;
+          tasksByTaskList = _.groupBy(tasks, (function(task) {
+            return task.get('taskList').$ds_key;
           }));
-          tasksByProject = _.groupBy(tasksByTodoList, (function(todoList) {
-            return todoList[0].get('project').$ds_key;
+          tasksByProject = _.groupBy(tasksByTaskList, (function(taskList) {
+            return taskList[0].get('project').$ds_key;
           }));
           if (((ref1 = (filterByProject = config.view3FilterByProject)) != null ? ref1.length : void 0) > 0) {
             filterByProject = filterByProject.trim().toLowerCase();
@@ -11540,13 +12177,13 @@ ngModule.factory('View3', [
               var projectView;
               projectView = poolProjects.find(_this, projectKey);
               projectView.set('project', Project.pool.items[projectKey]);
-              projectView.get('todoListsList').merge(_this, _.map(projectGroup, (function(todoListGroup) {
-                var todoListKey, todoListView;
-                todoListKey = todoListGroup[0].get('todoList').$ds_key;
-                todoListView = projectView.poolTodoLists.find(_this, todoListKey);
-                todoListView.set('todoList', TodoList.pool.items[todoListKey]);
-                todoListView.set('tasksCount', _.size(todoListGroup));
-                todoListView.set('totalEstimate', _.reduce(todoListGroup, (function(sum, task) {
+              projectView.get('taskListsList').merge(_this, _.map(projectGroup, (function(taskListGroup) {
+                var taskListKey, taskListView;
+                taskListKey = taskListGroup[0].get('taskList').$ds_key;
+                taskListView = projectView.poolTaskLists.find(_this, taskListKey);
+                taskListView.set('taskList', TaskList.pool.items[taskListKey]);
+                taskListView.set('tasksCount', _.size(taskListGroup));
+                taskListView.set('totalEstimate', _.reduce(taskListGroup, (function(sum, task) {
                   var estimate;
                   if ((estimate = task.get('estimate'))) {
                     return sum.add(estimate);
@@ -11554,10 +12191,10 @@ ngModule.factory('View3', [
                     return sum;
                   }
                 }), moment.duration(0)));
-                todoListView.get('tasksList').merge(_this, (_.map(todoListGroup, (function(task) {
+                taskListView.get('tasksList').merge(_this, (_.map(taskListGroup, (function(task) {
                   return task.addRef(_this);
                 }))).sort(TWTasks.tasksSortRule));
-                return todoListView;
+                return taskListView;
               })));
               return projectView;
             };
@@ -11623,11 +12260,11 @@ ngModule.factory('View3', [
             r = rows[i];
             if (!filterByPerson || filterPerson(r, filterByPerson)) {
               if (tasksByPeople.hasOwnProperty(personViewKey = (r !== 'null' ? r.$ds_key : 'null'))) {
-                tasksByTodoList = _.groupBy(tasksByPeople[personViewKey], (function(task) {
-                  return task.get('todoList').$ds_key;
+                tasksByTaskList = _.groupBy(tasksByPeople[personViewKey], (function(task) {
+                  return task.get('taskList').$ds_key;
                 }));
-                tasksByProject = _.groupBy(tasksByTodoList, (function(todoList) {
-                  return todoList[0].get('project').$ds_key;
+                tasksByProject = _.groupBy(tasksByTaskList, (function(taskList) {
+                  return taskList[0].get('project').$ds_key;
                 }));
                 if (filterByProject) {
                   for (k in tasksByProject) {
@@ -11650,13 +12287,13 @@ ngModule.factory('View3', [
                     var projectView;
                     projectView = poolProjects.find(_this, projectKey);
                     projectView.set('project', Project.pool.items[projectKey]);
-                    projectView.get('todoListsList').merge(_this, _.map(projectGroup, (function(todoListGroup) {
-                      var todoListKey, todoListView;
-                      todoListKey = todoListGroup[0].get('todoList').$ds_key;
-                      todoListView = projectView.poolTodoLists.find(_this, todoListKey);
-                      todoListView.set('todoList', TodoList.pool.items[todoListKey]);
-                      todoListView.set('tasksCount', _.size(todoListGroup));
-                      todoListView.set('totalEstimate', _.reduce(todoListGroup, (function(sum, task) {
+                    projectView.get('taskListsList').merge(_this, _.map(projectGroup, (function(taskListGroup) {
+                      var taskListKey, taskListView;
+                      taskListKey = taskListGroup[0].get('taskList').$ds_key;
+                      taskListView = projectView.poolTaskLists.find(_this, taskListKey);
+                      taskListView.set('taskList', TaskList.pool.items[taskListKey]);
+                      taskListView.set('tasksCount', _.size(taskListGroup));
+                      taskListView.set('totalEstimate', _.reduce(taskListGroup, (function(sum, task) {
                         var estimate;
                         if ((estimate = task.get('estimate'))) {
                           return sum.add(estimate);
@@ -11664,10 +12301,10 @@ ngModule.factory('View3', [
                           return sum;
                         }
                       }), moment.duration(0)));
-                      todoListView.get('tasksList').merge(_this, (_.map(todoListGroup, (function(task) {
+                      taskListView.get('tasksList').merge(_this, (_.map(taskListGroup, (function(task) {
                         return task.addRef(_this);
                       }))).sort(TWTasks.tasksSortRule));
-                      return todoListView;
+                      return taskListView;
                     })));
                     return projectView;
                   };
@@ -11724,26 +12361,28 @@ ngModule.directive('rmsView3DropTask', [
         });
         el.addEventListener('drop', function(ev) {
           var fields, modal, tasks;
-          if (!(ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate !== null)) {
-            tasks = [$rootScope.modal.task];
-          } else {
-            tasks = getDropTasksGroup();
+          if (ev.dataTransfer.getData('task')) {
+            if (!(ev.ctrlKey && !(modal = $rootScope.modal).task.split && modal.task.duedate !== null)) {
+              tasks = [$rootScope.modal.task];
+            } else {
+              tasks = getDropTasksGroup();
+            }
+            fields = {
+              plan: false
+            };
+            switch (activeTab()) {
+              case -1:
+                fields.duedate = null;
+                fields.clipboard = true;
+                break;
+              case 0:
+                fields.duedate = null;
+                break;
+              case 1:
+                fields.duedate = moment($rootScope.startDateVal).add(1, 'week');
+            }
+            addCommentAndSave(tasks, ev.shiftKey, fields);
           }
-          fields = {
-            plan: false
-          };
-          switch (activeTab()) {
-            case -1:
-              fields.duedate = null;
-              fields.clipboard = true;
-              break;
-            case 0:
-              fields.duedate = null;
-              break;
-            case 1:
-              fields.duedate = moment($rootScope.startDateVal).add(1, 'week');
-          }
-          addCommentAndSave(tasks, ev.shiftKey, fields);
           $rootScope.$digest();
           ev.stopPropagation();
           return false;
@@ -11754,8 +12393,8 @@ ngModule.directive('rmsView3DropTask', [
 ]);
 
 
-},{"../../../../dscommon/DSView":83,"../../../../dscommon/util":84,"../../../config":19,"../../../data/dsDataService":24,"../../../data/teamwork/TWTasks":29,"../../../models/Project":35,"../../../models/Task":37,"../../../models/TodoList":39,"../../tasks/addCommentAndSave":48,"../view1/models/Row":58,"./models/PersonView":62,"./models/ProjectView":63,"./models/TodoListView":64}],62:[function(require,module,exports){
-var DSObject, Person, PersonView, Project, ProjectView, Row, TodoListView, validate,
+},{"../../../../dscommon/DSView":89,"../../../../dscommon/util":90,"../../../config":19,"../../../data/dsDataService":24,"../../../data/teamwork/TWTasks":31,"../../../models/Project":37,"../../../models/Task":39,"../../../models/TaskList":40,"../../tasks/addCommentAndSave":53,"../view1/models/Row":64,"./models/PersonView":68,"./models/ProjectView":69,"./models/TaskListView":70}],68:[function(require,module,exports){
+var DSObject, Person, PersonView, Project, ProjectView, Row, TaskListView, validate,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -11769,7 +12408,7 @@ Project = require('../../../../models/Project');
 
 ProjectView = require('./ProjectView');
 
-TodoListView = require('./TodoListView');
+TaskListView = require('./TaskListView');
 
 Row = require('../../view1/models/Row');
 
@@ -11786,7 +12425,7 @@ module.exports = PersonView = (function(superClass) {
 
   PersonView.propPool('poolProjects', ProjectView);
 
-  PersonView.propList('projects', TodoListView);
+  PersonView.propList('projects', TaskListView);
 
   PersonView.end();
 
@@ -11795,8 +12434,8 @@ module.exports = PersonView = (function(superClass) {
 })(DSObject);
 
 
-},{"../../../../../dscommon/DSObject":78,"../../../../../dscommon/util":84,"../../../../models/Person":32,"../../../../models/Project":35,"../../view1/models/Row":58,"./ProjectView":63,"./TodoListView":64}],63:[function(require,module,exports){
-var DSObject, Project, ProjectView, TodoListView, validate,
+},{"../../../../../dscommon/DSObject":84,"../../../../../dscommon/util":90,"../../../../models/Person":34,"../../../../models/Project":37,"../../view1/models/Row":64,"./ProjectView":69,"./TaskListView":70}],69:[function(require,module,exports){
+var DSObject, Project, ProjectView, TaskListView, validate,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -11806,7 +12445,7 @@ validate = require('../../../../../dscommon/util').validate;
 
 Project = require('../../../../models/Project');
 
-TodoListView = require('./TodoListView');
+TaskListView = require('./TaskListView');
 
 module.exports = ProjectView = (function(superClass) {
   extend(ProjectView, superClass);
@@ -11819,9 +12458,9 @@ module.exports = ProjectView = (function(superClass) {
 
   ProjectView.propDoc('project', Project);
 
-  ProjectView.propPool('poolTodoLists', TodoListView);
+  ProjectView.propPool('poolTaskLists', TaskListView);
 
-  ProjectView.propList('todoLists', TodoListView);
+  ProjectView.propList('taskLists', TaskListView);
 
   ProjectView.end();
 
@@ -11830,8 +12469,8 @@ module.exports = ProjectView = (function(superClass) {
 })(DSObject);
 
 
-},{"../../../../../dscommon/DSObject":78,"../../../../../dscommon/util":84,"../../../../models/Project":35,"./TodoListView":64}],64:[function(require,module,exports){
-var DSObject, Task, TodoList, TodoListView, validate,
+},{"../../../../../dscommon/DSObject":84,"../../../../../dscommon/util":90,"../../../../models/Project":37,"./TaskListView":70}],70:[function(require,module,exports){
+var DSObject, Task, TaskList, TaskListView, validate,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -11841,39 +12480,39 @@ validate = require('../../../../../dscommon/util').validate;
 
 Task = require('../../../../models/Task');
 
-TodoList = require('../../../../models/TodoList');
+TaskList = require('../../../../models/TaskList');
 
-module.exports = TodoListView = (function(superClass) {
-  extend(TodoListView, superClass);
+module.exports = TaskListView = (function(superClass) {
+  extend(TaskListView, superClass);
 
-  function TodoListView() {
-    return TodoListView.__super__.constructor.apply(this, arguments);
+  function TaskListView() {
+    return TaskListView.__super__.constructor.apply(this, arguments);
   }
 
-  TodoListView.begin('TodoListView');
+  TaskListView.begin('TaskListView');
 
-  TodoListView.propDoc('todoList', TodoList);
+  TaskListView.propDoc('taskList', TaskList);
 
-  TodoListView.propList('tasks', Task);
+  TaskListView.propList('tasks', Task);
 
-  TodoListView.propNum('tasksCount', {
+  TaskListView.propNum('tasksCount', {
     init: 0
   });
 
-  TodoListView.propDuration('totalEstimate');
+  TaskListView.propDuration('totalEstimate');
 
-  TodoListView.propBool('isExpand', {
+  TaskListView.propBool('isExpand', {
     init: true
   });
 
-  TodoListView.end();
+  TaskListView.end();
 
-  return TodoListView;
+  return TaskListView;
 
 })(DSObject);
 
 
-},{"../../../../../dscommon/DSObject":78,"../../../../../dscommon/util":84,"../../../../models/Task":37,"../../../../models/TodoList":39}],65:[function(require,module,exports){
+},{"../../../../../dscommon/DSObject":84,"../../../../../dscommon/util":90,"../../../../models/Task":39,"../../../../models/TaskList":40}],71:[function(require,module,exports){
 var ngModule;
 
 module.exports = (ngModule = angular.module('ui/widgets/widgetDate', [])).name;
@@ -11914,7 +12553,7 @@ ngModule.directive('widgetDate', [
 ]);
 
 
-},{}],66:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 var msInHours, msInMinute, ngModule;
 
 module.exports = (ngModule = angular.module('ui/widgets/widgetDuration', [])).name;
@@ -11967,7 +12606,7 @@ ngModule.directive('widgetDuration', [
 ]);
 
 
-},{}],67:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 var RMSDataEnd, RMSDataStart, assert, clear, error, trimEndLF, trimStartLF;
 
 assert = require('../../dscommon/util').assert;
@@ -12068,7 +12707,7 @@ module.exports = {
 };
 
 
-},{"../../dscommon/util":84}],68:[function(require,module,exports){
+},{"../../dscommon/util":90}],74:[function(require,module,exports){
 var DSChangesBase, DSData, DSDigest, DSDocument, DSHistory, DSPool, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -12285,7 +12924,7 @@ module.exports = DSChangesBase = (function(superClass) {
 })(DSData);
 
 
-},{"./DSData":69,"./DSDigest":74,"./DSDocument":75,"./DSHistory":76,"./DSPool":80,"./util":84}],69:[function(require,module,exports){
+},{"./DSData":75,"./DSDigest":80,"./DSDocument":81,"./DSHistory":82,"./DSPool":86,"./util":90}],75:[function(require,module,exports){
 var DSData, DSObject, assert, error, modeReleaseDataOnReload, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -12414,7 +13053,7 @@ module.exports = DSData = (function(superClass) {
 })(DSObject);
 
 
-},{"./DSObject":78,"./util":84}],70:[function(require,module,exports){
+},{"./DSObject":84,"./util":90}],76:[function(require,module,exports){
 var DSData, DSDigest, DSDocument, DSSet, assert, classes, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -12678,7 +13317,7 @@ module.exports = (function(itemType) {
 });
 
 
-},{"./DSData":69,"./DSDigest":74,"./DSDocument":75,"./DSSet":81,"./util":84}],71:[function(require,module,exports){
+},{"./DSData":75,"./DSDigest":80,"./DSDocument":81,"./DSSet":87,"./util":90}],77:[function(require,module,exports){
 var DSData, DSDigest, DSObject, DSSet, assert, classes, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -12847,7 +13486,7 @@ module.exports = (function(itemType) {
 });
 
 
-},{"./DSData":69,"./DSDigest":74,"./DSObject":78,"./DSSet":81,"./util":84}],72:[function(require,module,exports){
+},{"./DSData":75,"./DSDigest":80,"./DSObject":84,"./DSSet":87,"./util":90}],78:[function(require,module,exports){
 var DSDataServiceBase, DSObject, DSPool, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -12951,7 +13590,7 @@ module.exports = DSDataServiceBase = (function(superClass) {
 })(DSObject);
 
 
-},{"./DSObject":78,"./DSPool":80,"./util":84}],73:[function(require,module,exports){
+},{"./DSObject":84,"./DSPool":86,"./util":90}],79:[function(require,module,exports){
 var DSDigest, DSObject, assert, base64, error, modeReleaseDataOnReload, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -13141,7 +13780,7 @@ ngModule.factory('DSDataSource', [
 ]);
 
 
-},{"../utils/base64":86,"./DSDigest":74,"./DSObject":78,"./util":84}],74:[function(require,module,exports){
+},{"../utils/base64":92,"./DSDigest":80,"./DSObject":84,"./util":90}],80:[function(require,module,exports){
 var DSDigest, assert, error;
 
 assert = require('./util').assert;
@@ -13241,7 +13880,7 @@ module.exports = DSDigest = (function() {
 })();
 
 
-},{"./util":84}],75:[function(require,module,exports){
+},{"./util":90}],81:[function(require,module,exports){
 var DSDocument, DSObject, DSObjectBase, DSSet, assert, error, traceRefs,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -13563,7 +14202,7 @@ module.exports = DSDocument = (function(superClass) {
                       this.$ds_chg.add(this, this);
                       this.$ds_chg.$ds_hist.add(this, propName, value, oldVal);
                     } else if (equal((serverValue = this.$ds_doc[propName]), value)) {
-                      this.$ds_chg.$ds_hist.add(this, propName, oldVal, (changePair = change[propName]).v);
+                      this.$ds_chg.$ds_hist.add(this, propName, value, (changePair = change[propName]).v);
                       if ((v = changePair.v) instanceof DSObjectBase) {
                         v.release(this);
                       }
@@ -13633,7 +14272,7 @@ module.exports = DSDocument = (function(superClass) {
 })(DSObject);
 
 
-},{"./DSObject":78,"./DSObjectBase":79,"./DSSet":81,"./util":84}],76:[function(require,module,exports){
+},{"./DSObject":84,"./DSObjectBase":85,"./DSSet":87,"./util":90}],82:[function(require,module,exports){
 var DSDigest, DSDocument, DSHistory, DSObject, DSObjectBase, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -13902,7 +14541,7 @@ module.exports = DSHistory = (function(superClass) {
 })(DSObject);
 
 
-},{"./DSDigest":74,"./DSDocument":75,"./DSObject":78,"./DSObjectBase":79,"./util":84}],77:[function(require,module,exports){
+},{"./DSDigest":80,"./DSDocument":81,"./DSObject":84,"./DSObjectBase":85,"./util":90}],83:[function(require,module,exports){
 var DSList, DSObjectBase, assert, error, totalReleaseVerb, traceRefs, util,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -14003,7 +14642,7 @@ module.exports = DSList = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSObjectBase":79,"./util":84}],78:[function(require,module,exports){
+},{"./DSObjectBase":85,"./util":90}],84:[function(require,module,exports){
 var DSList, DSObject, DSObjectBase, DSPool, DSSet, assert, error, serviceOwner, totalRelease,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -14197,7 +14836,7 @@ module.exports = DSObject = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSList":77,"./DSObjectBase":79,"./DSPool":80,"./DSSet":81,"./util":84}],79:[function(require,module,exports){
+},{"./DSList":83,"./DSObjectBase":85,"./DSPool":86,"./DSSet":87,"./util":90}],85:[function(require,module,exports){
 var DSObjectBase, assert, error, serviceOwner, totalRelease, totalReleaseVerb, traceData, traceRefs, util;
 
 util = require('./util');
@@ -14377,8 +15016,12 @@ module.exports = DSObjectBase = (function() {
   });
 
   DSObjectBase.prototype.toString = (function() {
-    return this.__proto__.$ds_docType + ":" + this.$ds_key + (typeof this.$ds_pool === 'object' ? '@' + this.$ds_pool : '');
+    return this.__proto__.$ds_docType + "@" + this.$ds_key + (typeof this.$ds_pool === 'object' ? ' <- ' + this.$ds_pool : '');
   });
+
+  DSObjectBase.prototype.toJSON = function() {
+    return this.__proto__.$ds_docType + "@" + this.$ds_key;
+  };
 
   DSObjectBase.prototype.writeMap = (function() {
     var prop, propName, ref, res;
@@ -15118,7 +15761,7 @@ module.exports = DSObjectBase = (function() {
 })();
 
 
-},{"./util":84}],80:[function(require,module,exports){
+},{"./util":90}],86:[function(require,module,exports){
 var DSDigest, DSObjectBase, DSPool, assert, error, traceWatch,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -15283,7 +15926,7 @@ module.exports = DSPool = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSDigest":74,"./DSObjectBase":79,"./util":84}],81:[function(require,module,exports){
+},{"./DSDigest":80,"./DSObjectBase":85,"./util":90}],87:[function(require,module,exports){
 var DSObjectBase, DSSet, assert, error, modeReleaseDataOnReload, totalReleaseVerb, traceRefs, traceWatch, util,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -15565,7 +16208,7 @@ module.exports = DSSet = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSObjectBase":79,"./util":84}],82:[function(require,module,exports){
+},{"./DSObjectBase":85,"./util":90}],88:[function(require,module,exports){
 var DSObjectBase, DSTags, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -15843,7 +16486,7 @@ module.exports = DSTags = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSObjectBase":79,"./util":84}],83:[function(require,module,exports){
+},{"./DSObjectBase":85,"./util":90}],89:[function(require,module,exports){
 var DSObject, DSSet, assert, error, ngModule, traceView,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -16121,7 +16764,7 @@ ngModule.factory('DSView', [
 ]);
 
 
-},{"../app/data/dsDataService":24,"./DSObject":78,"./DSSet":81,"./util":84}],84:[function(require,module,exports){
+},{"../app/data/dsDataService":24,"./DSObject":84,"./DSSet":87,"./util":90}],90:[function(require,module,exports){
 var ServiceOwner, util;
 
 module.exports = util = {
@@ -16233,7 +16876,7 @@ module.exports = util = {
 };
 
 
-},{}],85:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 /**
  * An Angular module that gives you access to the browsers local storage
  * @version v0.1.5 - 2014-11-04
@@ -16689,7 +17332,7 @@ angularLocalStorage.provider('localStorageService', function() {
   }];
 });
 })( window, window.angular );
-},{}],86:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 var keyStr;
 
 keyStr = "ABCDEFGHIJKLMNOP" + "QRSTUVWXYZabcdef" + "ghijklmnopqrstuv" + "wxyz0123456789+/" + "=";
@@ -16772,7 +17415,7 @@ module.exports = {
 };
 
 
-},{}],87:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 (function (process){
 /* Jison generated parser */
 var jsonlint = (function(){
