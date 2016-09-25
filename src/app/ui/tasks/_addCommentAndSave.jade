@@ -11,10 +11,9 @@
         td.name reason:
         td.value: textarea(cols='60' rows='3' ng-model='addCommentAndSave.reason')
       tr
-        td.name &nbsp;
-        td.value
+        td.value(colspan='2')
           .actions
-            button.save(type='submit' ng-disabled='addCommentAndSave.plansChange && addCommentAndSave.reason.trim() == ""' ng-click='addCommentAndSave.save()') Save
-            button.cancel(ng-click='addCommentAndSave.cancel()') Cancel
+            button.flat-button.save(type='submit' ng-disabled='addCommentAndSave.plansChange && addCommentAndSave.reason.trim() == ""' ng-click='addCommentAndSave.save()') Save
+            button.flat-button.cancel(ng-click='addCommentAndSave.cancel()') Cancel
 
 

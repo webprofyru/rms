@@ -8,11 +8,11 @@ roundsToBeStable = 10 # times
 
 ngModule.directive "sameHeight", ->
   scope: true
-  controller: ($scope) ->
+  controller: ['$scope', ($scope) ->
     @height = 0
     @update = []
     @scope = $scope
-    return
+    return]
   link: ($scope, element, attrs, ctrl) ->
     if attrs.sameHeight
       $scope.$watch attrs.sameHeight, ->

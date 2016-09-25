@@ -1,4 +1,4 @@
-form#modal-task(ng-switch-when='task-edit' rms-task-edit='')
+form#modal-task(ng-switch-when='task-edit' rms-task-edit='' ng-class='{"under-backdrop": addCommentAndSave}')
   .task-modal-wrapper-main
 
     .task-modal-row.project(ng-if='!edit.newTask')

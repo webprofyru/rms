@@ -1,6 +1,7 @@
 #modal-add-comment
   .required
      color: rgba(255, 0, 0, 0.47)
+  font-size: 0.9rem
   position: absolute
   overflow: hidden
   z-index: 1000
@@ -12,7 +13,7 @@
   width: 30rem
   padding: 5px 15px
   border: $border
-  background-color: #EDE9E9
+  background-color: $color-header-light
   border-radius: 5px
   font-size: 12px
   .author
@@ -30,5 +31,8 @@
       td.value
   .actions
     margin-top: 1rem
+    margin-bottom: 14px
+    button
+      height: 26px
     button.cancel
       float: right

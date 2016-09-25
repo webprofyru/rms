@@ -8,11 +8,11 @@ roundsToBeStable = 10 # times
 
 ngModule.directive "sameWidth", ->
   scope: true
-  controller: ($scope) ->
+  controller: ['$scope', ($scope) ->
     @width = 0
     @update = []
     @scope = $scope
-    return
+    return]
   link: ($scope, element, attrs, ctrl) ->
     if attrs.sameWidth
       $scope.$watch attrs.sameWidth, ->

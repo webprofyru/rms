@@ -11,6 +11,6 @@
   div(ng-if='addCommentAndSave')
     include ./tasks/_addCommentAndSave.jade
 
-  .backdrop(ng-if='isShowAccount || (modal.type != null && modal.type != "task-info" && modal.type != "drag-start")')
+  .backdrop(ng-if='isShowAccount || addCommentAndSave || (modal.type != null && modal.type != "task-info" && modal.type != "drag-start")')
 
 include ./account/_account.jade
