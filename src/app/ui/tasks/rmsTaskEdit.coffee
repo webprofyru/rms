@@ -136,6 +136,7 @@ ngModule.directive 'rmsTaskEdit', [
           return
 
         $scope.task = task = # fake task, to do not have a deal with rewriting task split logic
+          $new: true
           $u: Task$u
           get: (propName) ->
             switch propName
@@ -280,15 +281,19 @@ ngModule.directive 'rmsTaskEdit', [
             split.fixEstimate diff
 
         # Actual save...
-        update =
-          title: edit.title
-          duedate: edit.duedate
-          estimate: edit.estimate
-          responsible: edit.responsible
-          split: if edit.isSplit && edit.split.valueOf().length > 0 then edit.split else null
-          tags: edit.tags
-          description: edit.description
+        update = {}
+        if task.$new
+          update.project = edit.project
+          update.taskList = edit.taskList
+        update.title = edit.title
+        update.duedate = edit.duedate
+        update.estimate = edit.estimate
+        update.responsible = edit.responsible
+        update.split = if edit.isSplit && edit.split.valueOf().length > 0 then edit.split else null
+        update.tags = edit.tags
+        update.description = edit.description
         update.plan = plan if typeof plan == 'boolean'
+
         addCommentAndSave task, $event.shiftKey, update
         .then ((saved) ->
           close() if saved

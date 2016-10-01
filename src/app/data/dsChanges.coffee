@@ -27,8 +27,8 @@ ngModule.run ['dsChanges', '$rootScope', ((dsChanges, $rootScope) ->
 CHANGES_PERSISTANCE_VER = 1 # increase every time then compatibility with previous version of format is lost
 
 ngModule.factory 'dsChanges', [
-  'DSDataSource', 'config', 'localStorageService', '$rootScope', '$http', '$timeout', '$q',
-  ((DSDataSource, config, localStorageService, $rootScope, $http, $timeout, $q) ->
+  'TWTaskLists', 'DSDataSource', 'config', 'localStorageService', '$rootScope', '$http', '$timeout', '$q',
+  ((TWTaskLists, DSDataSource, config, localStorageService, $rootScope, $http, $timeout, $q) ->
     class DSChanges extends DSChangesBase
       @begin 'DSChanges'
 
@@ -103,29 +103,40 @@ ngModule.factory 'dsChanges', [
                 @__unwatchStatus3 = originalTasks.watchStatus @, (source, status, prevStatus, unwatch) =>
                   return unless status == 'ready'
                   unwatch() # only once
-                  DSDigest.block =>
-                    Task.pool.enableWatch false
-                    step1 = @mapToChanges(changes.changes)
-                    for personKey, loadList of step1.load.Person # step 2
-                      if !peopleSet.items.hasOwnProperty(personKey)
-                        console.error 'Person #{personKey} missing in server data'
-                      else
-                        person = peopleSet.items[personKey]
-                        f(person) for f in loadList
-                    tasksSetPool = (tasksSet = @get 'tasksSet').$ds_pool
-                    set = {}
-                    for taskKey, taskChange of step1.changes.tasks # step 3
-                      continue unless originalTasks.items.hasOwnProperty(taskKey) && !((task = originalTasks.items[taskKey]).get 'completed') # task is not either removed or completed
-                      (taskEditable = tasksSetPool.find(@, taskKey, set)).init(task, tasksSet, taskChange)
-                      taskEditable.$u = $u
-                      unless taskEditable.hasOwnProperty '__change' # all changes met server version
-                        delete set[taskEditable.$ds_key]
-                        taskEditable.release @
-                      task.release @
-                    tasksSet.merge @, set
-                    Task.pool.enableWatch true
-                    @_endLoad true
-                    return # DSDigest.block =>
+                  Task.pool.enableWatch false
+                  step1 = @mapToChanges(changes.changes)
+
+                  for personKey, loadList of step1.load.Person # step 2
+                    if !peopleSet.items.hasOwnProperty(personKey)
+                      console.error 'Person #{personKey} missing in server data'
+                    else
+                      person = peopleSet.items[personKey]
+                      f(person) for f in loadList
+                  tasksSetPool = (tasksSet = @get 'tasksSet').$ds_pool
+
+                  TWTaskLists.loadTaskListsAndProjects @get('dataService').get('dataSource'), step1.load
+                  .then =>
+                    DSDigest.block =>
+                      set = {}
+                      # TODO: Add new tasks support
+                      for taskKey, taskChange of step1.changes.tasks # step 3
+                        unless taskKey.startsWith('new:')
+                          continue unless originalTasks.items.hasOwnProperty(taskKey) && !((task = originalTasks.items[taskKey]).get 'completed') # task is not either removed or completed
+                        else
+                          console.info '2.'
+                          task = Task.pool.find @, taskKey
+                          task.set 'status', 'new'
+                        (taskEditable = tasksSetPool.find(@, taskKey, set)).init(task, tasksSet, taskChange)
+                        taskEditable.$u = $u
+                        unless taskEditable.hasOwnProperty '__change' # all changes met server version
+                          delete set[taskEditable.$ds_key]
+                          taskEditable.release @
+                        task.release @
+                      tasksSet.merge @, set
+                      Task.pool.enableWatch true
+                      @_endLoad true
+                      return # DSDigest.block =>
+                    return # .then ->
                   return # originalTasks.watchStatus (source, status, prevStatus, unwatch) =>
                 originalTasks.release @
                 return # peopleSet.watchStatus @, ((source, status, prevStatus, unwatch) =>

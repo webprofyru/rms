@@ -1,6 +1,8 @@
 assert = require('../../../dscommon/util').assert
 error = require('../../../dscommon/util').error
 
+shortid = require 'shortid'
+
 serviceOwner = require('../../../dscommon/util').serviceOwner
 
 DSObject = require '../../../dscommon/DSObject'
@@ -10,6 +12,7 @@ DSDigest = require '../../../dscommon/DSDigest'
 Comments = require '../../models/types/Comments'
 
 Person = require '../../models/Person'
+Task = require '../../models/Task'
 
 module.exports = (ngModule = angular.module 'ui/tasks/addCommentAndSave', [
   require '../../config'
@@ -36,15 +39,26 @@ ngModule.factory 'addCommentAndSave', [
 
       show: ((document, showDialog, changes) ->
         if assert
-          error.invalidArg 'document' if !(document != null && ((Array.isArray(document) && document.length > 0 && document[0] instanceof DSDocument) ||  document instanceof DSDocument))
-          error.invalidArg 'showDialog' if !(typeof showDialog == 'boolean')
-          error.invalidArg 'changes' if !(changes != null && typeof changes == 'object')
+          error.invalidArg 'document' unless document != null && (document.$new || ((Array.isArray(document) && document.length > 0 && document[0] instanceof DSDocument) ||  document instanceof DSDocument))
+          error.invalidArg 'showDialog' unless typeof showDialog == 'boolean'
+          error.invalidArg 'changes' unless changes != null && typeof changes == 'object'
 
         @__deferred =  $q.defer()
 
-        if changes.hasOwnProperty('duedate') && !changes.hasOwnProperty('clipboard')
-          unless (if Array.isArray(document) then document[0] else document).get('duedate')?.valueOf() == changes.duedate?.valueOf()
-            changes.clipboard = false
+        @get('documentsList').merge @, []
+
+        if document.$new # it's a new task
+          newTask = Task.pool.find @, newTaskId = "new:#{shortid()}"
+          newTask.set 'status', 'new'
+          @set 'document', (document = (changesSet = dsChanges.get('tasksSet')).$ds_pool.find(@, newTaskId)) # .init is not required, it's already done
+          document.release @
+        else
+          if Array.isArray(document)
+            doc.addRef @ for doc in document
+            @get('documentsList').merge @, document
+            document = @set 'document', document[0]
+          else
+            @set 'document', document
 
         # set plansChange to true, only if new plan value is false and there is at least one document with plan equal to true
         if changes.hasOwnProperty('plan') && !changes.plan
@@ -55,11 +69,9 @@ ngModule.factory 'addCommentAndSave', [
           else if document.get('plan')
             plansChange = @set 'plansChange', true
 
-        if Array.isArray(document)
-          doc.addRef @ for doc in document
-          @get('documentsList').merge @, document
-          document = @set 'document', document[0]
-        else @set 'document', document
+        if changes.hasOwnProperty('duedate') && !changes.hasOwnProperty('clipboard')
+          unless (if Array.isArray(document) then document[0] else document).get('duedate')?.valueOf() == changes.duedate?.valueOf()
+            changes.clipboard = false
 
         newChanges = []; anyChange = false
         for propName, propDesc of document.__props

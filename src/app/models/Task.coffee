@@ -86,6 +86,8 @@ module.exports = class Task extends DSDocument
   @str = ((v) -> if v == null then '' else v.get('title'))
 
   @propNum 'id', init: 0
+  @propDoc 'project', Project
+  @propDoc 'taskList', TaskList
   @propStr 'title'
   (@propDuration 'estimate').str = ((v) ->
     hours = Math.floor v.asHours()
@@ -100,14 +102,18 @@ module.exports = class Task extends DSDocument
   @propDoc 'creator', Person
   # TODO: No support for multiple persons
   @propDoc 'responsible', Person
-  @propDoc 'taskList', TaskList
-  @propDoc 'project', Project
   @propTaskRelativeSplit 'split'
+
+  @propDSTags 'tags' # 'read:' option, is defined in dsChanges.init()
+  @propBool 'completed'
+  @propBool 'plan', write: null, read: null # TODO: Initial solution.  It's depricated by 'tags', but still in use
 
   @propStr 'description', str: (v) ->
     if !v || v.length == 0 then ''
     else if v.length <= 20 then v
     else "#{v.substr 0, 20}..."
+
+  @propEnum 'status', ['new', '', 'deleted'], init: '', common: true
 
   @propComments 'comments'
 
@@ -115,11 +121,7 @@ module.exports = class Task extends DSDocument
   @propDoc 'timeTracking', TaskTimeTracking, write: null
   @propStr 'firstTimeEntryId', write: null
 
-  @propBool 'completed'
   @propBool 'isReady', write: null
-
-  @propBool 'plan', write: null, read: null # TODO: Initial solution.  It's depricated by 'tags', but still in use
-  @propDSTags 'tags' # 'read:' option, is defined in dsChanges.init()
 
   # calculated props
   @propNum 'priority', init: defaultTag.priority, calc: true

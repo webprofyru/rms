@@ -6,11 +6,12 @@ DSDocument = require('../../../../../dscommon/DSDocument')
 
 module.exports = class Change extends DSObject
   @begin 'Change'
-  @propDoc  'doc', DSDocument
+  @propDoc 'doc', DSDocument
   @propStr 'prop'
   @propStr 'value'
   @propStr 'conflict'
   @propStr 'error'
   @propBool 'isDark'
+  @propNum 'index'
   @end()
 

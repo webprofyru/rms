@@ -1,5 +1,5 @@
 .action-buttons
-  button.flat-button.addTask.disabled(ng-disabled='!connected' ng-if="mode=='edited'" rms-task-add='' ng-click='addTask()' title='Add new task (Not implemented yet)')
+  button.flat-button.addTask(ng-disabled='!connected' ng-if="mode=='edited'" rms-task-add='' ng-click='addTask()' title='Add new task')
     img(src='./images/icons/plus.svg')
   button.flat-button.refresh(ng-disabled='!connected' ng-click='dataService.refresh()' title='Refresh data')
     img(no-drag='' src='./images/icons/refresh.svg')

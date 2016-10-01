@@ -69,28 +69,31 @@ ngModule.factory 'ViewChanges', ['DSView', 'dsChanges', '$log', ((DSView, dsChan
         return)
       for taskKey, task of tasksSet.items
         isDark = !isDark
-        isFirst = true
         task.__change.__refreshView = refreshView
         remove = do (task) -> ->
           dsChanges.removeChanges task
           refreshView()
           return
+
+        taskChanges = []
         for propName, propChange of task.__change when propName != '__error' && propName != '__refreshView' && propName != 'clipboard'
           prop = props[propName]
-          changes.push(change = poolChanges.find @, "#{task.$ds_key}.#{propName}")
+          taskChanges.push(change = poolChanges.find @, "#{task.$ds_key}.#{propName}")
           change.set 'isDark', isDark
-          if isFirst
-            isFirst = false
-            change.set 'doc', task
+          change.set 'index', prop.index
           change.set 'prop', propName
           change.set 'value',
             if (v = propChange.v) == null then ' -' else prop.str(propChange.v)
           change.set 'conflict',
             if prop.equal((conflictValue = task.$ds_doc.get(propName)), propChange.s) then null
             else if conflictValue == null then ' -' else prop.str(conflictValue)
-          if remove
-            change.remove = remove
-            remove = null
+
+        taskChanges.sort (l, r) -> l.get('index') - r.get('index')
+        taskChanges[0].set 'doc', task
+        taskChanges[0].remove = remove
+
+        Array::push.apply changes, taskChanges
+
         if task.__change.__error
           changes.push(change = poolChanges.find @, "#{task.$ds_key}.__error")
           change.set 'isDark', isDark

@@ -181,6 +181,7 @@ module.exports = class DSObjectBase
 
     propDecl = @::__props[opts.name] = { # add prop description to __props
       name: opts.name
+      index: _.size @::__props
       type: opts.type
       write: opts.write || (if (opts.hasOwnProperty('write') && !opts.write) || opts.calc || opts.common then null else ((v) -> if v == null then null else v.valueOf()))
       read: opts.read || (if (opts.hasOwnProperty('read') && !opts.read) || opts.calc || opts.common then null else ((v) -> v))
