@@ -1,0 +1,36 @@
+{
+	"accounts":[
+		{
+			"account":"АСЖ",
+			"kit": [
+				{
+					"project_id":1235,
+					"contract_id":1235
+				}
+			],
+			"teamwork": [
+				{
+					"project_id":1234
+				}
+			]
+		},
+		{
+			"account":"Fesco ИТ",
+			"kit": [
+				{
+					"project_id":222,
+					"contract_id":3333
+				},
+				{
+					"project_id":222,
+					"contract_id":5555
+				}
+			],
+			"teamwork": [
+				{
+					"project_id":555
+				}
+			]
+		}
+	]
+}
