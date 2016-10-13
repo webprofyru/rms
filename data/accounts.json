@@ -5,11 +5,11 @@
 			"kit": [
 				{
 					"project" : 63206,
-					"contract" : any
+					"contract" : "any"
 				},
 				{
 					"project" : 61932,
-					"contract" : any
+					"contract" : "any"
 				}
 			],
 			"teamwork_projects": [
@@ -22,11 +22,11 @@
 			"kit": [
 				{
 					"project" : 61728,
-					"contract" : any
+					"contract" : "any"
 				},
 				{
 					"project_id" : 61909,
-					"contract_id" : any
+					"contract_id" : "any"
 				}
 			],
 			"teamwork_projects": [
