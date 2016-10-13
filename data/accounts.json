@@ -1,35 +1,37 @@
 {
 	"accounts":[
 		{
-			"account":"АСЖ",
+			"account" : "Fesco маркетинг",
 			"kit": [
 				{
-					"project_id":1235,
-					"contract_id":1235
+					"project" : 63206,
+					"contract" : any
+				},
+				{
+					"project" : 61932,
+					"contract" : any
 				}
 			],
-			"teamwork": [
-				{
-					"project_id":1234
-				}
+			"teamwork_projects": [
+				182324,
+				258075
 			]
 		},
 		{
-			"account":"Fesco ИТ",
+			"account" : "Fesco ИТ",
 			"kit": [
 				{
-					"project_id":222,
-					"contract_id":3333
+					"project" : 61728,
+					"contract" : any
 				},
 				{
-					"project_id":222,
-					"contract_id":5555
+					"project_id" : 61909,
+					"contract_id" : any
 				}
 			],
-			"teamwork": [
-				{
-					"project_id":555
-				}
+			"teamwork_projects": [
+				158707,
+				154875
 			]
 		}
 	]
