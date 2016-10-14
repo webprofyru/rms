@@ -25,8 +25,8 @@
 					"contract" : "any"
 				},
 				{
-					"project_id" : 61909,
-					"contract_id" : "any"
+					"project" : 61909,
+					"contract" : "any"
 				}
 			],
 			"teamwork_projects": [
