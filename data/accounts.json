@@ -6,12 +6,12 @@
 				{
 					"kit_project" : 63206,
 					"kit_contract" : "any",
-					"teamwork_projects" : 258075
+					"teamwork_project" : 258075
 				},
 				{
 					"kit_project" : 61932,
 					"kit_contract" : "any",
-					"teamwork_projects" : 182324
+					"teamwork_project" : 182324
 				}
 			]
 		},
@@ -21,12 +21,12 @@
 				{
 					"kit_project" : 61728,
 					"kit_contract" : "any",
-					"teamwork_projects" : 158707
+					"teamwork_project" : 158707
 				},
 				{
 					"kit_project" : 61909,
 					"kit_contract" : "any",
-					"teamwork_projects" : 154875
+					"teamwork_project" : 154875
 				}
 			]
 		}
