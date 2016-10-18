@@ -29,6 +29,21 @@
 					"teamwork_project" : 154875
 				}
 			]
+		},
+		{
+			"account" : "АСЖ",
+			"aggregates": [
+				{
+					"kit_project" : 48397,
+					"kit_contract" : "any",
+					"teamwork_project" : 119979
+				},
+				{
+					"kit_project" : 56996,
+					"kit_contract" : "any",
+					"teamwork_project" : 90484
+				}
+			]
 		}
 	]
 }
