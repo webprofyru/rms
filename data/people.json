@@ -122,12 +122,6 @@
             "projects": [87822, 154875, 169023]
         },
         {
-            "id": 48693,
-            "role": "Art-director",
-            "name": "Алексей Шевцов",
-            "email": "a.shevtsov@webprofy.ru"
-        },
-        {
             "id": 54199,
             "role": "Copywriter",
             "name": "Антон Скобин",
@@ -158,12 +152,6 @@
             "email": "i.anikin@webprofy.ru"
         },
         {
-            "id": 96181,
-            "role": "Markuper, Programmer, GroupKorovkin",
-            "name": "Игорь Лесневский",
-            "email": "igor@sozdavatel.ru"
-        },
-        {
             "id": 48685,
             "role": "RMStrainee",
             "name": "Илья Сабуров",
@@ -174,12 +162,6 @@
             "role": "Designer",
             "name": "Мария Русакова",
             "email": "m.rusakova@webprofy.ru"
-        },
-        {
-            "id": 49788,
-            "role": "Designer",
-            "name": "Наталья Черепенина",
-            "email": "n.cherepenina@webprofy.ru"
         },
         {
             "id": 97175,
@@ -213,12 +195,6 @@
           "projects": [154875]
         },
         {
-            "id": 121030,
-            "role": "Programmer, Markuper, GroupKorovkin",
-            "name": "Валерий Серов",
-            "email": "v.serov@webprofy.ru"
-        },
-        {
             "id": 178897,
             "role": "Programmer, Markuper, GroupSkinteev",
             "name": "Максим Ситников",
@@ -237,46 +213,10 @@
             "email": "a.zhapaspaeva@webprofy.ru"
         },
         {
-            "id": 143237,
-            "role": "Tester, Content-manager",
-            "name": "Владислав Топорков",
-            "email": "v.toporkov@webprofy.ru"
-        },
-        {
-            "id": 153216,
-            "role": "Manager, RMStrainee",
-            "name": "Мария Семенченок",
-            "email": "m.semenchenok@webprofy.ru"
-        },        
-        {
-            "id": 161546,
-            "role": "Manager, RMStrainee",
-            "name": "Максим Баталеев",
-            "email": "m.bataleev@webprofy.ru"
-        },
-        {
             "id": 102943,
             "role": "Programmer, Markuper",
             "name": "Григорий Красильников",
             "email": "g.krasilnikov@webprofy.ru"
-        },
-        {
-            "id": 221647,
-            "role": "Programmer, Markuper",
-            "name": "Александр Руденко",
-            "email": "a.rudenko@webprofy.ru"
-        },
-        {
-            "id": 231625,
-            "role": "Programmer, Markuper, GroupKorovkin",
-            "name": "Наталья Баганова",
-            "email": "n.baganova@webprofy.ru"
-        },
-        {
-            "id": 180846,
-            "role": "Programmer, Markuper, GroupSkinteev",
-            "name": "Игорь Качко",
-            "email": "i.kachko@webprofy.ru"
         },
         {
             "id": 96180,
