@@ -241,6 +241,12 @@
             "role": "Programmer, Markuper, GroupKorovkin",
             "name": "Вадим Зайнетдинов",
             "email": "vadim.zvf@gmail.com"
+        },
+	{
+            "id": 277133,
+            "role": "Manager",
+            "name": "Валентина Насырова",
+            "email": "valencia.po@gmail.com"
         }
     ],
     "dailyPlan": {
