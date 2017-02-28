@@ -916,6 +916,10 @@ module.exports = Task = (function(superClass) {
     init: 0
   });
 
+  Task.propNum('progress', {
+    init: 0
+  });
+
   Task.propDoc('project', Project);
 
   Task.propDoc('taskList', TaskList);
@@ -934,6 +938,18 @@ module.exports = Task = (function(superClass) {
       res = '0';
     }
     return res;
+  });
+
+  Task.prop({
+    name: 'remaining',
+    type: 'calc',
+    func: (function() {
+      var estimate;
+      if ((estimate = this.get('estimate')) === null) {
+        return null;
+      }
+      return moment.duration(estimate.valueOf() * (100 - this.get('progress')) / 100);
+    })
   });
 
   (Task.propMoment('duedate')).str = (function(v) {

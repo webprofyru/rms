@@ -740,21 +740,30 @@ ul {
         bottom: 0.2rem;
         font-size: 10px; }
       /* line 40, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+      #screen1 .task .task-body .progress, #screen1 #task-drag-ghost .task-body .progress {
+        font-size: 9px;
+        line-height: 10px;
+        display: block;
+        margin-top: -2px;
+        opacity: 0.6;
+        font-weight: bold;
+        color: darkgreen; }
+      /* line 48, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .due-date, #screen1 #task-drag-ghost .task-body .due-date {
         position: absolute;
         padding-left: 0.2rem;
         right: 0.3rem;
         bottom: 0.2rem;
         font-size: 10px; }
-        /* line 41, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+        /* line 49, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .due-date.up, #screen1 #task-drag-ghost .task-body .due-date.up {
           bottom: 1rem;
           background-color: inherit; }
-      /* line 52, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+      /* line 60, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .split-task .duration, #screen1 #task-drag-ghost .task-body .split-task .duration {
         position: absolute;
         margin-left: 6px; }
-      /* line 55, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+      /* line 63, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .task-progress, #screen1 #task-drag-ghost .task-body .task-progress {
         position: absolute;
         top: 0;
@@ -762,7 +771,7 @@ ul {
         right: 0;
         height: 0.2rem;
         line-height: 0.7rem; }
-        /* line 62, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+        /* line 70, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .percent, #screen1 #task-drag-ghost .task-body .task-progress .percent {
           position: absolute;
           height: 100%;
@@ -770,92 +779,92 @@ ul {
           color: #FFFFFF;
           text-align: center;
           font-size: 0.5rem; }
-        /* line 69, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+        /* line 77, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .load, #screen1 #task-drag-ghost .task-body .task-progress .load {
           position: absolute;
           height: 100%;
           width: 100%; }
-          /* line 73, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+          /* line 81, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
           #screen1 .task .task-body .task-progress .load img, #screen1 #task-drag-ghost .task-body .task-progress .load img {
             float: right;
             height: 0.6rem; }
-        /* line 76, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+        /* line 84, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .spent, #screen1 #task-drag-ghost .task-body .task-progress .spent {
           position: absolute;
           height: 100%;
           width: 70%;
           background-color: #008800; }
-        /* line 81, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+        /* line 89, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .overestimate, #screen1 #task-drag-ghost .task-body .task-progress .overestimate {
           position: absolute;
           height: 100%;
           width: 30%;
           background-color: #AA0000; }
-  /* line 90, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+  /* line 98, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
   #screen1 #task-drag-ghost {
     width: 6rem;
     border-radius: 5px;
     font-size: 12px;
     position: fixed;
     top: -100px; }
-  /* line 98, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+  /* line 106, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
   #screen1 .task-body {
     background: #BCD2E9; }
-    /* line 100, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+    /* line 108, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body:hover {
       background-color: #96b8dc; }
-    /* line 102, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+    /* line 110, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.grade-easy {
       background: #e2ecf6; }
-      /* line 104, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+      /* line 112, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.grade-easy:hover {
         background-color: #96b8dc; }
-    /* line 106, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+    /* line 114, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.grade-hard {
       background: #96b8dc; }
-      /* line 108, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+      /* line 116, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.grade-hard:hover {
         background-color: #6f9ed0; }
-    /* line 110, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+    /* line 118, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.grade-complex {
       background: #6f9ed0; }
-      /* line 112, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+      /* line 120, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.grade-complex:hover {
         background-color: #4985c3; }
-    /* line 114, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+    /* line 122, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.no-estimate {
       background: white; }
-      /* line 116, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+      /* line 124, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.no-estimate:hover {
         background-color: #abe3de; }
-      /* line 118, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+      /* line 126, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.no-estimate .duration:before {
         content: '[?]';
         color: red; }
-    /* line 121, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+    /* line 129, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.overdue {
       background: #FBC1C1; }
-      /* line 123, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+      /* line 131, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.overdue:hover {
         background-color: #f89191; }
-    /* line 125, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+    /* line 133, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body .loading {
       width: 100%;
       text-align: center; }
-      /* line 128, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+      /* line 136, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body .loading img {
         margin-top: 0.5rem;
         height: 0.8rem; }
-    /* line 131, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+    /* line 139, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.completed, #screen1 .task-body.loading {
       background: #A2FBA2; }
-      /* line 133, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+      /* line 141, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.completed:hover, #screen1 .task-body.loading:hover {
         background-color: #71f971; }
-    /* line 135, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+    /* line 143, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.workNotInDueDate {
       background: #F7BC50; }
-      /* line 137, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
+      /* line 145, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.workNotInDueDate:hover {
         background-color: #f5a91f; }
   /* line 1, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_actions.sass */

@@ -5063,7 +5063,7 @@ ngModule.factory('PersonDayStatData', [
                     } else {
                       n = Math.floor((duedate.valueOf() - startDate.valueOf()) / (24 * 60 * 60 * 1000));
                       if ((0 <= n && n < dayStats.length)) {
-                        if ((estimate = task.get('estimate')) !== null) {
+                        if ((estimate = task.get('remaining')) !== null) {
                           tasksTotal[n].add(estimate);
                         }
                         tasksCounts[n]++;
@@ -7163,6 +7163,7 @@ ngModule.factory('TWTasks', [
         task.set('taskList', taskList);
         task.set('title', jsonTask['content']);
         task.set('estimate', (estimate = jsonTask['estimated-minutes']) ? moment.duration(estimate, 'minutes') : null);
+        task.set('progress', jsonTask['progress']);
         task.set('duedate', (duedateStr = jsonTask['due-date']) ? moment(duedateStr, 'YYYYMMDD') : null);
         task.set('startDate', (date = jsonTask['start-date']) ? moment(date, 'YYYYMMDD') : null);
         task.set('completed', jsonTask['completed']);
@@ -8217,6 +8218,10 @@ module.exports = Task = (function(superClass) {
     init: 0
   });
 
+  Task.propNum('progress', {
+    init: 0
+  });
+
   Task.propDoc('project', Project);
 
   Task.propDoc('taskList', TaskList);
@@ -8235,6 +8240,18 @@ module.exports = Task = (function(superClass) {
       res = '0';
     }
     return res;
+  });
+
+  Task.prop({
+    name: 'remaining',
+    type: 'calc',
+    func: (function() {
+      var estimate;
+      if ((estimate = this.get('estimate')) === null) {
+        return null;
+      }
+      return moment.duration(estimate.valueOf() * (100 - this.get('progress')) / 100);
+    })
   });
 
   (Task.propMoment('duedate')).str = (function(v) {
@@ -9295,7 +9312,7 @@ ngModule.run([
         }
       }),
       taskPeriod: (function(doc, prop, time) {
-        var duration, hours, minutes, props, res, type;
+        var duration, hours, minutes, props, res;
         if (assert) {
           if (doc) {
             if (!(doc === null || doc instanceof DSObject)) {
@@ -9303,9 +9320,6 @@ ngModule.run([
             }
             if (!(prop === null || (props = doc.__proto__.__props).hasOwnProperty(prop))) {
               error.invalidArg('prop');
-            }
-            if (!((type = props[prop].type) === 'duration')) {
-              throw new Error("Expected property with type 'duration', but property '" + prop + "' has type " + type);
             }
           }
         }
