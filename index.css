@@ -1,180 +1,180 @@
-/* line 1, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 1, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
   display: block; }
 
-/* line 4, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 4, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 audio, canvas, video {
   display: inline-block; }
 
-/* line 7, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 7, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 audio:not([controls]) {
   display: none;
   height: 0; }
 
-/* line 11, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 11, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 [hidden] {
   display: none; }
 
-/* line 14, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 14, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%; }
 
-/* line 19, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 19, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 body {
   margin: 0; }
 
-/* line 22, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 22, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 a:focus {
   outline: none; }
 
-/* line 25, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 25, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 a:active, a:hover {
   outline: none; }
 
-/* line 29, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 29, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 :focus {
   outline: none; }
 
-/* line 32, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 32, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 h1 {
   font-size: 2em;
   margin: 0.67em 0; }
 
-/* line 36, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 36, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 abbr[title] {
   border-bottom: 1px dotted; }
 
-/* line 39, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 39, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 b, strong {
   font-weight: bold; }
 
-/* line 42, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 42, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 dfn {
   font-style: italic; }
 
-/* line 45, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 45, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 hr {
   -webkit-box-sizing: content-box;
           box-sizing: content-box;
   height: 0; }
 
-/* line 50, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 50, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 mark {
   background: #ff0;
   color: #000; }
 
-/* line 54, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 54, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 code, kbd, pre, samp {
   font-family: monospace, serif;
   font-size: 1em; }
 
-/* line 58, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 58, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 pre {
   white-space: pre-wrap; }
 
-/* line 61, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 61, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 q {
   quotes: "\201C" "\201D" "\2018" "\2019"; }
 
-/* line 64, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 64, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 small {
   font-size: 80%; }
 
-/* line 67, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 67, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 sub, sup {
   font-size: 75%;
   line-height: 0;
   position: relative;
   vertical-align: baseline; }
 
-/* line 73, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 73, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 sup {
   top: -0.5em; }
 
-/* line 76, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 76, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 sub {
   bottom: -0.25em; }
 
-/* line 79, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 79, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 img {
   border: 0; }
 
-/* line 82, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 82, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 svg:not(:root) {
   overflow: hidden; }
 
-/* line 85, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 85, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 figure {
   margin: 0; }
 
-/* line 88, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 88, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 fieldset {
   border: 1px solid #c0c0c0;
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em; }
 
-/* line 93, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 93, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 legend {
   border: 0;
   padding: 0; }
 
-/* line 97, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 97, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 button, input, select, textarea {
   font-family: inherit;
   font-size: 100%;
   margin: 0; }
 
-/* line 102, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 102, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 button, input {
   line-height: normal; }
 
-/* line 105, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 105, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 button, select {
   text-transform: none; }
 
-/* line 108, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 108, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 button, html input[type="button"], input[type="reset"], input[type="submit"] {
   -webkit-appearance: button;
   cursor: pointer; }
 
-/* line 112, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 112, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 button[disabled], html input[disabled] {
   cursor: default; }
 
-/* line 115, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 115, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 input[type="checkbox"], input[type="radio"] {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   padding: 0; }
 
-/* line 119, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 119, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 input[type="search"] {
   -webkit-appearance: textfield;
   -webkit-box-sizing: content-box;
   box-sizing: content-box; }
 
-/* line 125, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 125, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none; }
 
-/* line 128, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 128, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 button::-moz-focus-inner, input::-moz-focus-inner {
   border: 0;
   padding: 0; }
 
-/* line 132, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 132, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 textarea {
   overflow: auto;
   vertical-align: top; }
 
-/* line 136, C:/SVN/_WebProfyManagement/src/sass/lib/_normalize.sass */
+/* line 136, /Users/Enot/Work/webprofy-rms/src/sass/lib/_normalize.sass */
 table {
   border-collapse: collapse;
   border-spacing: 0; }
 
-/* line 25, C:/SVN/_WebProfyManagement/src/sass/index.sass */
+/* line 25, /Users/Enot/Work/webprofy-rms/src/sass/index.sass */
 html {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -182,13 +182,17 @@ html {
   margin-left: auto;
   margin-right: auto;
   font-family: 'Roboto', sans-serif; }
-  /* line 12, C:/SVN/_WebProfyManagement/src/sass/lib/susy/output/support/_clearfix.scss */
+  /* line 12, /Users/Enot/Work/webprofy-rms/src/sass/lib/susy/output/support/_clearfix.scss */
   html:after {
     content: " ";
     display: block;
     clear: both; }
 
-/* line 1, C:/SVN/_WebProfyManagement/src/sass/partials/_backdrop.sass */
+/* line 1, /Users/Enot/Work/webprofy-rms/src/sass/partials/_backdrop.sass */
+.under-backdrop {
+  z-index: 20 !important; }
+
+/* line 3, /Users/Enot/Work/webprofy-rms/src/sass/partials/_backdrop.sass */
 .backdrop {
   position: absolute;
   top: 0;
@@ -199,27 +203,27 @@ html {
   opacity: 0.2;
   z-index: 40; }
 
-/* line 1, C:/SVN/_WebProfyManagement/src/sass/partials/_general.sass */
+/* line 1, /Users/Enot/Work/webprofy-rms/src/sass/partials/_general.sass */
 input[type=number] {
   -moz-appearance: textfield; }
 
-/* line 4, C:/SVN/_WebProfyManagement/src/sass/partials/_general.sass */
+/* line 4, /Users/Enot/Work/webprofy-rms/src/sass/partials/_general.sass */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0; }
 
-/* line 10, C:/SVN/_WebProfyManagement/src/sass/partials/_general.sass */
+/* line 10, /Users/Enot/Work/webprofy-rms/src/sass/partials/_general.sass */
 input:focus {
   outline: 0; }
 
-/* line 13, C:/SVN/_WebProfyManagement/src/sass/partials/_general.sass */
+/* line 13, /Users/Enot/Work/webprofy-rms/src/sass/partials/_general.sass */
 ul {
   list-style: none;
   padding-left: 0;
   margin: 0; }
 
-/* line 1, C:/SVN/_WebProfyManagement/src/sass/partials/_spinner.sass */
+/* line 1, /Users/Enot/Work/webprofy-rms/src/sass/partials/_spinner.sass */
 .load-spinner {
   position: absolute;
   width: 100%;
@@ -227,7 +231,7 @@ ul {
   background-color: transparent;
   z-index: 100; }
 
-/* line 1, C:/SVN/_WebProfyManagement/src/sass/partials/_loader.sass */
+/* line 1, /Users/Enot/Work/webprofy-rms/src/sass/partials/_loader.sass */
 .spinner {
   margin: 100px auto;
   width: 60px;
@@ -237,7 +241,7 @@ ul {
   -webkit-animation: rotate 2.0s infinite linear;
   animation: rotate 2.0s infinite linear; }
 
-/* line 10, C:/SVN/_WebProfyManagement/src/sass/partials/_loader.sass */
+/* line 10, /Users/Enot/Work/webprofy-rms/src/sass/partials/_loader.sass */
 .dot1, .dot2 {
   width: 60%;
   height: 60%;
@@ -245,12 +249,11 @@ ul {
   position: absolute;
   top: 0;
   background-color: #E2CD8A;
-  -webkit-border-radius: 100%;
-          border-radius: 100%;
+  border-radius: 100%;
   -webkit-animation: bounce 2.0s infinite ease-in-out;
   animation: bounce 2.0s infinite ease-in-out; }
 
-/* line 21, C:/SVN/_WebProfyManagement/src/sass/partials/_loader.sass */
+/* line 21, /Users/Enot/Work/webprofy-rms/src/sass/partials/_loader.sass */
 .dot2 {
   top: auto;
   bottom: 0px;
@@ -280,51 +283,50 @@ ul {
     transform: scale(1);
     -webkit-transform: scale(1); } }
 
-/* line 4, C:/SVN/_WebProfyManagement/src/sass/partials/_handler.sass */
+/* line 4, /Users/Enot/Work/webprofy-rms/src/sass/partials/_handler.sass */
 .handler {
   position: absolute;
   background-color: #E2CD8A;
-  -webkit-border-radius: 3px;
-          border-radius: 3px;
+  border-radius: 3px;
   cursor: pointer; }
-  /* line 9, C:/SVN/_WebProfyManagement/src/sass/partials/_handler.sass */
+  /* line 9, /Users/Enot/Work/webprofy-rms/src/sass/partials/_handler.sass */
   .handler i {
     position: absolute;
     color: white; }
 
-/* line 13, C:/SVN/_WebProfyManagement/src/sass/partials/_handler.sass */
+/* line 13, /Users/Enot/Work/webprofy-rms/src/sass/partials/_handler.sass */
 .handler-horiz {
   width: 45px;
   height: 15px;
   z-index: 20; }
-  /* line 18, C:/SVN/_WebProfyManagement/src/sass/partials/_handler.sass */
+  /* line 18, /Users/Enot/Work/webprofy-rms/src/sass/partials/_handler.sass */
   .handler-horiz i:first-child {
     top: 1px;
     left: 10px; }
-  /* line 21, C:/SVN/_WebProfyManagement/src/sass/partials/_handler.sass */
+  /* line 21, /Users/Enot/Work/webprofy-rms/src/sass/partials/_handler.sass */
   .handler-horiz i:last-child {
     top: -1px;
     left: 27px; }
 
-/* line 25, C:/SVN/_WebProfyManagement/src/sass/partials/_handler.sass */
+/* line 25, /Users/Enot/Work/webprofy-rms/src/sass/partials/_handler.sass */
 .handler-vertical {
   width: 15px;
   height: 45px;
   z-index: 20; }
-  /* line 30, C:/SVN/_WebProfyManagement/src/sass/partials/_handler.sass */
+  /* line 30, /Users/Enot/Work/webprofy-rms/src/sass/partials/_handler.sass */
   .handler-vertical i:first-child {
     top: 10px;
     left: 4px; }
-  /* line 33, C:/SVN/_WebProfyManagement/src/sass/partials/_handler.sass */
+  /* line 33, /Users/Enot/Work/webprofy-rms/src/sass/partials/_handler.sass */
   .handler-vertical i:last-child {
     top: 27px;
     left: 5px; }
 
-/* line 1, C:/SVN/_WebProfyManagement/src/sass/partials/_scroller.sass */
+/* line 1, /Users/Enot/Work/webprofy-rms/src/sass/partials/_scroller.sass */
 .no-scroll {
   overflow: hidden; }
 
-/* line 4, C:/SVN/_WebProfyManagement/src/sass/partials/_scroller.sass */
+/* line 4, /Users/Enot/Work/webprofy-rms/src/sass/partials/_scroller.sass */
 .scroll-viewport {
   position: relative;
   overflow-y: scroll;
@@ -332,42 +334,42 @@ ul {
   margin-right: -100px;
   padding-right: 100px; }
 
-/* line 11, C:/SVN/_WebProfyManagement/src/sass/partials/_scroller.sass */
+/* line 11, /Users/Enot/Work/webprofy-rms/src/sass/partials/_scroller.sass */
 .scroll-body {
   position: relative;
   display: block;
   width: 100%;
   height: 100%; }
 
-/* line 1, C:/SVN/_WebProfyManagement/src/sass/partials/_select.sass */
+/* line 1, /Users/Enot/Work/webprofy-rms/src/sass/partials/_select.sass */
 .select2 > .select2-choice.ui-select-match {
   height: 29px; }
 
-/* line 4, C:/SVN/_WebProfyManagement/src/sass/partials/_select.sass */
+/* line 4, /Users/Enot/Work/webprofy-rms/src/sass/partials/_select.sass */
 .selectize-control > .selectize-dropdown {
   top: 36px; }
 
-/* line 7, C:/SVN/_WebProfyManagement/src/sass/partials/_select.sass */
+/* line 7, /Users/Enot/Work/webprofy-rms/src/sass/partials/_select.sass */
 .select-box {
   background: #fff;
   position: relative;
   z-index: 1; }
 
-/* line 12, C:/SVN/_WebProfyManagement/src/sass/partials/_select.sass */
+/* line 12, /Users/Enot/Work/webprofy-rms/src/sass/partials/_select.sass */
 .alert-info.positioned {
   margin-top: 1em;
   position: relative;
   z-index: 10000; }
 
-/* line 17, C:/SVN/_WebProfyManagement/src/sass/partials/_select.sass */
+/* line 17, /Users/Enot/Work/webprofy-rms/src/sass/partials/_select.sass */
 .selectize-input {
   padding: 3px 8px !important; }
 
-/* line 20, C:/SVN/_WebProfyManagement/src/sass/partials/_select.sass */
+/* line 20, /Users/Enot/Work/webprofy-rms/src/sass/partials/_select.sass */
 .selectize-control > .selectize-dropdown {
   top: 27px; }
 
-/* line 1, C:/SVN/_WebProfyManagement/src/sass/partials/_account.sass */
+/* line 1, /Users/Enot/Work/webprofy-rms/src/sass/partials/_account.sass */
 #account {
   z-index: 80;
   position: absolute;
@@ -376,94 +378,92 @@ ul {
   width: 200px;
   padding: 20px;
   border: 1px solid #AAAAAA;
-  -webkit-border-radius: 0 0 0 5px;
-          border-radius: 0 0 0 5px;
+  border-radius: 0 0 0 5px;
   background: #eadbab; }
-  /* line 11, C:/SVN/_WebProfyManagement/src/sass/partials/_account.sass */
+  /* line 11, /Users/Enot/Work/webprofy-rms/src/sass/partials/_account.sass */
   #account label {
     font-size: 12px; }
-  /* line 13, C:/SVN/_WebProfyManagement/src/sass/partials/_account.sass */
+  /* line 13, /Users/Enot/Work/webprofy-rms/src/sass/partials/_account.sass */
   #account .field {
     margin-bottom: 10px; }
-    /* line 15, C:/SVN/_WebProfyManagement/src/sass/partials/_account.sass */
+    /* line 15, /Users/Enot/Work/webprofy-rms/src/sass/partials/_account.sass */
     #account .field input {
       padding: 3px 6px;
-      -webkit-border-radius: 3px;
-              border-radius: 3px;
+      border-radius: 3px;
       border: none; }
-    /* line 19, C:/SVN/_WebProfyManagement/src/sass/partials/_account.sass */
+    /* line 19, /Users/Enot/Work/webprofy-rms/src/sass/partials/_account.sass */
     #account .field .error {
       color: red;
       font-size: 12px; }
-  /* line 23, C:/SVN/_WebProfyManagement/src/sass/partials/_account.sass */
+  /* line 23, /Users/Enot/Work/webprofy-rms/src/sass/partials/_account.sass */
   #account .btn-group button {
     height: 26px; }
-  /* line 25, C:/SVN/_WebProfyManagement/src/sass/partials/_account.sass */
+  /* line 25, /Users/Enot/Work/webprofy-rms/src/sass/partials/_account.sass */
   #account .btn-group .right {
     float: right; }
-  /* line 27, C:/SVN/_WebProfyManagement/src/sass/partials/_account.sass */
+  /* line 27, /Users/Enot/Work/webprofy-rms/src/sass/partials/_account.sass */
   #account .autoSave {
     margin-bottom: 18px; }
-    /* line 29, C:/SVN/_WebProfyManagement/src/sass/partials/_account.sass */
+    /* line 29, /Users/Enot/Work/webprofy-rms/src/sass/partials/_account.sass */
     #account .autoSave > label > input {
       vertical-align: middle;
       margin-right: 4px; }
 
-/* line 1, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+/* line 1, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
 #svc-emails {
   margin-left: 8.33333%;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   width: 83.33333%;
   float: left; }
-  /* line 6, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+  /* line 6, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
   #svc-emails .controls > .message {
     float: left;
     width: 100%;
     padding: 0.5rem;
     margin-bottom: 1rem;
     color: white; }
-    /* line 12, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+    /* line 12, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
     #svc-emails .controls > .message.error {
       background-color: red; }
-    /* line 14, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+    /* line 14, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
     #svc-emails .controls > .message.inProgress {
       background-color: yellow; }
-    /* line 16, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+    /* line 16, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
     #svc-emails .controls > .message.completed {
       background-color: green; }
-  /* line 18, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+  /* line 18, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
   #svc-emails .controls > label {
     margin-right: 0.5rem; }
-  /* line 20, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+  /* line 20, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
   #svc-emails .controls > button:not(:last-child), #svc-emails .controls > input:not(:last-child) {
     margin-right: 5rem; }
-  /* line 22, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+  /* line 22, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
   #svc-emails .controls > button:disabled {
     color: gray; }
-  /* line 24, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+  /* line 24, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
   #svc-emails .report {
     margin-top: 2rem;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     width: 66.66667%;
     float: left; }
-    /* line 27, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+    /* line 27, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
     #svc-emails .report .person {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       max-width: 100%;
       margin-left: auto;
       margin-right: auto; }
-      /* line 28, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+      /* line 28, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
       #svc-emails .report .person:not(:last-child) {
         margin-bottom: 2rem; }
-      /* line 12, C:/SVN/_WebProfyManagement/src/sass/lib/susy/output/support/_clearfix.scss */
+      /* line 12, /Users/Enot/Work/webprofy-rms/src/sass/lib/susy/output/support/_clearfix.scss */
       #svc-emails .report .person:after {
         content: " ";
         display: block;
         clear: both; }
-      /* line 32, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+      /* line 32, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
       #svc-emails .report .person .name {
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
@@ -471,22 +471,22 @@ ul {
         float: left;
         color: white;
         background-color: #8BBB93; }
-      /* line 36, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+      /* line 36, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
       #svc-emails .report .person .status {
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
         width: 25%;
         float: left;
         padding-left: 1rem; }
-        /* line 39, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+        /* line 39, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
         #svc-emails .report .person .status.notSent {
           color: #FB2727;
           background-color: #EFEF8C; }
-        /* line 42, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+        /* line 42, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
         #svc-emails .report .person .status.sent {
           color: white;
           background-color: green; }
-      /* line 45, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+      /* line 45, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
       #svc-emails .report .person table.projects {
         clear: both;
         -webkit-box-sizing: border-box;
@@ -495,91 +495,90 @@ ul {
         float: left;
         margin-left: 0;
         margin-right: 0; }
-        /* line 47, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+        /* line 47, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
         #svc-emails .report .person table.projects td.title {
           wddth: 50%; }
-        /* line 49, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+        /* line 49, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
         #svc-emails .report .person table.projects td.hours {
           width: 25%; }
-        /* line 51, C:/SVN/_WebProfyManagement/src/sass/partials/_emails.sass */
+        /* line 51, /Users/Enot/Work/webprofy-rms/src/sass/partials/_emails.sass */
         #svc-emails .report .person table.projects td.optHours {
           background-color: yellow;
           width: 25%; }
 
-/* line 3, C:/SVN/_WebProfyManagement/src/sass/screen1/_screen.sass */
+/* line 3, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_screen.sass */
 #screen1 {
   position: relative;
   overflow: hidden; }
-  /* line 7, C:/SVN/_WebProfyManagement/src/sass/screen1/_screen.sass */
+  /* line 7, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_screen.sass */
   #screen1 #top-block .people .person-row .tasks .task, #screen1 #bottom-block .col-not-assigned-tasks .task {
     position: absolute;
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
     width: 11.8%;
     font-size: 12px; }
-  /* line 13, C:/SVN/_WebProfyManagement/src/sass/screen1/_screen.sass */
+  /* line 13, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_screen.sass */
   #screen1 .sub-header {
     height: 44px;
     background: #eadbab;
     line-height: 44px;
     overflow: hidden; }
-    /* line 18, C:/SVN/_WebProfyManagement/src/sass/screen1/_screen.sass */
+    /* line 18, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_screen.sass */
     #screen1 .sub-header .week-number {
       padding-right: 6px;
       font-size: 12px; }
-    /* line 21, C:/SVN/_WebProfyManagement/src/sass/screen1/_screen.sass */
+    /* line 21, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_screen.sass */
     #screen1 .sub-header .unhide {
       margin-left: 1rem;
       font-size: 12px; }
-      /* line 24, C:/SVN/_WebProfyManagement/src/sass/screen1/_screen.sass */
+      /* line 24, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_screen.sass */
       #screen1 .sub-header .unhide > span {
         padding-right: 4px; }
-      /* line 26, C:/SVN/_WebProfyManagement/src/sass/screen1/_screen.sass */
+      /* line 26, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_screen.sass */
       #screen1 .sub-header .unhide .action {
         color: #1D1DFF;
         font-weight: 500;
         text-decoration: underline; }
-  /* line 31, C:/SVN/_WebProfyManagement/src/sass/screen1/_screen.sass */
+  /* line 31, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_screen.sass */
   #screen1 .selector {
     font-size: 12px; }
-    /* line 33, C:/SVN/_WebProfyManagement/src/sass/screen1/_screen.sass */
+    /* line 33, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_screen.sass */
     #screen1 .selector > span {
       padding-right: 8px; }
-    /* line 35, C:/SVN/_WebProfyManagement/src/sass/screen1/_screen.sass */
+    /* line 35, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_screen.sass */
     #screen1 .selector .input-wrapper {
       display: inline;
       position: relative; }
-      /* line 38, C:/SVN/_WebProfyManagement/src/sass/screen1/_screen.sass */
+      /* line 38, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_screen.sass */
       #screen1 .selector .input-wrapper i {
         position: absolute;
         top: 2px;
         right: 4px;
         opacity: 0.4; }
-  /* line 42, C:/SVN/_WebProfyManagement/src/sass/screen1/_screen.sass */
+  /* line 42, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_screen.sass */
   #screen1 input {
     padding: 3px 6px;
-    -webkit-border-radius: 3px;
-            border-radius: 3px;
+    border-radius: 3px;
     border: none; }
-  /* line 2, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+  /* line 2, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
   #screen1 #container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%; }
-    /* line 6, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+    /* line 6, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
     #screen1 #container div.header {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       max-width: 100%;
       margin-left: auto;
       margin-right: auto; }
-      /* line 12, C:/SVN/_WebProfyManagement/src/sass/lib/susy/output/support/_clearfix.scss */
+      /* line 12, /Users/Enot/Work/webprofy-rms/src/sass/lib/susy/output/support/_clearfix.scss */
       #screen1 #container div.header:after {
         content: " ";
         display: block;
         clear: both; }
-      /* line 8, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+      /* line 8, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
       #screen1 #container div.header h3 {
         padding-left: 1rem;
         line-height: 44px;
@@ -587,7 +586,7 @@ ul {
         box-sizing: border-box;
         width: 14.28571%;
         float: left; }
-      /* line 12, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+      /* line 12, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
       #screen1 #container div.header .action-buttons {
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
@@ -595,37 +594,37 @@ ul {
         float: right;
         margin-right: 0;
         width: auto; }
-    /* line 16, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+    /* line 16, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
     #screen1 #container table.header {
       height: 40px;
       width: 100%; }
-      /* line 20, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+      /* line 20, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.text h3 {
         width: 100%; }
     @media (min-width: 1350px) {
-      /* line 26, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+      /* line 26, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.text {
         width: 10%; }
-      /* line 28, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+      /* line 28, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.filters {
         width: 98%; }
-        /* line 31, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+        /* line 31, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
         #screen1 #container table.header td.filters > span {
           -webkit-box-sizing: border-box;
           box-sizing: border-box;
           width: 10%;
           float: left; }
-        /* line 33, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+        /* line 33, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
         #screen1 #container table.header td.filters .ui-select {
           -webkit-box-sizing: border-box;
           box-sizing: border-box;
           width: 15%;
           float: left; } }
     @media (min-width: 0px) and (max-width: 1350px) {
-      /* line 39, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+      /* line 39, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.text {
         width: 10%; }
-      /* line 41, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+      /* line 41, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.filters {
         width: 90%;
         -webkit-box-sizing: border-box;
@@ -633,46 +632,46 @@ ul {
         max-width: 100%;
         margin-left: auto;
         margin-right: auto; }
-        /* line 12, C:/SVN/_WebProfyManagement/src/sass/lib/susy/output/support/_clearfix.scss */
+        /* line 12, /Users/Enot/Work/webprofy-rms/src/sass/lib/susy/output/support/_clearfix.scss */
         #screen1 #container table.header td.filters:after {
           content: " ";
           display: block;
           clear: both; }
-        /* line 45, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+        /* line 45, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
         #screen1 #container table.header td.filters > span {
           display: none; }
-        /* line 47, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+        /* line 47, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
         #screen1 #container table.header td.filters .ui-select {
           -webkit-box-sizing: border-box;
           box-sizing: border-box;
           width: 25%;
           float: left; } }
     @media (min-width: 1400px) {
-      /* line 53, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+      /* line 53, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.actions .action-buttons {
         width: 100%; } }
     @media (min-width: 0px) and (max-width: 1400px) {
-      /* line 59, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+      /* line 59, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
       #screen1 #container table.header td.actions .action-buttons {
         width: 100%; } }
-    /* line 62, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+    /* line 62, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
     #screen1 #container .header {
       width: 100%;
       height: 44px;
       background: #E2CD8A; }
-      /* line 66, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+      /* line 66, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
       #screen1 #container .header h3 {
         padding-left: 1rem;
         line-height: 44px;
         margin-top: 0;
         margin-bottom: 0; }
-      /* line 72, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+      /* line 72, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
       #screen1 #container .header .filters {
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
         width: 45.45455%;
         float: left; }
-        /* line 74, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+        /* line 74, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
         #screen1 #container .header .filters > span {
           line-height: 44px;
           font-size: 14px;
@@ -680,18 +679,18 @@ ul {
           margin-top: -0.1rem;
           padding-left: 0.2rem;
           padding-right: 0.2rem; }
-        /* line 81, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+        /* line 81, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
         #screen1 #container .header .filters .ui-select {
           margin-top: 0.4rem;
           padding-right: 0.5rem; }
-    /* line 87, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+    /* line 87, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
     #screen1 #container #top-block {
       position: absolute;
       top: 44px;
       left: 0;
       width: 100%;
       background: #F0F0F0; }
-    /* line 92, C:/SVN/_WebProfyManagement/src/sass/screen1/_layout.sass */
+    /* line 92, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_layout.sass */
     #screen1 #container #bottom-block {
       position: absolute;
       bottom: 0;
@@ -699,34 +698,33 @@ ul {
       width: 100%;
       background: #F0F0F0;
       border-top: 1px solid #AAAAAA; }
-  /* line 1, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+  /* line 1, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
   #screen1 .task, #screen1 #task-drag-ghost {
     padding: 2px;
     cursor: pointer;
     position: relative; }
-    /* line 5, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 5, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .drag-start.task, #screen1 .drag-start#task-drag-ghost {
       opacity: 0.3; }
-    /* line 7, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 7, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task .task-body, #screen1 #task-drag-ghost .task-body {
       overflow: hidden;
       height: 55px;
       padding: 0.2rem 0.2rem 0 0.2rem;
-      -webkit-border-radius: 5px;
-              border-radius: 5px;
+      border-radius: 5px;
       line-height: 15px;
       position: relative; }
-      /* line 19, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 19, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task .task-body.split > .duration, #screen1 #task-drag-ghost .task-body.split > .duration {
         display: none; }
-      /* line 21, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 21, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .title, #screen1 #task-drag-ghost .task-body .title {
         display: block;
         overflow: hidden;
         height: 15px;
         text-overflow: ellipsis;
         white-space: nowrap; }
-      /* line 27, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 27, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .project, #screen1 #task-drag-ghost .task-body .project {
         display: block;
         overflow: hidden;
@@ -735,28 +733,28 @@ ul {
         white-space: nowrap;
         font-size: 10px;
         opacity: 0.6; }
-      /* line 35, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 35, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .duration, #screen1 #task-drag-ghost .task-body .duration {
         position: absolute;
         left: 0.3rem;
         bottom: 0.2rem;
         font-size: 10px; }
-      /* line 40, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 40, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .due-date, #screen1 #task-drag-ghost .task-body .due-date {
         position: absolute;
         padding-left: 0.2rem;
         right: 0.3rem;
         bottom: 0.2rem;
         font-size: 10px; }
-        /* line 41, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+        /* line 41, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .due-date.up, #screen1 #task-drag-ghost .task-body .due-date.up {
           bottom: 1rem;
           background-color: inherit; }
-      /* line 52, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 52, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .split-task .duration, #screen1 #task-drag-ghost .task-body .split-task .duration {
         position: absolute;
         margin-left: 6px; }
-      /* line 55, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 55, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task .task-body .task-progress, #screen1 #task-drag-ghost .task-body .task-progress {
         position: absolute;
         top: 0;
@@ -764,7 +762,7 @@ ul {
         right: 0;
         height: 0.2rem;
         line-height: 0.7rem; }
-        /* line 62, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+        /* line 62, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .percent, #screen1 #task-drag-ghost .task-body .task-progress .percent {
           position: absolute;
           height: 100%;
@@ -772,190 +770,189 @@ ul {
           color: #FFFFFF;
           text-align: center;
           font-size: 0.5rem; }
-        /* line 69, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+        /* line 69, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .load, #screen1 #task-drag-ghost .task-body .task-progress .load {
           position: absolute;
           height: 100%;
           width: 100%; }
-          /* line 73, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+          /* line 73, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
           #screen1 .task .task-body .task-progress .load img, #screen1 #task-drag-ghost .task-body .task-progress .load img {
             float: right;
             height: 0.6rem; }
-        /* line 76, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+        /* line 76, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .spent, #screen1 #task-drag-ghost .task-body .task-progress .spent {
           position: absolute;
           height: 100%;
           width: 70%;
           background-color: #008800; }
-        /* line 81, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+        /* line 81, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
         #screen1 .task .task-body .task-progress .overestimate, #screen1 #task-drag-ghost .task-body .task-progress .overestimate {
           position: absolute;
           height: 100%;
           width: 30%;
           background-color: #AA0000; }
-  /* line 90, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+  /* line 90, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
   #screen1 #task-drag-ghost {
     width: 6rem;
-    -webkit-border-radius: 5px;
-            border-radius: 5px;
+    border-radius: 5px;
     font-size: 12px;
     position: fixed;
     top: -100px; }
-  /* line 98, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+  /* line 98, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
   #screen1 .task-body {
     background: #BCD2E9; }
-    /* line 100, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 100, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body:hover {
       background-color: #96b8dc; }
-    /* line 102, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 102, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.grade-easy {
       background: #e2ecf6; }
-      /* line 104, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 104, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.grade-easy:hover {
         background-color: #96b8dc; }
-    /* line 106, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 106, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.grade-hard {
       background: #96b8dc; }
-      /* line 108, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 108, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.grade-hard:hover {
         background-color: #6f9ed0; }
-    /* line 110, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 110, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.grade-complex {
       background: #6f9ed0; }
-      /* line 112, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 112, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.grade-complex:hover {
         background-color: #4985c3; }
-    /* line 114, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 114, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.no-estimate {
       background: white; }
-      /* line 116, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 116, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.no-estimate:hover {
         background-color: #abe3de; }
-      /* line 118, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 118, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.no-estimate .duration:before {
         content: '[?]';
         color: red; }
-    /* line 121, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 121, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.overdue {
       background: #FBC1C1; }
-      /* line 123, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 123, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.overdue:hover {
         background-color: #f89191; }
-    /* line 125, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 125, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body .loading {
       width: 100%;
       text-align: center; }
-      /* line 128, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 128, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body .loading img {
         margin-top: 0.5rem;
         height: 0.8rem; }
-    /* line 131, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 131, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.completed, #screen1 .task-body.loading {
       background: #A2FBA2; }
-      /* line 133, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 133, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.completed:hover, #screen1 .task-body.loading:hover {
         background-color: #71f971; }
-    /* line 135, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+    /* line 135, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
     #screen1 .task-body.workNotInDueDate {
       background: #F7BC50; }
-      /* line 137, C:/SVN/_WebProfyManagement/src/sass/screen1/_task.sass */
+      /* line 137, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_task.sass */
       #screen1 .task-body.workNotInDueDate:hover {
         background-color: #f5a91f; }
-  /* line 1, C:/SVN/_WebProfyManagement/src/sass/screen1/_actions.sass */
+  /* line 1, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_actions.sass */
   #screen1 .action-buttons {
     padding: 3px 9px; }
-    /* line 3, C:/SVN/_WebProfyManagement/src/sass/screen1/_actions.sass */
+    /* line 3, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_actions.sass */
     #screen1 .action-buttons button {
       float: left; }
     @media (min-width: 0px) and (max-width: 1600px) {
-      /* line 6, C:/SVN/_WebProfyManagement/src/sass/screen1/_actions.sass */
+      /* line 6, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons button {
         width: 36px; }
-        /* line 8, C:/SVN/_WebProfyManagement/src/sass/screen1/_actions.sass */
+        /* line 8, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_actions.sass */
         #screen1 .action-buttons button:not(:last-child) {
           margin-right: 5px; }
-        /* line 10, C:/SVN/_WebProfyManagement/src/sass/screen1/_actions.sass */
+        /* line 10, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_actions.sass */
         #screen1 .action-buttons button table td:nth-child(2) {
           display: none; } }
     @media (min-width: 1600px) {
-      /* line 13, C:/SVN/_WebProfyManagement/src/sass/screen1/_actions.sass */
+      /* line 13, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons .addTask, #screen1 .action-buttons .refresh, #screen1 .action-buttons .time-spent, #screen1 .action-buttons .undo, #screen1 .action-buttons .redo {
         width: 36px; }
-      /* line 15, C:/SVN/_WebProfyManagement/src/sass/screen1/_actions.sass */
+      /* line 15, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons .addTask, #screen1 .action-buttons .refresh, #screen1 .action-buttons .time-spent, #screen1 .action-buttons .edited, #screen1 .action-buttons .redo {
         margin-right: 16px; }
-      /* line 17, C:/SVN/_WebProfyManagement/src/sass/screen1/_actions.sass */
+      /* line 17, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_actions.sass */
       #screen1 .action-buttons .changes, #screen1 .action-buttons .undo {
         margin-right: 6px; } }
-    /* line 20, C:/SVN/_WebProfyManagement/src/sass/screen1/_actions.sass */
+    /* line 20, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_actions.sass */
     #screen1 .action-buttons button.addTask > img, #screen1 .action-buttons button.refresh > img, #screen1 .action-buttons button.time-spent > img {
       margin-top: 3px; }
-  /* line 2, C:/SVN/_WebProfyManagement/src/sass/screen1/_vertical-lines.sass */
+  /* line 2, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_vertical-lines.sass */
   #screen1 .vertical-lines {
     position: absolute;
     width: 100%;
     height: 100%; }
-    /* line 7, C:/SVN/_WebProfyManagement/src/sass/screen1/_vertical-lines.sass */
+    /* line 7, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col {
       position: absolute;
       pointer-events: none;
       border-right: 1px dashed #c2ccd1;
       height: 100%; }
-    /* line 14, C:/SVN/_WebProfyManagement/src/sass/screen1/_vertical-lines.sass */
+    /* line 14, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col1 {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       width: 23.33333%;
       float: left; }
-    /* line 14, C:/SVN/_WebProfyManagement/src/sass/screen1/_vertical-lines.sass */
+    /* line 14, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col2 {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       width: 26.66667%;
       float: left; }
-    /* line 14, C:/SVN/_WebProfyManagement/src/sass/screen1/_vertical-lines.sass */
+    /* line 14, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col3 {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       width: 36.66667%;
       float: left; }
-    /* line 14, C:/SVN/_WebProfyManagement/src/sass/screen1/_vertical-lines.sass */
+    /* line 14, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col4 {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       width: 46.66667%;
       float: left; }
-    /* line 14, C:/SVN/_WebProfyManagement/src/sass/screen1/_vertical-lines.sass */
+    /* line 14, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col5 {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       width: 56.66667%;
       float: left; }
-    /* line 14, C:/SVN/_WebProfyManagement/src/sass/screen1/_vertical-lines.sass */
+    /* line 14, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col6 {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       width: 66.66667%;
       float: left; }
-    /* line 14, C:/SVN/_WebProfyManagement/src/sass/screen1/_vertical-lines.sass */
+    /* line 14, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col7 {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       width: 76.66667%;
       float: left; }
-    /* line 14, C:/SVN/_WebProfyManagement/src/sass/screen1/_vertical-lines.sass */
+    /* line 14, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col8 {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       width: 86.66667%;
       float: left; }
-    /* line 14, C:/SVN/_WebProfyManagement/src/sass/screen1/_vertical-lines.sass */
+    /* line 14, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col9 {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       width: 96.66667%;
       float: left; }
-    /* line 14, C:/SVN/_WebProfyManagement/src/sass/screen1/_vertical-lines.sass */
+    /* line 14, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_vertical-lines.sass */
     #screen1 .vertical-lines .col10 {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
@@ -963,7 +960,7 @@ ul {
       float: left;
       margin-left: 0;
       margin-right: 0; }
-  /* line 4, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+  /* line 4, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
   #screen1 .total {
     position: absolute;
     height: 100%;
@@ -971,28 +968,28 @@ ul {
     box-sizing: border-box;
     width: 10%;
     float: left; }
-    /* line 9, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+    /* line 9, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
     #screen1 .total.day0 {
       margin-left: 26.66667%; }
-    /* line 9, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+    /* line 9, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
     #screen1 .total.day1 {
       margin-left: 36.66667%; }
-    /* line 9, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+    /* line 9, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
     #screen1 .total.day2 {
       margin-left: 46.66667%; }
-    /* line 9, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+    /* line 9, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
     #screen1 .total.day3 {
       margin-left: 56.66667%; }
-    /* line 9, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+    /* line 9, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
     #screen1 .total.day4 {
       margin-left: 66.66667%; }
-    /* line 9, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+    /* line 9, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
     #screen1 .total.day5 {
       margin-left: 76.66667%; }
-    /* line 9, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+    /* line 9, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
     #screen1 .total.day6 {
       margin-left: 86.66667%; }
-  /* line 15, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+  /* line 15, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
   #screen1 #top-block .sub-header .left-space {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -1000,24 +997,24 @@ ul {
     float: left;
     min-height: 1px;
     padding-left: 1rem; }
-    /* line 19, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+    /* line 19, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
     #screen1 #top-block .sub-header .left-space .input-wrapper {
       display: block;
       width: 120px; }
-      /* line 22, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+      /* line 22, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .sub-header .left-space .input-wrapper input {
         width: 100%; }
-      /* line 24, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+      /* line 24, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .sub-header .left-space .input-wrapper i {
         top: 14px;
         right: -6px; }
-  /* line 27, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+  /* line 27, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
   #screen1 #top-block .sub-header .prev-next-week {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     width: 3.33333%;
     float: left; }
-  /* line 29, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+  /* line 29, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
   #screen1 #top-block .sub-header .day {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -1027,26 +1024,26 @@ ul {
     line-height: 1.5;
     padding-top: 4px;
     text-align: center; }
-    /* line 35, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+    /* line 35, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
     #screen1 #top-block .sub-header .day > small {
       display: block;
       color: #000000; }
-  /* line 38, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+  /* line 38, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
   #screen1 #top-block .sub-header .btn {
     padding: 0 8px;
     height: 30px;
     margin-top: 5px;
     line-height: 30px; }
-  /* line 44, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+  /* line 44, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
   #screen1 #top-block .people {
     overflow: hidden; }
-    /* line 46, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+    /* line 46, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
     #screen1 #top-block .people > ul {
       overflow-y: scroll; }
-    /* line 48, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+    /* line 48, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
     #screen1 #top-block .people .people-table {
       width: 100%; }
-    /* line 50, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+    /* line 50, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
     #screen1 #top-block .people .person-row {
       position: relative;
       overflow: hidden;
@@ -1055,7 +1052,7 @@ ul {
       line-height: 2rem;
       -webkit-transition: all 0.2s ease;
       transition: all 0.2s ease; }
-      /* line 57, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+      /* line 57, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .person-info {
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
@@ -1063,41 +1060,40 @@ ul {
         float: left;
         padding-left: 0.2rem;
         padding-right: 0.2rem; }
-        /* line 61, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+        /* line 61, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
         #screen1 #top-block .people .person-row .person-info table {
           width: 100%; }
-          /* line 63, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+          /* line 63, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
           #screen1 #top-block .people .person-row .person-info table td {
             vertical-align: top; }
-          /* line 65, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+          /* line 65, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
           #screen1 #top-block .people .person-row .person-info table .hide {
             width: 1rem; }
-            /* line 67, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+            /* line 67, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
             #screen1 #top-block .people .person-row .person-info table .hide img {
               padding-right: 0.3rem;
               padding-top: 0.3rem;
               opacity: 0.5;
               cursor: pointer; }
-          /* line 2, C:/SVN/_WebProfyManagement/src/sass/screen1/_person.sass */
+          /* line 2, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_person.sass */
           #screen1 #top-block .people .person-row .person-info table .avatar {
             width: 2rem;
             margin-right: 0.3rem; }
-          /* line 5, C:/SVN/_WebProfyManagement/src/sass/screen1/_person.sass */
+          /* line 5, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_person.sass */
           #screen1 #top-block .people .person-row .person-info table .name {
             text-align: left;
             font-size: 12px; }
-          /* line 73, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+          /* line 73, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
           #screen1 #top-block .people .person-row .person-info table .expand {
             text-align: right;
             font-size: 14px;
             cursor: pointer; }
-            /* line 77, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+            /* line 77, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
             #screen1 #top-block .people .person-row .person-info table .expand i {
               background: whitesmoke;
               padding: 3px 5px;
-              -webkit-border-radius: 5px;
-                      border-radius: 5px; }
-      /* line 81, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+              border-radius: 5px; }
+      /* line 81, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .estimate {
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
@@ -1105,7 +1101,7 @@ ul {
         float: left;
         font-size: 12px;
         text-align: center; }
-      /* line 86, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+      /* line 86, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .total .task-count {
         display: block;
         position: absolute;
@@ -1114,7 +1110,7 @@ ul {
         font-size: 11px;
         line-height: 1;
         opacity: 0.5; }
-      /* line 94, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+      /* line 94, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .total .person-day-time {
         position: absolute;
         width: 100%;
@@ -1122,68 +1118,68 @@ ul {
         display: block;
         padding-left: 5px;
         font-size: 10px; }
-      /* line 101, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+      /* line 101, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .total .loaded {
         position: absolute;
         width: 0%;
         height: 100%; }
-        /* line 105, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+        /* line 105, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
         #screen1 #top-block .people .person-row .total .loaded.green {
           background-color: #69D869; }
-        /* line 108, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+        /* line 108, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
         #screen1 #top-block .people .person-row .total .loaded.red {
           background-color: #EF6363; }
-        /* line 111, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+        /* line 111, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
         #screen1 #top-block .people .person-row .total .loaded.light-yellow {
           background-color: #eee3a1; }
-      /* line 113, C:/SVN/_WebProfyManagement/src/sass/screen1/_top-block.sass */
+      /* line 113, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_top-block.sass */
       #screen1 #top-block .people .person-row .tasks {
         display: block;
         position: absolute;
         top: 32px;
         width: 100%;
         overflow: hidden; }
-  /* line 1, C:/SVN/_WebProfyManagement/src/sass/screen1/_bottom-block.sass */
+  /* line 1, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_bottom-block.sass */
   #screen1 #bottom-block {
     font-size: 12px; }
-    /* line 3, C:/SVN/_WebProfyManagement/src/sass/screen1/_bottom-block.sass */
+    /* line 3, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_bottom-block.sass */
     #screen1 #bottom-block h3, #screen1 #bottom-block h4 {
       margin-top: 2px;
       margin-bottom: 0; }
-    /* line 12, C:/SVN/_WebProfyManagement/src/sass/screen1/_bottom-block.sass */
+    /* line 12, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_bottom-block.sass */
     #screen1 #bottom-block .col-title {
       line-height: 18px;
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       width: 13.33333%;
       float: left; }
-      /* line 15, C:/SVN/_WebProfyManagement/src/sass/screen1/_bottom-block.sass */
+      /* line 15, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_bottom-block.sass */
       #screen1 #bottom-block .col-title h3 {
         margin-left: 1rem; }
-    /* line 18, C:/SVN/_WebProfyManagement/src/sass/screen1/_bottom-block.sass */
+    /* line 18, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_bottom-block.sass */
     #screen1 #bottom-block .col-not-assigned-tasks {
       position: absolute;
       width: 100%;
       margin-left: 26.66667%; }
-      /* line 22, C:/SVN/_WebProfyManagement/src/sass/screen1/_bottom-block.sass */
+      /* line 22, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_bottom-block.sass */
       #screen1 #bottom-block .col-not-assigned-tasks .compensate-pre {
         left: -26.66667%; }
-      /* line 24, C:/SVN/_WebProfyManagement/src/sass/screen1/_bottom-block.sass */
+      /* line 24, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_bottom-block.sass */
       #screen1 #bottom-block .col-not-assigned-tasks .header {
         line-height: 18px;
         background: none;
         height: auto; }
-      /* line 28, C:/SVN/_WebProfyManagement/src/sass/screen1/_bottom-block.sass */
+      /* line 28, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_bottom-block.sass */
       #screen1 #bottom-block .col-not-assigned-tasks .sub-header-row {
         display: none; }
-      /* line 30, C:/SVN/_WebProfyManagement/src/sass/screen1/_bottom-block.sass */
+      /* line 30, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_bottom-block.sass */
       #screen1 #bottom-block .col-not-assigned-tasks .tasks {
         position: absolute;
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
         width: 70%;
         float: left; }
-    /* line 36, C:/SVN/_WebProfyManagement/src/sass/screen1/_bottom-block.sass */
+    /* line 36, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_bottom-block.sass */
     #screen1 #bottom-block .col-late-tasks {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
@@ -1191,35 +1187,35 @@ ul {
       float: left;
       position: absolute;
       margin-left: 11.11111%; }
-      /* line 40, C:/SVN/_WebProfyManagement/src/sass/screen1/_bottom-block.sass */
+      /* line 40, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_bottom-block.sass */
       #screen1 #bottom-block .col-late-tasks .header {
         line-height: 18px;
         background: none;
         height: auto; }
-      /* line 44, C:/SVN/_WebProfyManagement/src/sass/screen1/_bottom-block.sass */
+      /* line 44, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_bottom-block.sass */
       #screen1 #bottom-block .col-late-tasks .sub-header-row {
         display: none; }
-      /* line 46, C:/SVN/_WebProfyManagement/src/sass/screen1/_bottom-block.sass */
+      /* line 46, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_bottom-block.sass */
       #screen1 #bottom-block .col-late-tasks .tasks {
         position: absolute;
         width: 100%; }
-  /* line 1, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+  /* line 1, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
   #screen1 #sidebar {
     position: absolute;
     top: 44px;
     right: 0;
     background: #F0F0F0;
     border-left: 1px solid #AAAAAA; }
-    /* line 5, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    /* line 5, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
     #screen1 #sidebar .none {
       padding-top: 6px;
       padding-left: 24px;
       font-style: italic; }
-    /* line 9, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    /* line 9, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
     #screen1 #sidebar .notAssigned {
       padding-left: 6px;
       padding-bottom: 6px; }
-    /* line 13, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    /* line 13, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
     #screen1 #sidebar .sub-header table.tabs {
       padding-left: 0;
       padding-top: 10px;
@@ -1228,101 +1224,99 @@ ul {
       font-size: 12px;
       border-spacing: 3px 0;
       border-collapse: separate; }
-      /* line 21, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+      /* line 21, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
       #screen1 #sidebar .sub-header table.tabs > tbody > tr > td {
         height: 30px;
-        -webkit-border-top-left-radius: 4px;
-                border-top-left-radius: 4px;
-        -webkit-border-top-right-radius: 4px;
-                border-top-right-radius: 4px;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
         padding: 0 14px;
         cursor: pointer;
         background: #d3b34d;
         color: #FAFAFA;
         overflow: hidden;
         text-overflow: ellipsis; }
-        /* line 31, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 31, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .sub-header table.tabs > tbody > tr > td.active {
           background: #FFFFFF;
           border: 1px solid #AAAAAA;
           color: #000000; }
-    /* line 36, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    /* line 36, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
     #screen1 #sidebar .sub-header.narrow table.tabs > tbody > tr > td {
       font-size: 8px; }
-    /* line 40, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    /* line 40, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
     #screen1 #sidebar table.person .avatar {
       margin-left: 6px; }
-    /* line 43, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    /* line 43, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
     #screen1 #sidebar table.project td {
       line-height: 24px; }
-    /* line 46, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    /* line 46, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
     #screen1 #sidebar table.todo-list td {
       line-height: 24px; }
-    /* line 49, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+    /* line 49, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
     #screen1 #sidebar .content-block {
       position: relative;
       font-size: 12px;
       overflow: hidden;
       padding-top: 6px; }
-      /* line 54, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+      /* line 54, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
       #screen1 #sidebar .content-block h3, #screen1 #sidebar .content-block h4 {
         margin: 0;
         clear: both; }
-      /* line 57, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+      /* line 57, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
       #screen1 #sidebar .content-block .tasks-block {
         padding-left: 24px; }
-        /* line 2, C:/SVN/_WebProfyManagement/src/sass/screen1/_person.sass */
+        /* line 2, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_person.sass */
         #screen1 #sidebar .content-block .tasks-block .avatar {
           width: 2rem;
           margin-right: 0.3rem; }
-        /* line 5, C:/SVN/_WebProfyManagement/src/sass/screen1/_person.sass */
+        /* line 5, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_person.sass */
         #screen1 #sidebar .content-block .tasks-block .name {
           text-align: left;
           font-size: 12px; }
-        /* line 61, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 61, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .tasks-block li:not(:last-child) {
           padding-bottom: 15px; }
-        /* line 64, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 64, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .tasks-block li table td {
           vertical-align: middle;
           text-align: left; }
-          /* line 67, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+          /* line 67, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
           #screen1 #sidebar .content-block .tasks-block li table td h3 {
             padding-left: 5px; }
-      /* line 74, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+      /* line 74, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
       #screen1 #sidebar .content-block .person-projects {
         margin-left: 16px; }
-      /* line 76, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+      /* line 76, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
       #screen1 #sidebar .content-block .task-list {
         padding-left: 20px;
         padding-bottom: 10px; }
-        /* line 79, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 79, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .task-list .task-list-title {
           cursor: pointer; }
-          /* line 81, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+          /* line 81, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
           #screen1 #sidebar .content-block .task-list .task-list-title i {
             display: inline-block; }
-          /* line 83, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+          /* line 83, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
           #screen1 #sidebar .content-block .task-list .task-list-title h4 {
             display: inline-block;
             padding-left: 5px; }
-      /* line 86, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+      /* line 86, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
       #screen1 #sidebar .content-block .task-list-items {
         padding-left: 20px;
         margin-left: 1rem;
         width: 100%;
         table-layout: fixed; }
-        /* line 87, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 87, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .task-list-items.plan {
           border: 1px solid #AAAAAA;
           border-width: 2px; }
-        /* line 94, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 94, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .task-list-items .col {
           line-height: 13px; }
-        /* line 96, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 96, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .task-list-items .col1 {
           width: 50%; }
-          /* line 98, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+          /* line 98, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
           #screen1 #sidebar .content-block .task-list-items .col1 div {
             overflow: hidden;
             height: 20px;
@@ -1332,62 +1326,59 @@ ul {
             line-height: 20px;
             text-overflow: ellipsis;
             background: #BCD2E9;
-            -webkit-border-radius: 5px;
-                    border-radius: 5px;
+            border-radius: 5px;
             border: 1px solid #AAAAAA;
             padding: 2px 6px; }
-        /* line 110, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 110, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .task-list-items .col2 {
           width: 2rem;
           text-align: center;
           line-height: 19px; }
-        /* line 114, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+        /* line 114, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
         #screen1 #sidebar .content-block .task-list-items .col3 {
           opacity: 0.4;
           width: 0.7rem;
           line-height: 19px;
           text-align: center; }
-          /* line 119, C:/SVN/_WebProfyManagement/src/sass/screen1/_sidebar.sass */
+          /* line 119, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_sidebar.sass */
           #screen1 #sidebar .content-block .task-list-items .col3 > img {
             width: 0.5rem; }
-  /* line 1, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+  /* line 1, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task-info.sass */
   #screen1 #modal-task-info, #screen1 #modal-task {
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.23), 0 10px 40px rgba(0, 0, 0, 0.19);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.23), 0 10px 40px rgba(0, 0, 0, 0.19);
     display: show;
     position: absolute;
-    z-index: 1000;
+    z-index: 100;
     top: 200px;
     left: 400px;
-    -webkit-border-radius: 5px;
-            border-radius: 5px;
+    border-radius: 5px;
     padding: 10px;
-    background: #eadbab;
+    background-color: #eadbab;
     border: 1px solid #AAAAAA;
     font-size: 0.9rem; }
-    /* line 4, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+    /* line 4, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task-info.sass */
     #screen1 .show#modal-task-info, #screen1 .show#modal-task {
       display: block; }
-    /* line 15, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+    /* line 15, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task-info.sass */
     #screen1 #modal-task-info .task-tag, #screen1 #modal-task .task-tag {
       display: inline;
-      -webkit-border-radius: 5px;
-              border-radius: 5px;
+      border-radius: 5px;
       float: left;
       color: white;
       padding: 0 4px;
       margin-top: 4px;
       margin-left: 4px; }
-      /* line 23, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+      /* line 23, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task-info.sass */
       #screen1 #modal-task-info .task-tag > img, #screen1 #modal-task .task-tag > img {
         cursor: pointer;
         opacity: 0.4;
         width: 6px;
         padding: 0.2rem 0.2rem 0.2rem 0.4rem; }
-  /* line 29, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+  /* line 29, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task-info.sass */
   #screen1 #modal-task-info {
     width: 270px; }
-    /* line 33, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+    /* line 33, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task-info.sass */
     #screen1 #modal-task-info li .task-info-label {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
@@ -1395,18 +1386,18 @@ ul {
       float: left;
       text-align: right;
       padding-right: 10px; }
-    /* line 37, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+    /* line 37, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task-info.sass */
     #screen1 #modal-task-info li .task-info-value {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       width: 71.42857%;
       float: left; }
-      /* line 39, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task-info.sass */
+      /* line 39, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task-info.sass */
       #screen1 #modal-task-info li .task-info-value.tags {
         font-size: 0.8rem;
         margin-top: -2px;
         margin-left: -4px; }
-  /* line 1, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+  /* line 1, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
   #screen1 #modal-task {
     display: inline-table;
     top: 20%;
@@ -1414,57 +1405,56 @@ ul {
     -webkit-transform: translate(-50%, 0);
         -ms-transform: translate(-50%, 0);
             transform: translate(-50%, 0); }
-    /* line 7, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 7, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task .task-modal-link {
       float: left; }
-    /* line 9, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 9, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task .task-modal-close {
       float: right; }
-    /* line 11, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 11, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task .select {
       background-color: #d3b34d; }
-    /* line 13, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 13, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task .warn {
       background-color: #ffca21; }
-    /* line 15, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 15, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task .task-modal-wrapper-main {
       width: 30rem;
       display: inline-block;
       margin-bottom: 8px; }
-      /* line 19, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+      /* line 19, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
       #screen1 #modal-task .task-modal-wrapper-main .task-modal-row {
         width: 100%;
         float: left;
         margin-bottom: 10px;
         overflow: auto; }
-        /* line 20, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 20, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row.project {
           margin-top: 8px; }
-        /* line 22, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 22, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row.project.edit, #screen1 #modal-task .task-modal-wrapper-main .task-modal-row.task-list.edit, #screen1 #modal-task .task-modal-wrapper-main .task-modal-row.split.edit, #screen1 #modal-task .task-modal-wrapper-main .task-modal-row.tags.edit {
           margin-bottom: 4px;
           overflow: visible; }
-        /* line 25, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 25, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row.responsible.edit {
           margin-bottom: 6px;
           overflow: visible; }
-        /* line 28, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 28, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row.split.edit {
           margin-bottom: 8px; }
-          /* line 30, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+          /* line 30, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
           #screen1 #modal-task .task-modal-wrapper-main .task-modal-row.split.edit > input[type=checkbox] {
             vertical-align: middle; }
-        /* line 33, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 33, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row.tags.edit .task-modal-row-title {
           margin-top: 4px; }
-        /* line 35, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 35, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .point {
           height: 16px;
           width: 16px;
-          -webkit-border-radius: 3px;
-                  border-radius: 3px;
+          border-radius: 3px;
           margin-right: 2px; }
-        /* line 45, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 45, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-row-title {
           -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -1472,153 +1462,152 @@ ul {
           float: left;
           text-align: right;
           padding-right: 1rem; }
-        /* line 49, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 49, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-row-value {
           -webkit-box-sizing: border-box;
           box-sizing: border-box;
           width: 76.92308%;
           float: left; }
-          /* line 51, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+          /* line 51, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
           #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-row-value.tags {
             margin-left: -3px; }
-        /* line 53, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 53, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-title {
           width: 60%; }
-        /* line 55, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 55, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-description {
           width: 73%; }
-        /* line 57, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 57, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-estimate-hours {
           width: 2.3rem; }
-        /* line 59, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 59, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-estimate-minutes {
           width: 2.3rem;
           margin-left: 1rem; }
-        /* line 62, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 62, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-estimate-duration {
           padding-left: 0.2rem; }
-        /* line 64, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 64, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-duedate {
           width: 8rem; }
-        /* line 66, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 66, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-project, #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-task-list {
           display: inline-block;
           float: left;
           width: 19rem; }
-        /* line 70, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 70, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-person {
           display: inline-block;
           float: left;
           width: 9rem; }
-        /* line 74, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 74, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-tag {
           display: inline-block;
           float: left;
           width: 9rem;
           margin-left: 3px;
           margin-top: 2px; }
-        /* line 80, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 80, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-icon-link {
           vertical-align: middle;
           margin-top: -7px;
           padding-left: 0.5rem;
           height: 15px;
           opacity: 0.5; }
-          /* line 86, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+          /* line 86, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
           #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-icon-link:hover {
             opacity: 0.3; }
-        /* line 88, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 88, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-icon-recycling {
           margin-left: 0.5rem;
           cursor: pointer; }
-          /* line 91, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+          /* line 91, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
           #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-icon-recycling:hover {
             opacity: 0.5; }
-          /* line 93, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+          /* line 93, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
           #screen1 #modal-task .task-modal-wrapper-main .task-modal-row .task-modal-icon-recycling.icon-after-select {
             display: block;
             float: left;
             margin-top: 5px; }
-    /* line 97, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 97, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task .task-modal-wrapper-split {
       margin-top: 14px;
       display: inline-block;
       vertical-align: top; }
-      /* line 101, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+      /* line 101, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
       #screen1 #modal-task .task-modal-wrapper-split table {
         margin-bottom: 1.5rem; }
-        /* line 103, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 103, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-split table th {
           font-weight: normal;
           font-size: 11px;
           text-align: left;
           padding-bottom: 10px; }
-        /* line 108, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 108, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-split table td {
           width: 5.4rem;
           padding: 4px; }
-          /* line 111, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+          /* line 111, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
           #screen1 #modal-task .task-modal-wrapper-split table td:first-child {
             width: 2rem; }
-          /* line 114, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+          /* line 114, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
           #screen1 #modal-task .task-modal-wrapper-split table td .task-split-estimate-wrapper input, #screen1 #modal-task .task-modal-wrapper-split table td .task-split-estimate-wrapper div {
             width: 25%;
             text-align: right; }
-            /* line 117, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+            /* line 117, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
             #screen1 #modal-task .task-modal-wrapper-split table td .task-split-estimate-wrapper input.task-modal-estimate-minutes, #screen1 #modal-task .task-modal-wrapper-split table td .task-split-estimate-wrapper div.task-modal-estimate-minutes {
               margin-left: 8px; }
-        /* line 120, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 120, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-split table tr.row-total-time td {
           font-size: 0.7rem;
           padding: 0 4px;
           line-height: 1;
           text-align: center; }
-        /* line 126, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 126, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-split table tr.row-arrows td {
           padding-top: 10px; }
-      /* line 128, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+      /* line 128, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
       #screen1 #modal-task .task-modal-wrapper-split .table-icon-arrow {
         text-align: center;
         width: 40px;
         height: 26px; }
-        /* line 132, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+        /* line 132, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
         #screen1 #modal-task .task-modal-wrapper-split .table-icon-arrow > img {
           padding-top: 2px;
           margin-top: 0; }
-    /* line 136, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 136, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task input {
       padding: 2px 6px;
-      -webkit-border-radius: 3px;
-              border-radius: 3px;
+      border-radius: 3px;
       border: none; }
-    /* line 141, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 141, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task a {
       text-decoration: none; }
-    /* line 144, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 144, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task .form-btn-row {
       padding: 0 12px 4px 12px; }
-      /* line 146, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+      /* line 146, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
       #screen1 #modal-task .form-btn-row button {
         height: 26px; }
-      /* line 148, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+      /* line 148, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
       #screen1 #modal-task .form-btn-row .plan {
         margin-left: 22px; }
-      /* line 150, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+      /* line 150, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
       #screen1 #modal-task .form-btn-row .right {
         float: right; }
-      /* line 152, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+      /* line 152, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
       #screen1 #modal-task .form-btn-row .save, #screen1 #modal-task .form-btn-row .right {
         width: 70px; }
-    /* line 155, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 155, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task .splitDiff {
       margin-left: 1rem;
       padding: 2px 4px; }
-    /* line 159, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-task.sass */
+    /* line 159, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-task.sass */
     #screen1 #modal-task .auto-split {
       height: 22px;
       line-height: 10px;
       margin-left: 1rem; }
-  /* line 1, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+  /* line 1, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
   #screen1 #modal-changes {
     position: absolute;
     overflow: hidden;
@@ -1631,110 +1620,110 @@ ul {
     width: 70%;
     padding: 5px 15px;
     background-color: #eadbab;
-    -webkit-border-radius: 5px;
-            border-radius: 5px;
+    border-radius: 5px;
     font-size: 12px; }
-    /* line 15, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+    /* line 15, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
     #screen1 #modal-changes h3 {
       margin: 10px 0; }
-    /* line 17, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+    /* line 17, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
     #screen1 #modal-changes .action-buttons {
       width: 78px;
       padding: 3px 0; }
-      /* line 20, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 20, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes .action-buttons .redo {
         margin-right: 0; }
-    /* line 22, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+    /* line 22, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
     #screen1 #modal-changes table.title {
       margin-bottom: 6px; }
-    /* line 24, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+    /* line 24, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
     #screen1 #modal-changes .main-table-border {
       border: 1px solid #AAAAAA; }
-    /* line 26, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+    /* line 26, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
     #screen1 #modal-changes table.header {
       background-color: #f4ecd4;
       border-bottom: 1px solid #AAAAAA;
       line-height: 20px; }
-      /* line 27, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 27, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes table.header th {
         font-weight: normal; }
-    /* line 32, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+    /* line 32, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
     #screen1 #modal-changes table.main-table {
       table-layout: fixed;
       width: 100%; }
-      /* line 35, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 35, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes table.main-table tr.dark {
         background-color: #e5d296; }
-      /* line 37, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 37, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes table.main-table tr.error {
         color: red; }
-      /* line 39, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 39, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes table.main-table td, #screen1 #modal-changes table.main-table th {
         text-align: left;
         padding: 2px 5px;
         border-left: 1px solid #AAAAAA;
         border-right: 1px solid #AAAAAA; }
-        /* line 44, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+        /* line 44, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
         #screen1 #modal-changes table.main-table td > div, #screen1 #modal-changes table.main-table th > div {
           width: auto;
           text-overflow: ellipsis; }
-      /* line 48, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 48, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes table.main-table td:nth-child(1), #screen1 #modal-changes table.main-table th:nth-child(1) {
         width: 10%;
         border-left: none; }
-      /* line 51, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 51, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes table.main-table td:nth-child(2), #screen1 #modal-changes table.main-table th:nth-child(2) {
         width: 15%; }
-      /* line 53, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 53, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes table.main-table td:nth-child(3), #screen1 #modal-changes table.main-table th:nth-child(3) {
         width: 25%; }
-      /* line 55, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 55, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes table.main-table td:nth-child(4), #screen1 #modal-changes table.main-table th:nth-child(4) {
         width: 20%; }
-      /* line 57, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 57, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes table.main-table td:nth-child(5), #screen1 #modal-changes table.main-table th:nth-child(5) {
         width: 20%; }
-      /* line 59, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 59, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes table.main-table td:nth-child(6), #screen1 #modal-changes table.main-table th:nth-child(6) {
         width: 10%;
         text-align: center;
         border-right: none; }
-    /* line 63, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+    /* line 63, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
     #screen1 #modal-changes .table-scroll {
       overflow-x: hidden;
       overflow-y: auto;
       background-color: #efe4bf;
       table-layout: fixed; }
-      /* line 68, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 68, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes .table-scroll .icon-remove {
         cursor: pointer; }
-        /* line 70, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+        /* line 70, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
         #screen1 #modal-changes .table-scroll .icon-remove:hover {
           opacity: 0.5; }
-    /* line 72, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+    /* line 72, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
     #screen1 #modal-changes .btn-group {
       width: 100%;
       margin-top: 1rem; }
-      /* line 75, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 75, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes .btn-group button.changes-modal-reset {
         float: left; }
-      /* line 77, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 77, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes .btn-group button.changes-modal-save {
         float: right;
         margin-right: 1rem; }
-      /* line 80, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 80, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes .btn-group button.changes-modal-close {
         float: right; }
-        /* line 82, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+        /* line 82, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
         #screen1 #modal-changes .btn-group button.changes-modal-close img {
           width: 12px;
           padding-right: 2px; }
-      /* line 85, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-changes.sass */
+      /* line 85, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-changes.sass */
       #screen1 #modal-changes .btn-group img {
         width: 20px;
         margin-top: 2px; }
-  /* line 1, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-add-comment.sass */
+  /* line 1, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-add-comment.sass */
   #screen1 #modal-add-comment {
+    font-size: 0.9rem;
     position: absolute;
     overflow: hidden;
     z-index: 1000;
@@ -1746,53 +1735,56 @@ ul {
     width: 30rem;
     padding: 5px 15px;
     border: 1px solid #AAAAAA;
-    background-color: #EDE9E9;
-    -webkit-border-radius: 5px;
-            border-radius: 5px;
+    background-color: #eadbab;
+    border-radius: 5px;
     font-size: 12px; }
-    /* line 2, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-add-comment.sass */
+    /* line 2, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-add-comment.sass */
     #screen1 #modal-add-comment .required {
       color: rgba(255, 0, 0, 0.47); }
-    /* line 18, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-add-comment.sass */
+    /* line 19, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-add-comment.sass */
     #screen1 #modal-add-comment .author {
       margin-left: 0.2rem;
       margin-top: 1rem;
       margin-bottom: 0.5rem;
       font-weight: bold; }
-    /* line 23, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-add-comment.sass */
+    /* line 24, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-add-comment.sass */
     #screen1 #modal-add-comment table.changes {
       width: 100%; }
-      /* line 25, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-add-comment.sass */
+      /* line 26, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-add-comment.sass */
       #screen1 #modal-add-comment table.changes tr {
         line-height: 1.5rem; }
-        /* line 27, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-add-comment.sass */
+        /* line 28, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-add-comment.sass */
         #screen1 #modal-add-comment table.changes tr td.name {
           text-align: right;
           padding-right: 0.2rem; }
-    /* line 31, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-add-comment.sass */
+    /* line 32, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-add-comment.sass */
     #screen1 #modal-add-comment .actions {
-      margin-top: 1rem; }
-      /* line 33, C:/SVN/_WebProfyManagement/src/sass/screen1/_modal-add-comment.sass */
+      margin-top: 1rem;
+      margin-bottom: 14px; }
+      /* line 35, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-add-comment.sass */
+      #screen1 #modal-add-comment .actions button {
+        height: 26px; }
+      /* line 37, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_modal-add-comment.sass */
       #screen1 #modal-add-comment .actions button.cancel {
         float: right; }
-  /* line 1, C:/SVN/_WebProfyManagement/src/sass/screen1/_setup-instruction.sass */
+  /* line 1, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_setup-instruction.sass */
   #screen1 #setup-instruction {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     max-width: 100%;
     margin-left: auto;
     margin-right: auto; }
-    /* line 12, C:/SVN/_WebProfyManagement/src/sass/lib/susy/output/support/_clearfix.scss */
+    /* line 12, /Users/Enot/Work/webprofy-rms/src/sass/lib/susy/output/support/_clearfix.scss */
     #screen1 #setup-instruction:after {
       content: " ";
       display: block;
       clear: both; }
-    /* line 4, C:/SVN/_WebProfyManagement/src/sass/screen1/_setup-instruction.sass */
+    /* line 4, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_setup-instruction.sass */
     #screen1 #setup-instruction a {
       text-decoration: none;
       color: black;
       font-weight: 500; }
-    /* line 8, C:/SVN/_WebProfyManagement/src/sass/screen1/_setup-instruction.sass */
+    /* line 8, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_setup-instruction.sass */
     #screen1 #setup-instruction > div {
       margin-left: 16.66667%;
       -webkit-box-sizing: border-box;
@@ -1801,26 +1793,24 @@ ul {
       float: left;
       padding-top: 10px; }
 
-/* line 3, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+/* line 3, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
 #sidebar .search-block {
   margin-bottom: 12px;
   padding: 4px 4px 2px 6px;
   background: #E2CD8A;
   border: none;
-  -webkit-border-top-left-radius: 5px;
-          border-top-left-radius: 5px;
-  -webkit-border-bottom-left-radius: 5px;
-          border-bottom-left-radius: 5px; }
-  /* line 10, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px; }
+  /* line 10, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
   #sidebar .search-block td {
     padding: 0; }
-  /* line 12, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+  /* line 12, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
   #sidebar .search-block > table {
     width: 100%; }
-    /* line 15, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+    /* line 15, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
     #sidebar .search-block > table > tbody > tr > td.filters {
       width: 100%; }
-    /* line 17, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+    /* line 17, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
     #sidebar .search-block > table > tbody > tr > td.mode {
       vertical-align: top;
       text-align: right;
@@ -1828,109 +1818,102 @@ ul {
       padding-top: 2px;
       padding-left: 4px;
       margin-right: 4px; }
-      /* line 24, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+      /* line 24, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
       #sidebar .search-block > table > tbody > tr > td.mode > button {
         margin-left: 4px;
         width: 36px; }
-        /* line 27, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+        /* line 27, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
         #sidebar .search-block > table > tbody > tr > td.mode > button.hideEmptyPeople {
           margin-top: 7px; }
 
-/* line 33, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+/* line 33, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
 #sidebar table.filters > tbody > tr:not(last-child) > td {
   padding-bottom: 2px; }
 
-/* line 35, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+/* line 35, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
 #sidebar table.filters > tbody > tr > td.label {
   width: 56px;
   padding-right: 4px;
   text-align: right; }
 
-/* line 39, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+/* line 39, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
 #sidebar table.filters > tbody > tr > td.input {
   width: 100%;
-  -webkit-border-radius: 3px;
-          border-radius: 3px; }
-  /* line 41, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+  border-radius: 3px; }
+  /* line 41, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
   #sidebar table.filters > tbody > tr > td.input table.input td {
     background-color: #FFFFFF; }
-    /* line 43, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+    /* line 43, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
     #sidebar table.filters > tbody > tr > td.input table.input td.left-padding {
       width: 1px;
-      -webkit-border-top-left-radius: 3px;
-              border-top-left-radius: 3px;
-      -webkit-border-bottom-left-radius: 3px;
-              border-bottom-left-radius: 3px; }
-    /* line 47, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px; }
+    /* line 47, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
     #sidebar table.filters > tbody > tr > td.input table.input td.right-padding {
       width: 1px;
-      -webkit-border-top-right-radius: 3px;
-              border-top-right-radius: 3px;
-      -webkit-border-bottom-right-radius: 3px;
-              border-bottom-right-radius: 3px; }
-  /* line 53, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px; }
+  /* line 53, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
   #sidebar table.filters > tbody > tr > td.input .clear {
     cursor: pointer;
     height: 26px;
     width: 20px; }
-  /* line 57, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+  /* line 57, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
   #sidebar table.filters > tbody > tr > td.input img.clear {
     height: 6px;
     width: 6px;
     margin-top: 6px;
     margin-left: 6px;
     padding: 2px;
-    -webkit-border-radius: 3px;
-            border-radius: 3px;
+    border-radius: 3px;
     border: 1px solid #AAAAAA; }
-  /* line 65, C:/SVN/_WebProfyManagement/src/sass/screen1/_view3Filter.sass */
+  /* line 65, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_view3Filter.sass */
   #sidebar table.filters > tbody > tr > td.input input {
     padding: 3px 0;
     width: 100%; }
 
-/* line 1, C:/SVN/_WebProfyManagement/src/sass/screen1/_buttons.sass */
+/* line 1, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_buttons.sass */
 button.flat-button {
   height: 34px;
   padding: 2px 7px 0px;
   border: 1px solid #AAAAAA;
-  -webkit-border-radius: 5px;
-          border-radius: 5px;
+  border-radius: 5px;
   font-size: 13px;
   color: #000000;
   background-color: #f6f0dc; }
-  /* line 10, C:/SVN/_WebProfyManagement/src/sass/screen1/_buttons.sass */
+  /* line 10, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_buttons.sass */
   button.flat-button:not(:active):not(:disabled):not(.active):not(.disabled) {
     -webkit-box-shadow: 0 1.5px 4px rgba(0, 0, 0, 0.24), 0 1.5px 6px rgba(0, 0, 0, 0.12);
             box-shadow: 0 1.5px 4px rgba(0, 0, 0, 0.24), 0 1.5px 6px rgba(0, 0, 0, 0.12); }
-  /* line 12, C:/SVN/_WebProfyManagement/src/sass/screen1/_buttons.sass */
+  /* line 12, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_buttons.sass */
   button.flat-button.disabled, button.flat-button:disabled {
     cursor: inherit;
     opacity: 0.2; }
-  /* line 15, C:/SVN/_WebProfyManagement/src/sass/screen1/_buttons.sass */
+  /* line 15, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_buttons.sass */
   button.flat-button.active {
     color: #FFFFFF;
     background-color: #a98b2a; }
-    /* line 18, C:/SVN/_WebProfyManagement/src/sass/screen1/_buttons.sass */
+    /* line 18, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_buttons.sass */
     button.flat-button.active img {
       -webkit-filter: invert(100%);
               filter: invert(100%); }
-  /* line 20, C:/SVN/_WebProfyManagement/src/sass/screen1/_buttons.sass */
+  /* line 20, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_buttons.sass */
   button.flat-button > img {
     width: 20px;
     text-align: center;
     width: 17px;
     margin-top: 2px; }
-  /* line 25, C:/SVN/_WebProfyManagement/src/sass/screen1/_buttons.sass */
+  /* line 25, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_buttons.sass */
   button.flat-button table {
     height: 100%; }
-    /* line 27, C:/SVN/_WebProfyManagement/src/sass/screen1/_buttons.sass */
+    /* line 27, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_buttons.sass */
     button.flat-button table td {
       vertical-align: middle;
       line-height: 1; }
-      /* line 28, C:/SVN/_WebProfyManagement/src/sass/screen1/_buttons.sass */
+      /* line 28, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_buttons.sass */
       button.flat-button table td img {
         width: 20px;
         margin-top: 2px; }
-      /* line 33, C:/SVN/_WebProfyManagement/src/sass/screen1/_buttons.sass */
+      /* line 33, /Users/Enot/Work/webprofy-rms/src/sass/screen1/_buttons.sass */
       button.flat-button table td:nth-child(2) {
         padding-left: 3px; }

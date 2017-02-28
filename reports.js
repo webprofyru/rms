@@ -65,7 +65,7 @@ ngModule.factory('config', [
       });
 
       Config.propCalc('hasRoles', (function() {
-        return this.teamwork.indexOf('://teamwork.webprofy.ru/') > 0 || this.teamwork.indexOf('://delightsoft.teamworkpm.net/') > 0;
+        return this.teamwork.indexOf('://teamwork.webprofy.ru/') > 0;
       }));
 
       Config.propCalc('hasTimeReports', (function() {
@@ -307,7 +307,7 @@ ngModule.factory('PeopleWithJson', [
               if (resp.status === 200) {
                 _this.set('cancel', null);
                 DSDigest.block((function() {
-                  var dstags, error1, filterManagers, i, j, k, l, len, len1, len2, len3, m, map, peopleRoles, person, personInfo, personKey, projectId, projectMap, ref, ref1, ref2, selectedManager, selectedRole, twPerson;
+                  var dstags, filterManagers, i, j, k, l, len, len1, len2, len3, m, map, peopleRoles, person, personInfo, personKey, projectId, projectMap, ref, ref1, ref2, selectedManager, selectedRole, twPerson;
                   peopleRoles = $rootScope.peopleRoles = resp.data.roles;
                   if ((selectedRole = $rootScope.selectedRole = config.get('selectedRole'))) {
                     for (j = 0, len = peopleRoles.length; j < len; j++) {
@@ -623,12 +623,12 @@ DSDocument = require('../../dscommon/DSDocument');
 DSTags = require('../../dscommon/DSTags');
 
 module.exports = Person = (function(superClass) {
-  var class1;
+  var ctor;
 
   extend(Person, superClass);
 
   function Person() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   Person.begin('Person');
@@ -667,7 +667,7 @@ module.exports = Person = (function(superClass) {
 
   Person.propDuration('contractTime');
 
-  class1 = (function(referry, key) {
+  ctor = (function(referry, key) {
     DSDocument.call(this, referry, key);
     this.set('contractTime', moment.duration(8, 'hours'));
   });
@@ -916,6 +916,10 @@ module.exports = Task = (function(superClass) {
     init: 0
   });
 
+  Task.propDoc('project', Project);
+
+  Task.propDoc('taskList', TaskList);
+
   Task.propStr('title');
 
   (Task.propDuration('estimate')).str = (function(v) {
@@ -952,11 +956,16 @@ module.exports = Task = (function(superClass) {
 
   Task.propDoc('responsible', Person);
 
-  Task.propDoc('taskList', TaskList);
-
-  Task.propDoc('project', Project);
-
   Task.propTaskRelativeSplit('split');
+
+  Task.propDSTags('tags');
+
+  Task.propBool('completed');
+
+  Task.propBool('plan', {
+    write: null,
+    read: null
+  });
 
   Task.propStr('description', {
     str: function(v) {
@@ -970,6 +979,11 @@ module.exports = Task = (function(superClass) {
     }
   });
 
+  Task.propEnum('status', ['new', '', 'deleted'], {
+    init: '',
+    common: true
+  });
+
   Task.propComments('comments');
 
   Task.propDoc('timeTracking', TaskTimeTracking, {
@@ -980,18 +994,9 @@ module.exports = Task = (function(superClass) {
     write: null
   });
 
-  Task.propBool('completed');
-
   Task.propBool('isReady', {
     write: null
   });
-
-  Task.propBool('plan', {
-    write: null,
-    read: null
-  });
-
-  Task.propDSTags('tags');
 
   Task.propNum('priority', {
     init: defaultTag.priority,
@@ -1199,10 +1204,10 @@ error = require('../../../dscommon/util').error;
 DSDocument = require('../../../dscommon/DSDocument');
 
 module.exports = Comments = (function() {
-  var class1, zero;
+  var ctor, zero;
 
   function Comments() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   Comments.addPropType = (function(clazz) {
@@ -1274,7 +1279,7 @@ module.exports = Comments = (function() {
 
   zero = moment.duration(0);
 
-  class1 = (function(persisted) {
+  ctor = (function(persisted) {
     var j, len, src, v;
     if (assert) {
       if (arguments.length === 1 && typeof arguments[0] === 'object' && arguments[0].__proto__ === Comments.prototype) {
@@ -1334,10 +1339,10 @@ error = require('../../../dscommon/util').error;
 DSDocument = require('../../../dscommon/DSDocument');
 
 module.exports = TaskSplit = (function() {
-  var class1, zero;
+  var ctor, zero;
 
   function TaskSplit() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   TaskSplit.addPropType = (function(clazz) {
@@ -1405,7 +1410,7 @@ module.exports = TaskSplit = (function() {
 
   zero = moment.duration(0);
 
-  class1 = (function(persisted) {
+  ctor = (function(persisted) {
     var d, i, j, k, len, len1, list, src, v;
     if (assert) {
       if (arguments.length === 1 && typeof arguments[0] === 'object' && arguments[0].__proto__ === TaskSplit.prototype) {
@@ -1684,12 +1689,12 @@ modeReleaseDataOnReload = require('./util').modeReleaseDataOnReload;
 DSObject = require('./DSObject');
 
 module.exports = DSData = (function(superClass) {
-  var class1;
+  var ctor;
 
   extend(DSData, superClass);
 
   function DSData() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   DSData.begin('DSData');
@@ -1743,7 +1748,7 @@ module.exports = DSData = (function(superClass) {
     this.set('status', isSuccess ? 'ready' : 'nodata');
   });
 
-  class1 = (function(referry, key, params) {
+  ctor = (function(referry, key, params) {
     DSObject.call(this, referry, key);
     if (assert) {
       if (this.__proto__.constructor === DSData) {
@@ -1926,12 +1931,12 @@ ngModule.factory('DSDataSource', [
   'config', '$rootScope', '$q', '$http', (function(config, $rootScope, $q, $http) {
     var DSDataSource;
     return DSDataSource = (function(superClass) {
-      var class1;
+      var ctor;
 
       extend(DSDataSource, superClass);
 
       function DSDataSource() {
-        return class1.apply(this, arguments);
+        return ctor.apply(this, arguments);
       }
 
       DSDataSource.begin('DSDataSource');
@@ -1956,7 +1961,7 @@ ngModule.factory('DSDataSource', [
         })(this)));
       });
 
-      class1 = (function(referry, key) {
+      ctor = (function(referry, key) {
         DSObject.call(this, referry, key);
         this.cancelDefers = [];
         this._lastRefresh = null;
@@ -2601,17 +2606,17 @@ error = require('./util').error;
 DSObjectBase = require('./DSObjectBase');
 
 module.exports = DSList = (function(superClass) {
-  var class1;
+  var ctor;
 
   extend(DSList, superClass);
 
   function DSList() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   DSList.begin('DSList');
 
-  class1 = (function(referry, key, type) {
+  ctor = (function(referry, key, type) {
     DSObjectBase.call(this, referry, key);
     if (assert) {
       if (!type instanceof DSObjectBase) {
@@ -2708,12 +2713,12 @@ DSList = require('./DSList');
 DSPool = require('./DSPool');
 
 module.exports = DSObject = (function(superClass) {
-  var class1;
+  var ctor;
 
   extend(DSObject, superClass);
 
   function DSObject() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   DSObject.desc = DSObjectBase.desc = (function(item) {
@@ -2743,7 +2748,7 @@ module.exports = DSObject = (function(superClass) {
     }
   });
 
-  class1 = (function(referry, key) {
+  ctor = (function(referry, key) {
     DSObjectBase.call(this, referry, key);
     if (assert) {
       if (this.__proto__.constructor === DSObjectBase) {
@@ -2898,10 +2903,10 @@ totalReleaseVerb = require('./util').totalReleaseVerb;
 error = require('./util').error;
 
 module.exports = DSObjectBase = (function() {
-  var class1, globalId, sequenceId, sourceId, statusByPrior, statusValues, totalPool;
+  var ctor1, globalId, sequenceId, sourceId, statusByPrior, statusValues, totalPool;
 
   function DSObjectBase() {
-    return class1.apply(this, arguments);
+    return ctor1.apply(this, arguments);
   }
 
   DSObjectBase.isAssignableFrom = (function(clazz) {
@@ -2937,7 +2942,7 @@ module.exports = DSObjectBase = (function() {
     });
   }
 
-  class1 = (function(referry, key) {
+  ctor1 = (function(referry, key) {
     var init, k, v;
     if (assert) {
       if (this.__proto__.constructor === DSObjectBase) {
@@ -3234,6 +3239,7 @@ module.exports = DSObjectBase = (function() {
     }
     propDecl = this.prototype.__props[opts.name] = {
       name: opts.name,
+      index: _.size(this.prototype.__props),
       type: opts.type,
       write: opts.write || ((opts.hasOwnProperty('write') && !opts.write) || opts.calc || opts.common ? null : (function(v) {
         if (v === null) {
@@ -3819,17 +3825,17 @@ DSObjectBase = require('./DSObjectBase');
 DSDigest = require('./DSDigest');
 
 module.exports = DSPool = (function(superClass) {
-  var class1, renderItem;
+  var ctor, renderItem;
 
   extend(DSPool, superClass);
 
   function DSPool() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   DSPool.begin('DSPool');
 
-  class1 = (function(referry, key, type, watchOn) {
+  ctor = (function(referry, key, type, watchOn) {
     var items;
     DSObjectBase.call(this, referry, key);
     if (assert) {
@@ -3990,12 +3996,12 @@ error = require('./util').error;
 DSObjectBase = require('./DSObjectBase');
 
 module.exports = DSSet = (function(superClass) {
-  var _add, _remove, class1;
+  var _add, _remove, ctor;
 
   extend(DSSet, superClass);
 
   function DSSet() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   DSSet.begin('DSSet');
@@ -4012,7 +4018,7 @@ module.exports = DSSet = (function(superClass) {
     }
   }));
 
-  class1 = (function(referry, key, type, data) {
+  ctor = (function(referry, key, type, data) {
     DSObjectBase.call(this, referry, key);
     if (assert) {
       if (!type instanceof DSObjectBase) {
@@ -4541,13 +4547,13 @@ module.exports = util = {
   totalReleaseVerb: false,
   modeReleaseDataOnReload: true,
   serviceOwner: new (ServiceOwner = (function() {
-    var class1;
+    var ctor;
 
     function ServiceOwner() {
-      return class1.apply(this, arguments);
+      return ctor.apply(this, arguments);
     }
 
-    class1 = (function() {
+    ctor = (function() {
       this.name = 'serviceOwner';
       this.services = [];
       this.poolCleaners = [];

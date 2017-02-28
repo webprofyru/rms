@@ -1,259 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
-var Iteration = require("./iteration");
-
-module.exports = ArrayIterator;
-function ArrayIterator(iterable, start, stop, step) {
-    this.array = iterable;
-    this.start = start || 0;
-    this.stop = stop || Infinity;
-    this.step = step || 1;
-}
-
-ArrayIterator.prototype.next = function () {
-    var iteration;
-    if (this.start < Math.min(this.array.length, this.stop)) {
-        iteration = new Iteration(this.array[this.start], false, this.start);
-        this.start += this.step;
-    } else {
-        iteration =  new Iteration(undefined, true);
-    }
-    return iteration;
-};
-
-
-},{"./iteration":2}],2:[function(require,module,exports){
-"use strict";
-
-module.exports = Iteration;
-function Iteration(value, done, index) {
-    this.value = value;
-    this.done = done;
-    this.index = index;
-}
-
-Iteration.prototype.equals = function (other) {
-    return (
-        typeof other == 'object' &&
-        other.value === this.value &&
-        other.done === this.done &&
-        other.index === this.index
-    );
-};
-
-
-},{}],3:[function(require,module,exports){
-"use strict";
-
-var Iteration = require("./iteration");
-var ArrayIterator = require("./array-iterator");
-
-module.exports = ObjectIterator;
-function ObjectIterator(iterable, start, stop, step) {
-    this.object = iterable;
-    this.keysIterator = new ArrayIterator(Object.keys(iterable), start, stop, step);
-}
-
-ObjectIterator.prototype.next = function () {
-    var iteration = this.keysIterator.next();
-    if (iteration.done) {
-        return iteration;
-    }
-    var key = iteration.value;
-    return new Iteration(this.object[key], false, key);
-};
-
-
-},{"./array-iterator":1,"./iteration":2}],4:[function(require,module,exports){
-"use strict";
-
-var ArrayIterator = require("./array-iterator");
-var ObjectIterator = require("./object-iterator");
-
-module.exports = iterate;
-function iterate(iterable, start, stop, step) {
-    if (!iterable) {
-        return empty;
-    } else if (Array.isArray(iterable)) {
-        return new ArrayIterator(iterable, start, stop, step);
-    } else if (typeof iterable.next === "function") {
-        return iterable;
-    } else if (typeof iterable.iterate === "function") {
-        return iterable.iterate(start, stop, step);
-    } else if (typeof iterable === "object") {
-        return new ObjectIterator(iterable);
-    } else {
-        throw new TypeError("Can't iterate " + iterable);
-    }
-}
-
-
-},{"./array-iterator":1,"./object-iterator":3}],5:[function(require,module,exports){
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-(function () {
-    try {
-        cachedSetTimeout = setTimeout;
-    } catch (e) {
-        cachedSetTimeout = function () {
-            throw new Error('setTimeout is not defined');
-        }
-    }
-    try {
-        cachedClearTimeout = clearTimeout;
-    } catch (e) {
-        cachedClearTimeout = function () {
-            throw new Error('clearTimeout is not defined');
-        }
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-},{}],6:[function(require,module,exports){
-"use strict";
-
 // rawAsap provides everything we need except exception management.
 var rawAsap = require("./raw");
 // RawTasks are recycled to reduce GC churn.
@@ -319,7 +66,7 @@ RawTask.prototype.call = function () {
     }
 };
 
-},{"./raw":7}],7:[function(require,module,exports){
+},{"./raw":2}],2:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -399,9 +146,12 @@ function flush() {
 
 // Safari 6 and 6.1 for desktop, iPad, and iPhone are the only browsers that
 // have WebKitMutationObserver but not un-prefixed MutationObserver.
-// Must use `global` instead of `window` to work in both frames and web
+// Must use `global` or `self` instead of `window` to work in both frames and web
 // workers. `global` is a provision of Browserify, Mr, Mrs, or Mop.
-var BrowserMutationObserver = global.MutationObserver || global.WebKitMutationObserver;
+
+/* globals self */
+var scope = typeof global !== "undefined" ? global : self;
+var BrowserMutationObserver = scope.MutationObserver || scope.WebKitMutationObserver;
 
 // MutationObservers are desirable because they have high priority and work
 // reliably everywhere they are implemented.
@@ -543,6 +293,279 @@ rawAsap.makeRequestCallFromTimer = makeRequestCallFromTimer;
 // https://github.com/tildeio/rsvp.js/blob/cddf7232546a9cf858524b75cde6f9edf72620a7/lib/rsvp/asap.js
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],3:[function(require,module,exports){
+"use strict";
+
+var Iteration = require("./iteration");
+
+module.exports = ArrayIterator;
+function ArrayIterator(iterable, start, stop, step) {
+    this.array = iterable;
+    this.start = start || 0;
+    this.stop = stop || Infinity;
+    this.step = step || 1;
+}
+
+ArrayIterator.prototype.next = function () {
+    var iteration;
+    if (this.start < Math.min(this.array.length, this.stop)) {
+        iteration = new Iteration(this.array[this.start], false, this.start);
+        this.start += this.step;
+    } else {
+        iteration =  new Iteration(undefined, true);
+    }
+    return iteration;
+};
+
+
+},{"./iteration":4}],4:[function(require,module,exports){
+"use strict";
+
+module.exports = Iteration;
+function Iteration(value, done, index) {
+    this.value = value;
+    this.done = done;
+    this.index = index;
+}
+
+Iteration.prototype.equals = function (other) {
+    return (
+        typeof other == 'object' &&
+        other.value === this.value &&
+        other.done === this.done &&
+        other.index === this.index
+    );
+};
+
+
+},{}],5:[function(require,module,exports){
+"use strict";
+
+var Iteration = require("./iteration");
+var ArrayIterator = require("./array-iterator");
+
+module.exports = ObjectIterator;
+function ObjectIterator(iterable, start, stop, step) {
+    this.object = iterable;
+    this.keysIterator = new ArrayIterator(Object.keys(iterable), start, stop, step);
+}
+
+ObjectIterator.prototype.next = function () {
+    var iteration = this.keysIterator.next();
+    if (iteration.done) {
+        return iteration;
+    }
+    var key = iteration.value;
+    return new Iteration(this.object[key], false, key);
+};
+
+
+},{"./array-iterator":3,"./iteration":4}],6:[function(require,module,exports){
+"use strict";
+
+var ArrayIterator = require("./array-iterator");
+var ObjectIterator = require("./object-iterator");
+
+module.exports = iterate;
+function iterate(iterable, start, stop, step) {
+    if (!iterable) {
+        return empty;
+    } else if (Array.isArray(iterable)) {
+        return new ArrayIterator(iterable, start, stop, step);
+    } else if (typeof iterable.next === "function") {
+        return iterable;
+    } else if (typeof iterable.iterate === "function") {
+        return iterable.iterate(start, stop, step);
+    } else if (typeof iterable === "object") {
+        return new ObjectIterator(iterable);
+    } else {
+        throw new TypeError("Can't iterate " + iterable);
+    }
+}
+
+
+},{"./array-iterator":3,"./object-iterator":5}],7:[function(require,module,exports){
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
 },{}],8:[function(require,module,exports){
 (function (process){
 /* vim:ts=4:sts=4:sw=4: */
@@ -2349,7 +2372,323 @@ var qEndingLine = captureLine();
 
 
 }).call(this,require('_process'))
-},{"_process":5,"asap":6,"pop-iterate":4,"weak-map":17}],9:[function(require,module,exports){
+},{"_process":7,"asap":1,"pop-iterate":6,"weak-map":26}],9:[function(require,module,exports){
+'use strict';
+module.exports = require('./lib/index');
+
+},{"./lib/index":13}],10:[function(require,module,exports){
+'use strict';
+
+var randomFromSeed = require('./random/random-from-seed');
+
+var ORIGINAL = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-';
+var alphabet;
+var previousSeed;
+
+var shuffled;
+
+function reset() {
+    shuffled = false;
+}
+
+function setCharacters(_alphabet_) {
+    if (!_alphabet_) {
+        if (alphabet !== ORIGINAL) {
+            alphabet = ORIGINAL;
+            reset();
+        }
+        return;
+    }
+
+    if (_alphabet_ === alphabet) {
+        return;
+    }
+
+    if (_alphabet_.length !== ORIGINAL.length) {
+        throw new Error('Custom alphabet for shortid must be ' + ORIGINAL.length + ' unique characters. You submitted ' + _alphabet_.length + ' characters: ' + _alphabet_);
+    }
+
+    var unique = _alphabet_.split('').filter(function(item, ind, arr){
+       return ind !== arr.lastIndexOf(item);
+    });
+
+    if (unique.length) {
+        throw new Error('Custom alphabet for shortid must be ' + ORIGINAL.length + ' unique characters. These characters were not unique: ' + unique.join(', '));
+    }
+
+    alphabet = _alphabet_;
+    reset();
+}
+
+function characters(_alphabet_) {
+    setCharacters(_alphabet_);
+    return alphabet;
+}
+
+function setSeed(seed) {
+    randomFromSeed.seed(seed);
+    if (previousSeed !== seed) {
+        reset();
+        previousSeed = seed;
+    }
+}
+
+function shuffle() {
+    if (!alphabet) {
+        setCharacters(ORIGINAL);
+    }
+
+    var sourceArray = alphabet.split('');
+    var targetArray = [];
+    var r = randomFromSeed.nextValue();
+    var characterIndex;
+
+    while (sourceArray.length > 0) {
+        r = randomFromSeed.nextValue();
+        characterIndex = Math.floor(r * sourceArray.length);
+        targetArray.push(sourceArray.splice(characterIndex, 1)[0]);
+    }
+    return targetArray.join('');
+}
+
+function getShuffled() {
+    if (shuffled) {
+        return shuffled;
+    }
+    shuffled = shuffle();
+    return shuffled;
+}
+
+/**
+ * lookup shuffled letter
+ * @param index
+ * @returns {string}
+ */
+function lookup(index) {
+    var alphabetShuffled = getShuffled();
+    return alphabetShuffled[index];
+}
+
+module.exports = {
+    characters: characters,
+    seed: setSeed,
+    lookup: lookup,
+    shuffled: getShuffled
+};
+
+},{"./random/random-from-seed":16}],11:[function(require,module,exports){
+'use strict';
+var alphabet = require('./alphabet');
+
+/**
+ * Decode the id to get the version and worker
+ * Mainly for debugging and testing.
+ * @param id - the shortid-generated id.
+ */
+function decode(id) {
+    var characters = alphabet.shuffled();
+    return {
+        version: characters.indexOf(id.substr(0, 1)) & 0x0f,
+        worker: characters.indexOf(id.substr(1, 1)) & 0x0f
+    };
+}
+
+module.exports = decode;
+
+},{"./alphabet":10}],12:[function(require,module,exports){
+'use strict';
+
+var randomByte = require('./random/random-byte');
+
+function encode(lookup, number) {
+    var loopCounter = 0;
+    var done;
+
+    var str = '';
+
+    while (!done) {
+        str = str + lookup( ( (number >> (4 * loopCounter)) & 0x0f ) | randomByte() );
+        done = number < (Math.pow(16, loopCounter + 1 ) );
+        loopCounter++;
+    }
+    return str;
+}
+
+module.exports = encode;
+
+},{"./random/random-byte":15}],13:[function(require,module,exports){
+'use strict';
+
+var alphabet = require('./alphabet');
+var encode = require('./encode');
+var decode = require('./decode');
+var isValid = require('./is-valid');
+
+// Ignore all milliseconds before a certain time to reduce the size of the date entropy without sacrificing uniqueness.
+// This number should be updated every year or so to keep the generated id short.
+// To regenerate `new Date() - 0` and bump the version. Always bump the version!
+var REDUCE_TIME = 1459707606518;
+
+// don't change unless we change the algos or REDUCE_TIME
+// must be an integer and less than 16
+var version = 6;
+
+// if you are using cluster or multiple servers use this to make each instance
+// has a unique value for worker
+// Note: I don't know if this is automatically set when using third
+// party cluster solutions such as pm2.
+var clusterWorkerId = require('./util/cluster-worker-id') || 0;
+
+// Counter is used when shortid is called multiple times in one second.
+var counter;
+
+// Remember the last time shortid was called in case counter is needed.
+var previousSeconds;
+
+/**
+ * Generate unique id
+ * Returns string id
+ */
+function generate() {
+
+    var str = '';
+
+    var seconds = Math.floor((Date.now() - REDUCE_TIME) * 0.001);
+
+    if (seconds === previousSeconds) {
+        counter++;
+    } else {
+        counter = 0;
+        previousSeconds = seconds;
+    }
+
+    str = str + encode(alphabet.lookup, version);
+    str = str + encode(alphabet.lookup, clusterWorkerId);
+    if (counter > 0) {
+        str = str + encode(alphabet.lookup, counter);
+    }
+    str = str + encode(alphabet.lookup, seconds);
+
+    return str;
+}
+
+
+/**
+ * Set the seed.
+ * Highly recommended if you don't want people to try to figure out your id schema.
+ * exposed as shortid.seed(int)
+ * @param seed Integer value to seed the random alphabet.  ALWAYS USE THE SAME SEED or you might get overlaps.
+ */
+function seed(seedValue) {
+    alphabet.seed(seedValue);
+    return module.exports;
+}
+
+/**
+ * Set the cluster worker or machine id
+ * exposed as shortid.worker(int)
+ * @param workerId worker must be positive integer.  Number less than 16 is recommended.
+ * returns shortid module so it can be chained.
+ */
+function worker(workerId) {
+    clusterWorkerId = workerId;
+    return module.exports;
+}
+
+/**
+ *
+ * sets new characters to use in the alphabet
+ * returns the shuffled alphabet
+ */
+function characters(newCharacters) {
+    if (newCharacters !== undefined) {
+        alphabet.characters(newCharacters);
+    }
+
+    return alphabet.shuffled();
+}
+
+
+// Export all other functions as properties of the generate function
+module.exports = generate;
+module.exports.generate = generate;
+module.exports.seed = seed;
+module.exports.worker = worker;
+module.exports.characters = characters;
+module.exports.decode = decode;
+module.exports.isValid = isValid;
+
+},{"./alphabet":10,"./decode":11,"./encode":12,"./is-valid":14,"./util/cluster-worker-id":17}],14:[function(require,module,exports){
+'use strict';
+var alphabet = require('./alphabet');
+
+function isShortId(id) {
+    if (!id || typeof id !== 'string' || id.length < 6 ) {
+        return false;
+    }
+
+    var characters = alphabet.characters();
+    var len = id.length;
+    for(var i = 0; i < len;i++) {
+        if (characters.indexOf(id[i]) === -1) {
+            return false;
+        }
+    }
+    return true;
+}
+
+module.exports = isShortId;
+
+},{"./alphabet":10}],15:[function(require,module,exports){
+'use strict';
+
+var crypto = typeof window === 'object' && (window.crypto || window.msCrypto); // IE 11 uses window.msCrypto
+
+function randomByte() {
+    if (!crypto || !crypto.getRandomValues) {
+        return Math.floor(Math.random() * 256) & 0x30;
+    }
+    var dest = new Uint8Array(1);
+    crypto.getRandomValues(dest);
+    return dest[0] & 0x30;
+}
+
+module.exports = randomByte;
+
+},{}],16:[function(require,module,exports){
+'use strict';
+
+// Found this seed-based random generator somewhere
+// Based on The Central Randomizer 1.3 (C) 1997 by Paul Houle (houle@msc.cornell.edu)
+
+var seed = 1;
+
+/**
+ * return a random number based on a seed
+ * @param seed
+ * @returns {number}
+ */
+function getNextValue() {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed/(233280.0);
+}
+
+function setSeed(_seed_) {
+    seed = _seed_;
+}
+
+module.exports = {
+    nextValue: getNextValue,
+    seed: setSeed
+};
+
+},{}],17:[function(require,module,exports){
+'use strict';
+
+module.exports = 0;
+
+},{}],18:[function(require,module,exports){
+/*eslint-env browser*/
 "use strict";
 
 var Q = require("q");
@@ -2416,7 +2755,8 @@ function xhrSuccess(req) {
 }
 
 
-},{"./common-system":11,"q":8}],10:[function(require,module,exports){
+},{"./common-system":20,"q":8}],19:[function(require,module,exports){
+/*eslint-env browser*/
 // This is the browser implementation for "url",
 // redirected from "url" within this package by the
 // loader because of the "browser" redirects in package.json.
@@ -2469,7 +2809,9 @@ exports.resolve = function resolve(base, relative) {
     return resolved;
 };
 
-},{}],11:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
+/*eslint no-console:[0]*/
+/*global console*/
 "use strict";
 
 var Q = require("q");
@@ -2487,7 +2829,7 @@ function System(location, description, options) {
     var self = this;
     options = options || {};
     description = description || {};
-    self.name = description.name || '';
+    self.name = description.name || "";
     self.location = location;
     self.description = description;
     self.dependencies = {};
@@ -2499,8 +2841,8 @@ function System(location, description, options) {
     self.systemLoadedPromises = options.systemLoadedPromises || {}; // by system.name
     self.buildSystem = options.buildSystem; // or self if undefined
     self.analyzers = {js: self.analyzeJavaScript};
-    self.compilers = {js: self.compileJavaScript, json: self.compileJson};
-    self.translators = {};
+    self.compilers = {js: self.compileJavaScript};
+    self.translators = {json: self.translateJson};
     self.internalRedirects = {};
     self.externalRedirects = {};
     self.node = !!options.node;
@@ -2541,6 +2883,7 @@ function System(location, description, options) {
 
     // Local per-extension overrides:
     if (description.redirects) { self.addRedirects(description.redirects); }
+    if (description.extensions) { self.addExtensions(description.extensions); }
     if (description.translators) { self.addTranslators(description.translators); }
     if (description.analyzers) { self.addAnalyzers(description.analyzers); }
     if (description.compilers) { self.addCompilers(description.compilers); }
@@ -2548,7 +2891,7 @@ function System(location, description, options) {
 
 System.load = function loadSystem(location, options) {
     var self = this;
-    return self.prototype.loadSystemDescription(location)
+    return self.prototype.loadSystemDescription(location, "<anonymous>")
     .then(function (description) {
         return new self(location, description, options);
     });
@@ -2652,7 +2995,7 @@ System.prototype.makeRequire = function makeRequire(abs, main) {
     var self = this;
     function require(rel) {
         return self.require(rel, abs);
-    };
+    }
     require.main = main;
     return require;
 };
@@ -2662,21 +3005,21 @@ System.prototype.makeRequire = function makeRequire(abs, main) {
 // Should only be called if the system is known to have already been loaded by
 // system.loadSystem.
 System.prototype.getSystem = function getSystem(rel, abs) {
-    var self = this;
-    var hasDependency = self.dependencies[rel];
+    var via;
+    var hasDependency = this.dependencies[rel];
     if (!hasDependency) {
-        var via = abs ? " via " + JSON.stringify(abs) : "";
+        via = abs ? " via " + JSON.stringify(abs) : "";
         throw new Error(
             "Can't get dependency " + JSON.stringify(rel) +
-            " in package named " + JSON.stringify(self.name) + via
+            " in package named " + JSON.stringify(this.name) + via
         );
     }
-    var dependency = self.systems[rel];
+    var dependency = this.systems[rel];
     if (!dependency) {
-        var via = abs ? " via " + JSON.stringify(abs) : "";
+        via = abs ? " via " + JSON.stringify(abs) : "";
         throw new Error(
             "Can't get dependency " + JSON.stringify(rel) +
-            " in package named " + JSON.stringify(self.name) + via
+            " in package named " + JSON.stringify(this.name) + via
         );
     }
     return dependency;
@@ -2692,15 +3035,15 @@ System.prototype.loadSystem = function (name, abs) {
     //}
     var loadingSystem = self.systemLoadedPromises[name];
     if (!loadingSystem) {
-         loadingSystem = self.actuallyLoadSystem(name, abs);
-         self.systemLoadedPromises[name] = loadingSystem;
+        loadingSystem = self.actuallyLoadSystem(name, abs);
+        self.systemLoadedPromises[name] = loadingSystem;
     }
     return loadingSystem;
 };
 
-System.prototype.loadSystemDescription = function loadSystemDescription(location) {
+System.prototype.loadSystemDescription = function loadSystemDescription(location, name) {
     var self = this;
-    var descriptionLocation = URL.resolve(location, "package.json")
+    var descriptionLocation = URL.resolve(location, "package.json");
     return self.read(descriptionLocation, "utf-8", "application/json")
     .then(function (json) {
         try {
@@ -2714,7 +3057,7 @@ System.prototype.loadSystemDescription = function loadSystemDescription(location
         error.message = "Can't load package " + JSON.stringify(name) + " at " +
             JSON.stringify(location) + " because " + error.message;
         throw error;
-    })
+    });
 };
 
 System.prototype.actuallyLoadSystem = function (name, abs) {
@@ -2733,7 +3076,7 @@ System.prototype.actuallyLoadSystem = function (name, abs) {
         buildSystem = self.buildSystem.actuallyLoadSystem(name, abs);
     }
     return Q.all([
-        self.loadSystemDescription(location),
+        self.loadSystemDescription(location, name),
         buildSystem
     ]).spread(function onDescriptionAndBuildSystem(description, buildSystem) {
         var system = new System(location, description, {
@@ -2766,6 +3109,7 @@ System.prototype.normalizeIdentifier = function (id) {
     var extension = Identifier.extension(id);
     if (
         !has.call(self.translators, extension) &&
+        !has.call(self.analyzers, extension) &&
         !has.call(self.compilers, extension) &&
         extension !== "js" &&
         extension !== "json"
@@ -2775,13 +3119,78 @@ System.prototype.normalizeIdentifier = function (id) {
     return id;
 };
 
+System.prototype.load = function load(rel, abs) {
+    var self = this;
+    return self.deepLoad(rel, abs)
+    .then(function () {
+        return self.deepCompile(rel, abs, {});
+    });
+};
+
+System.prototype.deepCompile = function deepCompile(rel, abs, memo) {
+    var self = this;
+
+    var res = Identifier.resolve(rel, abs);
+    if (Identifier.isAbsolute(rel)) {
+        if (self.externalRedirects[res]) {
+            return self.deepCompile(self.externalRedirects[res], res, memo);
+        }
+        var head = Identifier.head(rel);
+        var tail = Identifier.tail(rel);
+        if (self.dependencies[head]) {
+            var system = self.getSystem(head, abs);
+            return system.compileInternalModule(tail, "", memo);
+        } else {
+            // XXX no clear idea what to do in this load case.
+            // Should never reject, but should cause require to produce an
+            // error.
+            return Q();
+        }
+    } else {
+        return self.compileInternalModule(rel, abs, memo);
+    }
+};
+
+System.prototype.compileInternalModule = function compileInternalModule(rel, abs, memo) {
+    var self = this;
+
+    var res = Identifier.resolve(rel, abs);
+    var id = self.normalizeIdentifier(res);
+    if (self.internalRedirects[id]) {
+        return self.deepCompile(self.internalRedirects[id], "", memo);
+    }
+    var module = self.lookupInternalModule(id, abs);
+
+    // Break the cycle of violence
+    if (memo[module.key]) {
+        return Q();
+    }
+    memo[module.key] = true;
+
+    if (module.compiled) {
+        return Q();
+    }
+    module.compiled = true;
+    return Q.try(function () {
+        return Q.all(module.dependencies.map(function (dependency) {
+            return self.deepCompile(dependency, module.id, memo);
+        }));
+    }).then(function () {
+        return self.translate(module);
+    }).then(function () {
+        return self.compile(module);
+    }).catch(function (error) {
+        module.error = error;
+    });
+};
+
 // Loads a module and its transitive dependencies.
-System.prototype.load = function load(rel, abs, memo) {
+System.prototype.deepLoad = function deepLoad(rel, abs, memo) {
     var self = this;
     var res = Identifier.resolve(rel, abs);
     if (Identifier.isAbsolute(rel)) {
         if (self.externalRedirects[res]) {
-            return self.load(self.externalRedirects[res], res, memo);
+            return self.deepLoad(self.externalRedirects[res], res, memo);
         }
         var head = Identifier.head(rel);
         var tail = Identifier.tail(rel);
@@ -2804,7 +3213,7 @@ System.prototype.loadInternalModule = function loadInternalModule(rel, abs, memo
     var res = Identifier.resolve(rel, abs);
     var id = self.normalizeIdentifier(res);
     if (self.internalRedirects[id]) {
-        return self.load(self.internalRedirects[id], "", memo);
+        return self.deepLoad(self.internalRedirects[id], "", memo);
     }
 
     // Extension must be captured before normalization since it is used to
@@ -2856,20 +3265,11 @@ System.prototype.loadInternalModule = function loadInternalModule(rel, abs, memo
 System.prototype.finishLoadingModule = function finishLoadingModule(module, memo) {
     var self = this;
     return Q.try(function () {
-        return self.translate(module);
-        // TODO optimize
-        // TODO instrument
-        // TODO facilitate source maps and source map transforms
-    }).then(function () {
         return self.analyze(module);
     }).then(function () {
         return Q.all(module.dependencies.map(function onDependency(dependency) {
-            return self.load(dependency, module.id, memo);
+            return self.deepLoad(dependency, module.id, memo);
         }));
-    }).then(function () {
-        return self.compile(module);
-    }).catch(function (error) {
-        module.error = error;
     });
 };
 
@@ -2909,14 +3309,14 @@ System.prototype.lookupInternalModule = function lookupInternalModule(rel, abs) 
         return self.lookup(self.internalRedirects[id], res);
     }
 
-    var filename = self.name + '/' + id;
+    var filename = self.name + "/" + id;
     // This module system is case-insensitive, but mandates that a module must
     // be consistently identified by the same case convention to avoid problems
     // when migrating to case-sensitive file systems.
     var key = filename.toLowerCase();
     var module = self.modules[key];
 
-    if (module && module.redirect) {
+    if (module && module.redirect && module.redirect !== module.id) {
         return self.lookupInternalModule(module.redirect);
     }
 
@@ -2942,6 +3342,30 @@ System.prototype.lookupInternalModule = function lookupInternalModule(rel, abs) 
     }
 
     return module;
+};
+
+System.prototype.addExtensions = function (map) {
+    var extensions = Object.keys(map);
+    for (var index = 0; index < extensions.length; index++) {
+        var extension = extensions[index];
+        var id = map[extension];
+        this.analyzers[extension] = this.makeLoadStep(id, "analyze");
+        this.translators[extension] = this.makeLoadStep(id, "translate");
+        this.compilers[extension] = this.makeLoadStep(id, "compile");
+    }
+};
+
+System.prototype.makeLoadStep = function makeLoadStep(id, name) {
+    var self = this;
+    return function moduleLoaderStep(module) {
+        return self.getBuildSystem()
+        .import(id)
+        .then(function (exports) {
+            if (exports[name]) {
+                return exports[name](module);
+            }
+        });
+    };
 };
 
 // Translate:
@@ -2987,29 +3411,56 @@ System.prototype.makeTranslator = function makeTranslator(id) {
             module.extension = "js";
             return translate(module);
         });
-    }
+    };
 };
 
 // Analyze:
 
 System.prototype.analyze = function analyze(module) {
-    var self = this;
     if (
         module.text != null &&
         module.extension != null &&
-        self.analyzers[module.extension]
+        this.analyzers[module.extension]
     ) {
-        return self.analyzers[module.extension](module);
+        return this.analyzers[module.extension](module);
     }
 };
 
 System.prototype.analyzeJavaScript = function analyzeJavaScript(module) {
-    var self = this;
     module.dependencies.push.apply(module.dependencies, parseDependencies(module.text));
 };
 
-// TODO addAnalyzers
-// TODO addAnalyzer
+System.prototype.addAnalyzers = function addAnalyzers(analyzers) {
+    var self = this;
+    var extensions = Object.keys(analyzers);
+    for (var index = 0; index < extensions.length; index++) {
+        var extension = extensions[index];
+        var id = analyzers[extension];
+        self.addAnalyzer(extension, id);
+    }
+};
+
+System.prototype.addAnalyzer = function (extension, id) {
+    var self = this;
+    self.analyzers[extension] = self.makeAnalyzer(id);
+};
+
+System.prototype.makeAnalyzer = function makeAnalyzer(id) {
+    var self = this;
+    return function analyze(module) {
+        return self.getBuildSystem()
+        .import(id)
+        .then(function onAnalyzerImported(analyze) {
+            if (typeof analyze !== "function") {
+                throw new Error(
+                    "Can't analyze " + JSON.stringify(module.id) +
+                    " because " + JSON.stringify(id) + " did not export a function"
+                );
+            }
+            return analyze(module);
+        });
+    };
+};
 
 // Compile:
 
@@ -3030,8 +3481,8 @@ System.prototype.compileJavaScript = function compileJavaScript(module) {
     return compile(module);
 };
 
-System.prototype.compileJson = function compileJson(module) {
-    module.exports = JSON.parse(module.text);
+System.prototype.translateJson = function translateJson(module) {
+    module.text = "module.exports = " + module.text.trim() + ";\n";
 };
 
 System.prototype.addCompilers = function addCompilers(compilers) {
@@ -3057,7 +3508,7 @@ System.prototype.makeCompiler = function makeCompiler(id) {
         .then(function (compile) {
             return compile(module);
         });
-    }
+    };
 };
 
 // Resource:
@@ -3159,7 +3610,7 @@ System.prototype.inspect = function () {
     return {type: "system", location: self.location};
 };
 
-},{"./compile":12,"./identifier":13,"./module":14,"./parse-dependencies":15,"./resource":16,"./url":10,"q":8}],12:[function(require,module,exports){
+},{"./compile":21,"./identifier":22,"./module":23,"./parse-dependencies":24,"./resource":25,"./url":19,"q":8}],21:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -3210,7 +3661,7 @@ function compile(module) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],13:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 exports.isAbsolute = isAbsolute;
@@ -3272,7 +3723,7 @@ function basename(id) {
 
 exports.resolve = resolve;
 function resolve(rel, abs) {
-    abs = abs || '';
+    abs = abs || "";
     var source = rel.split("/");
     var target = [];
     var parts;
@@ -3293,7 +3744,7 @@ function resolve(rel, abs) {
     return target.join("/");
 }
 
-},{}],14:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 
 module.exports = Module;
@@ -3316,7 +3767,7 @@ function Module() {
     this.bundled = false;
 }
 
-},{}],15:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 
 module.exports = parseDependencies;
@@ -3328,7 +3779,7 @@ function parseDependencies(text) {
     return Object.keys(dependsUpon);
 }
 
-},{}],16:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 "use strict";
 
 module.exports = Resource;
@@ -3342,7 +3793,7 @@ function Resource() {
     this.system = null;
 }
 
-},{}],17:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 // Copyright (C) 2011 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -4029,7 +4480,7 @@ function Resource() {
   }
 })();
 
-},{}],18:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 toastr.options = {
   closeButton: false,
   debug: false,
@@ -4055,7 +4506,7 @@ require('./ng-app');
 moment.locale('ru');
 
 
-},{"../../static/libs/jsonlint/jsonlint.js":93,"./ng-app":44}],19:[function(require,module,exports){
+},{"../../static/libs/jsonlint/jsonlint.js":102,"./ng-app":53}],28:[function(require,module,exports){
 var DSObject, Person, VER_MAJOR, VER_MINOR, assert, fixUrl, ngModule, serviceOwner, validate,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -4122,7 +4573,7 @@ ngModule.factory('config', [
       });
 
       Config.propCalc('hasRoles', (function() {
-        return this.teamwork.indexOf('://teamwork.webprofy.ru/') > 0 || this.teamwork.indexOf('://delightsoft.teamworkpm.net/') > 0;
+        return this.teamwork.indexOf('://teamwork.webprofy.ru/') > 0;
       }));
 
       Config.propCalc('hasTimeReports', (function() {
@@ -4250,7 +4701,7 @@ ngModule.factory('config', [
 ]);
 
 
-},{"../dscommon/DSObject":84,"../dscommon/util":90,"../utils/angular-local-storage.js":91,"./models/Person":34}],20:[function(require,module,exports){
+},{"../dscommon/DSObject":93,"../dscommon/util":99,"../utils/angular-local-storage.js":100,"./models/Person":43}],29:[function(require,module,exports){
 var DSData, DSDataServiceBase, DSDigest, DSSet, DSTags, Person, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -4364,7 +4815,7 @@ ngModule.factory('PeopleWithJson', [
               if (resp.status === 200) {
                 _this.set('cancel', null);
                 DSDigest.block((function() {
-                  var dstags, error1, filterManagers, i, j, k, l, len, len1, len2, len3, m, map, peopleRoles, person, personInfo, personKey, projectId, projectMap, ref, ref1, ref2, selectedManager, selectedRole, twPerson;
+                  var dstags, filterManagers, i, j, k, l, len, len1, len2, len3, m, map, peopleRoles, person, personInfo, personKey, projectId, projectMap, ref, ref1, ref2, selectedManager, selectedRole, twPerson;
                   peopleRoles = $rootScope.peopleRoles = resp.data.roles;
                   if ((selectedRole = $rootScope.selectedRole = config.get('selectedRole'))) {
                     for (j = 0, len = peopleRoles.length; j < len; j++) {
@@ -4462,7 +4913,7 @@ ngModule.factory('PeopleWithJson', [
 ]);
 
 
-},{"../../dscommon/DSData":75,"../../dscommon/DSDataServiceBase":78,"../../dscommon/DSDigest":80,"../../dscommon/DSSet":87,"../../dscommon/DSTags":88,"../../dscommon/util":90,"../models/Person":34}],21:[function(require,module,exports){
+},{"../../dscommon/DSData":84,"../../dscommon/DSDataServiceBase":87,"../../dscommon/DSDigest":89,"../../dscommon/DSSet":96,"../../dscommon/DSTags":97,"../../dscommon/util":99,"../models/Person":43}],30:[function(require,module,exports){
 var DSData, DSDataServiceBase, DSDigest, DSDocument, DSSet, Person, PersonDayStat, Task, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -4746,7 +5197,7 @@ ngModule.factory('PersonDayStatData', [
 ]);
 
 
-},{"../../dscommon/DSData":75,"../../dscommon/DSDataServiceBase":78,"../../dscommon/DSDigest":80,"../../dscommon/DSDocument":81,"../../dscommon/DSSet":87,"../../dscommon/util":90,"../models/Person":34,"../models/PersonDayStat":35,"../models/Task":39}],22:[function(require,module,exports){
+},{"../../dscommon/DSData":84,"../../dscommon/DSDataServiceBase":87,"../../dscommon/DSDigest":89,"../../dscommon/DSDocument":90,"../../dscommon/DSSet":96,"../../dscommon/util":99,"../models/Person":43,"../models/PersonDayStat":44,"../models/Task":48}],31:[function(require,module,exports){
 var DSData, DSDataServiceBase, DSDigest, DSSet, DSTags, Task, TaskTimeTracking, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -4866,7 +5317,7 @@ ngModule.factory('TasksWithTimeTracking', [
 ]);
 
 
-},{"../../dscommon/DSData":75,"../../dscommon/DSDataServiceBase":78,"../../dscommon/DSDigest":80,"../../dscommon/DSSet":87,"../../dscommon/DSTags":88,"../../dscommon/util":90,"../models/Task":39,"../models/TaskTimeTracking":41}],23:[function(require,module,exports){
+},{"../../dscommon/DSData":84,"../../dscommon/DSDataServiceBase":87,"../../dscommon/DSDigest":89,"../../dscommon/DSSet":96,"../../dscommon/DSTags":97,"../../dscommon/util":99,"../models/Task":48,"../models/TaskTimeTracking":50}],32:[function(require,module,exports){
 var CHANGES_PERSISTANCE_VER, Comments, DSChangesBase, DSDataEditable, DSDigest, DSSet, DSTags, Person, RMSData, Tag, Task, assert, error, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -4908,7 +5359,7 @@ ngModule.run([
 CHANGES_PERSISTANCE_VER = 1;
 
 ngModule.factory('dsChanges', [
-  'DSDataSource', 'config', 'localStorageService', '$rootScope', '$http', '$timeout', '$q', (function(DSDataSource, config, localStorageService, $rootScope, $http, $timeout, $q) {
+  'TWTaskLists', 'DSDataSource', 'config', 'localStorageService', '$rootScope', '$http', '$timeout', '$q', (function(TWTaskLists, DSDataSource, config, localStorageService, $rootScope, $http, $timeout, $q) {
     var DSChanges;
     DSChanges = (function(superClass) {
       var removeChanges, reportFailedSave, reportSuccessSave, trimTitle;
@@ -5050,46 +5501,55 @@ ngModule.factory('dsChanges', [
                     filter: 'all'
                   });
                   _this.__unwatchStatus3 = originalTasks.watchStatus(_this, function(source, status, prevStatus, unwatch) {
+                    var f, i, len, loadList, person, personKey, ref, step1, tasksSet, tasksSetPool;
                     if (status !== 'ready') {
                       return;
                     }
                     unwatch();
-                    DSDigest.block(function() {
-                      var f, i, len, loadList, person, personKey, ref, ref1, set, step1, task, taskChange, taskEditable, taskKey, tasksSet, tasksSetPool;
-                      Task.pool.enableWatch(false);
-                      step1 = _this.mapToChanges(changes.changes);
-                      ref = step1.load.Person;
-                      for (personKey in ref) {
-                        loadList = ref[personKey];
-                        if (!peopleSet.items.hasOwnProperty(personKey)) {
-                          console.error('Person #{personKey} missing in server data');
-                        } else {
-                          person = peopleSet.items[personKey];
-                          for (i = 0, len = loadList.length; i < len; i++) {
-                            f = loadList[i];
-                            f(person);
+                    Task.pool.enableWatch(false);
+                    step1 = _this.mapToChanges(changes.changes);
+                    ref = step1.load.Person;
+                    for (personKey in ref) {
+                      loadList = ref[personKey];
+                      if (!peopleSet.items.hasOwnProperty(personKey)) {
+                        console.error('Person #{personKey} missing in server data');
+                      } else {
+                        person = peopleSet.items[personKey];
+                        for (i = 0, len = loadList.length; i < len; i++) {
+                          f = loadList[i];
+                          f(person);
+                        }
+                      }
+                    }
+                    tasksSetPool = (tasksSet = _this.get('tasksSet')).$ds_pool;
+                    TWTaskLists.loadTaskListsAndProjects(_this.get('dataService').get('dataSource'), step1.load).then(function() {
+                      DSDigest.block(function() {
+                        var ref1, set, task, taskChange, taskEditable, taskKey;
+                        set = {};
+                        ref1 = step1.changes.tasks;
+                        for (taskKey in ref1) {
+                          taskChange = ref1[taskKey];
+                          if (!taskKey.startsWith('new:')) {
+                            if (!(originalTasks.items.hasOwnProperty(taskKey) && !((task = originalTasks.items[taskKey]).get('completed')))) {
+                              continue;
+                            }
+                          } else {
+                            console.info('2.');
+                            task = Task.pool.find(_this, taskKey);
+                            task.set('status', 'new');
                           }
+                          (taskEditable = tasksSetPool.find(_this, taskKey, set)).init(task, tasksSet, taskChange);
+                          taskEditable.$u = $u;
+                          if (!taskEditable.hasOwnProperty('__change')) {
+                            delete set[taskEditable.$ds_key];
+                            taskEditable.release(_this);
+                          }
+                          task.release(_this);
                         }
-                      }
-                      tasksSetPool = (tasksSet = _this.get('tasksSet')).$ds_pool;
-                      set = {};
-                      ref1 = step1.changes.tasks;
-                      for (taskKey in ref1) {
-                        taskChange = ref1[taskKey];
-                        if (!(originalTasks.items.hasOwnProperty(taskKey) && !((task = originalTasks.items[taskKey]).get('completed')))) {
-                          continue;
-                        }
-                        (taskEditable = tasksSetPool.find(_this, taskKey, set)).init(task, tasksSet, taskChange);
-                        taskEditable.$u = $u;
-                        if (!taskEditable.hasOwnProperty('__change')) {
-                          delete set[taskEditable.$ds_key];
-                          taskEditable.release(_this);
-                        }
-                        task.release(_this);
-                      }
-                      tasksSet.merge(_this, set);
-                      Task.pool.enableWatch(true);
-                      _this._endLoad(true);
+                        tasksSet.merge(_this, set);
+                        Task.pool.enableWatch(true);
+                        _this._endLoad(true);
+                      });
                     });
                   });
                   originalTasks.release(_this);
@@ -5416,7 +5876,7 @@ ngModule.factory('dsChanges', [
 ]);
 
 
-},{"../../dscommon/DSChangesBase":74,"../../dscommon/DSDataEditable":76,"../../dscommon/DSDataSource":79,"../../dscommon/DSDigest":80,"../../dscommon/DSSet":87,"../../dscommon/DSTags":88,"../../dscommon/util":90,"../models/Person":34,"../models/Tag":38,"../models/Task":39,"../models/types/Comments":42,"../utils/RMSData":73}],24:[function(require,module,exports){
+},{"../../dscommon/DSChangesBase":83,"../../dscommon/DSDataEditable":85,"../../dscommon/DSDataSource":88,"../../dscommon/DSDigest":89,"../../dscommon/DSSet":96,"../../dscommon/DSTags":97,"../../dscommon/util":99,"../models/Person":43,"../models/Tag":47,"../models/Task":48,"../models/types/Comments":51,"../utils/RMSData":82}],33:[function(require,module,exports){
 var DSChangesBase, DSDataEditable, DSDataFiltered, DSDataServiceBase, DSObject, Person, PersonTimeTracking, Tag, Task, TaskTimeTracking, assert, base64, error, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -5461,12 +5921,12 @@ ngModule.factory('dsDataService', [
   'TWPeople', 'TWTasks', 'TWProjects', 'TWTaskLists', 'TWTags', 'TWTimeTracking', 'PeopleWithJson', 'TasksWithTimeTracking', 'PersonDayStatData', 'DSDataSource', 'dsChanges', 'config', '$http', '$rootScope', '$q', (function(TWPeople, TWTasks, TWProjects, TWTaskLists, TWTags, TWTimeTracking, PeopleWithJson, TasksWithTimeTracking, PersonDayStatData, DSDataSource, dsChanges, config, $http, $rootScope, $q) {
     var DSDataService;
     DSDataService = (function(superClass) {
-      var class1;
+      var ctor;
 
       extend(DSDataService, superClass);
 
       function DSDataService() {
-        return class1.apply(this, arguments);
+        return ctor.apply(this, arguments);
       }
 
       DSDataService.begin('DSDataService');
@@ -5493,7 +5953,7 @@ ngModule.factory('dsDataService', [
         this.__unwatch2();
       }));
 
-      class1 = (function() {
+      ctor = (function() {
         var cancel;
         DSDataServiceBase.apply(this, arguments);
         (this.set('dataSource', new DSDataSource(this, 'dataSource'))).release(this);
@@ -5758,7 +6218,7 @@ ngModule.factory('dsDataService', [
 ]);
 
 
-},{"../../dscommon/DSChangesBase":74,"../../dscommon/DSDataEditable":76,"../../dscommon/DSDataFiltered":77,"../../dscommon/DSDataServiceBase":78,"../../dscommon/DSDataSource":79,"../../dscommon/DSObject":84,"../../dscommon/util":90,"../../utils/base64":92,"../config":19,"../models/Person":34,"../models/PersonTimeTracking":36,"../models/Tag":38,"../models/Task":39,"../models/TaskTimeTracking":41,"./PeopleWithJson":20,"./PersonDayStatData":21,"./TasksWithTimeTracking":22,"./dsChanges":23,"./teamwork/TWPeople":27,"./teamwork/TWProjects":28,"./teamwork/TWTags":29,"./teamwork/TWTaskLists":30,"./teamwork/TWTasks":31,"./teamwork/TWTimeTracking":32}],25:[function(require,module,exports){
+},{"../../dscommon/DSChangesBase":83,"../../dscommon/DSDataEditable":85,"../../dscommon/DSDataFiltered":86,"../../dscommon/DSDataServiceBase":87,"../../dscommon/DSDataSource":88,"../../dscommon/DSObject":93,"../../dscommon/util":99,"../../utils/base64":101,"../config":28,"../models/Person":43,"../models/PersonTimeTracking":45,"../models/Tag":47,"../models/Task":48,"../models/TaskTimeTracking":50,"./PeopleWithJson":29,"./PersonDayStatData":30,"./TasksWithTimeTracking":31,"./dsChanges":32,"./teamwork/TWPeople":36,"./teamwork/TWProjects":37,"./teamwork/TWTags":38,"./teamwork/TWTaskLists":39,"./teamwork/TWTasks":40,"./teamwork/TWTimeTracking":41}],34:[function(require,module,exports){
 var Task, assert, ngModule, serviceOwner;
 
 assert = require('../../dscommon/util').assert;
@@ -5817,7 +6277,7 @@ ngModule.run([
 ]);
 
 
-},{"../../dscommon/util":90,"../models/Task.coffee":39,"./dsDataService.coffee":24}],26:[function(require,module,exports){
+},{"../../dscommon/util":99,"../models/Task.coffee":48,"./dsDataService.coffee":33}],35:[function(require,module,exports){
 var DSData, DSDigest, WORK_ENTRIES_WHOLE_PAGE, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -5945,7 +6405,7 @@ ngModule.factory('DSDataTeamworkPaged', [
 ]);
 
 
-},{"../../../dscommon/DSData":75,"../../../dscommon/DSDigest":80,"../../../dscommon/util":90}],27:[function(require,module,exports){
+},{"../../../dscommon/DSData":84,"../../../dscommon/DSDigest":89,"../../../dscommon/util":99}],36:[function(require,module,exports){
 var Person, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -6021,7 +6481,7 @@ ngModule.factory('TWPeople', [
 ]);
 
 
-},{"../../../dscommon/DSDataSource":79,"../../../dscommon/util":90,"../../models/Person":34,"./DSDataTeamworkPaged":26}],28:[function(require,module,exports){
+},{"../../../dscommon/DSDataSource":88,"../../../dscommon/util":99,"../../models/Person":43,"./DSDataTeamworkPaged":35}],37:[function(require,module,exports){
 var Project, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -6092,7 +6552,7 @@ ngModule.factory('TWProjects', [
 ]);
 
 
-},{"../../../dscommon/DSDataSource":79,"../../../dscommon/util":90,"../../models/Project":37,"./DSDataTeamworkPaged":26}],29:[function(require,module,exports){
+},{"../../../dscommon/DSDataSource":88,"../../../dscommon/util":99,"../../models/Project":46,"./DSDataTeamworkPaged":35}],38:[function(require,module,exports){
 var Tag, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -6141,19 +6601,6 @@ ngModule.factory('TWTags', [
         onError = (function(_this) {
           return function(error, isCancelled) {
             if (!isCancelled) {
-              if (error.hasOwnProperty('status')) {
-                toastr.error("Failed to load <i>data/tags.json</i>:<br/><br/> " + error.status + " " + error.statusText, null, {
-                  positionClass: 'toast-top-center',
-                  newestOnTop: true,
-                  timeOut: -1
-                });
-              } else {
-                toastr.error("Invalid <i>data/tags.json</i>:<br/><br/> " + error.message, null, {
-                  positionClass: 'toast-top-center',
-                  newestOnTop: true,
-                  timeOut: -1
-                });
-              }
               _this.set('cancel', null);
             }
             return [];
@@ -6213,19 +6660,18 @@ ngModule.factory('TWTags', [
       };
 
       TWTags.prototype.importResponse = function(json) {
-        var cnt, j, jsonTag, len, person, ref, tagColor, tagName;
+        var cnt, j, jsonTag, len, ref, tagColor, tagName, twTag;
         cnt = 0;
         ref = json['tags'];
         for (j = 0, len = ref.length; j < len; j++) {
           jsonTag = ref[j];
           ++cnt;
-          person = Tag.pool.find(this, (tagName = jsonTag['name']), this.tagsMap);
-          person.set('id', parseInt(jsonTag['id']));
-          person.set('name', tagName);
-          person.set('color', (tagColor = jsonTag['color']));
-          person.set('twColor', tagColor);
+          twTag = Tag.pool.find(this, (tagName = jsonTag['name']), this.tagsMap);
+          twTag.set('id', parseInt(jsonTag['id']));
+          twTag.set('name', tagName);
+          twTag.set('twColor', (tagColor = jsonTag['color']));
         }
-        return cnt;
+        return 1;
       };
 
       TWTags.prototype.finalizeLoad = function() {
@@ -6265,8 +6711,8 @@ ngModule.factory('TWTags', [
 ]);
 
 
-},{"../../../dscommon/DSDataSource":79,"../../../dscommon/util":90,"../../models/Tag":38,"./DSDataTeamworkPaged":26}],30:[function(require,module,exports){
-var Project, TaskList, assert, error, ngModule,
+},{"../../../dscommon/DSDataSource":88,"../../../dscommon/util":99,"../../models/Tag":47,"./DSDataTeamworkPaged":35}],39:[function(require,module,exports){
+var Project, TaskList, assert, error, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
@@ -6279,6 +6725,8 @@ error = require('../../../dscommon/util').error;
 Project = require('../../models/Project');
 
 TaskList = require('../../models/TaskList');
+
+serviceOwner = require('../../../dscommon/util').serviceOwner;
 
 ngModule.factory('TWTaskLists', [
   'DSDataTeamworkPaged', 'DSDataSource', '$rootScope', '$q', (function(DSDataTeamworkPaged, DSDataSource, $rootScope, $q) {
@@ -6304,8 +6752,10 @@ ngModule.factory('TWTaskLists', [
 
       TWTaskLists.prototype.init = (function(dsDataService) {
         var project;
-        this.set('project', project = this.get('params').project);
-        this.set('request', "projects/" + (this.project.get('id')) + "/tasklists.json");
+        if (this.get('params').hasOwnProperty('project')) {
+          this.set('project', project = this.get('params').project);
+          this.set('request', "projects/" + (this.project.get('id')) + "/tasklists.json");
+        }
         this.__unwatch2 = DSDataSource.setLoadAndRefresh.call(this, dsDataService);
         this.init = null;
       });
@@ -6336,6 +6786,68 @@ ngModule.factory('TWTaskLists', [
         delete this.taskListsMap;
       };
 
+      TWTaskLists.loadTaskListsAndProjects = function(dataSource, load) {
+        var deferred, nextTaskList;
+        deferred = $q.defer();
+        if (!load.hasOwnProperty('TaskList')) {
+          deferred.resolve();
+        } else {
+          (nextTaskList = function() {
+            var f, i, len, loadList, onError, project, projectKey, ref, ref1, taskListKey;
+            ref = load.TaskList;
+            for (taskListKey in ref) {
+              loadList = ref[taskListKey];
+              onError = function(error, isCancelled) {
+                if (!isCancelled) {
+                  console.error('error: ', error);
+                  delete load.TaskList[taskListKey];
+                  nextTaskList();
+                } else {
+                  deferred.resolve();
+                }
+              };
+              dataSource.httpGet("/tasklists/" + taskListKey + ".json", $q.defer()).then((function(resp) {
+                var f, i, jsonTaskList, len, project, taskList;
+                if (resp.status === 200) {
+                  jsonTaskList = resp.data['todo-list'];
+                  project = Project.pool.find(serviceOwner, jsonTaskList['projectId']);
+                  project.set('id', parseInt(jsonTaskList['projectId']));
+                  project.set('name', jsonTaskList['projectName']);
+                  taskList = TaskList.pool.find(serviceOwner, taskListKey);
+                  taskList.set('id', parseInt(jsonTaskList['id']));
+                  taskList.set('name', jsonTaskList['name']);
+                  taskList.set('project', project);
+                  taskList.set('position', jsonTaskList['position']);
+                  for (i = 0, len = loadList.length; i < len; i++) {
+                    f = loadList[i];
+                    f(taskList);
+                  }
+                  project.release(serviceOwner);
+                  taskList.release(serviceOwner);
+                  delete load.TaskList[taskListKey];
+                  nextTaskList();
+                } else {
+                  onError(resp, resp.status === 0);
+                }
+              }), onError);
+              return;
+            }
+            ref1 = load.Project;
+            for (projectKey in ref1) {
+              loadList = ref1[projectKey];
+              project = Project.pool.find(serviceOwner, projectKey);
+              for (i = 0, len = loadList.length; i < len; i++) {
+                f = loadList[i];
+                f(project);
+              }
+              project.release(serviceOwner);
+            }
+            deferred.resolve();
+          })();
+        }
+        return deferred.promise;
+      };
+
       TWTaskLists.end();
 
       return TWTaskLists;
@@ -6345,7 +6857,7 @@ ngModule.factory('TWTaskLists', [
 ]);
 
 
-},{"../../../dscommon/DSDataSource":79,"../../../dscommon/util":90,"../../models/Project":37,"../../models/TaskList":40,"./DSDataTeamworkPaged":26}],31:[function(require,module,exports){
+},{"../../../dscommon/DSDataSource":88,"../../../dscommon/util":99,"../../models/Project":46,"../../models/TaskList":49,"./DSDataTeamworkPaged":35}],40:[function(require,module,exports){
 var DSData, DSDigest, DSTags, Person, PersonTimeTracking, Project, RMSData, Tag, Task, TaskList, TaskSplit, TaskTimeTracking, assert, error, ngModule, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -6386,12 +6898,12 @@ ngModule.factory('TWTasks', [
   'TWTags', 'DSDataSource', 'dsChanges', 'config', '$injector', '$http', '$q', function(TWTags, DSDataSource, dsChanges, config, $injector, $http, $q) {
     var TWTasks;
     return TWTasks = (function(superClass) {
-      var class1, clazz, importTask, isTaskInDatesRange, loadCompletedTaskForPersonTimeTracking, releaseMaps;
+      var clazz, ctor, importTask, isTaskInDatesRange, loadCompletedTaskForPersonTimeTracking, releaseMaps;
 
       extend(TWTasks, superClass);
 
       function TWTasks() {
-        return class1.apply(this, arguments);
+        return ctor.apply(this, arguments);
       }
 
       Task.TWTask = TWTasks;
@@ -6437,7 +6949,7 @@ ngModule.factory('TWTasks', [
         init: {}
       });
 
-      class1 = (function() {
+      ctor = (function() {
         var completedTasksPool, self, taskSet, visiblePersonTTracking;
         DSData.apply(this, arguments);
         this.peopleMap = {};
@@ -6682,7 +7194,6 @@ ngModule.factory('TWTasks', [
             tagDoc = (tags != null ? tags : tags = {})[tag.name] = Tag.pool.find(this, tag.name);
             tagDoc.set('id', tag.id);
             tagDoc.set('name', tag.name);
-            tagDoc.set('color', tagDoc.set('twColor', tag.color));
             (tags || (tags = {}))[tag.name] = tagDoc;
           }
           if (tags === null) {
@@ -6862,7 +7373,7 @@ ngModule.factory('TWTasks', [
 ]);
 
 
-},{"../../../dscommon/DSData":75,"../../../dscommon/DSDataSource":79,"../../../dscommon/DSDigest":80,"../../../dscommon/DSTags":88,"../../../dscommon/util":90,"../../models/Person":34,"../../models/PersonTimeTracking":36,"../../models/Project":37,"../../models/Tag":38,"../../models/Task":39,"../../models/TaskList":40,"../../models/TaskTimeTracking":41,"../../models/types/TaskSplit":43,"../../ui/time":58,"../../utils/RMSData":73,"./TWTags":29}],32:[function(require,module,exports){
+},{"../../../dscommon/DSData":84,"../../../dscommon/DSDataSource":88,"../../../dscommon/DSDigest":89,"../../../dscommon/DSTags":97,"../../../dscommon/util":99,"../../models/Person":43,"../../models/PersonTimeTracking":45,"../../models/Project":46,"../../models/Tag":47,"../../models/Task":48,"../../models/TaskList":49,"../../models/TaskTimeTracking":50,"../../models/types/TaskSplit":52,"../../ui/time":67,"../../utils/RMSData":82,"./TWTags":38}],41:[function(require,module,exports){
 var DSData, DSDigest, HISTORY_END_SEARCH_STEP, PersonTimeTracking, RMSData, Task, TaskSplit, TaskTimeTracking, WORK_ENTRIES_WHOLE_PAGE, assert, error, ngModule, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -6897,12 +7408,12 @@ ngModule.factory('TWTimeTracking', [
   'DSDataSource', '$q', 'db', 'config', (function(DSDataSource, $q, db, config) {
     var TWTimeTracking;
     return TWTimeTracking = (function(superClass) {
-      var class1;
+      var ctor;
 
       extend(TWTimeTracking, superClass);
 
       function TWTimeTracking() {
-        return class1.apply(this, arguments);
+        return ctor.apply(this, arguments);
       }
 
       TWTimeTracking.begin('TWTimeTracking');
@@ -6934,7 +7445,7 @@ ngModule.factory('TWTimeTracking', [
         init: {}
       });
 
-      class1 = (function() {
+      ctor = (function() {
         var visibleTTracking;
         DSData.apply(this, arguments);
         if (assert) {
@@ -7184,7 +7695,7 @@ ngModule.factory('TWTimeTracking', [
 ]);
 
 
-},{"../../../dscommon/DSData":75,"../../../dscommon/DSDataSource":79,"../../../dscommon/DSDigest":80,"../../../dscommon/util":90,"../../config":19,"../../db":33,"../../models/PersonTimeTracking":36,"../../models/Task":39,"../../models/TaskTimeTracking":41,"../../models/types/TaskSplit":43,"../../ui/time":58,"../../utils/RMSData":73}],33:[function(require,module,exports){
+},{"../../../dscommon/DSData":84,"../../../dscommon/DSDataSource":88,"../../../dscommon/DSDigest":89,"../../../dscommon/util":99,"../../config":28,"../../db":42,"../../models/PersonTimeTracking":45,"../../models/Task":48,"../../models/TaskTimeTracking":50,"../../models/types/TaskSplit":52,"../../ui/time":67,"../../utils/RMSData":82}],42:[function(require,module,exports){
 var DSObject, assert, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7235,7 +7746,7 @@ ngModule.factory('db', [
             dbDeferred.reject();
           });
           request.onupgradeneeded = (function(event) {
-            var db, e, error;
+            var db, e;
             console.info("IndexedDB.openDB: Upgrade", event);
             db = event.target.result;
             try {
@@ -7262,7 +7773,7 @@ ngModule.factory('db', [
 ]);
 
 
-},{"../dscommon/DSObject":84,"../dscommon/util":90}],34:[function(require,module,exports){
+},{"../dscommon/DSObject":93,"../dscommon/util":99}],43:[function(require,module,exports){
 var DSDocument, DSTags, Person, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7276,12 +7787,12 @@ DSDocument = require('../../dscommon/DSDocument');
 DSTags = require('../../dscommon/DSTags');
 
 module.exports = Person = (function(superClass) {
-  var class1;
+  var ctor;
 
   extend(Person, superClass);
 
   function Person() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   Person.begin('Person');
@@ -7320,7 +7831,7 @@ module.exports = Person = (function(superClass) {
 
   Person.propDuration('contractTime');
 
-  class1 = (function(referry, key) {
+  ctor = (function(referry, key) {
     DSDocument.call(this, referry, key);
     this.set('contractTime', moment.duration(8, 'hours'));
   });
@@ -7332,7 +7843,7 @@ module.exports = Person = (function(superClass) {
 })(DSDocument);
 
 
-},{"../../dscommon/DSDocument":81,"../../dscommon/DSTags":88,"../../dscommon/util":90}],35:[function(require,module,exports){
+},{"../../dscommon/DSDocument":90,"../../dscommon/DSTags":97,"../../dscommon/util":99}],44:[function(require,module,exports){
 var DSObject, Person, PersonDayStat, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7346,12 +7857,12 @@ DSObject = require('../../dscommon/DSObject');
 Person = require('./Person');
 
 module.exports = PersonDayStat = (function(superClass) {
-  var DayStat, class1;
+  var DayStat, ctor;
 
   extend(PersonDayStat, superClass);
 
   function PersonDayStat() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   PersonDayStat.begin('PersonDayStat');
@@ -7383,7 +7894,7 @@ module.exports = PersonDayStat = (function(superClass) {
 
   })(DSObject);
 
-  class1 = (function(referry, key, person, days) {
+  ctor = (function(referry, key, person, days) {
     var d, ds, i, id, len;
     DSObject.call(this, referry, key);
     if (assert) {
@@ -7426,7 +7937,7 @@ module.exports = PersonDayStat = (function(superClass) {
 })(DSObject);
 
 
-},{"../../dscommon/DSObject":84,"../../dscommon/util":90,"./Person":34}],36:[function(require,module,exports){
+},{"../../dscommon/DSObject":93,"../../dscommon/util":99,"./Person":43}],45:[function(require,module,exports){
 var DSObject, PersonTimeTracking, Task,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7469,7 +7980,7 @@ module.exports = PersonTimeTracking = (function(superClass) {
 })(DSObject);
 
 
-},{"../../dscommon/DSObject":84,"../models/Task":39}],37:[function(require,module,exports){
+},{"../../dscommon/DSObject":93,"../models/Task":48}],46:[function(require,module,exports){
 var DSObject, Project, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7516,7 +8027,7 @@ module.exports = Project = (function(superClass) {
 })(DSObject);
 
 
-},{"../../dscommon/DSObject":84,"../../dscommon/util":90}],38:[function(require,module,exports){
+},{"../../dscommon/DSObject":93,"../../dscommon/util":99}],47:[function(require,module,exports){
 var DSDocument, Tag, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7561,7 +8072,7 @@ module.exports = Tag = (function(superClass) {
 })(DSDocument);
 
 
-},{"../../dscommon/DSDocument":81,"../../dscommon/util":90}],39:[function(require,module,exports){
+},{"../../dscommon/DSDocument":90,"../../dscommon/util":99}],48:[function(require,module,exports){
 var Comments, DSDocument, DSTags, Person, Project, Tag, Task, TaskList, TaskSplit, TaskTimeTracking, assert, error, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7706,6 +8217,10 @@ module.exports = Task = (function(superClass) {
     init: 0
   });
 
+  Task.propDoc('project', Project);
+
+  Task.propDoc('taskList', TaskList);
+
   Task.propStr('title');
 
   (Task.propDuration('estimate')).str = (function(v) {
@@ -7742,11 +8257,16 @@ module.exports = Task = (function(superClass) {
 
   Task.propDoc('responsible', Person);
 
-  Task.propDoc('taskList', TaskList);
-
-  Task.propDoc('project', Project);
-
   Task.propTaskRelativeSplit('split');
+
+  Task.propDSTags('tags');
+
+  Task.propBool('completed');
+
+  Task.propBool('plan', {
+    write: null,
+    read: null
+  });
 
   Task.propStr('description', {
     str: function(v) {
@@ -7760,6 +8280,11 @@ module.exports = Task = (function(superClass) {
     }
   });
 
+  Task.propEnum('status', ['new', '', 'deleted'], {
+    init: '',
+    common: true
+  });
+
   Task.propComments('comments');
 
   Task.propDoc('timeTracking', TaskTimeTracking, {
@@ -7770,18 +8295,9 @@ module.exports = Task = (function(superClass) {
     write: null
   });
 
-  Task.propBool('completed');
-
   Task.propBool('isReady', {
     write: null
   });
-
-  Task.propBool('plan', {
-    write: null,
-    read: null
-  });
-
-  Task.propDSTags('tags');
 
   Task.propNum('priority', {
     init: defaultTag.priority,
@@ -7887,7 +8403,7 @@ module.exports = Task = (function(superClass) {
 })(DSDocument);
 
 
-},{"../../dscommon/DSDocument":81,"../../dscommon/DSTags":88,"../../dscommon/util":90,"../ui/time":58,"./Person":34,"./Project":37,"./Tag":38,"./TaskList":40,"./TaskTimeTracking":41,"./types/Comments":42,"./types/TaskSplit":43}],40:[function(require,module,exports){
+},{"../../dscommon/DSDocument":90,"../../dscommon/DSTags":97,"../../dscommon/util":99,"../ui/time":67,"./Person":43,"./Project":46,"./Tag":47,"./TaskList":49,"./TaskTimeTracking":50,"./types/Comments":51,"./types/TaskSplit":52}],49:[function(require,module,exports){
 var DSObject, Project, TaskList, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7936,7 +8452,7 @@ module.exports = TaskList = (function(superClass) {
 })(DSObject);
 
 
-},{"../../dscommon/DSObject":84,"../../dscommon/util":90,"./Project":37}],41:[function(require,module,exports){
+},{"../../dscommon/DSObject":93,"../../dscommon/util":99,"./Project":46}],50:[function(require,module,exports){
 var DSObject, TaskTimeTracking,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -7979,7 +8495,7 @@ module.exports = TaskTimeTracking = (function(superClass) {
 })(DSObject);
 
 
-},{"../../dscommon/DSObject":84}],42:[function(require,module,exports){
+},{"../../dscommon/DSObject":93}],51:[function(require,module,exports){
 var Comments, DSDocument, assert, error;
 
 assert = require('../../../dscommon/util').assert;
@@ -7989,10 +8505,10 @@ error = require('../../../dscommon/util').error;
 DSDocument = require('../../../dscommon/DSDocument');
 
 module.exports = Comments = (function() {
-  var class1, zero;
+  var ctor, zero;
 
   function Comments() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   Comments.addPropType = (function(clazz) {
@@ -8064,7 +8580,7 @@ module.exports = Comments = (function() {
 
   zero = moment.duration(0);
 
-  class1 = (function(persisted) {
+  ctor = (function(persisted) {
     var j, len, src, v;
     if (assert) {
       if (arguments.length === 1 && typeof arguments[0] === 'object' && arguments[0].__proto__ === Comments.prototype) {
@@ -8114,7 +8630,7 @@ module.exports = Comments = (function() {
 })();
 
 
-},{"../../../dscommon/DSDocument":81,"../../../dscommon/util":90}],43:[function(require,module,exports){
+},{"../../../dscommon/DSDocument":90,"../../../dscommon/util":99}],52:[function(require,module,exports){
 var DSDocument, TaskSplit, assert, error;
 
 assert = require('../../../dscommon/util').assert;
@@ -8124,10 +8640,10 @@ error = require('../../../dscommon/util').error;
 DSDocument = require('../../../dscommon/DSDocument');
 
 module.exports = TaskSplit = (function() {
-  var class1, zero;
+  var ctor, zero;
 
   function TaskSplit() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   TaskSplit.addPropType = (function(clazz) {
@@ -8195,7 +8711,7 @@ module.exports = TaskSplit = (function() {
 
   zero = moment.duration(0);
 
-  class1 = (function(persisted) {
+  ctor = (function(persisted) {
     var d, i, j, k, len, len1, list, src, v;
     if (assert) {
       if (arguments.length === 1 && typeof arguments[0] === 'object' && arguments[0].__proto__ === TaskSplit.prototype) {
@@ -8442,7 +8958,7 @@ module.exports = TaskSplit = (function() {
 })();
 
 
-},{"../../../dscommon/DSDocument":81,"../../../dscommon/util":90}],44:[function(require,module,exports){
+},{"../../../dscommon/DSDocument":90,"../../../dscommon/util":99}],53:[function(require,module,exports){
 var ngModule;
 
 module.exports = (ngModule = angular.module('app', ['ui.router', 'ui.select', require('./ui/ui'), require('./data/dsDataService'), require('./data/persistClipboard'), require('./svc/emails/emails'), require('./db')])).name;
@@ -8465,7 +8981,7 @@ ngModule.config([
 ]);
 
 
-},{"./data/dsDataService":24,"./data/persistClipboard":25,"./db":33,"./svc/emails/emails":45,"./ui/ui":59}],45:[function(require,module,exports){
+},{"./data/dsDataService":33,"./data/persistClipboard":34,"./db":42,"./svc/emails/emails":54,"./ui/ui":68}],54:[function(require,module,exports){
 var Person, Task, base64, ctrl, ngModule;
 
 base64 = require('../../../utils/base64');
@@ -8672,7 +9188,7 @@ ctrl = [
 ];
 
 
-},{"../../../utils/base64":92,"../../data/dsDataService":24,"../../models/Person":34,"../../models/Task":39}],46:[function(require,module,exports){
+},{"../../../utils/base64":101,"../../data/dsDataService":33,"../../models/Person":43,"../../models/Task":48}],55:[function(require,module,exports){
 var ngModule;
 
 module.exports = (ngModule = angular.module('ui/account/rmsAccount', [require('../../config')])).name;
@@ -8719,7 +9235,7 @@ ngModule.directive('rmsAccount', [
 ]);
 
 
-},{"../../config":19}],47:[function(require,module,exports){
+},{"../../config":28}],56:[function(require,module,exports){
 var DSObject, assert, dayOfWeek, error, ngModule;
 
 assert = require('../../dscommon/util').assert;
@@ -8941,7 +9457,7 @@ ngModule.run([
 ]);
 
 
-},{"../../dscommon/DSObject":84,"../../dscommon/util":90}],48:[function(require,module,exports){
+},{"../../dscommon/DSObject":93,"../../dscommon/util":99}],57:[function(require,module,exports){
 var DOMWrapper, actionsMinWidth, actionsWidth, area1MinHeight, area1MinWidth, area2MinHeight, area3MinWidth, assert, error, headerHeight, ngModule, windowMinHeight, windowMinWidth;
 
 assert = require('../../dscommon/util').assert;
@@ -9068,13 +9584,13 @@ ngModule.directive('uiLayoutResizer', [
 ]);
 
 DOMWrapper = (function() {
-  var class1;
+  var ctor;
 
   function DOMWrapper() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
-  class1 = (function(DOMElement) {
+  ctor = (function(DOMElement) {
     this.elem = DOMElement;
   });
 
@@ -9098,7 +9614,7 @@ ngModule.directive('uiLayoutContainer', [
 ]);
 
 
-},{"../../dscommon/util":90}],49:[function(require,module,exports){
+},{"../../dscommon/util":99}],58:[function(require,module,exports){
 var assert, error, ngModule;
 
 assert = require('../../dscommon/util').assert;
@@ -9121,7 +9637,7 @@ ngModule.directive("noDrag", function() {
 });
 
 
-},{"../../dscommon/util":90}],50:[function(require,module,exports){
+},{"../../dscommon/util":99}],59:[function(require,module,exports){
 var assert, error, ngModule, roundPeriod, roundsToBeStable;
 
 assert = require('../../dscommon/util').assert;
@@ -9232,7 +9748,7 @@ ngModule.directive("sameHeightDest", function() {
 });
 
 
-},{"../../dscommon/util":90}],51:[function(require,module,exports){
+},{"../../dscommon/util":99}],60:[function(require,module,exports){
 var assert, error, ngModule, roundPeriod, roundsToBeStable;
 
 assert = require('../../dscommon/util').assert;
@@ -9344,7 +9860,7 @@ ngModule.directive("sameWidthDest", function() {
 });
 
 
-},{"../../dscommon/util":90}],52:[function(require,module,exports){
+},{"../../dscommon/util":99}],61:[function(require,module,exports){
 var DSObject, Person, PersonDayStat, Task, TaskSplit, assert, ngModule, time,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -9402,12 +9918,12 @@ ngModule.factory('TaskSplitWeekView', [
 
     })(DSObject);
     return TaskSplitWeekView = (function(superClass) {
-      var class1;
+      var ctor;
 
       extend(TaskSplitWeekView, superClass);
 
       function TaskSplitWeekView() {
-        return class1.apply(this, arguments);
+        return ctor.apply(this, arguments);
       }
 
       TaskSplitWeekView.begin('TaskSplitWeekView');
@@ -9430,7 +9946,7 @@ ngModule.factory('TaskSplitWeekView', [
 
       TaskSplitWeekView.propTaskRelativeSplit('split');
 
-      class1 = (function($scope, key, getDuedate, split, monday) {
+      ctor = (function($scope, key, getDuedate, split, monday) {
         var d, date, dayModel, days, initSplit, splitDuedate;
         if (assert) {
           if (!typeof getDuedate === 'function') {
@@ -9544,14 +10060,16 @@ ngModule.factory('TaskSplitWeekView', [
 ]);
 
 
-},{"../../../dscommon/DSObject":84,"../../../dscommon/DSView":89,"../../../dscommon/util":90,"../../models/Person":34,"../../models/PersonDayStat":35,"../../models/Task":39,"../../models/types/TaskSplit":43,"../time":58}],53:[function(require,module,exports){
-var Comments, DSDigest, DSDocument, DSObject, Person, assert, error, ngModule, serviceOwner,
+},{"../../../dscommon/DSObject":93,"../../../dscommon/DSView":98,"../../../dscommon/util":99,"../../models/Person":43,"../../models/PersonDayStat":44,"../../models/Task":48,"../../models/types/TaskSplit":52,"../time":67}],62:[function(require,module,exports){
+var Comments, DSDigest, DSDocument, DSObject, Person, Task, assert, error, ngModule, serviceOwner, shortid,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
 assert = require('../../../dscommon/util').assert;
 
 error = require('../../../dscommon/util').error;
+
+shortid = require('shortid');
 
 serviceOwner = require('../../../dscommon/util').serviceOwner;
 
@@ -9564,6 +10082,8 @@ DSDigest = require('../../../dscommon/DSDigest');
 Comments = require('../../models/types/Comments');
 
 Person = require('../../models/Person');
+
+Task = require('../../models/Task');
 
 module.exports = (ngModule = angular.module('ui/tasks/addCommentAndSave', [require('../../config'), require('../../data/dsDataService'), require('../../data/dsChanges')])).name;
 
@@ -9598,12 +10118,12 @@ ngModule.factory('addCommentAndSave', [
       AddCommentAndSave.propBool('plansChange');
 
       AddCommentAndSave.prototype.show = (function(document, showDialog, changes) {
-        var anyChange, doc, i, j, len, len1, newChanges, plansChange, promise, propDesc, propName, ref, ref1, ref2, ref3, value;
+        var anyChange, changesSet, doc, i, j, len, len1, newChanges, newTask, newTaskId, plansChange, promise, propDesc, propName, ref, ref1, ref2, ref3, value;
         if (assert) {
-          if (!(document !== null && ((Array.isArray(document) && document.length > 0 && document[0] instanceof DSDocument) || document instanceof DSDocument))) {
+          if (!(document !== null && (document.$new || ((Array.isArray(document) && document.length > 0 && document[0] instanceof DSDocument) || document instanceof DSDocument)))) {
             error.invalidArg('document');
           }
-          if (!(typeof showDialog === 'boolean')) {
+          if (typeof showDialog !== 'boolean') {
             error.invalidArg('showDialog');
           }
           if (!(changes !== null && typeof changes === 'object')) {
@@ -9611,15 +10131,28 @@ ngModule.factory('addCommentAndSave', [
           }
         }
         this.__deferred = $q.defer();
-        if (changes.hasOwnProperty('duedate') && !changes.hasOwnProperty('clipboard')) {
-          if (((ref = (Array.isArray(document) ? document[0] : document).get('duedate')) != null ? ref.valueOf() : void 0) !== ((ref1 = changes.duedate) != null ? ref1.valueOf() : void 0)) {
-            changes.clipboard = false;
+        this.get('documentsList').merge(this, []);
+        if (document.$new) {
+          newTask = Task.pool.find(this, newTaskId = "new:" + (shortid()));
+          newTask.set('status', 'new');
+          this.set('document', (document = (changesSet = dsChanges.get('tasksSet')).$ds_pool.find(this, newTaskId)));
+          document.release(this);
+        } else {
+          if (Array.isArray(document)) {
+            for (i = 0, len = document.length; i < len; i++) {
+              doc = document[i];
+              doc.addRef(this);
+            }
+            this.get('documentsList').merge(this, document);
+            document = this.set('document', document[0]);
+          } else {
+            this.set('document', document);
           }
         }
         if (changes.hasOwnProperty('plan') && !changes.plan) {
           if (Array.isArray(document)) {
-            for (i = 0, len = document.length; i < len; i++) {
-              doc = document[i];
+            for (j = 0, len1 = document.length; j < len1; j++) {
+              doc = document[j];
               if (!(doc.get('plan'))) {
                 continue;
               }
@@ -9630,15 +10163,10 @@ ngModule.factory('addCommentAndSave', [
             plansChange = this.set('plansChange', true);
           }
         }
-        if (Array.isArray(document)) {
-          for (j = 0, len1 = document.length; j < len1; j++) {
-            doc = document[j];
-            doc.addRef(this);
+        if (changes.hasOwnProperty('duedate') && !changes.hasOwnProperty('clipboard')) {
+          if (((ref = (Array.isArray(document) ? document[0] : document).get('duedate')) != null ? ref.valueOf() : void 0) !== ((ref1 = changes.duedate) != null ? ref1.valueOf() : void 0)) {
+            changes.clipboard = false;
           }
-          this.get('documentsList').merge(this, document);
-          document = this.set('document', document[0]);
-        } else {
-          this.set('document', document);
         }
         newChanges = [];
         anyChange = false;
@@ -9798,7 +10326,7 @@ ngModule.factory('addCommentAndSave', [
 ]);
 
 
-},{"../../../dscommon/DSDigest":80,"../../../dscommon/DSDocument":81,"../../../dscommon/DSObject":84,"../../../dscommon/util":90,"../../config":19,"../../data/dsChanges":23,"../../data/dsDataService":24,"../../models/Person":34,"../../models/types/Comments":42}],54:[function(require,module,exports){
+},{"../../../dscommon/DSDigest":89,"../../../dscommon/DSDocument":90,"../../../dscommon/DSObject":93,"../../../dscommon/util":99,"../../config":28,"../../data/dsChanges":32,"../../data/dsDataService":33,"../../models/Person":43,"../../models/Task":48,"../../models/types/Comments":51,"shortid":9}],63:[function(require,module,exports){
 var ngModule;
 
 module.exports = (ngModule = angular.module('ui/tasks/rmsTask', [])).name;
@@ -9925,7 +10453,7 @@ ngModule.directive('setTaskVisible', [
 ]);
 
 
-},{}],55:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 var ngModule;
 
 module.exports = (ngModule = angular.module('ui/tasks/rmsTaskAdd', [])).name;
@@ -9964,7 +10492,7 @@ ngModule.directive('rmsTaskAdd', [
 ]);
 
 
-},{}],56:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 var DSDataEditable, DSDigest, DSTags, Person, PersonDayStat, Project, Tag, Task, Task$u, TaskList, TaskSplit, assert, ngModule, splitViewWeeksCount, time;
 
 module.exports = (ngModule = angular.module('ui/tasks/rmsTaskEdit', [require('../../data/dsChanges'), require('../../data/dsDataService'), require('./TaskSplitWeekView'), require('./addCommentAndSave')])).name;
@@ -10203,6 +10731,7 @@ ngModule.directive('rmsTaskEdit', [
             allProjects.release($scope);
           });
           $scope.task = task = {
+            $new: true,
             $u: Task$u,
             get: function(propName) {
               switch (propName) {
@@ -10428,15 +10957,18 @@ ngModule.directive('rmsTaskEdit', [
               split.fixEstimate(diff);
             }
           }
-          update = {
-            title: edit.title,
-            duedate: edit.duedate,
-            estimate: edit.estimate,
-            responsible: edit.responsible,
-            split: edit.isSplit && edit.split.valueOf().length > 0 ? edit.split : null,
-            tags: edit.tags,
-            description: edit.description
-          };
+          update = {};
+          if (task.$new) {
+            update.project = edit.project;
+            update.taskList = edit.taskList;
+          }
+          update.title = edit.title;
+          update.duedate = edit.duedate;
+          update.estimate = edit.estimate;
+          update.responsible = edit.responsible;
+          update.split = edit.isSplit && edit.split.valueOf().length > 0 ? edit.split : null;
+          update.tags = edit.tags;
+          update.description = edit.description;
           if (typeof plan === 'boolean') {
             update.plan = plan;
           }
@@ -10534,7 +11066,7 @@ ngModule.directive('rmsTaskEdit', [
 ]);
 
 
-},{"../../../dscommon/DSDataEditable":76,"../../../dscommon/DSDigest":80,"../../../dscommon/DSTags":88,"../../../dscommon/util":90,"../../data/dsChanges":23,"../../data/dsDataService":24,"../../models/Person":34,"../../models/PersonDayStat":35,"../../models/Project":37,"../../models/Tag":38,"../../models/Task":39,"../../models/TaskList":40,"../../models/types/TaskSplit":43,"../../ui/time":58,"./TaskSplitWeekView":52,"./addCommentAndSave":53}],57:[function(require,module,exports){
+},{"../../../dscommon/DSDataEditable":85,"../../../dscommon/DSDigest":89,"../../../dscommon/DSTags":97,"../../../dscommon/util":99,"../../data/dsChanges":32,"../../data/dsDataService":33,"../../models/Person":43,"../../models/PersonDayStat":44,"../../models/Project":46,"../../models/Tag":47,"../../models/Task":48,"../../models/TaskList":49,"../../models/types/TaskSplit":52,"../../ui/time":67,"./TaskSplitWeekView":61,"./addCommentAndSave":62}],66:[function(require,module,exports){
 var DSObject, assert, error, ngModule;
 
 module.exports = (ngModule = angular.module('ui/tasks/rmsTaskInfo', [])).name;
@@ -10587,7 +11119,7 @@ ngModule.directive('rmsTaskInfo', [
 ]);
 
 
-},{"../../../dscommon/DSObject":84,"../../../dscommon/util":90}],58:[function(require,module,exports){
+},{"../../../dscommon/DSObject":93,"../../../dscommon/util":99}],67:[function(require,module,exports){
 var time, updateToday;
 
 module.exports = time = {
@@ -10603,7 +11135,7 @@ module.exports = time = {
 }))();
 
 
-},{}],59:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 var DSObjectBase, PersonDayStat, assert, error, ngModule, totalRelease, uiCtrl;
 
 assert = require('../../dscommon/util').assert;
@@ -10697,7 +11229,7 @@ uiCtrl = [
 ];
 
 
-},{"../../dscommon/DSObjectBase":85,"../../dscommon/util":90,"../models/PersonDayStat":35,"./account/rmsAccount":46,"./filters":47,"./layout":48,"./noDrag":49,"./sameHeight":50,"./sameWidth":51,"./tasks/TaskSplitWeekView":52,"./tasks/addCommentAndSave":53,"./tasks/rmsTask":54,"./tasks/rmsTaskAdd":55,"./tasks/rmsTaskEdit":56,"./tasks/rmsTaskInfo":57,"./views/changes/ViewChanges":60,"./views/view1/View1":62,"./views/view2/View2":66,"./views/view3/View3":67,"./widgets/widgetDate":71,"./widgets/widgetDuration":72}],60:[function(require,module,exports){
+},{"../../dscommon/DSObjectBase":94,"../../dscommon/util":99,"../models/PersonDayStat":44,"./account/rmsAccount":55,"./filters":56,"./layout":57,"./noDrag":58,"./sameHeight":59,"./sameWidth":60,"./tasks/TaskSplitWeekView":61,"./tasks/addCommentAndSave":62,"./tasks/rmsTask":63,"./tasks/rmsTaskAdd":64,"./tasks/rmsTaskEdit":65,"./tasks/rmsTaskInfo":66,"./views/changes/ViewChanges":69,"./views/view1/View1":71,"./views/view2/View2":75,"./views/view3/View3":76,"./widgets/widgetDate":80,"./widgets/widgetDuration":81}],69:[function(require,module,exports){
 var Change, DSDigest, DSObject, Person, Task, assert, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -10767,12 +11299,12 @@ ngModule.factory('ViewChanges', [
   'DSView', 'dsChanges', '$log', (function(DSView, dsChanges, $log) {
     var ViewChange;
     return ViewChange = (function(superClass) {
-      var class1;
+      var ctor;
 
       extend(ViewChange, superClass);
 
       function ViewChange() {
-        return class1.apply(this, arguments);
+        return ctor.apply(this, arguments);
       }
 
       ViewChange.begin('ViewChange');
@@ -10787,7 +11319,7 @@ ngModule.factory('ViewChanges', [
 
       ViewChange.propNum('renderVer', 0);
 
-      class1 = (function($scope, key) {
+      ctor = (function($scope, key) {
         DSView.call(this, $scope, key);
         this.dataUpdate({});
       });
@@ -10802,7 +11334,7 @@ ngModule.factory('ViewChanges', [
       }));
 
       ViewChange.prototype.render = (function() {
-        var change, changes, conflictValue, isDark, isFirst, poolChanges, prop, propChange, propName, props, ref, ref1, refreshView, remove, task, taskKey, tasksSet, tasksStatus, v;
+        var change, changes, conflictValue, isDark, poolChanges, prop, propChange, propName, props, ref, ref1, refreshView, remove, task, taskChanges, taskKey, tasksSet, tasksStatus, v;
         if (!((tasksStatus = this.get('data').get('tasksStatus')) === 'ready' || tasksStatus === 'update')) {
           this.get('changesList').merge(this, []);
           return;
@@ -10820,7 +11352,6 @@ ngModule.factory('ViewChanges', [
         for (taskKey in ref) {
           task = ref[taskKey];
           isDark = !isDark;
-          isFirst = true;
           task.__change.__refreshView = refreshView;
           remove = (function(task) {
             return function() {
@@ -10828,6 +11359,7 @@ ngModule.factory('ViewChanges', [
               refreshView();
             };
           })(task);
+          taskChanges = [];
           ref1 = task.__change;
           for (propName in ref1) {
             propChange = ref1[propName];
@@ -10835,20 +11367,19 @@ ngModule.factory('ViewChanges', [
               continue;
             }
             prop = props[propName];
-            changes.push(change = poolChanges.find(this, task.$ds_key + "." + propName));
+            taskChanges.push(change = poolChanges.find(this, task.$ds_key + "." + propName));
             change.set('isDark', isDark);
-            if (isFirst) {
-              isFirst = false;
-              change.set('doc', task);
-            }
+            change.set('index', prop.index);
             change.set('prop', propName);
             change.set('value', (v = propChange.v) === null ? ' -' : prop.str(propChange.v));
             change.set('conflict', prop.equal((conflictValue = task.$ds_doc.get(propName)), propChange.s) ? null : conflictValue === null ? ' -' : prop.str(conflictValue));
-            if (remove) {
-              change.remove = remove;
-              remove = null;
-            }
           }
+          taskChanges.sort(function(l, r) {
+            return l.get('index') - r.get('index');
+          });
+          taskChanges[0].set('doc', task);
+          taskChanges[0].remove = remove;
+          Array.prototype.push.apply(changes, taskChanges);
           if (task.__change.__error) {
             changes.push(change = poolChanges.find(this, task.$ds_key + ".__error"));
             change.set('isDark', isDark);
@@ -10868,7 +11399,7 @@ ngModule.factory('ViewChanges', [
 ]);
 
 
-},{"../../../../dscommon/DSDigest":80,"../../../../dscommon/DSObject":84,"../../../../dscommon/DSView":89,"../../../../dscommon/util":90,"../../../data/dsChanges":23,"../../../models/Person":34,"../../../models/Task":39,"./models/Change":61}],61:[function(require,module,exports){
+},{"../../../../dscommon/DSDigest":89,"../../../../dscommon/DSObject":93,"../../../../dscommon/DSView":98,"../../../../dscommon/util":99,"../../../data/dsChanges":32,"../../../models/Person":43,"../../../models/Task":48,"./models/Change":70}],70:[function(require,module,exports){
 var Change, DSDocument, DSObject, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -10902,6 +11433,8 @@ module.exports = Change = (function(superClass) {
 
   Change.propBool('isDark');
 
+  Change.propNum('index');
+
   Change.end();
 
   return Change;
@@ -10909,7 +11442,7 @@ module.exports = Change = (function(superClass) {
 })(DSObject);
 
 
-},{"../../../../../dscommon/DSDocument":81,"../../../../../dscommon/DSObject":84,"../../../../../dscommon/util":90}],62:[function(require,module,exports){
+},{"../../../../../dscommon/DSDocument":90,"../../../../../dscommon/DSObject":93,"../../../../../dscommon/util":99}],71:[function(require,module,exports){
 var DSDigest, Day, Person, PersonDayStat, PersonTimeTracking, Row, Tag, Task, TaskView, assert, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -10960,12 +11493,12 @@ ngModule.factory('View1', [
   'DSView', 'config', '$rootScope', '$log', 'TWTasks', (function(DSView, config, $rootScope, $log, TWTasks) {
     var View1;
     return View1 = (function(superClass) {
-      var class1, positionTaskView, taskViewsSortRule;
+      var ctor, positionTaskView, taskViewsSortRule;
 
       extend(View1, superClass);
 
       function View1() {
-        return class1.apply(this, arguments);
+        return ctor.apply(this, arguments);
       }
 
       View1.begin('View1');
@@ -11009,7 +11542,7 @@ ngModule.factory('View1', [
         this.__unwatchC();
       }));
 
-      class1 = (function($scope, key) {
+      ctor = (function($scope, key) {
         var i, j, l, len1, len2, ref, ref1, selectedCompany, selectedLoad;
         DSView.call(this, $scope, key);
         this.scope = $scope;
@@ -11605,7 +12138,7 @@ ngModule.directive('rmsView1MouseOverWeekChange', [
 ]);
 
 
-},{"../../../../dscommon/DSDigest":80,"../../../../dscommon/DSView":89,"../../../../dscommon/util":90,"../../../config":19,"../../../data/dsChanges":23,"../../../data/dsDataService":24,"../../../data/teamwork/TWTasks":31,"../../../models/Person":34,"../../../models/PersonDayStat":35,"../../../models/PersonTimeTracking":36,"../../../models/Tag":38,"../../../models/Task":39,"../../tasks/addCommentAndSave":53,"./models/Day":63,"./models/Row":64,"./models/TaskView":65}],63:[function(require,module,exports){
+},{"../../../../dscommon/DSDigest":89,"../../../../dscommon/DSView":98,"../../../../dscommon/util":99,"../../../config":28,"../../../data/dsChanges":32,"../../../data/dsDataService":33,"../../../data/teamwork/TWTasks":40,"../../../models/Person":43,"../../../models/PersonDayStat":44,"../../../models/PersonTimeTracking":45,"../../../models/Tag":47,"../../../models/Task":48,"../../tasks/addCommentAndSave":62,"./models/Day":72,"./models/Row":73,"./models/TaskView":74}],72:[function(require,module,exports){
 var DSObject, Day,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -11638,7 +12171,7 @@ module.exports = Day = (function(superClass) {
 })(DSObject);
 
 
-},{"../../../../../dscommon/DSObject":84}],64:[function(require,module,exports){
+},{"../../../../../dscommon/DSObject":93}],73:[function(require,module,exports){
 var DSObject, Person, PersonDayStat, Row, TaskView, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -11683,7 +12216,7 @@ module.exports = Row = (function(superClass) {
 })(DSObject);
 
 
-},{"../../../../../dscommon/DSObject":84,"../../../../../dscommon/util":90,"../../../../models/Person":34,"../../../../models/PersonDayStat":35,"./TaskView":65}],65:[function(require,module,exports){
+},{"../../../../../dscommon/DSObject":93,"../../../../../dscommon/util":99,"../../../../models/Person":43,"../../../../models/PersonDayStat":44,"./TaskView":74}],74:[function(require,module,exports){
 var DSObject, PersonTimeTracking, Task, TaskView, validate,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -11733,7 +12266,7 @@ module.exports = TaskView = (function(superClass) {
 })(DSObject);
 
 
-},{"../../../../../dscommon/DSObject":84,"../../../../../dscommon/util":90,"../../../../models/PersonTimeTracking":36,"../../../../models/Task":39}],66:[function(require,module,exports){
+},{"../../../../../dscommon/DSObject":93,"../../../../../dscommon/util":99,"../../../../models/PersonTimeTracking":45,"../../../../models/Task":48}],75:[function(require,module,exports){
 var DSDigest, Task, TaskView, assert, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -11764,12 +12297,12 @@ ngModule.factory('View2', [
   'View1', 'DSView', '$rootScope', '$log', 'TWTasks', (function(View1, DSView, $rootScope, $log, TWTasks) {
     var View2;
     return View2 = (function(superClass) {
-      var class1, taskViewsSortRule;
+      var ctor, taskViewsSortRule;
 
       extend(View2, superClass);
 
       function View2() {
-        return class1.apply(this, arguments);
+        return ctor.apply(this, arguments);
       }
 
       View2.begin('View2');
@@ -11800,7 +12333,7 @@ ngModule.factory('View2', [
         this.__unwatchA();
       }));
 
-      class1 = (function($scope, key) {
+      ctor = (function($scope, key) {
         DSView.call(this, $scope, key);
         this.__unwatchA = $scope.$watch((function() {
           var ref, ref1;
@@ -11920,7 +12453,7 @@ ngModule.directive('rmsView2DayDropTask', [
 ]);
 
 
-},{"../../../../dscommon/DSDigest":80,"../../../../dscommon/DSView":89,"../../../../dscommon/util":90,"../../../data/dsChanges":23,"../../../data/dsDataService":24,"../../../data/teamwork/TWTasks":31,"../../../models/Task":39,"../../tasks/addCommentAndSave":53,"../view1/View1":62,"../view1/models/TaskView":65}],67:[function(require,module,exports){
+},{"../../../../dscommon/DSDigest":89,"../../../../dscommon/DSView":98,"../../../../dscommon/util":99,"../../../data/dsChanges":32,"../../../data/dsDataService":33,"../../../data/teamwork/TWTasks":40,"../../../models/Task":48,"../../tasks/addCommentAndSave":62,"../view1/View1":71,"../view1/models/TaskView":74}],76:[function(require,module,exports){
 var PersonView, Project, ProjectView, Row, Task, TaskList, TaskListView, assert, error, ngModule,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -12393,7 +12926,7 @@ ngModule.directive('rmsView3DropTask', [
 ]);
 
 
-},{"../../../../dscommon/DSView":89,"../../../../dscommon/util":90,"../../../config":19,"../../../data/dsDataService":24,"../../../data/teamwork/TWTasks":31,"../../../models/Project":37,"../../../models/Task":39,"../../../models/TaskList":40,"../../tasks/addCommentAndSave":53,"../view1/models/Row":64,"./models/PersonView":68,"./models/ProjectView":69,"./models/TaskListView":70}],68:[function(require,module,exports){
+},{"../../../../dscommon/DSView":98,"../../../../dscommon/util":99,"../../../config":28,"../../../data/dsDataService":33,"../../../data/teamwork/TWTasks":40,"../../../models/Project":46,"../../../models/Task":48,"../../../models/TaskList":49,"../../tasks/addCommentAndSave":62,"../view1/models/Row":73,"./models/PersonView":77,"./models/ProjectView":78,"./models/TaskListView":79}],77:[function(require,module,exports){
 var DSObject, Person, PersonView, Project, ProjectView, Row, TaskListView, validate,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -12434,7 +12967,7 @@ module.exports = PersonView = (function(superClass) {
 })(DSObject);
 
 
-},{"../../../../../dscommon/DSObject":84,"../../../../../dscommon/util":90,"../../../../models/Person":34,"../../../../models/Project":37,"../../view1/models/Row":64,"./ProjectView":69,"./TaskListView":70}],69:[function(require,module,exports){
+},{"../../../../../dscommon/DSObject":93,"../../../../../dscommon/util":99,"../../../../models/Person":43,"../../../../models/Project":46,"../../view1/models/Row":73,"./ProjectView":78,"./TaskListView":79}],78:[function(require,module,exports){
 var DSObject, Project, ProjectView, TaskListView, validate,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -12469,7 +13002,7 @@ module.exports = ProjectView = (function(superClass) {
 })(DSObject);
 
 
-},{"../../../../../dscommon/DSObject":84,"../../../../../dscommon/util":90,"../../../../models/Project":37,"./TaskListView":70}],70:[function(require,module,exports){
+},{"../../../../../dscommon/DSObject":93,"../../../../../dscommon/util":99,"../../../../models/Project":46,"./TaskListView":79}],79:[function(require,module,exports){
 var DSObject, Task, TaskList, TaskListView, validate,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -12512,7 +13045,7 @@ module.exports = TaskListView = (function(superClass) {
 })(DSObject);
 
 
-},{"../../../../../dscommon/DSObject":84,"../../../../../dscommon/util":90,"../../../../models/Task":39,"../../../../models/TaskList":40}],71:[function(require,module,exports){
+},{"../../../../../dscommon/DSObject":93,"../../../../../dscommon/util":99,"../../../../models/Task":48,"../../../../models/TaskList":49}],80:[function(require,module,exports){
 var ngModule;
 
 module.exports = (ngModule = angular.module('ui/widgets/widgetDate', [])).name;
@@ -12553,7 +13086,7 @@ ngModule.directive('widgetDate', [
 ]);
 
 
-},{}],72:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 var msInHours, msInMinute, ngModule;
 
 module.exports = (ngModule = angular.module('ui/widgets/widgetDuration', [])).name;
@@ -12606,7 +13139,7 @@ ngModule.directive('widgetDuration', [
 ]);
 
 
-},{}],73:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 var RMSDataEnd, RMSDataStart, assert, clear, error, trimEndLF, trimStartLF;
 
 assert = require('../../dscommon/util').assert;
@@ -12667,7 +13200,7 @@ clear = (function(description) {
 module.exports = {
   clear: clear,
   get: (function(description) {
-    var end, error1, ex, jsonStart, start;
+    var end, ex, jsonStart, start;
     if (assert) {
       if (!(description === null || typeof description === 'string')) {
         error.invalidArg('description');
@@ -12707,7 +13240,7 @@ module.exports = {
 };
 
 
-},{"../../dscommon/util":90}],74:[function(require,module,exports){
+},{"../../dscommon/util":99}],83:[function(require,module,exports){
 var DSChangesBase, DSData, DSDigest, DSDocument, DSHistory, DSPool, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -12727,12 +13260,12 @@ DSDocument = require('./DSDocument');
 DSDigest = require('./DSDigest');
 
 module.exports = DSChangesBase = (function(superClass) {
-  var class1, loadOneDoc;
+  var ctor, loadOneDoc;
 
   extend(DSChangesBase, superClass);
 
   function DSChangesBase() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   DSChangesBase.begin('DSChangesBase');
@@ -12745,7 +13278,7 @@ module.exports = DSChangesBase = (function(superClass) {
     init: 0
   });
 
-  class1 = (function(referry, key) {
+  ctor = (function(referry, key) {
     var countChanges, hist, i, len, ref, set, setName, unwatch;
     DSData.call(this, referry, key, {});
     (hist = this.set('hist', new DSHistory(this, key + ".hist"))).release(this);
@@ -12924,7 +13457,7 @@ module.exports = DSChangesBase = (function(superClass) {
 })(DSData);
 
 
-},{"./DSData":75,"./DSDigest":80,"./DSDocument":81,"./DSHistory":82,"./DSPool":86,"./util":90}],75:[function(require,module,exports){
+},{"./DSData":84,"./DSDigest":89,"./DSDocument":90,"./DSHistory":91,"./DSPool":95,"./util":99}],84:[function(require,module,exports){
 var DSData, DSObject, assert, error, modeReleaseDataOnReload, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -12940,12 +13473,12 @@ modeReleaseDataOnReload = require('./util').modeReleaseDataOnReload;
 DSObject = require('./DSObject');
 
 module.exports = DSData = (function(superClass) {
-  var class1;
+  var ctor;
 
   extend(DSData, superClass);
 
   function DSData() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   DSData.begin('DSData');
@@ -12999,7 +13532,7 @@ module.exports = DSData = (function(superClass) {
     this.set('status', isSuccess ? 'ready' : 'nodata');
   });
 
-  class1 = (function(referry, key, params) {
+  ctor = (function(referry, key, params) {
     DSObject.call(this, referry, key);
     if (assert) {
       if (this.__proto__.constructor === DSData) {
@@ -13053,7 +13586,7 @@ module.exports = DSData = (function(superClass) {
 })(DSObject);
 
 
-},{"./DSObject":84,"./util":90}],76:[function(require,module,exports){
+},{"./DSObject":93,"./util":99}],85:[function(require,module,exports){
 var DSData, DSDigest, DSDocument, DSSet, assert, classes, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -13317,7 +13850,7 @@ module.exports = (function(itemType) {
 });
 
 
-},{"./DSData":75,"./DSDigest":80,"./DSDocument":81,"./DSSet":87,"./util":90}],77:[function(require,module,exports){
+},{"./DSData":84,"./DSDigest":89,"./DSDocument":90,"./DSSet":96,"./util":99}],86:[function(require,module,exports){
 var DSData, DSDigest, DSObject, DSSet, assert, classes, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -13486,7 +14019,7 @@ module.exports = (function(itemType) {
 });
 
 
-},{"./DSData":75,"./DSDigest":80,"./DSObject":84,"./DSSet":87,"./util":90}],78:[function(require,module,exports){
+},{"./DSData":84,"./DSDigest":89,"./DSObject":93,"./DSSet":96,"./util":99}],87:[function(require,module,exports){
 var DSDataServiceBase, DSObject, DSPool, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -13590,7 +14123,7 @@ module.exports = DSDataServiceBase = (function(superClass) {
 })(DSObject);
 
 
-},{"./DSObject":84,"./DSPool":86,"./util":90}],79:[function(require,module,exports){
+},{"./DSObject":93,"./DSPool":95,"./util":99}],88:[function(require,module,exports){
 var DSDigest, DSObject, assert, base64, error, modeReleaseDataOnReload, ngModule, serviceOwner,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -13615,12 +14148,12 @@ ngModule.factory('DSDataSource', [
   'config', '$rootScope', '$q', '$http', (function(config, $rootScope, $q, $http) {
     var DSDataSource;
     return DSDataSource = (function(superClass) {
-      var class1;
+      var ctor;
 
       extend(DSDataSource, superClass);
 
       function DSDataSource() {
-        return class1.apply(this, arguments);
+        return ctor.apply(this, arguments);
       }
 
       DSDataSource.begin('DSDataSource');
@@ -13645,7 +14178,7 @@ ngModule.factory('DSDataSource', [
         })(this)));
       });
 
-      class1 = (function(referry, key) {
+      ctor = (function(referry, key) {
         DSObject.call(this, referry, key);
         this.cancelDefers = [];
         this._lastRefresh = null;
@@ -13780,7 +14313,7 @@ ngModule.factory('DSDataSource', [
 ]);
 
 
-},{"../utils/base64":92,"./DSDigest":80,"./DSObject":84,"./util":90}],80:[function(require,module,exports){
+},{"../utils/base64":101,"./DSDigest":89,"./DSObject":93,"./util":99}],89:[function(require,module,exports){
 var DSDigest, assert, error;
 
 assert = require('./util').assert;
@@ -13880,7 +14413,7 @@ module.exports = DSDigest = (function() {
 })();
 
 
-},{"./util":90}],81:[function(require,module,exports){
+},{"./util":99}],90:[function(require,module,exports){
 var DSDocument, DSObject, DSObjectBase, DSSet, assert, error, traceRefs,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -14272,7 +14805,7 @@ module.exports = DSDocument = (function(superClass) {
 })(DSObject);
 
 
-},{"./DSObject":84,"./DSObjectBase":85,"./DSSet":87,"./util":90}],82:[function(require,module,exports){
+},{"./DSObject":93,"./DSObjectBase":94,"./DSSet":96,"./util":99}],91:[function(require,module,exports){
 var DSDigest, DSDocument, DSHistory, DSObject, DSObjectBase, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -14290,12 +14823,12 @@ DSDigest = require('./DSDigest');
 DSDocument = require('./DSDocument');
 
 module.exports = DSHistory = (function(superClass) {
-  var _reset, blockCount, blockId, class1, hasRedo, skipAdd;
+  var _reset, blockCount, blockId, ctor, hasRedo, skipAdd;
 
   extend(DSHistory, superClass);
 
   function DSHistory() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   DSHistory.begin('DSHistory');
@@ -14304,7 +14837,7 @@ module.exports = DSHistory = (function(superClass) {
     _reset.call(this);
   }));
 
-  class1 = (function(referry, key) {
+  ctor = (function(referry, key) {
     DSObject.call(this, referry, key);
     this.hist = [];
     this.histTop = 0;
@@ -14541,7 +15074,7 @@ module.exports = DSHistory = (function(superClass) {
 })(DSObject);
 
 
-},{"./DSDigest":80,"./DSDocument":81,"./DSObject":84,"./DSObjectBase":85,"./util":90}],83:[function(require,module,exports){
+},{"./DSDigest":89,"./DSDocument":90,"./DSObject":93,"./DSObjectBase":94,"./util":99}],92:[function(require,module,exports){
 var DSList, DSObjectBase, assert, error, totalReleaseVerb, traceRefs, util,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -14559,17 +15092,17 @@ error = require('./util').error;
 DSObjectBase = require('./DSObjectBase');
 
 module.exports = DSList = (function(superClass) {
-  var class1;
+  var ctor;
 
   extend(DSList, superClass);
 
   function DSList() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   DSList.begin('DSList');
 
-  class1 = (function(referry, key, type) {
+  ctor = (function(referry, key, type) {
     DSObjectBase.call(this, referry, key);
     if (assert) {
       if (!type instanceof DSObjectBase) {
@@ -14642,7 +15175,7 @@ module.exports = DSList = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSObjectBase":85,"./util":90}],84:[function(require,module,exports){
+},{"./DSObjectBase":94,"./util":99}],93:[function(require,module,exports){
 var DSList, DSObject, DSObjectBase, DSPool, DSSet, assert, error, serviceOwner, totalRelease,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -14666,12 +15199,12 @@ DSList = require('./DSList');
 DSPool = require('./DSPool');
 
 module.exports = DSObject = (function(superClass) {
-  var class1;
+  var ctor;
 
   extend(DSObject, superClass);
 
   function DSObject() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   DSObject.desc = DSObjectBase.desc = (function(item) {
@@ -14701,7 +15234,7 @@ module.exports = DSObject = (function(superClass) {
     }
   });
 
-  class1 = (function(referry, key) {
+  ctor = (function(referry, key) {
     DSObjectBase.call(this, referry, key);
     if (assert) {
       if (this.__proto__.constructor === DSObjectBase) {
@@ -14836,7 +15369,7 @@ module.exports = DSObject = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSList":83,"./DSObjectBase":85,"./DSPool":86,"./DSSet":87,"./util":90}],85:[function(require,module,exports){
+},{"./DSList":92,"./DSObjectBase":94,"./DSPool":95,"./DSSet":96,"./util":99}],94:[function(require,module,exports){
 var DSObjectBase, assert, error, serviceOwner, totalRelease, totalReleaseVerb, traceData, traceRefs, util;
 
 util = require('./util');
@@ -14856,10 +15389,10 @@ totalReleaseVerb = require('./util').totalReleaseVerb;
 error = require('./util').error;
 
 module.exports = DSObjectBase = (function() {
-  var class1, globalId, sequenceId, sourceId, statusByPrior, statusValues, totalPool;
+  var ctor1, globalId, sequenceId, sourceId, statusByPrior, statusValues, totalPool;
 
   function DSObjectBase() {
-    return class1.apply(this, arguments);
+    return ctor1.apply(this, arguments);
   }
 
   DSObjectBase.isAssignableFrom = (function(clazz) {
@@ -14895,7 +15428,7 @@ module.exports = DSObjectBase = (function() {
     });
   }
 
-  class1 = (function(referry, key) {
+  ctor1 = (function(referry, key) {
     var init, k, v;
     if (assert) {
       if (this.__proto__.constructor === DSObjectBase) {
@@ -15192,6 +15725,7 @@ module.exports = DSObjectBase = (function() {
     }
     propDecl = this.prototype.__props[opts.name] = {
       name: opts.name,
+      index: _.size(this.prototype.__props),
       type: opts.type,
       write: opts.write || ((opts.hasOwnProperty('write') && !opts.write) || opts.calc || opts.common ? null : (function(v) {
         if (v === null) {
@@ -15761,7 +16295,7 @@ module.exports = DSObjectBase = (function() {
 })();
 
 
-},{"./util":90}],86:[function(require,module,exports){
+},{"./util":99}],95:[function(require,module,exports){
 var DSDigest, DSObjectBase, DSPool, assert, error, traceWatch,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -15777,17 +16311,17 @@ DSObjectBase = require('./DSObjectBase');
 DSDigest = require('./DSDigest');
 
 module.exports = DSPool = (function(superClass) {
-  var class1, renderItem;
+  var ctor, renderItem;
 
   extend(DSPool, superClass);
 
   function DSPool() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   DSPool.begin('DSPool');
 
-  class1 = (function(referry, key, type, watchOn) {
+  ctor = (function(referry, key, type, watchOn) {
     var items;
     DSObjectBase.call(this, referry, key);
     if (assert) {
@@ -15926,7 +16460,7 @@ module.exports = DSPool = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSDigest":80,"./DSObjectBase":85,"./util":90}],87:[function(require,module,exports){
+},{"./DSDigest":89,"./DSObjectBase":94,"./util":99}],96:[function(require,module,exports){
 var DSObjectBase, DSSet, assert, error, modeReleaseDataOnReload, totalReleaseVerb, traceRefs, traceWatch, util,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -15948,12 +16482,12 @@ error = require('./util').error;
 DSObjectBase = require('./DSObjectBase');
 
 module.exports = DSSet = (function(superClass) {
-  var _add, _remove, class1;
+  var _add, _remove, ctor;
 
   extend(DSSet, superClass);
 
   function DSSet() {
-    return class1.apply(this, arguments);
+    return ctor.apply(this, arguments);
   }
 
   DSSet.begin('DSSet');
@@ -15970,7 +16504,7 @@ module.exports = DSSet = (function(superClass) {
     }
   }));
 
-  class1 = (function(referry, key, type, data) {
+  ctor = (function(referry, key, type, data) {
     DSObjectBase.call(this, referry, key);
     if (assert) {
       if (!type instanceof DSObjectBase) {
@@ -16208,7 +16742,7 @@ module.exports = DSSet = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSObjectBase":85,"./util":90}],88:[function(require,module,exports){
+},{"./DSObjectBase":94,"./util":99}],97:[function(require,module,exports){
 var DSObjectBase, DSTags, assert, error,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -16486,7 +17020,7 @@ module.exports = DSTags = (function(superClass) {
 })(DSObjectBase);
 
 
-},{"./DSObjectBase":85,"./util":90}],89:[function(require,module,exports){
+},{"./DSObjectBase":94,"./util":99}],98:[function(require,module,exports){
 var DSObject, DSSet, assert, error, ngModule, traceView,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -16531,12 +17065,12 @@ ngModule.factory('DSView', [
 
     })();
     return DSView = (function(superClass) {
-      var class1, viewSequence;
+      var ctor, viewSequence;
 
       extend(DSView, superClass);
 
       function DSView() {
-        return class1.apply(this, arguments);
+        return ctor.apply(this, arguments);
       }
 
       DSView.begin('DSView');
@@ -16603,7 +17137,7 @@ ngModule.factory('DSView', [
         }
       }));
 
-      class1 = (function($scope, key) {
+      ctor = (function($scope, key) {
         var k, ref, setDirty, v, watch;
         DSObject.call(this, $scope, key);
         if (assert) {
@@ -16764,7 +17298,7 @@ ngModule.factory('DSView', [
 ]);
 
 
-},{"../app/data/dsDataService":24,"./DSObject":84,"./DSSet":87,"./util":90}],90:[function(require,module,exports){
+},{"../app/data/dsDataService":33,"./DSObject":93,"./DSSet":96,"./util":99}],99:[function(require,module,exports){
 var ServiceOwner, util;
 
 module.exports = util = {
@@ -16777,13 +17311,13 @@ module.exports = util = {
   totalReleaseVerb: false,
   modeReleaseDataOnReload: true,
   serviceOwner: new (ServiceOwner = (function() {
-    var class1;
+    var ctor;
 
     function ServiceOwner() {
-      return class1.apply(this, arguments);
+      return ctor.apply(this, arguments);
     }
 
-    class1 = (function() {
+    ctor = (function() {
       this.name = 'serviceOwner';
       this.services = [];
       this.poolCleaners = [];
@@ -16876,7 +17410,7 @@ module.exports = util = {
 };
 
 
-},{}],91:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 /**
  * An Angular module that gives you access to the browsers local storage
  * @version v0.1.5 - 2014-11-04
@@ -17332,7 +17866,7 @@ angularLocalStorage.provider('localStorageService', function() {
   }];
 });
 })( window, window.angular );
-},{}],92:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 var keyStr;
 
 keyStr = "ABCDEFGHIJKLMNOP" + "QRSTUVWXYZabcdef" + "ghijklmnopqrstuv" + "wxyz0123456789+/" + "=";
@@ -17415,7 +17949,7 @@ module.exports = {
 };
 
 
-},{}],93:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 (function (process){
 /* Jison generated parser */
 var jsonlint = (function(){
@@ -17852,4 +18386,4 @@ if (typeof module !== 'undefined' && require.main === module) {
 }
 }
 }).call(this,require('_process'))
-},{"_process":5,"system":9}]},{},[18]);
+},{"_process":7,"system":18}]},{},[27]);
