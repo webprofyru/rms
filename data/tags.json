@@ -6,7 +6,7 @@
   {"name": "План", "color": "#00538a", "border": "solid 2px #000000", "priority": 100},
   {"name": "NEXT", "color": "#FEFE22", "priority": 110},
   {"name": "MUST", "color": "#FEFE22", "priority": 120},
-  {"name": "DP", "color": "#00BFFF", "border": "solid 2px #000000", "priority": 150},
+  {"name": "DP", "border": "solid 2px #000000", "priority": 150},
   {"name": "Товарищ проверь за собой", "color": "#FF0000", "priority": 200},
   {"name": "NICE TO HAVE", "color": "#ceff1d", "priority": 300}
 ]
