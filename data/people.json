@@ -104,7 +104,9 @@
             "id": 171133,
             "role": "Tester, Content-manager",
             "name": "Виктория Лобова",
-            "email": "v.lobova@webprofy.ru"
+            "email": "v.lobova@webprofy.ru",
+			"estimates": true,
+			"parent": 78180
         },    	
         {
             "id": 112015,
@@ -149,7 +151,8 @@
             "id": 146695,
             "role": "Programmer, Markuper, GroupSkinteev",
             "name": "Иван Аникин",
-            "email": "i.anikin@webprofy.ru"
+            "email": "i.anikin@webprofy.ru",
+			"estimates": true
         },
         {
             "id": 48685,
@@ -161,7 +164,7 @@
             "id": 97614,
             "role": "Designer",
             "name": "Мария Русакова",
-            "email": "m.rusakova@webprofy.ru"
+            "email": "m.rusakova@webprofy.ru",
         },
         {
             "id": 97175,
@@ -179,7 +182,8 @@
             "id": 56392,
             "role": "Designer",
             "name": "Ольга Чухаленко",
-            "email": "o.chukhalenko@webprofy.ru"
+            "email": "o.chukhalenko@webprofy.ru",
+			"estimates": true
         },
         {
             "id": 78180,
@@ -204,7 +208,8 @@
             "id": 150752,
             "role": "Programmer, Markuper, GroupSkinteev",
             "name": "Александр Муравьев",
-            "email": "a.muravyev@webprofy.ru"
+            "email": "a.muravyev@webprofy.ru",
+			"estimates": true
         },
         {
             "id": 139026,
@@ -222,7 +227,8 @@
             "id": 96180,
             "role": "Programmer, Markuper, GroupKorovkin",
             "name": "Андрей Васильев",
-            "email": "a.vasilyev@webprofy.ru"
+            "email": "a.vasilyev@webprofy.ru",
+			"estimates": true
         },
         {
             "id": 174645,
@@ -234,7 +240,8 @@
             "id": 139024,
             "role": "Programmer, GroupKorovkin",
             "name": "Павел Шестаков",
-            "email": "p.shestakov@webprofy.ru"
+            "email": "p.shestakov@webprofy.ru",
+			"estimates": true
         },
         {
             "id": 257346,
