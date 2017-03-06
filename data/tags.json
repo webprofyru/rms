@@ -4,9 +4,10 @@
   {"name": "ВЕЧЕ", "color": "#B896EE", "priority": 30},
   {"name": "На контроль Ольги", "color": "#98BFFD", "priority": 40},
   {"name": "План", "color": "#00538a", "border": "solid 2px #000000", "priority": 100},
-  {"name": "NEXT", "color": "#FEFE22", "priority": 110},
-  {"name": "MUST", "color": "#FEFE22", "priority": 120},
+  {"name": "NEXT", "color": "#F4BD38", "priority": 110},
+  {"name": "MUST", "color": "#9B7CDB", "priority": 120},
   {"name": "DP", "border": "solid 2px #000000", "priority": 150},
   {"name": "Товарищ проверь за собой", "color": "#FF0000", "priority": 200},
-  {"name": "NICE TO HAVE", "color": "#ceff1d", "priority": 300}
+  {"name": "NICE TO HAVE", "color": "#B1DA34", "priority": 300},
+  {"name": "СРЕДА", "color": "#F47FBE", "priority": 310},
 ]
