@@ -29,14 +29,20 @@
             "groupRole": true
         },
         {
-            "role": "GroupSkinteev",
-            "name": "Group Skinteev",
+            "role": "GroupMax",
+            "name": "Group Max",
             "showInDailyPlan": true,
-            "tagId" : 35390
+            "tagId" : 53330
+        },
+    	{
+            "role": "GroupAlya",
+            "name": "Group Alya",
+            "showInDailyPlan": true,
+            "tagId" : 53696
         },
         {
-            "role": "GroupKorovkin",
-            "name": "Group Korovkin",
+            "role": "GroupDen",
+            "name": "Group Den",
             "showInDailyPlan": true,
             "tagId": 35484
         },        
@@ -131,7 +137,7 @@
         },
         {
             "id": 48687,
-            "role": "Programmer, Markuper, Teamlead, GroupKorovkin, RMStrainee",
+            "role": "Programmer, Markuper, Teamlead, GroupDen, RMStrainee",
             "name": "Денис Коровкин",
             "email": "d.korovkin@webprofy.ru"
         },
@@ -149,7 +155,7 @@
         },
         {
             "id": 146695,
-            "role": "Programmer, Markuper, GroupSkinteev",
+            "role": "Programmer, Markuper, GroupAlya",
             "name": "Иван Аникин",
             "email": "i.anikin@webprofy.ru",
 			"estimates": true
@@ -168,7 +174,7 @@
         },
         {
             "id": 97175,
-            "role": "Programmer, Markuper, GroupSkinteev, Teamlead, RMStrainee",
+            "role": "Programmer, Markuper, GroupDen, Teamlead, RMStrainee",
             "name": "Николай Скинтеев",
             "email": "n.skinteev@webprofy.ru"
         },
@@ -180,7 +186,7 @@
         },
         {
             "id": 56392,
-            "role": "Designer",
+            "role": "Designer, GroupDen",
             "name": "Ольга Чухаленко",
             "email": "o.chukhalenko@webprofy.ru",
 			"estimates": true
@@ -200,20 +206,20 @@
         },
         {
             "id": 178897,
-            "role": "Programmer, Markuper, GroupSkinteev",
+            "role": "Programmer, Markuper, GroupMax, GroupDen",
             "name": "Максим Ситников",
             "email": "m.sitnikov@webprofy.ru"
         },
 	{
             "id": 150752,
-            "role": "Programmer, Markuper, GroupSkinteev",
+            "role": "Programmer, Markuper, GroupMax",
             "name": "Александр Муравьев",
             "email": "a.muravyev@webprofy.ru",
 			"estimates": true
         },
         {
             "id": 139026,
-            "role": "Programmer, Markuper, GroupSkinteev",
+            "role": "Programmer, Markuper, GroupAlya, GroupDen",
             "name": "Аля Жапаспаева",
             "email": "a.zhapaspaeva@webprofy.ru"
         },
@@ -225,7 +231,7 @@
         },
         {
             "id": 96180,
-            "role": "Programmer, Markuper, GroupKorovkin",
+            "role": "Programmer, Markuper, GroupDen, GroupMax",
             "name": "Андрей Васильев",
             "email": "a.vasilyev@webprofy.ru",
 			"estimates": true
@@ -238,14 +244,14 @@
         },
         {
             "id": 139024,
-            "role": "Programmer, GroupKorovkin",
+            "role": "Programmer, GroupDen, GroupMax",
             "name": "Павел Шестаков",
             "email": "p.shestakov@webprofy.ru",
 			"estimates": true
         },
         {
             "id": 257346,
-            "role": "Programmer, Markuper, GroupKorovkin",
+            "role": "Programmer, Markuper, GroupDen",
             "name": "Вадим Зайнетдинов",
             "email": "vadim.zvf@gmail.com"
         },
