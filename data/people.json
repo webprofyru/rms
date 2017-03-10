@@ -174,7 +174,7 @@
         },
         {
             "id": 97175,
-            "role": "Programmer, Markuper, GroupDen, Teamlead, RMStrainee",
+            "role": "Programmer, Markuper, Teamlead, RMStrainee",
             "name": "Николай Скинтеев",
             "email": "n.skinteev@webprofy.ru"
         },
@@ -231,7 +231,7 @@
         },
         {
             "id": 96180,
-            "role": "Programmer, Markuper, GroupDen, GroupMax",
+            "role": "Programmer, Markuper",
             "name": "Андрей Васильев",
             "email": "a.vasilyev@webprofy.ru",
 			"estimates": true
@@ -251,7 +251,7 @@
         },
         {
             "id": 257346,
-            "role": "Programmer, Markuper, GroupDen",
+            "role": "Programmer, Markuper",
             "name": "Вадим Зайнетдинов",
             "email": "vadim.zvf@gmail.com"
         },
