@@ -9,5 +9,6 @@
   {"name": "DP", "border": "solid 2px #000000", "priority": 150},
   {"name": "Товарищ проверь за собой", "color": "#FF0000", "priority": 200},
   {"name": "NICE TO HAVE", "color": "#B1DA34", "priority": 300},
-  {"name": "СРЕДА", "color": "#F47FBE", "priority": 310}
+  {"name": "СРЕДА", "color": "#F47FBE", "priority": 310},
+  {"name": "FromCalendar", "color": "#FCDD34", "priority": 50}
 ]
