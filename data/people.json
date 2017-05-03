@@ -217,6 +217,13 @@
             "email": "a.muravyev@webprofy.ru",
 			"estimates": true
         },
+	{
+            "id": 290804,
+            "role": "Programmer, Markuper, GroupAlya",
+            "name": "Александр Пашнин",
+            "email": "a.pashnin@webprofy.ru",
+	    "estimates": true
+        },
         {
             "id": 139026,
             "role": "Programmer, Markuper, GroupAlya, GroupDen",
