@@ -1,279 +1,301 @@
 {
-    "roles": [
-        {
-            "role": null,
-            "name": "All"
-        },
-        {
-            "role": "Except managers",
-            "name": "Except managers",
-            "special": "notSupervisors",
-            "groupRole": true
-        },
-        {
-            "role": "Designers only",
-            "name": "Designers only",
-            "roles": "Art-director, Designer, Jr. Designer, Analyst",
-            "groupRole": true
-        },
-        {
-            "role": "Webmasters only",
-            "name": "Webmasters only",
-            "roles": "Markuper, Programmer",
-            "groupRole": true
-        },
-        {
-            "role": "QA+content only",
-            "name": "QA+content only",
-            "roles": "Tester, Content-manager",
-            "groupRole": true
-        },
-        {
-            "role": "GroupMax",
-            "name": "Group Max",
-            "showInDailyPlan": true,
-            "tagId" : 53330
-        },
-    	{
-            "role": "GroupAlya",
-            "name": "Group Alya",
-            "showInDailyPlan": true,
-            "tagId" : 53696
-        },
-        {
-            "role": "GroupDen",
-            "name": "Group Den",
-            "showInDailyPlan": true,
-            "tagId": 35484
-        },        
-        {
-            "role": "RMStrainee",
-            "name": "RMS trainee"
-        },
-        {
-            "role": "Art-director",
-            "name": "Арт-директор",
-            "supervisor": true
-        },
-        {
-            "role": "Designer",
-            "name": "Дизайнер"
-        },
-        {
-            "role": "Jr. Designer",
-            "name": "Техдизайнер"
-        },
-        {
-            "role": "Copywriter",
-            "name": "Копирайтер"
-        },
-        {
-            "role": "Manager",
-            "name": "Менеджер",
-            "supervisor": true
-        },
-        {
-            "role": "Programmer",
-            "name": "Программист"
-        },
-        {
-            "role": "Markuper",
-            "name": "Верстальщик"
-        },
-        {
-            "role": "Tester",
-            "name": "Тестер"
-        },
-        {
-            "role": "Content-manager",
-            "name": "Контент-менеджер"
-        },
-        {
-            "role": "Analyst",
-            "name": "Аналитик"
-        },
-        {
-            "role": "Flasher",
-            "name": "Флешер"
-        },
-        {
-          "role": "Technologist",
-          "name": "Технолог"
-        },
-        {
-          "role": "Teamlead",
-          "name": "Тимлид"
-        }
-    ],
-    "people": [
-        {
-            "id": 171133,
-            "role": "Tester, Content-manager",
-            "name": "Виктория Лобова",
-            "email": "v.lobova@webprofy.ru",
-			"estimates": true,
-			"parent": 78180
-        },    	
-        {
-            "id": 112015,
-            "role": "Programmer, Teamlead",
-            "name": "Alexey Zorkaltsev",
-            "email": "alexey@zorkaltsev.com",
-            "projects": [87822, 154875, 169023]
-        },
-        {
-            "comment": "Zork: It's DEBUG user. Do not remove !!!",
-            "id": 54838,
-            "role": "Programmer, Teamlead",
-            "name": "Alexey Zorkaltsev",
-            "email": "alexey@zorkaltsev.com",
-            "projects": [87822, 154875, 169023]
-        },
-        {
-            "id": 54199,
-            "role": "Copywriter",
-            "name": "Антон Скобин",
-            "email": "a.skobin@webprofy.ru"
-        },
-        {
-            "id": 48687,
-            "role": "Programmer, Markuper, Teamlead, GroupDen, RMStrainee",
-            "name": "Денис Коровкин",
-            "email": "d.korovkin@webprofy.ru"
-        },
-        {
-            "id": 57093,
-            "role": "Flasher",
-            "name": "Дмитрий Кочкин (флэшер)",
-            "email": "banner-prom@mail.ru"
-        },
-        {
-            "id": 77667,
-            "role": "Art-director",
-            "name": "Евгения Харитонова",
-            "email": "e.kharitonova@webprofy.ru"
-        },
-        {
-            "id": 146695,
-            "role": "Programmer, Markuper, GroupAlya",
-            "name": "Иван Аникин",
-            "email": "i.anikin@webprofy.ru",
-			"estimates": true
-        },
-        {
-            "id": 48685,
-            "role": "RMStrainee",
-            "name": "Илья Сабуров",
-            "email": "i.saburov@webprofy.ru"
-        },
-        {
-            "id": 97614,
-            "role": "Designer",
-            "name": "Мария Русакова",
-            "email": "m.rusakova@webprofy.ru"
-        },
-        {
-            "id": 97175,
-            "role": "Programmer, Markuper, Teamlead, RMStrainee",
-            "name": "Николай Скинтеев",
-            "email": "n.skinteev@webprofy.ru"
-        },
-        {
-            "id": 77666,
-            "role": "Manager, RMStrainee",
-            "name": "Ольга Бояршинова",
-            "email": "o.boyarshinova@webprofy.ru"
-        },
-        {
-            "id": 56392,
-            "role": "Designer, GroupDen",
-            "name": "Ольга Чухаленко",
-            "email": "o.chukhalenko@webprofy.ru",
-			"estimates": true
-        },
-        {
-            "id": 78180,
-            "role": "Tester, Content-manager, Teamlead, RMStrainee",
-            "name": "Татьяна Верхотурова",
-            "email": "t.verkhoturova@webprofy.ru"
-        },
-        {
-          "id": 115545,
-          "role": "Manager, RMStrainee",
-          "name": "Анна Комарова",
-          "email": "a.komarova@webprofy.ru",
-          "projects": [154875]
-        },
-        {
-            "id": 178897,
-            "role": "Programmer, Markuper, GroupMax, GroupDen",
-            "name": "Максим Ситников",
-            "email": "m.sitnikov@webprofy.ru"
-        },
-	{
-            "id": 150752,
-            "role": "Programmer, Markuper, GroupMax",
-            "name": "Александр Муравьев",
-            "email": "a.muravyev@webprofy.ru",
-			"estimates": true
-        },
-	{
-            "id": 290804,
-            "role": "Programmer, Markuper, GroupAlya",
-            "name": "Александр Пашнин",
-            "email": "a.pashnin@webprofy.ru",
-	    "estimates": true
-        },
-        {
-            "id": 139026,
-            "role": "Programmer, Markuper, GroupAlya, GroupDen",
-            "name": "Аля Жапаспаева",
-            "email": "a.zhapaspaeva@webprofy.ru"
-        },
-        {
-            "id": 102943,
-            "role": "Programmer, Markuper",
-            "name": "Григорий Красильников",
-            "email": "g.krasilnikov@webprofy.ru"
-        },
-        {
-            "id": 96180,
-            "role": "Programmer, Markuper",
-            "name": "Андрей Васильев",
-            "email": "a.vasilyev@webprofy.ru",
-			"estimates": true
-        },
-        {
-            "id": 174645,
-            "role": "Manager, RMStrainee",
-            "name": "Алла Молчанова",
-            "email": "a.molchanova@webprofy.ru"
-        },
-        {
-            "id": 139024,
-            "role": "Programmer, GroupDen, GroupMax",
-            "name": "Павел Шестаков",
-            "email": "p.shestakov@webprofy.ru",
-			"estimates": true
-        },
-        {
-            "id": 257346,
-            "role": "Programmer, Markuper",
-            "name": "Вадим Зайнетдинов",
-            "email": "vadim.zvf@gmail.com"
-        },
-	{
-            "id": 277133,
-            "role": "Manager",
-            "name": "Валентина Насырова",
-            "email": "valencia.po@gmail.com"
-        }
-    ],
-    "dailyPlan": {
-    	"reloadTimeMin" : "5",
-	"hsize": "300",
-	"vsize": "400",
-	"finalWords": " ,отчет",
-	"dailyPlanTag": "37127"
+  "roles": [
+    {
+      "role": null,
+      "name": "All"
+    },
+    {
+      "role": "Except managers",
+      "name": "Except managers",
+      "special": "notSupervisors",
+      "groupRole": true
+    },
+    {
+      "role": "Designers only",
+      "name": "Designers only",
+      "roles": "Art-director, Designer, Jr. Designer, Analyst",
+      "groupRole": true
+    },
+    {
+      "role": "Webmasters only",
+      "name": "Webmasters only",
+      "roles": "Markuper, Programmer",
+      "groupRole": true
+    },
+    {
+      "role": "QA+content only",
+      "name": "QA+content only",
+      "roles": "Tester, Content-manager",
+      "groupRole": true
+    },
+    {
+      "role": "GroupMax",
+      "name": "Group Max",
+      "showInDailyPlan": true,
+      "tagId": 53330
+    },
+    {
+      "role": "GroupAlya",
+      "name": "Group Alya",
+      "showInDailyPlan": true,
+      "tagId": 53696
+    },
+    {
+      "role": "GroupDen",
+      "name": "Group Den",
+      "showInDailyPlan": true,
+      "tagId": 35484
+    },
+    {
+      "role": "RMStrainee",
+      "name": "RMS trainee"
+    },
+    {
+      "role": "Art-director",
+      "name": "Арт-директор",
+      "supervisor": true
+    },
+    {
+      "role": "Designer",
+      "name": "Дизайнер"
+    },
+    {
+      "role": "Jr. Designer",
+      "name": "Техдизайнер"
+    },
+    {
+      "role": "Copywriter",
+      "name": "Копирайтер"
+    },
+    {
+      "role": "Manager",
+      "name": "Менеджер",
+      "supervisor": true
+    },
+    {
+      "role": "Programmer",
+      "name": "Программист"
+    },
+    {
+      "role": "Markuper",
+      "name": "Верстальщик"
+    },
+    {
+      "role": "Tester",
+      "name": "Тестер"
+    },
+    {
+      "role": "Content-manager",
+      "name": "Контент-менеджер"
+    },
+    {
+      "role": "Analyst",
+      "name": "Аналитик"
+    },
+    {
+      "role": "Flasher",
+      "name": "Флешер"
+    },
+    {
+      "role": "Technologist",
+      "name": "Технолог"
+    },
+    {
+      "role": "Teamlead",
+      "name": "Тимлид"
     }
+  ],
+  "people": [
+    {
+      "id": 171133,
+      "role": "Tester, Content-manager",
+      "name": "Виктория Лобова",
+      "email": "v.lobova@webprofy.ru",
+      "estimates": true,
+      "parent": 78180
+    },
+    {
+      "id": 112015,
+      "role": "Programmer, Teamlead",
+      "name": "Alexey Zorkaltsev",
+      "email": "alexey@zorkaltsev.com",
+      "projects": [
+        87822,
+        154875,
+        169023
+      ]
+    },
+    {
+      "comment": "Zork: It's DEBUG user. Do not remove !!!",
+      "id": 54838,
+      "role": "Programmer, Teamlead",
+      "name": "Alexey Zorkaltsev",
+      "email": "alexey@zorkaltsev.com",
+      "projects": [
+        87822,
+        154875,
+        169023
+      ]
+    },
+    {
+      "id": 54199,
+      "role": "Copywriter",
+      "name": "Антон Скобин",
+      "email": "a.skobin@webprofy.ru"
+    },
+    {
+      "id": 48687,
+      "role": "Programmer, Markuper, Teamlead, GroupDen, RMStrainee",
+      "name": "Денис Коровкин",
+      "email": "d.korovkin@webprofy.ru"
+    },
+    {
+      "id": 57093,
+      "role": "Flasher",
+      "name": "Дмитрий Кочкин (флэшер)",
+      "email": "banner-prom@mail.ru"
+    },
+    {
+      "id": 77667,
+      "role": "Art-director",
+      "name": "Евгения Харитонова",
+      "email": "e.kharitonova@webprofy.ru"
+    },
+    {
+      "id": 146695,
+      "role": "Programmer, Markuper, GroupAlya",
+      "name": "Иван Аникин",
+      "email": "i.anikin@webprofy.ru",
+      "estimates": true
+    },
+    {
+      "id": 48685,
+      "role": "RMStrainee",
+      "name": "Илья Сабуров",
+      "email": "i.saburov@webprofy.ru"
+    },
+    {
+      "id": 97614,
+      "role": "Designer",
+      "name": "Мария Русакова",
+      "email": "m.rusakova@webprofy.ru"
+    },
+    {
+      "id": 97175,
+      "role": "Programmer, Markuper, Teamlead, RMStrainee",
+      "name": "Николай Скинтеев",
+      "email": "n.skinteev@webprofy.ru"
+    },
+    {
+      "id": 77666,
+      "role": "Manager, RMStrainee",
+      "name": "Ольга Бояршинова",
+      "email": "o.boyarshinova@webprofy.ru"
+    },
+    {
+      "id": 56392,
+      "role": "Designer, GroupDen",
+      "name": "Ольга Чухаленко",
+      "email": "o.chukhalenko@webprofy.ru",
+      "estimates": true
+    },
+    {
+      "id": 78180,
+      "role": "Tester, Content-manager, Teamlead, RMStrainee",
+      "name": "Татьяна Верхотурова",
+      "email": "t.verkhoturova@webprofy.ru"
+    },
+    {
+      "id": 115545,
+      "role": "Manager, RMStrainee",
+      "name": "Анна Комарова",
+      "email": "a.komarova@webprofy.ru",
+      "projects": [
+        154875
+      ]
+    },
+    {
+      "id": 178897,
+      "role": "Programmer, Markuper, Teamlead, GroupMax, GroupDen",
+      "name": "Максим Ситников",
+      "email": "m.sitnikov@webprofy.ru"
+    },
+    {
+      "id": 294545,
+      "role": "Programmer, Markuper, GroupMax, GroupDen",
+      "name": "Марина Страх",
+      "email": "m.strah@webprofy.ru"
+    },
+    {
+      "id": 294544,
+      "role": "Programmer, Markuper, GroupMax, GroupDen",
+      "name": "Андрей Павлов",
+      "email": "a.pavlov@webprofy.ru"
+    },
+    {
+      "id": 150752,
+      "role": "Programmer, Markuper, GroupMax",
+      "name": "Александр Муравьев",
+      "email": "a.muravyev@webprofy.ru",
+      "estimates": true
+    },
+    {
+      "id": 290804,
+      "role": "Programmer, Markuper, GroupAlya",
+      "name": "Александр Пашнин",
+      "email": "a.pashnin@webprofy.ru",
+      "estimates": true
+    },
+    {
+      "id": 139026,
+      "role": "Programmer, Markuper, Teamlead, GroupAlya, GroupDen",
+      "name": "Аля Жапаспаева",
+      "email": "a.zhapaspaeva@webprofy.ru"
+    },
+    {
+      "id": 102943,
+      "role": "Programmer, Markuper",
+      "name": "Григорий Красильников",
+      "email": "g.krasilnikov@webprofy.ru"
+    },
+    {
+      "id": 96180,
+      "role": "Programmer, Markuper",
+      "name": "Андрей Васильев",
+      "email": "a.vasilyev@webprofy.ru",
+      "estimates": true
+    },
+    {
+      "id": 174645,
+      "role": "Manager, RMStrainee",
+      "name": "Алла Молчанова",
+      "email": "a.molchanova@webprofy.ru"
+    },
+    {
+      "id": 139024,
+      "role": "Programmer, GroupDen, GroupMax",
+      "name": "Павел Шестаков",
+      "email": "p.shestakov@webprofy.ru",
+      "estimates": true
+    },
+    {
+      "id": 257346,
+      "role": "Programmer, Markuper",
+      "name": "Вадим Зайнетдинов",
+      "email": "vadim.zvf@gmail.com"
+    },
+    {
+      "id": 277133,
+      "role": "Manager",
+      "name": "Валентина Насырова",
+      "email": "valencia.po@gmail.com"
+    }
+  ],
+  "dailyPlan": {
+    "reloadTimeMin": "5",
+    "hsize": "300",
+    "vsize": "400",
+    "finalWords": " ,отчет",
+    "dailyPlanTag": "37127"
+  }
 }
