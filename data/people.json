@@ -162,13 +162,6 @@
       "email": "e.kharitonova@webprofy.ru"
     },
     {
-      "id": 146695,
-      "role": "Programmer, Markuper, GroupAlya",
-      "name": "Иван Аникин",
-      "email": "i.anikin@webprofy.ru",
-      "estimates": true
-    },
-    {
       "id": 48685,
       "role": "RMStrainee",
       "name": "Илья Сабуров",
@@ -179,12 +172,6 @@
       "role": "Designer",
       "name": "Мария Русакова",
       "email": "m.rusakova@webprofy.ru"
-    },
-    {
-      "id": 97175,
-      "role": "Programmer, Markuper, Teamlead, RMStrainee",
-      "name": "Николай Скинтеев",
-      "email": "n.skinteev@webprofy.ru"
     },
     {
       "id": 77666,
@@ -233,13 +220,6 @@
       "email": "a.pavlov@webprofy.ru"
     },
     {
-      "id": 150752,
-      "role": "Programmer, Markuper, GroupMax",
-      "name": "Александр Муравьев",
-      "email": "a.muravyev@webprofy.ru",
-      "estimates": true
-    },
-    {
       "id": 290804,
       "role": "Programmer, Markuper, GroupAlya",
       "name": "Александр Пашнин",
@@ -251,12 +231,6 @@
       "role": "Programmer, Markuper, Teamlead, GroupAlya, GroupDen",
       "name": "Аля Жапаспаева",
       "email": "a.zhapaspaeva@webprofy.ru"
-    },
-    {
-      "id": 102943,
-      "role": "Programmer, Markuper",
-      "name": "Григорий Красильников",
-      "email": "g.krasilnikov@webprofy.ru"
     },
     {
       "id": 96180,
@@ -277,12 +251,6 @@
       "name": "Павел Шестаков",
       "email": "p.shestakov@webprofy.ru",
       "estimates": true
-    },
-    {
-      "id": 257346,
-      "role": "Programmer, Markuper",
-      "name": "Вадим Зайнетдинов",
-      "email": "vadim.zvf@gmail.com"
     },
     {
       "id": 277133,
