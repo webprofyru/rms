@@ -41,6 +41,12 @@
       "tagId": 53696
     },
     {
+      "role": "GroupPavel",
+      "name": "Group Pavel",
+      "showInDailyPlan": true,
+      "tagId": 63663
+    },
+    {
       "role": "GroupDen",
       "name": "Group Den",
       "showInDailyPlan": true,
@@ -253,7 +259,7 @@
     },
     {
       "id": 139024,
-      "role": "Programmer, GroupDen, GroupMax",
+      "role": "Programmer, Teamlead, GroupDen, GroupPavel",
       "name": "Павел Шестаков",
       "email": "p.shestakov@webprofy.ru",
       "estimates": true
@@ -266,7 +272,7 @@
     },
     {
       "id": 300512,
-      "role": "Programmer, GroupAlya, GroupDen",
+      "role": "Programmer, GroupPavel, GroupDen",
       "name": "Олег Леньшин",
       "email": "o.lenshin@webprofy.ru"
     },
