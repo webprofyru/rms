@@ -17167,7 +17167,7 @@ ngModule.factory('DSView', [
         })(this)));
         this.__dirty = 0;
         this.__src = _.cloneDeep(this.__proto__.__src);
-        this.__srcList = new Array(__proto__.__srcLength);
+        this.__srcList = new Array(this.__proto__.__srcLength);
         this.dataStatus = 'nodata';
         setDirty = ((function(_this) {
           return function() {
