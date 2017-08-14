@@ -271,22 +271,10 @@
       "email": "valencia.po@gmail.com"
     },
     {
-      "id": 300512,
-      "role": "Programmer, GroupPavel, GroupDen",
-      "name": "Олег Леньшин",
-      "email": "o.lenshin@webprofy.ru"
-    },
-    {
       "id": 300624,
       "role": "Programmer, GroupAlya, GroupDen",
       "name": "Руслан Мерзияпов",
       "email": "r.merziapov@webprofy.ru"
-    },
-    {
-      "id": 300522,
-      "role": "Markuper, GroupAlya, GroupDen",
-      "name": "Дмитрий Потапов",
-      "email": "d.potapov@webprofy.ru"
     }
   ],
   "dailyPlan": {
