@@ -208,35 +208,10 @@
       ]
     },
     {
-      "id": 178897,
-      "role": "Programmer, Markuper, Teamlead, GroupMax, GroupDen",
-      "name": "Максим Ситников",
-      "email": "m.sitnikov@webprofy.ru"
-    },
-    {
-      "id": 295717,
-      "role": "Programmer, Markuper, GroupMax, GroupDen",
-      "name": "Наталья Зайцева",
-      "email": "n.zaytseva@webprofy.ru"
-    },
-    {
-      "id": 294544,
-      "role": "Programmer, Markuper, GroupMax, GroupDen",
-      "name": "Андрей Павлов",
-      "email": "a.pavlov@webprofy.ru"
-    },
-    {
       "id": 300521,
       "role": "Markuper, GroupMax, GroupDen",
       "name": "Алексей Богатюк",
       "email": "a.bogatyuk@webprofy.ru"
-    },
-    {
-      "id": 290804,
-      "role": "Programmer, Markuper, GroupAlya",
-      "name": "Александр Пашнин",
-      "email": "a.pashnin@webprofy.ru",
-      "estimates": true
     },
     {
       "id": 139026,
@@ -258,35 +233,16 @@
       "email": "a.molchanova@webprofy.ru"
     },
     {
-      "id": 139024,
-      "role": "Programmer, Teamlead, GroupDen, GroupPavel",
-      "name": "Павел Шестаков",
-      "email": "p.shestakov@webprofy.ru",
-      "estimates": true
-    },
-    {
       "id": 277133,
       "role": "Manager",
       "name": "Валентина Насырова",
       "email": "valencia.po@gmail.com"
     },
     {
-      "id": 300512,
-      "role": "Programmer, GroupPavel, GroupDen",
-      "name": "Олег Леньшин",
-      "email": "o.lenshin@webprofy.ru"
-    },
-    {
-      "id": 300624,
+      "id": 294545,
       "role": "Programmer, GroupAlya, GroupDen",
-      "name": "Руслан Мерзияпов",
-      "email": "r.merziapov@webprofy.ru"
-    },
-    {
-      "id": 300522,
-      "role": "Markuper, GroupAlya, GroupDen",
-      "name": "Дмитрий Потапов",
-      "email": "d.potapov@webprofy.ru"
+      "name": "Марина Страх",
+      "email": "m.strah@webprofy.ru"
     }
   ],
   "dailyPlan": {
