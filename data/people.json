@@ -246,9 +246,21 @@
     },
     {
       "id": 315700,
-      "role": "Programmer, GroupAlya, GroupDen",
+      "role": "Programmer, Markuper, GroupAlya, GroupDen",
       "name": "Алексей Мустафин",
       "email": "a.mustafin@webprofy.ru"
+    },
+    {
+      "id": 317633,
+      "role": "Programmer, Markuper, GroupAlya, GroupDen",
+      "name": "Алим Ахкубеков",
+      "email": "a.ahkubekov@webprofy.ru"
+    },
+    {
+      "id": 317632,
+      "role": "Programmer, Markuper, GroupAlya, GroupDen",
+      "name": "Нуриддин Зухирходжаев",
+      "email": "n.zukhirkhujaev@webprofy.ru"
     }
   ],
   "dailyPlan": {
