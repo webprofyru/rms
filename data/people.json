@@ -29,22 +29,10 @@
       "groupRole": true
     },
     {
-      "role": "GroupMax",
-      "name": "Group Max",
-      "showInDailyPlan": true,
-      "tagId": 53330
-    },
-    {
       "role": "GroupAlya",
       "name": "Group Alya",
       "showInDailyPlan": true,
       "tagId": 53696
-    },
-    {
-      "role": "GroupPavel",
-      "name": "Group Pavel",
-      "showInDailyPlan": true,
-      "tagId": 63663
     },
     {
       "role": "GroupDen",
@@ -121,17 +109,6 @@
       "parent": 78180
     },
     {
-      "id": 112015,
-      "role": "Programmer, Teamlead",
-      "name": "Alexey Zorkaltsev",
-      "email": "alexey@zorkaltsev.com",
-      "projects": [
-        87822,
-        154875,
-        169023
-      ]
-    },
-    {
       "comment": "Zork: It's DEBUG user. Do not remove !!!",
       "id": 54838,
       "role": "Programmer, Teamlead",
@@ -144,40 +121,16 @@
       ]
     },
     {
-      "id": 54199,
-      "role": "Copywriter",
-      "name": "Антон Скобин",
-      "email": "a.skobin@webprofy.ru"
-    },
-    {
       "id": 48687,
       "role": "Programmer, Markuper, Teamlead, GroupDen, RMStrainee",
       "name": "Денис Коровкин",
       "email": "d.korovkin@webprofy.ru"
     },
     {
-      "id": 57093,
-      "role": "Flasher",
-      "name": "Дмитрий Кочкин (флэшер)",
-      "email": "banner-prom@mail.ru"
-    },
-    {
       "id": 77667,
       "role": "Art-director",
       "name": "Евгения Харитонова",
       "email": "e.kharitonova@webprofy.ru"
-    },
-    {
-      "id": 48685,
-      "role": "RMStrainee",
-      "name": "Илья Сабуров",
-      "email": "i.saburov@webprofy.ru"
-    },
-    {
-      "id": 97614,
-      "role": "Designer",
-      "name": "Мария Русакова",
-      "email": "m.rusakova@webprofy.ru"
     },
     {
       "id": 77666,
@@ -199,38 +152,10 @@
       "email": "t.verkhoturova@webprofy.ru"
     },
     {
-      "id": 115545,
-      "role": "Manager, RMStrainee",
-      "name": "Анна Комарова",
-      "email": "a.komarova@webprofy.ru",
-      "projects": [
-        154875
-      ]
-    },
-    {
-      "id": 300521,
-      "role": "Markuper, GroupMax, GroupDen",
-      "name": "Алексей Богатюк",
-      "email": "a.bogatyuk@webprofy.ru"
-    },
-    {
       "id": 139026,
       "role": "Programmer, Markuper, Teamlead, GroupAlya, GroupDen",
       "name": "Аля Жапаспаева",
       "email": "a.zhapaspaeva@webprofy.ru"
-    },
-    {
-      "id": 96180,
-      "role": "Programmer, Markuper",
-      "name": "Андрей Васильев",
-      "email": "a.vasilyev@webprofy.ru",
-      "estimates": true
-    },
-    {
-      "id": 174645,
-      "role": "Manager, RMStrainee",
-      "name": "Алла Молчанова",
-      "email": "a.molchanova@webprofy.ru"
     },
     {
       "id": 277133,
@@ -245,10 +170,10 @@
       "email": "n.kolobkova@webprofy.ru"
     },
     {
-      "id": 315700,
-      "role": "Programmer, Markuper, GroupAlya, GroupDen",
-      "name": "Алексей Мустафин",
-      "email": "a.mustafin@webprofy.ru"
+      "id": 325265,
+      "role": "Manager",
+      "name": "Андрей Кузьмин",
+      "email": "a.kuzmin@webprofy.ru"
     },
     {
       "id": 317633,
