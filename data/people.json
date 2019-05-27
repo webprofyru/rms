@@ -5,6 +5,36 @@
       "name": "All"
     },
     {
+      "role": "Team 1",
+      "name": "Team 1",
+      "special": "notSupervisors",
+      "groupRole": true
+    },
+    {
+      "role": "Team 2",
+      "name": "Team 2",
+      "special": "notSupervisors",
+      "groupRole": true
+    },
+    {
+      "role": "Team 3",
+      "name": "Team 3",
+      "special": "notSupervisors",
+      "groupRole": true
+    },
+    {
+      "role": "Team 4",
+      "name": "Team 4",
+      "special": "notSupervisors",
+      "groupRole": true
+    },
+    {
+      "role": "Team 5",
+      "name": "Team 5",
+      "special": "notSupervisors",
+      "groupRole": true
+    },
+    {
       "role": "Except managers",
       "name": "Except managers",
       "special": "notSupervisors",
@@ -102,7 +132,7 @@
   "people": [
     {
       "id": 171133,
-      "role": "Tester, Content-manager",
+      "role": "Tester, Content-manager, Team 2",
       "name": "Виктория Лобова",
       "email": "v.lobova@webprofy.ru",
       "estimates": true,
@@ -147,21 +177,15 @@
     },
     {
       "id": 78180,
-      "role": "Tester, Content-manager, Teamlead, RMStrainee",
+      "role": "Tester, Content-manager, Teamlead, RMStrainee, Team 1",
       "name": "Татьяна Верхотурова",
       "email": "t.verkhoturova@webprofy.ru"
     },
     {
       "id": 139026,
-      "role": "Programmer, Markuper, Teamlead, GroupAlya, GroupDen",
+      "role": "Programmer, Markuper, Teamlead, GroupAlya, GroupDen, Team 1",
       "name": "Аля Жапаспаева",
       "email": "a.zhapaspaeva@webprofy.ru"
-    },
-    {
-      "id": 277133,
-      "role": "Manager",
-      "name": "Валентина Насырова",
-      "email": "v.nasyrova@webprofy.ru"
     },
     {
       "id": 316215,
@@ -170,34 +194,52 @@
       "email": "n.kolobkova@webprofy.ru"
     },
     {
-      "id": 325265,
-      "role": "Manager",
-      "name": "Андрей Кузьмин",
-      "email": "a.kuzmin@webprofy.ru"
-    },
-    {
       "id": 317633,
-      "role": "Programmer, Markuper, GroupAlya, GroupDen",
+      "role": "Programmer, Markuper, GroupAlya, GroupDen, Team 1",
       "name": "Алим Ахкубеков",
       "email": "a.ahkubekov@webprofy.ru"
     },
     {
       "id": 340053,
-      "role": "Programmer, Markuper, GroupAlya, GroupDen",
+      "role": "Programmer, Markuper, GroupAlya, GroupDen, Team 1",
       "name": "Даврон Юлдашев",
       "email": "d.yuldashev@webprofy.ru"
     },
     {
       "id": 333110,
-      "role": "Programmer, Markuper, GroupAlya, GroupDen",
+      "role": "Programmer, Markuper, GroupAlya, GroupDen, Team 1",
       "name": "Надежда Левенкова",
       "email": "n.levenkova@webprofy.ru"
     },
     {
       "id": 336660,
-      "role": "Programmer, Markuper, GroupAlya, GroupDen",
+      "role": "Programmer, Markuper, GroupAlya, GroupDen, Team 1",
       "name": "Ярослав Туровцев",
       "email": "y.turovtsev@webprofy.ru"
+    },
+     {
+      "id": 359543,
+      "role": "Manager",
+      "name": "Дарья Лебедева, Team 1",
+      "email": "d.lebedeva@webprofy.ru"
+    },
+     {
+      "id": 359540,
+      "role": "Manager, Team 2",
+      "name": "Юля Валиахметова",
+      "email": "y.valiakhmetova@webprofy.ru"
+    },
+     {
+      "id": 336660,
+      "role": "Programmer, Team 2",
+      "name": "Илья Балясов",
+      "email": "i.balyasov@webprofy.ru"
+    },
+     {
+      "id": 336660,
+      "role": "Programmer, Team 2",
+      "name": "Канат Артыкбаев",
+      "email": "k.artykbaev@webprofy.ru"
     }
   ],
   "dailyPlan": {
