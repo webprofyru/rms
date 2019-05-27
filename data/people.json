@@ -25,11 +25,6 @@
       "groupRole": true
     },
     {
-      "role": "Team5",
-      "name": "Team 5",
-      "groupRole": true
-    },
-    {
       "role": "Except managers",
       "name": "Except managers",
       "special": "notSupervisors",
@@ -171,6 +166,18 @@
       "estimates": true
     },
     {
+      "id": 360183,
+      "role": "Designer",
+      "name": "Дмитрий Красногоров",
+      "email": "d.krasnogorov@webprofy.ru",
+    }, 
+    {
+      "id": 360184,
+      "role": "Designer",
+      "name": "Марина Тунаева",
+      "email": "m.tunaeva@webprofy.ru",
+    }, 
+    {
       "id": 78180,
       "role": "Tester, Content-manager, Teamlead, RMStrainee, Team1",
       "name": "Татьяна Верхотурова",
@@ -196,7 +203,7 @@
     },
     {
       "id": 340053,
-      "role": "Programmer, Markuper, GroupAlya, GroupDen, Team1",
+      "role": "Programmer, Markuper, Teamlead, GroupDen, Team1",
       "name": "Даврон Юлдашев",
       "email": "d.yuldashev@webprofy.ru"
     },
@@ -224,14 +231,20 @@
       "name": "Юля Валиахметова",
       "email": "y.valiakhmetova@webprofy.ru"
     },
+    {
+      "id": 359600,
+      "role": "Programmer, Team2",
+      "name": "Ольга Бекетова",
+      "email": "o.beketova@webprofy.ru"
+    },
      {
-      "id": 336660,
+      "id": 359602,
       "role": "Programmer, Team2",
       "name": "Илья Балясов",
       "email": "i.balyasov@webprofy.ru"
     },
      {
-      "id": 336660,
+      "id": 359421,
       "role": "Programmer, Team2",
       "name": "Канат Артыкбаев",
       "email": "k.artykbaev@webprofy.ru"
@@ -256,7 +269,7 @@
     },
      {
       "id": 359549,
-      "role": "Programmer, Team3",
+      "role": "Programmer, Teamlead, Team3",
       "name": "Влад Федюнин",
       "email": "v.fedyunin@webprofy.ru"
     },
@@ -286,7 +299,7 @@
      },
     {
       "id": 359545,
-      "role": "Programmer, Team4",
+      "role": "Programmer, Teamlead, Team4",
       "name": "Дмитрий Князьков",
       "email": "d.knyazkov@webprofy.ru"
      },
