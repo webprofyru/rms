@@ -7,31 +7,26 @@
     {
       "role": "Team1",
       "name": "Team 1",
-      "special": "notSupervisors",
       "groupRole": true
     },
     {
       "role": "Team2",
       "name": "Team 2",
-      "special": "notSupervisors",
       "groupRole": true
     },
     {
       "role": "Team3",
       "name": "Team 3",
-      "special": "notSupervisors",
       "groupRole": true
     },
     {
       "role": "Team4",
       "name": "Team 4",
-      "special": "notSupervisors",
       "groupRole": true
     },
     {
       "role": "Team5",
       "name": "Team 5",
-      "special": "notSupervisors",
       "groupRole": true
     },
     {
@@ -249,7 +244,7 @@
      },
     {
       "id": 359553,
-      "role": "Programmer, Team3",
+      "role": "Tester, Team3",
       "name": "Александр Дадаев",
       "email": "a.dadaev@webprofy.ru"
     },
@@ -276,7 +271,43 @@
       "role": "Programmer, Team3",
       "name": "Наталья Нагаева",
       "email": "n.nagaeva@webprofy.ru"
-    }
+    },
+     {
+      "id": 359531,
+      "role": "Manager, Team4",
+      "name": "Константин Черных",
+      "email": "k.chernykh@webprofy.ru"
+     },
+    {
+      "id": 359547,
+      "role": "Programmer, Team4",
+      "name": "Андрей Трифонов",
+      "email": "a.trifonov@webprofy.ru"
+     },
+    {
+      "id": 359545,
+      "role": "Programmer, Team4",
+      "name": "Дмитрий Князьков",
+      "email": "d.knyazkov@webprofy.ru"
+     },
+    {
+      "id": 359546,
+      "role": "Tester, Team4",
+      "name": "Максим Панин",
+      "email": "m.panin@webprofy.ru"
+     },
+    {
+      "id": 359544,
+      "role": "Programmer, Team4",
+      "name": "Роман Князев",
+      "email": "r.knyazev@webprofy.ru"
+     },
+    {
+      "id": 359548,
+      "role": "Programmer, Team4",
+      "name": "Ярослав Миролевич",
+      "email": "y.mirolevich@webprofy.ru"
+     }
   ],
   "dailyPlan": {
     "reloadTimeMin": "5",
