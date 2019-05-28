@@ -202,12 +202,6 @@
       "email": "a.ahkubekov@webprofy.ru"
     },
     {
-      "id": 340053,
-      "role": "Programmer, Markuper, Teamlead, GroupDen, Team1",
-      "name": "Даврон Юлдашев",
-      "email": "d.yuldashev@webprofy.ru"
-    },
-    {
       "id": 333110,
       "role": "Programmer, Markuper, GroupAlya, GroupDen, Team1",
       "name": "Надежда Левенкова",
@@ -230,6 +224,12 @@
       "role": "Manager, Team2",
       "name": "Юля Валиахметова",
       "email": "y.valiakhmetova@webprofy.ru"
+    },
+    {
+      "id": 340053,
+      "role": "Programmer, Markuper, Teamlead, GroupDen, Team2",
+      "name": "Даврон Юлдашев",
+      "email": "d.yuldashev@webprofy.ru"
     },
     {
       "id": 359600,
