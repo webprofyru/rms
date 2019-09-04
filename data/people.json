@@ -219,7 +219,7 @@
     },
     {
       "id": 359600,
-      "role": "Programmer, Team2",
+      "role": "Programmer, GroupDen, Team2",
       "name": "Ольга Бекетова",
       "email": "o.beketova@webprofy.ru"
     },
@@ -239,7 +239,7 @@
     },
     {
       "id": 369284,
-      "role": "Programmer, Team2",
+      "role": "Programmer, GroupDen, Team2",
       "name": "Антон Пермяков",
       "email": "a.permiakov@webprofy.ru"
     },
@@ -257,7 +257,7 @@
     },
     {
       "id": 359602,
-      "role": "Programmer, Team3",
+      "role": "Programmer, GroupDen, Team3",
       "name": "Илья Балясов",
       "email": "i.balyasov@webprofy.ru"
     },
@@ -269,7 +269,7 @@
     },
      {
       "id": 359552,
-      "role": "Programmer, Team3",
+      "role": "Programmer, GroupDen, Team3",
       "name": "Евгений Чичайкин",
       "email": "e.chichaykin@webprofy.ru"
     },
@@ -281,13 +281,13 @@
      },
     {
       "id": 359547,
-      "role": "Programmer, Team4",
+      "role": "Programmer, GroupDen, Team4",
       "name": "Андрей Трифонов",
       "email": "a.trifonov@webprofy.ru"
      },
     {
       "id": 359545,
-      "role": "Programmer, Teamlead, Team4",
+      "role": "Programmer, Teamlead, GroupDen, Team4",
       "name": "Дмитрий Князьков",
       "email": "d.knyazkov@webprofy.ru"
      },
@@ -299,19 +299,19 @@
      },
     {
       "id": 359544,
-      "role": "Programmer, Team4",
+      "role": "Programmer, GroupDen, Team4",
       "name": "Роман Князев",
       "email": "r.knyazev@webprofy.ru"
      },
     {
       "id": 359548,
-      "role": "Programmer, Team4",
+      "role": "Programmer, GroupDen, Team4",
       "name": "Ярослав Миролевич",
       "email": "y.mirolevich@webprofy.ru"
      },
     {
       "id": 370071,
-      "role": "Programmer, Team4",
+      "role": "Programmer, GroupDen, Team4",
       "name": "Евгений Пригорский",
       "email": "e.prigorskii@webprofy.ru"
      }
