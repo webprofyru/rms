@@ -31,9 +31,9 @@
       "groupRole": true
     },
     {
-      "role": "Designers only",
-      "name": "Designers only",
-      "roles": "Art-director, Designer, Jr. Designer, Analyst",
+      "role": "Designers",
+      "name": "Designers and Co",
+      "roles": "Art-director, Designer, Jr. Designer, TechWriter, Prototyper",
       "groupRole": true
     },
     {
@@ -78,8 +78,8 @@
       "name": "Техдизайнер"
     },
     {
-      "role": "Copywriter",
-      "name": "Копирайтер"
+      "role": "TechWriter",
+      "name": "Технический писатель"
     },
     {
       "role": "Manager",
@@ -103,8 +103,8 @@
       "name": "Контент-менеджер"
     },
     {
-      "role": "Analyst",
-      "name": "Аналитик"
+      "role": "Prototyper",
+      "name": "Прототипировщик"
     },
     {
       "role": "Flasher",
@@ -120,14 +120,6 @@
     }
   ],
   "people": [
-    {
-      "id": 171133,
-      "role": "Tester, Content-manager, Team2",
-      "name": "Виктория Лобова",
-      "email": "v.lobova@webprofy.ru",
-      "estimates": true,
-      "parent": 78180
-    },
     {
       "comment": "Zork: It's DEBUG user. Do not remove !!!",
       "id": 54838,
@@ -145,18 +137,6 @@
       "role": "Programmer, Markuper, Teamlead, GroupDen, RMStrainee",
       "name": "Денис Коровкин",
       "email": "d.korovkin@webprofy.ru"
-    },
-    {
-      "id": 77667,
-      "role": "Art-director",
-      "name": "Евгения Харитонова",
-      "email": "e.kharitonova@webprofy.ru"
-    },
-    {
-      "id": 77666,
-      "role": "Manager, RMStrainee",
-      "name": "Ольга Бояршинова",
-      "email": "o.boyarshinova@webprofy.ru"
     },
     {
       "id": 56392,
@@ -177,6 +157,18 @@
       "name": "Марина Тунаева",
       "email": "m.tunaeva@webprofy.ru"
     }, 
+    {
+      "id": 356642,
+      "role": "Prototyper",
+      "name": "Сергей Соколов",
+      "email": "s.sokolov@corp.kokocgroup.ru"
+    },
+    {
+      "id": 357948,
+      "role": "TechWriter",
+      "name": "Антон Кискин",
+      "email": "a.kiskin@webprofy.ru"
+    },
     {
       "id": 78180,
       "role": "Tester, Content-manager, Teamlead, RMStrainee, Team1",
@@ -208,12 +200,6 @@
       "email": "n.levenkova@webprofy.ru"
     },
     {
-      "id": 336660,
-      "role": "Programmer, Markuper, GroupAlya, GroupDen, Team1",
-      "name": "Ярослав Туровцев",
-      "email": "y.turovtsev@webprofy.ru"
-    },
-     {
       "id": 359543,
       "role": "Manager",
       "name": "Дарья Лебедева, Team1",
@@ -238,16 +224,24 @@
       "email": "o.beketova@webprofy.ru"
     },
      {
-      "id": 359602,
-      "role": "Programmer, Team2",
-      "name": "Илья Балясов",
-      "email": "i.balyasov@webprofy.ru"
-    },
-     {
       "id": 359421,
       "role": "Programmer, Team2",
       "name": "Канат Артыкбаев",
       "email": "k.artykbaev@webprofy.ru"
+    },
+    {
+      "id": 171133,
+      "role": "Tester, Content-manager, Team2",
+      "name": "Виктория Лобова",
+      "email": "v.lobova@webprofy.ru",
+      "estimates": true,
+      "parent": 78180
+    },
+    {
+      "id": 369284,
+      "role": "Programmer, Team2",
+      "name": "Антон Пермяков",
+      "email": "a.permiakov@webprofy.ru"
     },
     {
       "id": 359537,
@@ -262,14 +256,14 @@
       "email": "a.dadaev@webprofy.ru"
     },
     {
-      "id": 359550,
+      "id": 359602,
       "role": "Programmer, Team3",
-      "name": "Андрей Шарапов",
-      "email": "a.sharapov@webprofy.ru"
+      "name": "Илья Балясов",
+      "email": "i.balyasov@webprofy.ru"
     },
      {
       "id": 359549,
-      "role": "Programmer, Teamlead, Team3",
+      "role": "Programmer, Teamlead, Manager, Team3",
       "name": "Влад Федюнин",
       "email": "v.fedyunin@webprofy.ru"
     },
@@ -279,13 +273,7 @@
       "name": "Евгений Чичайкин",
       "email": "e.chichaykin@webprofy.ru"
     },
-     {
-      "id": 359599,
-      "role": "Programmer, Team3",
-      "name": "Наталья Нагаева",
-      "email": "n.nagaeva@webprofy.ru"
-    },
-     {
+    {
       "id": 359531,
       "role": "Manager, Team4",
       "name": "Константин Черных",
@@ -320,6 +308,12 @@
       "role": "Programmer, Team4",
       "name": "Ярослав Миролевич",
       "email": "y.mirolevich@webprofy.ru"
+     },
+    {
+      "id": 370071,
+      "role": "Programmer, Team4",
+      "name": "Евгений Пригорский",
+      "email": "e.prigorskii@webprofy.ru"
      }
   ],
   "dailyPlan": {
