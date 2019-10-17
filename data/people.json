@@ -166,7 +166,7 @@
     }, 
     {
       "id": 356642,
-      "role": "Prototyper, Designer",
+      "role": "Prototyper,  Markuper, Designer",
       "name": "Сергей Соколов",
       "email": "s.sokolov@corp.kokocgroup.ru"
     },
@@ -251,10 +251,10 @@
       "email": "a.permiakov@webprofy.ru"
     },
     {
-      "id": 359537,
-      "role": "Manager, Team3",
-      "name": "Юля Орлова",
-      "email": "y.orlova@webprofy.ru"
+      "id": 373042,
+      "role": "Programmer, GroupDen, Team3",
+      "name": "Глеб Уваров",
+      "email": "g.uvarov@webprofy.ru"
      },
     {
       "id": 359553,
@@ -270,7 +270,7 @@
     },
      {
       "id": 359549,
-      "role": "Programmer, Teamlead, Manager, Team3",
+      "role": "Manager, Teamlead, Team3",
       "name": "Влад Федюнин",
       "email": "v.fedyunin@webprofy.ru"
     },
@@ -279,6 +279,12 @@
       "role": "Programmer, GroupDen, Team3",
       "name": "Евгений Чичайкин",
       "email": "e.chichaykin@webprofy.ru"
+    },
+    {
+      "id": 371848,
+      "role": "Programmer, GroupDen, Team3",
+      "name": "Татьяна Атласова",
+      "email": "t.atlasova@webprofy.ru"
     },
     {
       "id": 359531,
